@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--
+https://go.microsoft.com/fwlink/?LinkID=208121.
+-->
+<Project>
+  <PropertyGroup>
+    <_PublishTargetUrl>D:\new wleepay\Publish</_PublishTargetUrl>
+    <History>True|2023-02-16T10:47:58.3745254Z;True|2023-02-10T11:00:10.5094211+05:30;True|2023-02-02T20:55:42.6313862+05:30;True|2023-02-01T10:41:06.2801016+05:30;True|2023-01-24T15:10:04.6713833+05:30;True|2023-01-23T17:18:21.8656474+05:30;True|2023-01-09T15:35:20.4401913+05:30;True|2023-01-06T17:24:11.1638595+05:30;True|2023-01-04T15:19:38.3420198+05:30;True|2023-01-03T16:45:46.4839000+05:30;True|2023-01-03T15:24:39.4915338+05:30;True|2023-01-03T13:38:44.0392318+05:30;</History>
+    <LastFailureDetails />
+  </PropertyGroup>
+</Project>

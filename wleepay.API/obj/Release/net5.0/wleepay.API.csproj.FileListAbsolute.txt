@@ -1,0 +1,477 @@
+D:\Officials\wleePay\wleepay.API\bin\Release\net5.0\appsettings.Development.json
+D:\Officials\wleePay\wleepay.API\bin\Release\net5.0\appsettings.json
+D:\Officials\wleePay\wleepay.API\bin\Release\net5.0\wleepay.API.StaticWebAssets.xml
+D:\Officials\wleePay\wleepay.API\bin\Release\net5.0\wleepay.API.exe
+D:\Officials\wleePay\wleepay.API\bin\Release\net5.0\wleepay.API.deps.json
+D:\Officials\wleePay\wleepay.API\bin\Release\net5.0\wleepay.API.runtimeconfig.json
+D:\Officials\wleePay\wleepay.API\bin\Release\net5.0\wleepay.API.runtimeconfig.dev.json
+D:\Officials\wleePay\wleepay.API\bin\Release\net5.0\wleepay.API.dll
+D:\Officials\wleePay\wleepay.API\bin\Release\net5.0\ref\wleepay.API.dll
+D:\Officials\wleePay\wleepay.API\bin\Release\net5.0\wleepay.API.pdb
+D:\Officials\wleePay\wleepay.API\bin\Release\net5.0\FluentValidation.dll
+D:\Officials\wleePay\wleepay.API\bin\Release\net5.0\Humanizer.dll
+D:\Officials\wleePay\wleepay.API\bin\Release\net5.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
+D:\Officials\wleePay\wleepay.API\bin\Release\net5.0\Microsoft.AspNetCore.Authentication.OpenIdConnect.dll
+D:\Officials\wleePay\wleepay.API\bin\Release\net5.0\Microsoft.AspNetCore.Cryptography.Internal.dll
+D:\Officials\wleePay\wleepay.API\bin\Release\net5.0\Microsoft.AspNetCore.Cryptography.KeyDerivation.dll
+D:\Officials\wleePay\wleepay.API\bin\Release\net5.0\Microsoft.AspNetCore.Identity.EntityFrameworkCore.dll
+D:\Officials\wleePay\wleepay.API\bin\Release\net5.0\Microsoft.AspNetCore.Identity.UI.Views.V4.dll
+D:\Officials\wleePay\wleepay.API\bin\Release\net5.0\Microsoft.AspNetCore.Identity.UI.dll
+D:\Officials\wleePay\wleepay.API\bin\Release\net5.0\Microsoft.Data.SqlClient.dll
+D:\Officials\wleePay\wleepay.API\bin\Release\net5.0\Microsoft.EntityFrameworkCore.dll
+D:\Officials\wleePay\wleepay.API\bin\Release\net5.0\Microsoft.EntityFrameworkCore.Abstractions.dll
+D:\Officials\wleePay\wleepay.API\bin\Release\net5.0\Microsoft.EntityFrameworkCore.Design.dll
+D:\Officials\wleePay\wleepay.API\bin\Release\net5.0\Microsoft.EntityFrameworkCore.Relational.dll
+D:\Officials\wleePay\wleepay.API\bin\Release\net5.0\Microsoft.EntityFrameworkCore.SqlServer.dll
+D:\Officials\wleePay\wleepay.API\bin\Release\net5.0\Microsoft.Extensions.DependencyInjection.dll
+D:\Officials\wleePay\wleepay.API\bin\Release\net5.0\Microsoft.Extensions.FileProviders.Embedded.dll
+D:\Officials\wleePay\wleepay.API\bin\Release\net5.0\Microsoft.Extensions.Identity.Core.dll
+D:\Officials\wleePay\wleepay.API\bin\Release\net5.0\Microsoft.Extensions.Identity.Stores.dll
+D:\Officials\wleePay\wleepay.API\bin\Release\net5.0\Microsoft.Identity.Client.dll
+D:\Officials\wleePay\wleepay.API\bin\Release\net5.0\Microsoft.IdentityModel.JsonWebTokens.dll
+D:\Officials\wleePay\wleepay.API\bin\Release\net5.0\Microsoft.IdentityModel.Logging.dll
+D:\Officials\wleePay\wleepay.API\bin\Release\net5.0\Microsoft.IdentityModel.Protocols.dll
+D:\Officials\wleePay\wleepay.API\bin\Release\net5.0\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
+D:\Officials\wleePay\wleepay.API\bin\Release\net5.0\Microsoft.IdentityModel.Tokens.dll
+D:\Officials\wleePay\wleepay.API\bin\Release\net5.0\Microsoft.OpenApi.dll
+D:\Officials\wleePay\wleepay.API\bin\Release\net5.0\Swashbuckle.AspNetCore.Swagger.dll
+D:\Officials\wleePay\wleepay.API\bin\Release\net5.0\Swashbuckle.AspNetCore.SwaggerGen.dll
+D:\Officials\wleePay\wleepay.API\bin\Release\net5.0\Swashbuckle.AspNetCore.SwaggerUI.dll
+D:\Officials\wleePay\wleepay.API\bin\Release\net5.0\System.Configuration.ConfigurationManager.dll
+D:\Officials\wleePay\wleepay.API\bin\Release\net5.0\System.Diagnostics.DiagnosticSource.dll
+D:\Officials\wleePay\wleepay.API\bin\Release\net5.0\System.IdentityModel.Tokens.Jwt.dll
+D:\Officials\wleePay\wleepay.API\bin\Release\net5.0\System.Runtime.Caching.dll
+D:\Officials\wleePay\wleepay.API\bin\Release\net5.0\System.Security.Cryptography.ProtectedData.dll
+D:\Officials\wleePay\wleepay.API\bin\Release\net5.0\runtimes\unix\lib\netcoreapp3.1\Microsoft.Data.SqlClient.dll
+D:\Officials\wleePay\wleepay.API\bin\Release\net5.0\runtimes\win\lib\netcoreapp3.1\Microsoft.Data.SqlClient.dll
+D:\Officials\wleePay\wleepay.API\bin\Release\net5.0\runtimes\win-arm\native\Microsoft.Data.SqlClient.SNI.dll
+D:\Officials\wleePay\wleepay.API\bin\Release\net5.0\runtimes\win-arm\native\Microsoft.Data.SqlClient.SNI.pdb
+D:\Officials\wleePay\wleepay.API\bin\Release\net5.0\runtimes\win-arm64\native\Microsoft.Data.SqlClient.SNI.dll
+D:\Officials\wleePay\wleepay.API\bin\Release\net5.0\runtimes\win-arm64\native\Microsoft.Data.SqlClient.SNI.pdb
+D:\Officials\wleePay\wleepay.API\bin\Release\net5.0\runtimes\win-x64\native\Microsoft.Data.SqlClient.SNI.dll
+D:\Officials\wleePay\wleepay.API\bin\Release\net5.0\runtimes\win-x64\native\Microsoft.Data.SqlClient.SNI.pdb
+D:\Officials\wleePay\wleepay.API\bin\Release\net5.0\runtimes\win-x86\native\Microsoft.Data.SqlClient.SNI.dll
+D:\Officials\wleePay\wleepay.API\bin\Release\net5.0\runtimes\win-x86\native\Microsoft.Data.SqlClient.SNI.pdb
+D:\Officials\wleePay\wleepay.API\bin\Release\net5.0\runtimes\win\lib\netstandard2.0\System.Runtime.Caching.dll
+D:\Officials\wleePay\wleepay.API\bin\Release\net5.0\runtimes\win\lib\netstandard2.0\System.Security.Cryptography.ProtectedData.dll
+D:\Officials\wleePay\wleepay.API\bin\Release\net5.0\wleepay.Core.dll
+D:\Officials\wleePay\wleepay.API\bin\Release\net5.0\wleepay.Data.dll
+D:\Officials\wleePay\wleepay.API\bin\Release\net5.0\wleepay.Services.dll
+D:\Officials\wleePay\wleepay.API\bin\Release\net5.0\wleepay.Core.pdb
+D:\Officials\wleePay\wleepay.API\bin\Release\net5.0\wleepay.Data.pdb
+D:\Officials\wleePay\wleepay.API\bin\Release\net5.0\wleepay.Services.pdb
+D:\Officials\wleePay\wleepay.API\obj\Release\net5.0\wleepay.API.csprojAssemblyReference.cache
+D:\Officials\wleePay\wleepay.API\obj\Release\net5.0\wleepay.API.GeneratedMSBuildEditorConfig.editorconfig
+D:\Officials\wleePay\wleepay.API\obj\Release\net5.0\wleepay.API.AssemblyInfoInputs.cache
+D:\Officials\wleePay\wleepay.API\obj\Release\net5.0\wleepay.API.AssemblyInfo.cs
+D:\Officials\wleePay\wleepay.API\obj\Release\net5.0\wleepay.API.csproj.CoreCompileInputs.cache
+D:\Officials\wleePay\wleepay.API\obj\Release\net5.0\wleepay.API.MvcApplicationPartsAssemblyInfo.cs
+D:\Officials\wleePay\wleepay.API\obj\Release\net5.0\wleepay.API.MvcApplicationPartsAssemblyInfo.cache
+D:\Officials\wleePay\wleepay.API\obj\Release\net5.0\staticwebassets\wleepay.API.StaticWebAssets.Manifest.cache
+D:\Officials\wleePay\wleepay.API\obj\Release\net5.0\staticwebassets\wleepay.API.StaticWebAssets.xml
+D:\Officials\wleePay\wleepay.API\obj\Release\net5.0\scopedcss\bundle\wleepay.API.styles.css
+D:\Officials\wleePay\wleepay.API\obj\Release\net5.0\wleepay.API.RazorTargetAssemblyInfo.cache
+D:\Officials\wleePay\wleepay.API\obj\Release\net5.0\wleepay.API.csproj.CopyComplete
+D:\Officials\wleePay\wleepay.API\obj\Release\net5.0\wleepay.API.dll
+D:\Officials\wleePay\wleepay.API\obj\Release\net5.0\ref\wleepay.API.dll
+D:\Officials\wleePay\wleepay.API\obj\Release\net5.0\wleepay.API.pdb
+D:\Officials\wleePay\wleepay.API\obj\Release\net5.0\wleepay.API.genruntimeconfig.cache
+D:\Officials\wleePay\wleepay.API\bin\Release\net5.0\nlog.config
+D:\Officials\wleePay\wleepay.API\bin\Release\net5.0\NLog.dll
+D:\Officials\wleePay\wleepay.API\bin\Release\net5.0\NLog.Extensions.Logging.dll
+D:\Officials\wleePay\wleepay.API\bin\Release\net5.0\NLog.Web.AspNetCore.dll
+D:\Officials\wleePay\wleepay.API\bin\Release\net5.0\Microsoft.AspNet.Identity.Core.dll
+D:\Officials\wleePay\wleepay.API\bin\Release\net5.0\Newtonsoft.Json.dll
+D:\Officials\wleePay\wleepay.API\bin\Release\net5.0\Twilio.dll
+D:\Officials\wleePay\wleepay.API\bin\Release\net5.0\wleepay.Communication.dll
+D:\Officials\wleePay\wleepay.API\bin\Release\net5.0\wleepay.Communication.pdb
+D:\Officials\wleePay\wleepay.API\bin\Release\net5.0\System.Drawing.Common.dll
+D:\Officials\wleePay\wleepay.API\bin\Release\net5.0\runtimes\unix\lib\netcoreapp3.0\System.Drawing.Common.dll
+D:\Officials\wleePay\wleepay.API\bin\Release\net5.0\runtimes\win\lib\netcoreapp3.0\System.Drawing.Common.dll
+D:\Officials\wleePay\wleepay.API\bin\Release\net5.0\Microsoft.AspNetCore.Http.Features.dll
+D:\Officials\wleePay\wleepay.API\bin\Release\net5.0\Microsoft.Extensions.Primitives.dll
+D:\Officials\wleePay\wleepay.API\bin\Release\net5.0\System.IO.Pipelines.dll
+D:\Officials\wleePay\wleepay.API\bin\Release\net5.0\Microsoft.WindowsAzure.Storage.dll
+D:\Officials\wleePay\wleepay.API\bin\Release\net5.0\wleepay.Storage.dll
+D:\Officials\wleePay\wleepay.API\bin\Release\net5.0\wleepay.Storage.pdb
+D:\Officials\wleePay\wleepay.API\bin\Release\net5.0\Azure.Core.dll
+D:\Officials\wleePay\wleepay.API\bin\Release\net5.0\Azure.Storage.Blobs.dll
+D:\Officials\wleePay\wleepay.API\bin\Release\net5.0\Azure.Storage.Common.dll
+D:\Officials\wleePay\wleepay.API\bin\Release\net5.0\Microsoft.Bcl.AsyncInterfaces.dll
+D:\Officials\wleePay\wleepay.API\bin\Release\net5.0\System.Memory.Data.dll
+D:\wleePay\wleepay.API\bin\Release\net5.0\nlog.config
+D:\wleePay\wleepay.API\bin\Release\net5.0\appsettings.Development.json
+D:\wleePay\wleepay.API\bin\Release\net5.0\appsettings.json
+D:\wleePay\wleepay.API\bin\Release\net5.0\wleepay.API.StaticWebAssets.xml
+D:\wleePay\wleepay.API\bin\Release\net5.0\wleepay.API.exe
+D:\wleePay\wleepay.API\bin\Release\net5.0\wleepay.API.deps.json
+D:\wleePay\wleepay.API\bin\Release\net5.0\wleepay.API.runtimeconfig.json
+D:\wleePay\wleepay.API\bin\Release\net5.0\wleepay.API.runtimeconfig.dev.json
+D:\wleePay\wleepay.API\bin\Release\net5.0\wleepay.API.dll
+D:\wleePay\wleepay.API\bin\Release\net5.0\ref\wleepay.API.dll
+D:\wleePay\wleepay.API\bin\Release\net5.0\wleepay.API.pdb
+D:\wleePay\wleepay.API\bin\Release\net5.0\AutoMapper.dll
+D:\wleePay\wleepay.API\bin\Release\net5.0\AutoMapper.Extensions.Microsoft.DependencyInjection.dll
+D:\wleePay\wleepay.API\bin\Release\net5.0\Azure.Core.dll
+D:\wleePay\wleepay.API\bin\Release\net5.0\Azure.Storage.Blobs.dll
+D:\wleePay\wleepay.API\bin\Release\net5.0\Azure.Storage.Common.dll
+D:\wleePay\wleepay.API\bin\Release\net5.0\DevExpress.Data.v20.2.dll
+D:\wleePay\wleepay.API\bin\Release\net5.0\DevExpress.Xpo.v20.2.dll
+D:\wleePay\wleepay.API\bin\Release\net5.0\FluentValidation.dll
+D:\wleePay\wleepay.API\bin\Release\net5.0\Humanizer.dll
+D:\wleePay\wleepay.API\bin\Release\net5.0\Microsoft.AspNet.Identity.Core.dll
+D:\wleePay\wleepay.API\bin\Release\net5.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
+D:\wleePay\wleepay.API\bin\Release\net5.0\Microsoft.AspNetCore.Authentication.OpenIdConnect.dll
+D:\wleePay\wleepay.API\bin\Release\net5.0\Microsoft.AspNetCore.Cryptography.Internal.dll
+D:\wleePay\wleepay.API\bin\Release\net5.0\Microsoft.AspNetCore.Cryptography.KeyDerivation.dll
+D:\wleePay\wleepay.API\bin\Release\net5.0\Microsoft.AspNetCore.Http.Features.dll
+D:\wleePay\wleepay.API\bin\Release\net5.0\Microsoft.AspNetCore.Identity.EntityFrameworkCore.dll
+D:\wleePay\wleepay.API\bin\Release\net5.0\Microsoft.AspNetCore.Identity.UI.Views.V4.dll
+D:\wleePay\wleepay.API\bin\Release\net5.0\Microsoft.AspNetCore.Identity.UI.dll
+D:\wleePay\wleepay.API\bin\Release\net5.0\Microsoft.AspNetCore.JsonPatch.dll
+D:\wleePay\wleepay.API\bin\Release\net5.0\Microsoft.AspNetCore.Mvc.NewtonsoftJson.dll
+D:\wleePay\wleepay.API\bin\Release\net5.0\Microsoft.Bcl.AsyncInterfaces.dll
+D:\wleePay\wleepay.API\bin\Release\net5.0\Microsoft.Data.SqlClient.dll
+D:\wleePay\wleepay.API\bin\Release\net5.0\Microsoft.EntityFrameworkCore.dll
+D:\wleePay\wleepay.API\bin\Release\net5.0\Microsoft.EntityFrameworkCore.Abstractions.dll
+D:\wleePay\wleepay.API\bin\Release\net5.0\Microsoft.EntityFrameworkCore.Design.dll
+D:\wleePay\wleepay.API\bin\Release\net5.0\Microsoft.EntityFrameworkCore.Relational.dll
+D:\wleePay\wleepay.API\bin\Release\net5.0\Microsoft.EntityFrameworkCore.SqlServer.dll
+D:\wleePay\wleepay.API\bin\Release\net5.0\Microsoft.Extensions.DependencyInjection.dll
+D:\wleePay\wleepay.API\bin\Release\net5.0\Microsoft.Extensions.FileProviders.Embedded.dll
+D:\wleePay\wleepay.API\bin\Release\net5.0\Microsoft.Extensions.Identity.Core.dll
+D:\wleePay\wleepay.API\bin\Release\net5.0\Microsoft.Extensions.Identity.Stores.dll
+D:\wleePay\wleepay.API\bin\Release\net5.0\Microsoft.Extensions.Primitives.dll
+D:\wleePay\wleepay.API\bin\Release\net5.0\Microsoft.Identity.Client.dll
+D:\wleePay\wleepay.API\bin\Release\net5.0\Microsoft.IdentityModel.JsonWebTokens.dll
+D:\wleePay\wleepay.API\bin\Release\net5.0\Microsoft.IdentityModel.Logging.dll
+D:\wleePay\wleepay.API\bin\Release\net5.0\Microsoft.IdentityModel.Protocols.dll
+D:\wleePay\wleepay.API\bin\Release\net5.0\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
+D:\wleePay\wleepay.API\bin\Release\net5.0\Microsoft.IdentityModel.Tokens.dll
+D:\wleePay\wleepay.API\bin\Release\net5.0\Microsoft.OpenApi.dll
+D:\wleePay\wleepay.API\bin\Release\net5.0\Newtonsoft.Json.dll
+D:\wleePay\wleepay.API\bin\Release\net5.0\Newtonsoft.Json.Bson.dll
+D:\wleePay\wleepay.API\bin\Release\net5.0\NLog.dll
+D:\wleePay\wleepay.API\bin\Release\net5.0\NLog.Extensions.Logging.dll
+D:\wleePay\wleepay.API\bin\Release\net5.0\NLog.Web.AspNetCore.dll
+D:\wleePay\wleepay.API\bin\Release\net5.0\Swashbuckle.AspNetCore.Swagger.dll
+D:\wleePay\wleepay.API\bin\Release\net5.0\Swashbuckle.AspNetCore.SwaggerGen.dll
+D:\wleePay\wleepay.API\bin\Release\net5.0\Swashbuckle.AspNetCore.SwaggerUI.dll
+D:\wleePay\wleepay.API\bin\Release\net5.0\System.Configuration.ConfigurationManager.dll
+D:\wleePay\wleepay.API\bin\Release\net5.0\System.Data.SqlClient.dll
+D:\wleePay\wleepay.API\bin\Release\net5.0\System.Diagnostics.DiagnosticSource.dll
+D:\wleePay\wleepay.API\bin\Release\net5.0\System.Diagnostics.PerformanceCounter.dll
+D:\wleePay\wleepay.API\bin\Release\net5.0\System.Drawing.Common.dll
+D:\wleePay\wleepay.API\bin\Release\net5.0\System.IdentityModel.Tokens.Jwt.dll
+D:\wleePay\wleepay.API\bin\Release\net5.0\System.IO.Pipelines.dll
+D:\wleePay\wleepay.API\bin\Release\net5.0\System.Memory.Data.dll
+D:\wleePay\wleepay.API\bin\Release\net5.0\System.Runtime.Caching.dll
+D:\wleePay\wleepay.API\bin\Release\net5.0\System.Security.Cryptography.ProtectedData.dll
+D:\wleePay\wleepay.API\bin\Release\net5.0\System.ServiceModel.Http.dll
+D:\wleePay\wleepay.API\bin\Release\net5.0\System.ServiceModel.NetTcp.dll
+D:\wleePay\wleepay.API\bin\Release\net5.0\System.ServiceModel.Primitives.dll
+D:\wleePay\wleepay.API\bin\Release\net5.0\System.ServiceModel.dll
+D:\wleePay\wleepay.API\bin\Release\net5.0\System.ServiceModel.Security.dll
+D:\wleePay\wleepay.API\bin\Release\net5.0\Twilio.dll
+D:\wleePay\wleepay.API\bin\Release\net5.0\Microsoft.WindowsAzure.Storage.dll
+D:\wleePay\wleepay.API\bin\Release\net5.0\runtimes\unix\lib\netcoreapp3.1\Microsoft.Data.SqlClient.dll
+D:\wleePay\wleepay.API\bin\Release\net5.0\runtimes\win\lib\netcoreapp3.1\Microsoft.Data.SqlClient.dll
+D:\wleePay\wleepay.API\bin\Release\net5.0\runtimes\win-arm\native\Microsoft.Data.SqlClient.SNI.dll
+D:\wleePay\wleepay.API\bin\Release\net5.0\runtimes\win-arm\native\Microsoft.Data.SqlClient.SNI.pdb
+D:\wleePay\wleepay.API\bin\Release\net5.0\runtimes\win-arm64\native\Microsoft.Data.SqlClient.SNI.dll
+D:\wleePay\wleepay.API\bin\Release\net5.0\runtimes\win-arm64\native\Microsoft.Data.SqlClient.SNI.pdb
+D:\wleePay\wleepay.API\bin\Release\net5.0\runtimes\win-x64\native\Microsoft.Data.SqlClient.SNI.dll
+D:\wleePay\wleepay.API\bin\Release\net5.0\runtimes\win-x64\native\Microsoft.Data.SqlClient.SNI.pdb
+D:\wleePay\wleepay.API\bin\Release\net5.0\runtimes\win-x86\native\Microsoft.Data.SqlClient.SNI.dll
+D:\wleePay\wleepay.API\bin\Release\net5.0\runtimes\win-x86\native\Microsoft.Data.SqlClient.SNI.pdb
+D:\wleePay\wleepay.API\bin\Release\net5.0\runtimes\win-arm64\native\sni.dll
+D:\wleePay\wleepay.API\bin\Release\net5.0\runtimes\win-x64\native\sni.dll
+D:\wleePay\wleepay.API\bin\Release\net5.0\runtimes\win-x86\native\sni.dll
+D:\wleePay\wleepay.API\bin\Release\net5.0\runtimes\unix\lib\netcoreapp2.1\System.Data.SqlClient.dll
+D:\wleePay\wleepay.API\bin\Release\net5.0\runtimes\win\lib\netcoreapp2.1\System.Data.SqlClient.dll
+D:\wleePay\wleepay.API\bin\Release\net5.0\runtimes\win\lib\netcoreapp2.0\System.Diagnostics.PerformanceCounter.dll
+D:\wleePay\wleepay.API\bin\Release\net5.0\runtimes\unix\lib\netcoreapp3.0\System.Drawing.Common.dll
+D:\wleePay\wleepay.API\bin\Release\net5.0\runtimes\win\lib\netcoreapp3.0\System.Drawing.Common.dll
+D:\wleePay\wleepay.API\bin\Release\net5.0\runtimes\unix\lib\netstandard2.0\System.Private.ServiceModel.dll
+D:\wleePay\wleepay.API\bin\Release\net5.0\runtimes\win\lib\netstandard2.0\System.Private.ServiceModel.dll
+D:\wleePay\wleepay.API\bin\Release\net5.0\runtimes\win\lib\netstandard2.0\System.Runtime.Caching.dll
+D:\wleePay\wleepay.API\bin\Release\net5.0\runtimes\win\lib\netstandard2.0\System.Security.Cryptography.ProtectedData.dll
+D:\wleePay\wleepay.API\bin\Release\net5.0\wleepay.Communication.dll
+D:\wleePay\wleepay.API\bin\Release\net5.0\wleepay.Core.dll
+D:\wleePay\wleepay.API\bin\Release\net5.0\wleepay.Data.dll
+D:\wleePay\wleepay.API\bin\Release\net5.0\wleepay.Services.dll
+D:\wleePay\wleepay.API\bin\Release\net5.0\wleepay.Storage.dll
+D:\wleePay\wleepay.API\bin\Release\net5.0\wleepay.Communication.pdb
+D:\wleePay\wleepay.API\bin\Release\net5.0\wleepay.Core.pdb
+D:\wleePay\wleepay.API\bin\Release\net5.0\wleepay.Data.pdb
+D:\wleePay\wleepay.API\bin\Release\net5.0\wleepay.Services.pdb
+D:\wleePay\wleepay.API\bin\Release\net5.0\wleepay.Storage.pdb
+D:\wleePay\wleepay.API\obj\Release\net5.0\wleepay.API.csprojAssemblyReference.cache
+D:\wleePay\wleepay.API\obj\Release\net5.0\wleepay.API.GeneratedMSBuildEditorConfig.editorconfig
+D:\wleePay\wleepay.API\obj\Release\net5.0\wleepay.API.AssemblyInfoInputs.cache
+D:\wleePay\wleepay.API\obj\Release\net5.0\wleepay.API.AssemblyInfo.cs
+D:\wleePay\wleepay.API\obj\Release\net5.0\wleepay.API.csproj.CoreCompileInputs.cache
+D:\wleePay\wleepay.API\obj\Release\net5.0\wleepay.API.MvcApplicationPartsAssemblyInfo.cs
+D:\wleePay\wleepay.API\obj\Release\net5.0\wleepay.API.MvcApplicationPartsAssemblyInfo.cache
+D:\wleePay\wleepay.API\obj\Release\net5.0\staticwebassets\wleepay.API.StaticWebAssets.Manifest.cache
+D:\wleePay\wleepay.API\obj\Release\net5.0\staticwebassets\wleepay.API.StaticWebAssets.xml
+D:\wleePay\wleepay.API\obj\Release\net5.0\scopedcss\bundle\wleepay.API.styles.css
+D:\wleePay\wleepay.API\obj\Release\net5.0\wleepay.API.RazorTargetAssemblyInfo.cache
+D:\wleePay\wleepay.API\obj\Release\net5.0\wleepay.API.csproj.CopyComplete
+D:\wleePay\wleepay.API\obj\Release\net5.0\wleepay.API.dll
+D:\wleePay\wleepay.API\obj\Release\net5.0\ref\wleepay.API.dll
+D:\wleePay\wleepay.API\obj\Release\net5.0\wleepay.API.pdb
+D:\wleePay\wleepay.API\obj\Release\net5.0\wleepay.API.genruntimeconfig.cache
+D:\wleePay\wleepay.API\bin\Release\net5.0\BouncyCastle.Crypto.dll
+D:\Wleepay-API\wleepay_api\wleepay.API\bin\Release\net5.0\nlog.config
+D:\Wleepay-API\wleepay_api\wleepay.API\bin\Release\net5.0\appsettings.Development.json
+D:\Wleepay-API\wleepay_api\wleepay.API\bin\Release\net5.0\appsettings.json
+D:\Wleepay-API\wleepay_api\wleepay.API\bin\Release\net5.0\wleepay.API.StaticWebAssets.xml
+D:\Wleepay-API\wleepay_api\wleepay.API\bin\Release\net5.0\wleepay.API.exe
+D:\Wleepay-API\wleepay_api\wleepay.API\bin\Release\net5.0\wleepay.API.deps.json
+D:\Wleepay-API\wleepay_api\wleepay.API\bin\Release\net5.0\wleepay.API.runtimeconfig.json
+D:\Wleepay-API\wleepay_api\wleepay.API\bin\Release\net5.0\wleepay.API.runtimeconfig.dev.json
+D:\Wleepay-API\wleepay_api\wleepay.API\bin\Release\net5.0\wleepay.API.dll
+D:\Wleepay-API\wleepay_api\wleepay.API\bin\Release\net5.0\ref\wleepay.API.dll
+D:\Wleepay-API\wleepay_api\wleepay.API\bin\Release\net5.0\wleepay.API.pdb
+D:\Wleepay-API\wleepay_api\wleepay.API\bin\Release\net5.0\AutoMapper.dll
+D:\Wleepay-API\wleepay_api\wleepay.API\bin\Release\net5.0\AutoMapper.Extensions.Microsoft.DependencyInjection.dll
+D:\Wleepay-API\wleepay_api\wleepay.API\bin\Release\net5.0\Azure.Core.dll
+D:\Wleepay-API\wleepay_api\wleepay.API\bin\Release\net5.0\Azure.Storage.Blobs.dll
+D:\Wleepay-API\wleepay_api\wleepay.API\bin\Release\net5.0\Azure.Storage.Common.dll
+D:\Wleepay-API\wleepay_api\wleepay.API\bin\Release\net5.0\BouncyCastle.Crypto.dll
+D:\Wleepay-API\wleepay_api\wleepay.API\bin\Release\net5.0\DevExpress.Data.v20.2.dll
+D:\Wleepay-API\wleepay_api\wleepay.API\bin\Release\net5.0\DevExpress.Xpo.v20.2.dll
+D:\Wleepay-API\wleepay_api\wleepay.API\bin\Release\net5.0\FluentValidation.dll
+D:\Wleepay-API\wleepay_api\wleepay.API\bin\Release\net5.0\Humanizer.dll
+D:\Wleepay-API\wleepay_api\wleepay.API\bin\Release\net5.0\Microsoft.AspNet.Identity.Core.dll
+D:\Wleepay-API\wleepay_api\wleepay.API\bin\Release\net5.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
+D:\Wleepay-API\wleepay_api\wleepay.API\bin\Release\net5.0\Microsoft.AspNetCore.Authentication.OpenIdConnect.dll
+D:\Wleepay-API\wleepay_api\wleepay.API\bin\Release\net5.0\Microsoft.AspNetCore.Cryptography.Internal.dll
+D:\Wleepay-API\wleepay_api\wleepay.API\bin\Release\net5.0\Microsoft.AspNetCore.Cryptography.KeyDerivation.dll
+D:\Wleepay-API\wleepay_api\wleepay.API\bin\Release\net5.0\Microsoft.AspNetCore.Http.Features.dll
+D:\Wleepay-API\wleepay_api\wleepay.API\bin\Release\net5.0\Microsoft.AspNetCore.Identity.EntityFrameworkCore.dll
+D:\Wleepay-API\wleepay_api\wleepay.API\bin\Release\net5.0\Microsoft.AspNetCore.Identity.UI.Views.V4.dll
+D:\Wleepay-API\wleepay_api\wleepay.API\bin\Release\net5.0\Microsoft.AspNetCore.Identity.UI.dll
+D:\Wleepay-API\wleepay_api\wleepay.API\bin\Release\net5.0\Microsoft.AspNetCore.JsonPatch.dll
+D:\Wleepay-API\wleepay_api\wleepay.API\bin\Release\net5.0\Microsoft.AspNetCore.Mvc.NewtonsoftJson.dll
+D:\Wleepay-API\wleepay_api\wleepay.API\bin\Release\net5.0\Microsoft.Bcl.AsyncInterfaces.dll
+D:\Wleepay-API\wleepay_api\wleepay.API\bin\Release\net5.0\Microsoft.Data.SqlClient.dll
+D:\Wleepay-API\wleepay_api\wleepay.API\bin\Release\net5.0\Microsoft.EntityFrameworkCore.dll
+D:\Wleepay-API\wleepay_api\wleepay.API\bin\Release\net5.0\Microsoft.EntityFrameworkCore.Abstractions.dll
+D:\Wleepay-API\wleepay_api\wleepay.API\bin\Release\net5.0\Microsoft.EntityFrameworkCore.Design.dll
+D:\Wleepay-API\wleepay_api\wleepay.API\bin\Release\net5.0\Microsoft.EntityFrameworkCore.Relational.dll
+D:\Wleepay-API\wleepay_api\wleepay.API\bin\Release\net5.0\Microsoft.EntityFrameworkCore.SqlServer.dll
+D:\Wleepay-API\wleepay_api\wleepay.API\bin\Release\net5.0\Microsoft.Extensions.DependencyInjection.dll
+D:\Wleepay-API\wleepay_api\wleepay.API\bin\Release\net5.0\Microsoft.Extensions.FileProviders.Embedded.dll
+D:\Wleepay-API\wleepay_api\wleepay.API\bin\Release\net5.0\Microsoft.Extensions.Identity.Core.dll
+D:\Wleepay-API\wleepay_api\wleepay.API\bin\Release\net5.0\Microsoft.Extensions.Identity.Stores.dll
+D:\Wleepay-API\wleepay_api\wleepay.API\bin\Release\net5.0\Microsoft.Extensions.Primitives.dll
+D:\Wleepay-API\wleepay_api\wleepay.API\bin\Release\net5.0\Microsoft.Identity.Client.dll
+D:\Wleepay-API\wleepay_api\wleepay.API\bin\Release\net5.0\Microsoft.IdentityModel.JsonWebTokens.dll
+D:\Wleepay-API\wleepay_api\wleepay.API\bin\Release\net5.0\Microsoft.IdentityModel.Logging.dll
+D:\Wleepay-API\wleepay_api\wleepay.API\bin\Release\net5.0\Microsoft.IdentityModel.Protocols.dll
+D:\Wleepay-API\wleepay_api\wleepay.API\bin\Release\net5.0\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
+D:\Wleepay-API\wleepay_api\wleepay.API\bin\Release\net5.0\Microsoft.IdentityModel.Tokens.dll
+D:\Wleepay-API\wleepay_api\wleepay.API\bin\Release\net5.0\Microsoft.OpenApi.dll
+D:\Wleepay-API\wleepay_api\wleepay.API\bin\Release\net5.0\Newtonsoft.Json.dll
+D:\Wleepay-API\wleepay_api\wleepay.API\bin\Release\net5.0\Newtonsoft.Json.Bson.dll
+D:\Wleepay-API\wleepay_api\wleepay.API\bin\Release\net5.0\NLog.dll
+D:\Wleepay-API\wleepay_api\wleepay.API\bin\Release\net5.0\NLog.Extensions.Logging.dll
+D:\Wleepay-API\wleepay_api\wleepay.API\bin\Release\net5.0\NLog.Web.AspNetCore.dll
+D:\Wleepay-API\wleepay_api\wleepay.API\bin\Release\net5.0\Swashbuckle.AspNetCore.Swagger.dll
+D:\Wleepay-API\wleepay_api\wleepay.API\bin\Release\net5.0\Swashbuckle.AspNetCore.SwaggerGen.dll
+D:\Wleepay-API\wleepay_api\wleepay.API\bin\Release\net5.0\Swashbuckle.AspNetCore.SwaggerUI.dll
+D:\Wleepay-API\wleepay_api\wleepay.API\bin\Release\net5.0\System.Configuration.ConfigurationManager.dll
+D:\Wleepay-API\wleepay_api\wleepay.API\bin\Release\net5.0\System.Data.SqlClient.dll
+D:\Wleepay-API\wleepay_api\wleepay.API\bin\Release\net5.0\System.Diagnostics.DiagnosticSource.dll
+D:\Wleepay-API\wleepay_api\wleepay.API\bin\Release\net5.0\System.Diagnostics.PerformanceCounter.dll
+D:\Wleepay-API\wleepay_api\wleepay.API\bin\Release\net5.0\System.Drawing.Common.dll
+D:\Wleepay-API\wleepay_api\wleepay.API\bin\Release\net5.0\System.IdentityModel.Tokens.Jwt.dll
+D:\Wleepay-API\wleepay_api\wleepay.API\bin\Release\net5.0\System.IO.Pipelines.dll
+D:\Wleepay-API\wleepay_api\wleepay.API\bin\Release\net5.0\System.Memory.Data.dll
+D:\Wleepay-API\wleepay_api\wleepay.API\bin\Release\net5.0\System.Runtime.Caching.dll
+D:\Wleepay-API\wleepay_api\wleepay.API\bin\Release\net5.0\System.Security.Cryptography.ProtectedData.dll
+D:\Wleepay-API\wleepay_api\wleepay.API\bin\Release\net5.0\System.ServiceModel.Http.dll
+D:\Wleepay-API\wleepay_api\wleepay.API\bin\Release\net5.0\System.ServiceModel.NetTcp.dll
+D:\Wleepay-API\wleepay_api\wleepay.API\bin\Release\net5.0\System.ServiceModel.Primitives.dll
+D:\Wleepay-API\wleepay_api\wleepay.API\bin\Release\net5.0\System.ServiceModel.dll
+D:\Wleepay-API\wleepay_api\wleepay.API\bin\Release\net5.0\System.ServiceModel.Security.dll
+D:\Wleepay-API\wleepay_api\wleepay.API\bin\Release\net5.0\Twilio.dll
+D:\Wleepay-API\wleepay_api\wleepay.API\bin\Release\net5.0\Microsoft.WindowsAzure.Storage.dll
+D:\Wleepay-API\wleepay_api\wleepay.API\bin\Release\net5.0\runtimes\unix\lib\netcoreapp3.1\Microsoft.Data.SqlClient.dll
+D:\Wleepay-API\wleepay_api\wleepay.API\bin\Release\net5.0\runtimes\win\lib\netcoreapp3.1\Microsoft.Data.SqlClient.dll
+D:\Wleepay-API\wleepay_api\wleepay.API\bin\Release\net5.0\runtimes\win-arm\native\Microsoft.Data.SqlClient.SNI.dll
+D:\Wleepay-API\wleepay_api\wleepay.API\bin\Release\net5.0\runtimes\win-arm\native\Microsoft.Data.SqlClient.SNI.pdb
+D:\Wleepay-API\wleepay_api\wleepay.API\bin\Release\net5.0\runtimes\win-arm64\native\Microsoft.Data.SqlClient.SNI.dll
+D:\Wleepay-API\wleepay_api\wleepay.API\bin\Release\net5.0\runtimes\win-arm64\native\Microsoft.Data.SqlClient.SNI.pdb
+D:\Wleepay-API\wleepay_api\wleepay.API\bin\Release\net5.0\runtimes\win-x64\native\Microsoft.Data.SqlClient.SNI.dll
+D:\Wleepay-API\wleepay_api\wleepay.API\bin\Release\net5.0\runtimes\win-x64\native\Microsoft.Data.SqlClient.SNI.pdb
+D:\Wleepay-API\wleepay_api\wleepay.API\bin\Release\net5.0\runtimes\win-x86\native\Microsoft.Data.SqlClient.SNI.dll
+D:\Wleepay-API\wleepay_api\wleepay.API\bin\Release\net5.0\runtimes\win-x86\native\Microsoft.Data.SqlClient.SNI.pdb
+D:\Wleepay-API\wleepay_api\wleepay.API\bin\Release\net5.0\runtimes\win-arm64\native\sni.dll
+D:\Wleepay-API\wleepay_api\wleepay.API\bin\Release\net5.0\runtimes\win-x64\native\sni.dll
+D:\Wleepay-API\wleepay_api\wleepay.API\bin\Release\net5.0\runtimes\win-x86\native\sni.dll
+D:\Wleepay-API\wleepay_api\wleepay.API\bin\Release\net5.0\runtimes\unix\lib\netcoreapp2.1\System.Data.SqlClient.dll
+D:\Wleepay-API\wleepay_api\wleepay.API\bin\Release\net5.0\runtimes\win\lib\netcoreapp2.1\System.Data.SqlClient.dll
+D:\Wleepay-API\wleepay_api\wleepay.API\bin\Release\net5.0\runtimes\win\lib\netcoreapp2.0\System.Diagnostics.PerformanceCounter.dll
+D:\Wleepay-API\wleepay_api\wleepay.API\bin\Release\net5.0\runtimes\unix\lib\netcoreapp3.0\System.Drawing.Common.dll
+D:\Wleepay-API\wleepay_api\wleepay.API\bin\Release\net5.0\runtimes\win\lib\netcoreapp3.0\System.Drawing.Common.dll
+D:\Wleepay-API\wleepay_api\wleepay.API\bin\Release\net5.0\runtimes\unix\lib\netstandard2.0\System.Private.ServiceModel.dll
+D:\Wleepay-API\wleepay_api\wleepay.API\bin\Release\net5.0\runtimes\win\lib\netstandard2.0\System.Private.ServiceModel.dll
+D:\Wleepay-API\wleepay_api\wleepay.API\bin\Release\net5.0\runtimes\win\lib\netstandard2.0\System.Runtime.Caching.dll
+D:\Wleepay-API\wleepay_api\wleepay.API\bin\Release\net5.0\runtimes\win\lib\netstandard2.0\System.Security.Cryptography.ProtectedData.dll
+D:\Wleepay-API\wleepay_api\wleepay.API\bin\Release\net5.0\wleepay.Communication.dll
+D:\Wleepay-API\wleepay_api\wleepay.API\bin\Release\net5.0\wleepay.Core.dll
+D:\Wleepay-API\wleepay_api\wleepay.API\bin\Release\net5.0\wleepay.Data.dll
+D:\Wleepay-API\wleepay_api\wleepay.API\bin\Release\net5.0\wleepay.Services.dll
+D:\Wleepay-API\wleepay_api\wleepay.API\bin\Release\net5.0\wleepay.Storage.dll
+D:\Wleepay-API\wleepay_api\wleepay.API\bin\Release\net5.0\wleepay.Communication.pdb
+D:\Wleepay-API\wleepay_api\wleepay.API\bin\Release\net5.0\wleepay.Core.pdb
+D:\Wleepay-API\wleepay_api\wleepay.API\bin\Release\net5.0\wleepay.Data.pdb
+D:\Wleepay-API\wleepay_api\wleepay.API\bin\Release\net5.0\wleepay.Services.pdb
+D:\Wleepay-API\wleepay_api\wleepay.API\bin\Release\net5.0\wleepay.Storage.pdb
+D:\Wleepay-API\wleepay_api\wleepay.API\obj\Release\net5.0\wleepay.API.csprojAssemblyReference.cache
+D:\Wleepay-API\wleepay_api\wleepay.API\obj\Release\net5.0\wleepay.API.GeneratedMSBuildEditorConfig.editorconfig
+D:\Wleepay-API\wleepay_api\wleepay.API\obj\Release\net5.0\wleepay.API.AssemblyInfoInputs.cache
+D:\Wleepay-API\wleepay_api\wleepay.API\obj\Release\net5.0\wleepay.API.AssemblyInfo.cs
+D:\Wleepay-API\wleepay_api\wleepay.API\obj\Release\net5.0\wleepay.API.csproj.CoreCompileInputs.cache
+D:\Wleepay-API\wleepay_api\wleepay.API\obj\Release\net5.0\wleepay.API.MvcApplicationPartsAssemblyInfo.cs
+D:\Wleepay-API\wleepay_api\wleepay.API\obj\Release\net5.0\wleepay.API.MvcApplicationPartsAssemblyInfo.cache
+D:\Wleepay-API\wleepay_api\wleepay.API\obj\Release\net5.0\staticwebassets\wleepay.API.StaticWebAssets.Manifest.cache
+D:\Wleepay-API\wleepay_api\wleepay.API\obj\Release\net5.0\staticwebassets\wleepay.API.StaticWebAssets.xml
+D:\Wleepay-API\wleepay_api\wleepay.API\obj\Release\net5.0\scopedcss\bundle\wleepay.API.styles.css
+D:\Wleepay-API\wleepay_api\wleepay.API\obj\Release\net5.0\wleepay.API.RazorTargetAssemblyInfo.cache
+D:\Wleepay-API\wleepay_api\wleepay.API\obj\Release\net5.0\wleepay.API.csproj.CopyComplete
+D:\Wleepay-API\wleepay_api\wleepay.API\obj\Release\net5.0\wleepay.API.dll
+D:\Wleepay-API\wleepay_api\wleepay.API\obj\Release\net5.0\ref\wleepay.API.dll
+D:\Wleepay-API\wleepay_api\wleepay.API\obj\Release\net5.0\wleepay.API.pdb
+D:\Wleepay-API\wleepay_api\wleepay.API\obj\Release\net5.0\wleepay.API.genruntimeconfig.cache
+D:\Wleepay-API\wleepay_api\wleepay.API\bin\Release\net5.0\System.Net.Http.Formatting.dll
+D:\Wleepay-API\wleepay_api\wleepay.API\bin\Release\net5.0\System.Web.Http.dll
+D:\new wleepay\wleepay\wleepay.API\bin\Release\net5.0\appsettings.Development.json
+D:\new wleepay\wleepay\wleepay.API\bin\Release\net5.0\nlog.config
+D:\new wleepay\wleepay\wleepay.API\bin\Release\net5.0\appsettings.json
+D:\new wleepay\wleepay\wleepay.API\bin\Release\net5.0\wleepay.API.StaticWebAssets.xml
+D:\new wleepay\wleepay\wleepay.API\bin\Release\net5.0\wleepay.API.exe
+D:\new wleepay\wleepay\wleepay.API\bin\Release\net5.0\wleepay.API.deps.json
+D:\new wleepay\wleepay\wleepay.API\bin\Release\net5.0\wleepay.API.runtimeconfig.json
+D:\new wleepay\wleepay\wleepay.API\bin\Release\net5.0\wleepay.API.runtimeconfig.dev.json
+D:\new wleepay\wleepay\wleepay.API\bin\Release\net5.0\wleepay.API.dll
+D:\new wleepay\wleepay\wleepay.API\bin\Release\net5.0\wleepay.API.pdb
+D:\new wleepay\wleepay\wleepay.API\bin\Release\net5.0\AutoMapper.dll
+D:\new wleepay\wleepay\wleepay.API\bin\Release\net5.0\AutoMapper.Extensions.Microsoft.DependencyInjection.dll
+D:\new wleepay\wleepay\wleepay.API\bin\Release\net5.0\Azure.Core.dll
+D:\new wleepay\wleepay\wleepay.API\bin\Release\net5.0\Azure.Storage.Blobs.dll
+D:\new wleepay\wleepay\wleepay.API\bin\Release\net5.0\Azure.Storage.Common.dll
+D:\new wleepay\wleepay\wleepay.API\bin\Release\net5.0\BouncyCastle.Crypto.dll
+D:\new wleepay\wleepay\wleepay.API\bin\Release\net5.0\DevExpress.Data.v20.2.dll
+D:\new wleepay\wleepay\wleepay.API\bin\Release\net5.0\DevExpress.Xpo.v20.2.dll
+D:\new wleepay\wleepay\wleepay.API\bin\Release\net5.0\FluentValidation.dll
+D:\new wleepay\wleepay\wleepay.API\bin\Release\net5.0\Humanizer.dll
+D:\new wleepay\wleepay\wleepay.API\bin\Release\net5.0\Microsoft.AspNet.Identity.Core.dll
+D:\new wleepay\wleepay\wleepay.API\bin\Release\net5.0\System.Net.Http.Formatting.dll
+D:\new wleepay\wleepay\wleepay.API\bin\Release\net5.0\System.Web.Http.dll
+D:\new wleepay\wleepay\wleepay.API\bin\Release\net5.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
+D:\new wleepay\wleepay\wleepay.API\bin\Release\net5.0\Microsoft.AspNetCore.Authentication.OpenIdConnect.dll
+D:\new wleepay\wleepay\wleepay.API\bin\Release\net5.0\Microsoft.AspNetCore.Cryptography.Internal.dll
+D:\new wleepay\wleepay\wleepay.API\bin\Release\net5.0\Microsoft.AspNetCore.Cryptography.KeyDerivation.dll
+D:\new wleepay\wleepay\wleepay.API\bin\Release\net5.0\Microsoft.AspNetCore.Http.Features.dll
+D:\new wleepay\wleepay\wleepay.API\bin\Release\net5.0\Microsoft.AspNetCore.Identity.EntityFrameworkCore.dll
+D:\new wleepay\wleepay\wleepay.API\bin\Release\net5.0\Microsoft.AspNetCore.Identity.UI.Views.V4.dll
+D:\new wleepay\wleepay\wleepay.API\bin\Release\net5.0\Microsoft.AspNetCore.Identity.UI.dll
+D:\new wleepay\wleepay\wleepay.API\bin\Release\net5.0\Microsoft.AspNetCore.JsonPatch.dll
+D:\new wleepay\wleepay\wleepay.API\bin\Release\net5.0\Microsoft.AspNetCore.Mvc.NewtonsoftJson.dll
+D:\new wleepay\wleepay\wleepay.API\bin\Release\net5.0\Microsoft.Bcl.AsyncInterfaces.dll
+D:\new wleepay\wleepay\wleepay.API\bin\Release\net5.0\Microsoft.Data.SqlClient.dll
+D:\new wleepay\wleepay\wleepay.API\bin\Release\net5.0\Microsoft.EntityFrameworkCore.dll
+D:\new wleepay\wleepay\wleepay.API\bin\Release\net5.0\Microsoft.EntityFrameworkCore.Abstractions.dll
+D:\new wleepay\wleepay\wleepay.API\bin\Release\net5.0\Microsoft.EntityFrameworkCore.Design.dll
+D:\new wleepay\wleepay\wleepay.API\bin\Release\net5.0\Microsoft.EntityFrameworkCore.Relational.dll
+D:\new wleepay\wleepay\wleepay.API\bin\Release\net5.0\Microsoft.EntityFrameworkCore.SqlServer.dll
+D:\new wleepay\wleepay\wleepay.API\bin\Release\net5.0\Microsoft.Extensions.DependencyInjection.dll
+D:\new wleepay\wleepay\wleepay.API\bin\Release\net5.0\Microsoft.Extensions.FileProviders.Embedded.dll
+D:\new wleepay\wleepay\wleepay.API\bin\Release\net5.0\Microsoft.Extensions.Identity.Core.dll
+D:\new wleepay\wleepay\wleepay.API\bin\Release\net5.0\Microsoft.Extensions.Identity.Stores.dll
+D:\new wleepay\wleepay\wleepay.API\bin\Release\net5.0\Microsoft.Extensions.Primitives.dll
+D:\new wleepay\wleepay\wleepay.API\bin\Release\net5.0\Microsoft.Identity.Client.dll
+D:\new wleepay\wleepay\wleepay.API\bin\Release\net5.0\Microsoft.IdentityModel.JsonWebTokens.dll
+D:\new wleepay\wleepay\wleepay.API\bin\Release\net5.0\Microsoft.IdentityModel.Logging.dll
+D:\new wleepay\wleepay\wleepay.API\bin\Release\net5.0\Microsoft.IdentityModel.Protocols.dll
+D:\new wleepay\wleepay\wleepay.API\bin\Release\net5.0\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
+D:\new wleepay\wleepay\wleepay.API\bin\Release\net5.0\Microsoft.IdentityModel.Tokens.dll
+D:\new wleepay\wleepay\wleepay.API\bin\Release\net5.0\Microsoft.OpenApi.dll
+D:\new wleepay\wleepay\wleepay.API\bin\Release\net5.0\Newtonsoft.Json.dll
+D:\new wleepay\wleepay\wleepay.API\bin\Release\net5.0\Newtonsoft.Json.Bson.dll
+D:\new wleepay\wleepay\wleepay.API\bin\Release\net5.0\NLog.dll
+D:\new wleepay\wleepay\wleepay.API\bin\Release\net5.0\NLog.Extensions.Logging.dll
+D:\new wleepay\wleepay\wleepay.API\bin\Release\net5.0\NLog.Web.AspNetCore.dll
+D:\new wleepay\wleepay\wleepay.API\bin\Release\net5.0\Swashbuckle.AspNetCore.Swagger.dll
+D:\new wleepay\wleepay\wleepay.API\bin\Release\net5.0\Swashbuckle.AspNetCore.SwaggerGen.dll
+D:\new wleepay\wleepay\wleepay.API\bin\Release\net5.0\Swashbuckle.AspNetCore.SwaggerUI.dll
+D:\new wleepay\wleepay\wleepay.API\bin\Release\net5.0\System.Configuration.ConfigurationManager.dll
+D:\new wleepay\wleepay\wleepay.API\bin\Release\net5.0\System.Data.SqlClient.dll
+D:\new wleepay\wleepay\wleepay.API\bin\Release\net5.0\System.Diagnostics.DiagnosticSource.dll
+D:\new wleepay\wleepay\wleepay.API\bin\Release\net5.0\System.Diagnostics.PerformanceCounter.dll
+D:\new wleepay\wleepay\wleepay.API\bin\Release\net5.0\System.Drawing.Common.dll
+D:\new wleepay\wleepay\wleepay.API\bin\Release\net5.0\System.IdentityModel.Tokens.Jwt.dll
+D:\new wleepay\wleepay\wleepay.API\bin\Release\net5.0\System.IO.Pipelines.dll
+D:\new wleepay\wleepay\wleepay.API\bin\Release\net5.0\System.Memory.Data.dll
+D:\new wleepay\wleepay\wleepay.API\bin\Release\net5.0\System.Runtime.Caching.dll
+D:\new wleepay\wleepay\wleepay.API\bin\Release\net5.0\System.Security.Cryptography.ProtectedData.dll
+D:\new wleepay\wleepay\wleepay.API\bin\Release\net5.0\System.ServiceModel.Http.dll
+D:\new wleepay\wleepay\wleepay.API\bin\Release\net5.0\System.ServiceModel.NetTcp.dll
+D:\new wleepay\wleepay\wleepay.API\bin\Release\net5.0\System.ServiceModel.Primitives.dll
+D:\new wleepay\wleepay\wleepay.API\bin\Release\net5.0\System.ServiceModel.dll
+D:\new wleepay\wleepay\wleepay.API\bin\Release\net5.0\System.ServiceModel.Security.dll
+D:\new wleepay\wleepay\wleepay.API\bin\Release\net5.0\Twilio.dll
+D:\new wleepay\wleepay\wleepay.API\bin\Release\net5.0\Microsoft.WindowsAzure.Storage.dll
+D:\new wleepay\wleepay\wleepay.API\bin\Release\net5.0\runtimes\unix\lib\netcoreapp3.1\Microsoft.Data.SqlClient.dll
+D:\new wleepay\wleepay\wleepay.API\bin\Release\net5.0\runtimes\win\lib\netcoreapp3.1\Microsoft.Data.SqlClient.dll
+D:\new wleepay\wleepay\wleepay.API\bin\Release\net5.0\runtimes\win-arm\native\Microsoft.Data.SqlClient.SNI.dll
+D:\new wleepay\wleepay\wleepay.API\bin\Release\net5.0\runtimes\win-arm\native\Microsoft.Data.SqlClient.SNI.pdb
+D:\new wleepay\wleepay\wleepay.API\bin\Release\net5.0\runtimes\win-arm64\native\Microsoft.Data.SqlClient.SNI.dll
+D:\new wleepay\wleepay\wleepay.API\bin\Release\net5.0\runtimes\win-arm64\native\Microsoft.Data.SqlClient.SNI.pdb
+D:\new wleepay\wleepay\wleepay.API\bin\Release\net5.0\runtimes\win-x64\native\Microsoft.Data.SqlClient.SNI.dll
+D:\new wleepay\wleepay\wleepay.API\bin\Release\net5.0\runtimes\win-x64\native\Microsoft.Data.SqlClient.SNI.pdb
+D:\new wleepay\wleepay\wleepay.API\bin\Release\net5.0\runtimes\win-x86\native\Microsoft.Data.SqlClient.SNI.dll
+D:\new wleepay\wleepay\wleepay.API\bin\Release\net5.0\runtimes\win-x86\native\Microsoft.Data.SqlClient.SNI.pdb
+D:\new wleepay\wleepay\wleepay.API\bin\Release\net5.0\runtimes\win-arm64\native\sni.dll
+D:\new wleepay\wleepay\wleepay.API\bin\Release\net5.0\runtimes\win-x64\native\sni.dll
+D:\new wleepay\wleepay\wleepay.API\bin\Release\net5.0\runtimes\win-x86\native\sni.dll
+D:\new wleepay\wleepay\wleepay.API\bin\Release\net5.0\runtimes\unix\lib\netcoreapp2.1\System.Data.SqlClient.dll
+D:\new wleepay\wleepay\wleepay.API\bin\Release\net5.0\runtimes\win\lib\netcoreapp2.1\System.Data.SqlClient.dll
+D:\new wleepay\wleepay\wleepay.API\bin\Release\net5.0\runtimes\win\lib\netcoreapp2.0\System.Diagnostics.PerformanceCounter.dll
+D:\new wleepay\wleepay\wleepay.API\bin\Release\net5.0\runtimes\unix\lib\netcoreapp3.0\System.Drawing.Common.dll
+D:\new wleepay\wleepay\wleepay.API\bin\Release\net5.0\runtimes\win\lib\netcoreapp3.0\System.Drawing.Common.dll
+D:\new wleepay\wleepay\wleepay.API\bin\Release\net5.0\runtimes\unix\lib\netstandard2.0\System.Private.ServiceModel.dll
+D:\new wleepay\wleepay\wleepay.API\bin\Release\net5.0\runtimes\win\lib\netstandard2.0\System.Private.ServiceModel.dll
+D:\new wleepay\wleepay\wleepay.API\bin\Release\net5.0\runtimes\win\lib\netstandard2.0\System.Runtime.Caching.dll
+D:\new wleepay\wleepay\wleepay.API\bin\Release\net5.0\runtimes\win\lib\netstandard2.0\System.Security.Cryptography.ProtectedData.dll
+D:\new wleepay\wleepay\wleepay.API\bin\Release\net5.0\wleepay.Communication.dll
+D:\new wleepay\wleepay\wleepay.API\bin\Release\net5.0\wleepay.Core.dll
+D:\new wleepay\wleepay\wleepay.API\bin\Release\net5.0\wleepay.Data.dll
+D:\new wleepay\wleepay\wleepay.API\bin\Release\net5.0\wleepay.Services.dll
+D:\new wleepay\wleepay\wleepay.API\bin\Release\net5.0\wleepay.Storage.dll
+D:\new wleepay\wleepay\wleepay.API\bin\Release\net5.0\wleepay.Communication.pdb
+D:\new wleepay\wleepay\wleepay.API\bin\Release\net5.0\wleepay.Core.pdb
+D:\new wleepay\wleepay\wleepay.API\bin\Release\net5.0\wleepay.Data.pdb
+D:\new wleepay\wleepay\wleepay.API\bin\Release\net5.0\wleepay.Services.pdb
+D:\new wleepay\wleepay\wleepay.API\bin\Release\net5.0\wleepay.Storage.pdb
+D:\new wleepay\wleepay\wleepay.API\obj\Release\net5.0\wleepay.API.csproj.AssemblyReference.cache
+D:\new wleepay\wleepay\wleepay.API\obj\Release\net5.0\wleepay.API.GeneratedMSBuildEditorConfig.editorconfig
+D:\new wleepay\wleepay\wleepay.API\obj\Release\net5.0\wleepay.API.AssemblyInfoInputs.cache
+D:\new wleepay\wleepay\wleepay.API\obj\Release\net5.0\wleepay.API.AssemblyInfo.cs
+D:\new wleepay\wleepay\wleepay.API\obj\Release\net5.0\wleepay.API.csproj.CoreCompileInputs.cache
+D:\new wleepay\wleepay\wleepay.API\obj\Release\net5.0\wleepay.API.MvcApplicationPartsAssemblyInfo.cs
+D:\new wleepay\wleepay\wleepay.API\obj\Release\net5.0\wleepay.API.MvcApplicationPartsAssemblyInfo.cache
+D:\new wleepay\wleepay\wleepay.API\obj\Release\net5.0\scopedcss\bundle\wleepay.API.styles.css
+D:\new wleepay\wleepay\wleepay.API\obj\Release\net5.0\staticwebassets\wleepay.API.StaticWebAssets.Manifest.cache
+D:\new wleepay\wleepay\wleepay.API\obj\Release\net5.0\staticwebassets\wleepay.API.StaticWebAssets.xml
+D:\new wleepay\wleepay\wleepay.API\obj\Release\net5.0\wleepay.API.RazorTargetAssemblyInfo.cache
+D:\new wleepay\wleepay\wleepay.API\obj\Release\net5.0\wleepay.API.csproj.CopyComplete
+D:\new wleepay\wleepay\wleepay.API\obj\Release\net5.0\wleepay.API.dll
+D:\new wleepay\wleepay\wleepay.API\obj\Release\net5.0\refint\wleepay.API.dll
+D:\new wleepay\wleepay\wleepay.API\obj\Release\net5.0\wleepay.API.pdb
+D:\new wleepay\wleepay\wleepay.API\obj\Release\net5.0\wleepay.API.genruntimeconfig.cache
+D:\new wleepay\wleepay\wleepay.API\obj\Release\net5.0\ref\wleepay.API.dll

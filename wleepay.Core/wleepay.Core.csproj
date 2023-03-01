@@ -1,0 +1,23 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Models\AspNetRole.cs" />
+    <Compile Remove="Models\AspNetRoleClaim.cs" />
+    <Compile Remove="Models\AspNetUser.cs" />
+    <Compile Remove="Models\AspNetUserClaim.cs" />
+    <Compile Remove="Models\AspNetUserLogin.cs" />
+    <Compile Remove="Models\AspNetUserRole.cs" />
+    <Compile Remove="Models\AspNetUserToken.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="DevExpress.Xpo" Version="20.2.4" />
+    <PackageReference Include="Microsoft.AspNetCore.Http.Features" Version="5.0.8" />
+    <PackageReference Include="Microsoft.Extensions.Identity.Stores" Version="5.0.9" />
+  </ItemGroup>
+
+</Project>

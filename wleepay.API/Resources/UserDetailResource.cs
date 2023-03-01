@@ -1,0 +1,50 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using wleepay.Core.Models;
+
+namespace wleepay.API.Resources
+{
+    public class UserDetailResource
+    {
+        public int Id { get; set; }
+        public string UserId { get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+        public string Gender { get; set; }
+        public string PhoneNumber { get; set; }
+        public DateTime? DOB { get; set; }
+        public int KYCStatusId { get; set; }
+        public string Image { get; set; }
+        public int CountyId { get; set; }
+        public int KYCLevel { get; set; }
+        public bool IsLoggedIn { get; set; } = false;
+        public string AccountNumber { get; set; }
+        public string KYCDocumentImage { get; set; }
+
+        public virtual KYCStatus KYCStatus { get; set; }
+        public virtual KYCLevel KYCLevelDetail { get; set; }
+        public virtual County County { get; set; }
+        //public virtual ApplicationUser ApplicationUser {get;set;}
+    }
+
+    public class KYCStatus {
+        public int Id { get; set; }
+        public string Name { get; set; }
+    }
+
+    public class County {
+        public int Id { get; set; }
+        public string Name { get; set; }
+    }
+
+    public class KYCLevel
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public double? TransactionDayLimit { get; set; }
+        public double? TransactionMonthLimit { get; set; }
+        public double? AccountBalanceLimit { get; set; }
+    }
+}

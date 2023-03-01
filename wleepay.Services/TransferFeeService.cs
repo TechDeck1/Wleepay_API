@@ -1,0 +1,37 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+using System.Threading.Tasks;
+using wleepay.Core;
+using wleepay.Core.Models;
+using wleepay.Core.Services;
+using System.Linq;
+
+namespace wleepay.Services
+{
+    public class TransferFeeService : ITransferFeeService
+    {
+        private readonly IUnitOfWork _unitOfWork;
+
+        public TransferFeeService(IUnitOfWork unitOfWork)
+        {
+            this._unitOfWork = unitOfWork;
+        }
+       
+        public async Task<TransferFee> GetTransferFeeById(int id)
+        {
+            return await _unitOfWork.TransferFee.GetByIdAsync(id);
+        }
+
+        public async Task<TransferFee> UpdateTransferFee(TransferFee fee)
+        {
+            var transferFee = await _unitOfWork.TransferFee.GetByIdAsync(fee.Id);
+            if(transferFee != null)
+            {
+                transferFee = fee;
+            }
+            await _unitOfWork.CommitAsync();
+            return transferFee;
+        }
+    }
+}

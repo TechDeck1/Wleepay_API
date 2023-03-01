@@ -1,0 +1,37 @@
+D:\Officials\wleePay\wleepay.Core\bin\Release\netcoreapp3.1\wleepay.Core.deps.json
+D:\Officials\wleePay\wleepay.Core\bin\Release\netcoreapp3.1\wleepay.Core.dll
+D:\Officials\wleePay\wleepay.Core\bin\Release\netcoreapp3.1\wleepay.Core.pdb
+D:\Officials\wleePay\wleepay.Core\obj\Release\netcoreapp3.1\wleepay.Core.csprojAssemblyReference.cache
+D:\Officials\wleePay\wleepay.Core\obj\Release\netcoreapp3.1\wleepay.Core.AssemblyInfoInputs.cache
+D:\Officials\wleePay\wleepay.Core\obj\Release\netcoreapp3.1\wleepay.Core.AssemblyInfo.cs
+D:\Officials\wleePay\wleepay.Core\obj\Release\netcoreapp3.1\wleepay.Core.csproj.CoreCompileInputs.cache
+D:\Officials\wleePay\wleepay.Core\obj\Release\netcoreapp3.1\wleepay.Core.dll
+D:\Officials\wleePay\wleepay.Core\obj\Release\netcoreapp3.1\wleepay.Core.pdb
+D:\wleePay\wleepay.Core\bin\Release\netcoreapp3.1\wleepay.Core.deps.json
+D:\wleePay\wleepay.Core\bin\Release\netcoreapp3.1\wleepay.Core.dll
+D:\wleePay\wleepay.Core\bin\Release\netcoreapp3.1\wleepay.Core.pdb
+D:\wleePay\wleepay.Core\obj\Release\netcoreapp3.1\wleepay.Core.csprojAssemblyReference.cache
+D:\wleePay\wleepay.Core\obj\Release\netcoreapp3.1\wleepay.Core.AssemblyInfoInputs.cache
+D:\wleePay\wleepay.Core\obj\Release\netcoreapp3.1\wleepay.Core.AssemblyInfo.cs
+D:\wleePay\wleepay.Core\obj\Release\netcoreapp3.1\wleepay.Core.csproj.CoreCompileInputs.cache
+D:\wleePay\wleepay.Core\obj\Release\netcoreapp3.1\wleepay.Core.dll
+D:\wleePay\wleepay.Core\obj\Release\netcoreapp3.1\wleepay.Core.pdb
+D:\Wleepay-API\wleepay_api\wleepay.Core\bin\Release\netcoreapp3.1\wleepay.Core.deps.json
+D:\Wleepay-API\wleepay_api\wleepay.Core\bin\Release\netcoreapp3.1\wleepay.Core.dll
+D:\Wleepay-API\wleepay_api\wleepay.Core\bin\Release\netcoreapp3.1\wleepay.Core.pdb
+D:\Wleepay-API\wleepay_api\wleepay.Core\obj\Release\netcoreapp3.1\wleepay.Core.csprojAssemblyReference.cache
+D:\Wleepay-API\wleepay_api\wleepay.Core\obj\Release\netcoreapp3.1\wleepay.Core.AssemblyInfoInputs.cache
+D:\Wleepay-API\wleepay_api\wleepay.Core\obj\Release\netcoreapp3.1\wleepay.Core.AssemblyInfo.cs
+D:\Wleepay-API\wleepay_api\wleepay.Core\obj\Release\netcoreapp3.1\wleepay.Core.csproj.CoreCompileInputs.cache
+D:\Wleepay-API\wleepay_api\wleepay.Core\obj\Release\netcoreapp3.1\wleepay.Core.dll
+D:\Wleepay-API\wleepay_api\wleepay.Core\obj\Release\netcoreapp3.1\wleepay.Core.pdb
+D:\new wleepay\wleepay\wleepay.Core\bin\Release\netcoreapp3.1\wleepay.Core.deps.json
+D:\new wleepay\wleepay\wleepay.Core\bin\Release\netcoreapp3.1\wleepay.Core.dll
+D:\new wleepay\wleepay\wleepay.Core\bin\Release\netcoreapp3.1\wleepay.Core.pdb
+D:\new wleepay\wleepay\wleepay.Core\obj\Release\netcoreapp3.1\wleepay.Core.csproj.AssemblyReference.cache
+D:\new wleepay\wleepay\wleepay.Core\obj\Release\netcoreapp3.1\wleepay.Core.GeneratedMSBuildEditorConfig.editorconfig
+D:\new wleepay\wleepay\wleepay.Core\obj\Release\netcoreapp3.1\wleepay.Core.AssemblyInfoInputs.cache
+D:\new wleepay\wleepay\wleepay.Core\obj\Release\netcoreapp3.1\wleepay.Core.AssemblyInfo.cs
+D:\new wleepay\wleepay\wleepay.Core\obj\Release\netcoreapp3.1\wleepay.Core.csproj.CoreCompileInputs.cache
+D:\new wleepay\wleepay\wleepay.Core\obj\Release\netcoreapp3.1\wleepay.Core.dll
+D:\new wleepay\wleepay\wleepay.Core\obj\Release\netcoreapp3.1\wleepay.Core.pdb

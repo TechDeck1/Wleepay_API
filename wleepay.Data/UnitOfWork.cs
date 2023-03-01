@@ -1,0 +1,58 @@
+﻿using System;
+using System.Threading.Tasks;
+using wleepay.Core;
+using wleepay.Core.Repositories;
+using wleepay.Data.Context;
+using wleepay.Data.Repositories;
+
+namespace wleepay.Data
+{
+    public class UnitOfWork : IUnitOfWork
+    {
+        private readonly WPContext _context;
+        private UserDetailRepository _userDetailsRepository;
+        private KYCDocumentsRepository _kycDocumentsRepository;
+        private CountyRepository _countyRepository;
+        private DocumentTypeRepository _documentTypeRepository;
+        private KYCStatusRepository _kycStatusRepository;
+        private ITransactionRepository _transactionRepository;
+        private ICurrencyRepository _currencyRepository;
+        private IWalletTypeRepository _walletTypeRepository;
+        private IWalletRepository _walletRepository;
+        private ISmileIdentityJobRepository _smileIdentityJobRepository;
+        private ITransferTypeRepository _transferTypeRepository;
+        private ITransferFeeRepository _transferFeeRepository;
+        private ITransactionStatusRepository _transactionStatusRepository;
+        private IAddressRepository _addressRepository;
+        private IKYCLevelRepository _kycLevelRepository;
+
+        public UnitOfWork(WPContext context) {
+            this._context = context;
+        }
+        public IUserDetailsRepository UserDetail => _userDetailsRepository = _userDetailsRepository ?? new UserDetailRepository(_context);
+        public IKYCDocumentsRepository KYCDocuments => _kycDocumentsRepository = _kycDocumentsRepository ?? new KYCDocumentsRepository(_context);
+        public ICountyRepository County => _countyRepository = _countyRepository ?? new CountyRepository(_context);
+        public IDocumentTypeRepository DocumentType => _documentTypeRepository = _documentTypeRepository ?? new DocumentTypeRepository(_context);
+        public IKYCStatusRepository KYCStatus => _kycStatusRepository = _kycStatusRepository ?? new KYCStatusRepository(_context);
+        public ITransactionRepository Transaction => _transactionRepository = _transactionRepository ?? new TransactionRepository(_context);
+        public IWalletRepository Wallet => _walletRepository = _walletRepository ?? new WalletRepository(_context);
+        public IWalletTypeRepository WalletType => _walletTypeRepository = _walletTypeRepository ?? new WalletTypeRepository(_context);
+        public ICurrencyRepository Currency => _currencyRepository = _currencyRepository ?? new CurrencyRepository(_context);
+        public ISmileIdentityJobRepository SmileIdentityJob => _smileIdentityJobRepository = _smileIdentityJobRepository ?? new SmileIdentityJobRepository(_context);
+        public ITransferTypeRepository TransferType => _transferTypeRepository = _transferTypeRepository ?? new TransferTypeRepository(_context);
+        public ITransferFeeRepository TransferFee => _transferFeeRepository = _transferFeeRepository ?? new TransferFeeRepository(_context);
+        public ITransactionStatusRepository TransactionStatus => _transactionStatusRepository = _transactionStatusRepository ?? new TransactionStatusRepository(_context);
+        public IAddressRepository Address => _addressRepository = _addressRepository ?? new AddressRespository(_context);
+        public IKYCLevelRepository KYCLevel => _kycLevelRepository = _kycLevelRepository ?? new KYCLevelRepository(_context);
+
+        public async Task<int> CommitAsync()
+        {
+            return await _context.SaveChangesAsync();
+        }
+
+        public void Dispose()
+        {
+            _context.Dispose();
+        }
+    }
+}
