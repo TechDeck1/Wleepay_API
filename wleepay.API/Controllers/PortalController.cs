@@ -202,12 +202,13 @@ namespace wleepay.API.Controllers
                 string verificationCode = GenerateVerificationCode(6); // Generate a 6-digit verification code
                 string message = "Your one time code is " + verificationCode;
                 var code = _SMSService.sendMessage(message, model.Phone);
-                if (code!=" ")
+                var updateDatabase = await _userDetailsService.UpdateUserVerificationCode(model.UserId, verificationCode);
+                return Ok(new
                 {
-                    var updateDatabase = await _userDetailsService.UpdateUserVerificationCode(model.UserId, verificationCode);
-                }
+                    Phone = model.Phone,
+                    Sucess = true
 
-                return Ok();
+                }); ;
 
             }
             catch (Exception ex)
@@ -218,6 +219,65 @@ namespace wleepay.API.Controllers
            
 
         }
+
+        [HttpPost("VerifyCode")]
+        public async Task<IActionResult> VerifyCode([FromBody]VerificationModel model)
+        {
+            try
+            {
+                var userDetails = await _userDetailsService.GetUserDetailsById(model.UserId);
+                var expiryDate = userDetails.VerificationExpiry;
+                DateTime currentDate = DateTime.UtcNow; // Use UtcNow to compare in UTC
+
+                TimeSpan difference = (TimeSpan)(currentDate - expiryDate);
+                int minutesDifference = (int)difference.TotalMinutes;
+
+                // Check if the given date is expired (more than 2 minutes ago)
+                bool isExpired = minutesDifference >= 2;
+                if (!isExpired)
+                {
+                    if (userDetails.VerificationCode == model.Code)
+                    {
+
+                        var token = GenerateJSONWebToken(userDetails);
+                        //Get user role
+                        //updated user
+                        UserDetail updatedUser = null;
+                        //set logged in status to true if first log in
+                        if (!userDetails.IsLoggedIn)
+                            updatedUser = await _userDetailsService.UpdateUserLoggedInStatus(userDetails.UserId, true);
+
+                        return Ok(new
+                        {
+                            UserId = userDetails.UserId,
+                            isExpired = isExpired,
+                            Success = true,
+                            Token = token,
+                            IsLoggedInVerified = updatedUser != null ? updatedUser.IsLoggedIn : userDetails.IsLoggedIn,
+
+                        });
+                    }
+                }
+                else
+                {
+                    return Ok(new 
+                    {
+                       isExpired = true,
+                       sucess=false,
+                    });
+
+                }
+                return BadRequest();
+                
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+
+        }
+
 
 
         #region helper methods

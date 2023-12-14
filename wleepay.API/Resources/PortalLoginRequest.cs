@@ -32,6 +32,13 @@ namespace wleepay.API.Resources
 
     }
 
+    public class VerificationModel
+    {
+        public string Code { get; set; }
+        public string UserId { get; set; }
+
+    }
+
 
 
 }
