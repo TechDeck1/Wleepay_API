@@ -25,6 +25,7 @@ using wleepay.Core.Services;
 using System;
 using wleepay.Core.Models;
 using System.Text.Json.Serialization;
+using Microsoft.AspNetCore.HttpsPolicy;
 
 namespace wleepay.API
 {
@@ -46,6 +47,16 @@ namespace wleepay.API
             services.AddIdentity<ApplicationUser, ApplicationRole>()
                    .AddEntityFrameworkStores<WPContext>()
                    .AddDefaultTokenProviders();
+
+            services.AddSession(options =>
+            {
+                // Set session timeout to 30 minutes
+                options.IdleTimeout = TimeSpan.FromMinutes(30);
+                options.Cookie.HttpOnly = true;
+                options.Cookie.IsEssential = true; // Make the session cookie essential
+            });
+
+            services.AddDistributedMemoryCache(); // Register the distributed memory cache
 
             services.AddAuthentication(options =>
             {
@@ -73,7 +84,9 @@ namespace wleepay.API
                     RequireExpirationTime = false,
                     RequireSignedTokens = false
                 };
+
             });
+
 
             services.AddCors(options => {
                 options.AddPolicy("AllowAllHeaders",
@@ -124,7 +137,8 @@ namespace wleepay.API
             services.AddTransient<ITransferFeeService, TransferFeeService>();
 
             services.AddSingleton<IHTTPService, HTTPService>();
-          
+
+
             //swagger config
             services.AddSwaggerGen(c =>
             {
@@ -187,6 +201,8 @@ namespace wleepay.API
             //    Path.Combine(Directory.GetCurrentDirectory(), @"KYCDocuments")),
             //    RequestPath = new PathString("/Documents")
             //});
+
+            app.UseSession();
 
             app.UseHttpsRedirection();
 

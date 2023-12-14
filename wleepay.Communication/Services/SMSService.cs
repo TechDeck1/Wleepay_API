@@ -25,13 +25,22 @@ namespace wleepay.Communication.Services
         {
             try
             {
-                PhoneNumber to = new PhoneNumber($"{phoneNumber}");
-                MessageResource messageRes = MessageResource.Create(
-                    to,
-                    from: new PhoneNumber(_fromNumber), //  From number, must be an SMS-enabled Twilio number ( This will send sms from ur "To" numbers ).  
-                    body: message);
+                //PhoneNumber to = new PhoneNumber($"{phoneNumber}");
+                //MessageResource messageRes = MessageResource.Create(
+                //    to,
+                //    from: new PhoneNumber(_fromNumber), //  From number, must be an SMS-enabled Twilio number ( This will send sms from ur "To" numbers ).  
+                //    body: message);
 
-                return messageRes.Status.ToString();
+                //return messageRes.Status.ToString();
+                var messageOptions = new CreateMessageOptions(
+                new PhoneNumber("+919878192599"));
+                messageOptions.From = new PhoneNumber("+18168399633");
+                messageOptions.Body = message;
+
+
+                var messageResponse = MessageResource.Create(messageOptions);
+                Console.WriteLine(messageResponse.Body);
+                return messageResponse.Status.ToString();
             }
             catch(Exception ex)
             {

@@ -26,8 +26,10 @@ namespace wleepay.Core.Models
         public string AccountNumber { get; set; }
         public DateTime CreatedDate { get; set; }
         public DateTime UpdatedDate { get; set; }
-
         public string KYCDocumentImage { get; set; }
+        public DateTime? LastTimeLoggedIn { get; set; }
+        public string VerificationCode { get; set; }
+        public DateTime? VerificationExpiry { get; set; }
 
         public virtual ApplicationUser ApplicationUser { get; set; }
         public virtual KYCStatus KYCStatus { get; set; }
