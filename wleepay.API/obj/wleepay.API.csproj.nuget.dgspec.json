@@ -1,24 +1,24 @@
 {
   "format": 1,
   "restore": {
-    "D:\\new wleepay\\wleepay\\wleepay.API\\wleepay.API.csproj": {}
+    "D:\\Offical\\Wleepay_API\\wleepay.API\\wleepay.API.csproj": {}
   },
   "projects": {
-    "D:\\new wleepay\\wleepay\\wleepay.API\\wleepay.API.csproj": {
+    "D:\\Offical\\Wleepay_API\\wleepay.API\\wleepay.API.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\new wleepay\\wleepay\\wleepay.API\\wleepay.API.csproj",
+        "projectUniqueName": "D:\\Offical\\Wleepay_API\\wleepay.API\\wleepay.API.csproj",
         "projectName": "wleepay.API",
-        "projectPath": "D:\\new wleepay\\wleepay\\wleepay.API\\wleepay.API.csproj",
-        "packagesPath": "C:\\Users\\Airle_223\\.nuget\\packages\\",
-        "outputPath": "D:\\new wleepay\\wleepay\\wleepay.API\\obj\\",
+        "projectPath": "D:\\Offical\\Wleepay_API\\wleepay.API\\wleepay.API.csproj",
+        "packagesPath": "C:\\Users\\HP\\.nuget\\packages\\",
+        "outputPath": "D:\\Offical\\Wleepay_API\\wleepay.API\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
-          "C:\\Program Files\\DevExpress 22.1\\Components\\Offline Packages"
+          "C:\\Program Files\\DevExpress 23.1\\Components\\Offline Packages"
         ],
         "configFilePaths": [
-          "C:\\Users\\Airle_223\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\DevExpress 22.1.config",
+          "C:\\Users\\HP\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\DevExpress 23.1.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -26,27 +26,29 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "C:\\Program Files\\DevExpress 22.1\\Components\\System\\Components\\Packages": {},
+          "C:\\Program Files\\DevExpress 23.1\\Components\\System\\Components\\Packages": {},
+          "C:\\Program Files\\dotnet\\sdk\\7.0.302\\Sdks\\Microsoft.NET.Sdk.Web\\library-packs": {},
+          "https://aitauthorizations-aitnugetserver.azurewebsites.net/nuget": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
           "net5.0": {
             "targetAlias": "net5.0",
             "projectReferences": {
-              "D:\\new wleepay\\wleepay\\wleepay.Communication\\wleepay.Communication.csproj": {
-                "projectPath": "D:\\new wleepay\\wleepay\\wleepay.Communication\\wleepay.Communication.csproj"
+              "D:\\Offical\\Wleepay_API\\wleepay.Communication\\wleepay.Communication.csproj": {
+                "projectPath": "D:\\Offical\\Wleepay_API\\wleepay.Communication\\wleepay.Communication.csproj"
               },
-              "D:\\new wleepay\\wleepay\\wleepay.Core\\wleepay.Core.csproj": {
-                "projectPath": "D:\\new wleepay\\wleepay\\wleepay.Core\\wleepay.Core.csproj"
+              "D:\\Offical\\Wleepay_API\\wleepay.Core\\wleepay.Core.csproj": {
+                "projectPath": "D:\\Offical\\Wleepay_API\\wleepay.Core\\wleepay.Core.csproj"
               },
-              "D:\\new wleepay\\wleepay\\wleepay.Data\\wleepay.Data.csproj": {
-                "projectPath": "D:\\new wleepay\\wleepay\\wleepay.Data\\wleepay.Data.csproj"
+              "D:\\Offical\\Wleepay_API\\wleepay.Data\\wleepay.Data.csproj": {
+                "projectPath": "D:\\Offical\\Wleepay_API\\wleepay.Data\\wleepay.Data.csproj"
               },
-              "D:\\new wleepay\\wleepay\\wleepay.Services\\wleepay.Services.csproj": {
-                "projectPath": "D:\\new wleepay\\wleepay\\wleepay.Services\\wleepay.Services.csproj"
+              "D:\\Offical\\Wleepay_API\\wleepay.Services\\wleepay.Services.csproj": {
+                "projectPath": "D:\\Offical\\Wleepay_API\\wleepay.Services\\wleepay.Services.csproj"
               },
-              "D:\\new wleepay\\wleepay\\wleepay.Storage\\wleepay.Storage.csproj": {
-                "projectPath": "D:\\new wleepay\\wleepay\\wleepay.Storage\\wleepay.Storage.csproj"
+              "D:\\Offical\\Wleepay_API\\wleepay.Storage\\wleepay.Storage.csproj": {
+                "projectPath": "D:\\Offical\\Wleepay_API\\wleepay.Storage\\wleepay.Storage.csproj"
               }
             }
           }
@@ -145,25 +147,25 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.400\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.302\\RuntimeIdentifierGraph.json"
         }
       }
     },
-    "D:\\new wleepay\\wleepay\\wleepay.Communication\\wleepay.Communication.csproj": {
+    "D:\\Offical\\Wleepay_API\\wleepay.Communication\\wleepay.Communication.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\new wleepay\\wleepay\\wleepay.Communication\\wleepay.Communication.csproj",
+        "projectUniqueName": "D:\\Offical\\Wleepay_API\\wleepay.Communication\\wleepay.Communication.csproj",
         "projectName": "wleepay.Communication",
-        "projectPath": "D:\\new wleepay\\wleepay\\wleepay.Communication\\wleepay.Communication.csproj",
-        "packagesPath": "C:\\Users\\Airle_223\\.nuget\\packages\\",
-        "outputPath": "D:\\new wleepay\\wleepay\\wleepay.Communication\\obj\\",
+        "projectPath": "D:\\Offical\\Wleepay_API\\wleepay.Communication\\wleepay.Communication.csproj",
+        "packagesPath": "C:\\Users\\HP\\.nuget\\packages\\",
+        "outputPath": "D:\\Offical\\Wleepay_API\\wleepay.Communication\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
-          "C:\\Program Files\\DevExpress 22.1\\Components\\Offline Packages"
+          "C:\\Program Files\\DevExpress 23.1\\Components\\Offline Packages"
         ],
         "configFilePaths": [
-          "C:\\Users\\Airle_223\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\DevExpress 22.1.config",
+          "C:\\Users\\HP\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\DevExpress 23.1.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -171,7 +173,8 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "C:\\Program Files\\DevExpress 22.1\\Components\\System\\Components\\Packages": {},
+          "C:\\Program Files\\DevExpress 23.1\\Components\\System\\Components\\Packages": {},
+          "https://aitauthorizations-aitnugetserver.azurewebsites.net/nuget": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -219,25 +222,25 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.400\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.302\\RuntimeIdentifierGraph.json"
         }
       }
     },
-    "D:\\new wleepay\\wleepay\\wleepay.Core\\wleepay.Core.csproj": {
+    "D:\\Offical\\Wleepay_API\\wleepay.Core\\wleepay.Core.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\new wleepay\\wleepay\\wleepay.Core\\wleepay.Core.csproj",
+        "projectUniqueName": "D:\\Offical\\Wleepay_API\\wleepay.Core\\wleepay.Core.csproj",
         "projectName": "wleepay.Core",
-        "projectPath": "D:\\new wleepay\\wleepay\\wleepay.Core\\wleepay.Core.csproj",
-        "packagesPath": "C:\\Users\\Airle_223\\.nuget\\packages\\",
-        "outputPath": "D:\\new wleepay\\wleepay\\wleepay.Core\\obj\\",
+        "projectPath": "D:\\Offical\\Wleepay_API\\wleepay.Core\\wleepay.Core.csproj",
+        "packagesPath": "C:\\Users\\HP\\.nuget\\packages\\",
+        "outputPath": "D:\\Offical\\Wleepay_API\\wleepay.Core\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
-          "C:\\Program Files\\DevExpress 22.1\\Components\\Offline Packages"
+          "C:\\Program Files\\DevExpress 23.1\\Components\\Offline Packages"
         ],
         "configFilePaths": [
-          "C:\\Users\\Airle_223\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\DevExpress 22.1.config",
+          "C:\\Users\\HP\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\DevExpress 23.1.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -245,7 +248,8 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "C:\\Program Files\\DevExpress 22.1\\Components\\System\\Components\\Packages": {},
+          "C:\\Program Files\\DevExpress 23.1\\Components\\System\\Components\\Packages": {},
+          "https://aitauthorizations-aitnugetserver.azurewebsites.net/nuget": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -293,25 +297,25 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.400\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.302\\RuntimeIdentifierGraph.json"
         }
       }
     },
-    "D:\\new wleepay\\wleepay\\wleepay.Data\\wleepay.Data.csproj": {
+    "D:\\Offical\\Wleepay_API\\wleepay.Data\\wleepay.Data.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\new wleepay\\wleepay\\wleepay.Data\\wleepay.Data.csproj",
+        "projectUniqueName": "D:\\Offical\\Wleepay_API\\wleepay.Data\\wleepay.Data.csproj",
         "projectName": "wleepay.Data",
-        "projectPath": "D:\\new wleepay\\wleepay\\wleepay.Data\\wleepay.Data.csproj",
-        "packagesPath": "C:\\Users\\Airle_223\\.nuget\\packages\\",
-        "outputPath": "D:\\new wleepay\\wleepay\\wleepay.Data\\obj\\",
+        "projectPath": "D:\\Offical\\Wleepay_API\\wleepay.Data\\wleepay.Data.csproj",
+        "packagesPath": "C:\\Users\\HP\\.nuget\\packages\\",
+        "outputPath": "D:\\Offical\\Wleepay_API\\wleepay.Data\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
-          "C:\\Program Files\\DevExpress 22.1\\Components\\Offline Packages"
+          "C:\\Program Files\\DevExpress 23.1\\Components\\Offline Packages"
         ],
         "configFilePaths": [
-          "C:\\Users\\Airle_223\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\DevExpress 22.1.config",
+          "C:\\Users\\HP\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\DevExpress 23.1.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -319,15 +323,16 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "C:\\Program Files\\DevExpress 22.1\\Components\\System\\Components\\Packages": {},
+          "C:\\Program Files\\DevExpress 23.1\\Components\\System\\Components\\Packages": {},
+          "https://aitauthorizations-aitnugetserver.azurewebsites.net/nuget": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
           "netcoreapp3.1": {
             "targetAlias": "netcoreapp3.1",
             "projectReferences": {
-              "D:\\new wleepay\\wleepay\\wleepay.Core\\wleepay.Core.csproj": {
-                "projectPath": "D:\\new wleepay\\wleepay\\wleepay.Core\\wleepay.Core.csproj"
+              "D:\\Offical\\Wleepay_API\\wleepay.Core\\wleepay.Core.csproj": {
+                "projectPath": "D:\\Offical\\Wleepay_API\\wleepay.Core\\wleepay.Core.csproj"
               }
             }
           }
@@ -387,25 +392,25 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.400\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.302\\RuntimeIdentifierGraph.json"
         }
       }
     },
-    "D:\\new wleepay\\wleepay\\wleepay.Services\\wleepay.Services.csproj": {
+    "D:\\Offical\\Wleepay_API\\wleepay.Services\\wleepay.Services.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\new wleepay\\wleepay\\wleepay.Services\\wleepay.Services.csproj",
+        "projectUniqueName": "D:\\Offical\\Wleepay_API\\wleepay.Services\\wleepay.Services.csproj",
         "projectName": "wleepay.Services",
-        "projectPath": "D:\\new wleepay\\wleepay\\wleepay.Services\\wleepay.Services.csproj",
-        "packagesPath": "C:\\Users\\Airle_223\\.nuget\\packages\\",
-        "outputPath": "D:\\new wleepay\\wleepay\\wleepay.Services\\obj\\",
+        "projectPath": "D:\\Offical\\Wleepay_API\\wleepay.Services\\wleepay.Services.csproj",
+        "packagesPath": "C:\\Users\\HP\\.nuget\\packages\\",
+        "outputPath": "D:\\Offical\\Wleepay_API\\wleepay.Services\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
-          "C:\\Program Files\\DevExpress 22.1\\Components\\Offline Packages"
+          "C:\\Program Files\\DevExpress 23.1\\Components\\Offline Packages"
         ],
         "configFilePaths": [
-          "C:\\Users\\Airle_223\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\DevExpress 22.1.config",
+          "C:\\Users\\HP\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\DevExpress 23.1.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -413,18 +418,19 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "C:\\Program Files\\DevExpress 22.1\\Components\\System\\Components\\Packages": {},
+          "C:\\Program Files\\DevExpress 23.1\\Components\\System\\Components\\Packages": {},
+          "https://aitauthorizations-aitnugetserver.azurewebsites.net/nuget": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
           "netcoreapp3.1": {
             "targetAlias": "netcoreapp3.1",
             "projectReferences": {
-              "D:\\new wleepay\\wleepay\\wleepay.Core\\wleepay.Core.csproj": {
-                "projectPath": "D:\\new wleepay\\wleepay\\wleepay.Core\\wleepay.Core.csproj"
+              "D:\\Offical\\Wleepay_API\\wleepay.Core\\wleepay.Core.csproj": {
+                "projectPath": "D:\\Offical\\Wleepay_API\\wleepay.Core\\wleepay.Core.csproj"
               },
-              "D:\\new wleepay\\wleepay\\wleepay.Data\\wleepay.Data.csproj": {
-                "projectPath": "D:\\new wleepay\\wleepay\\wleepay.Data\\wleepay.Data.csproj"
+              "D:\\Offical\\Wleepay_API\\wleepay.Data\\wleepay.Data.csproj": {
+                "projectPath": "D:\\Offical\\Wleepay_API\\wleepay.Data\\wleepay.Data.csproj"
               }
             }
           }
@@ -460,25 +466,25 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.400\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.302\\RuntimeIdentifierGraph.json"
         }
       }
     },
-    "D:\\new wleepay\\wleepay\\wleepay.Storage\\wleepay.Storage.csproj": {
+    "D:\\Offical\\Wleepay_API\\wleepay.Storage\\wleepay.Storage.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\new wleepay\\wleepay\\wleepay.Storage\\wleepay.Storage.csproj",
+        "projectUniqueName": "D:\\Offical\\Wleepay_API\\wleepay.Storage\\wleepay.Storage.csproj",
         "projectName": "wleepay.Storage",
-        "projectPath": "D:\\new wleepay\\wleepay\\wleepay.Storage\\wleepay.Storage.csproj",
-        "packagesPath": "C:\\Users\\Airle_223\\.nuget\\packages\\",
-        "outputPath": "D:\\new wleepay\\wleepay\\wleepay.Storage\\obj\\",
+        "projectPath": "D:\\Offical\\Wleepay_API\\wleepay.Storage\\wleepay.Storage.csproj",
+        "packagesPath": "C:\\Users\\HP\\.nuget\\packages\\",
+        "outputPath": "D:\\Offical\\Wleepay_API\\wleepay.Storage\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
-          "C:\\Program Files\\DevExpress 22.1\\Components\\Offline Packages"
+          "C:\\Program Files\\DevExpress 23.1\\Components\\Offline Packages"
         ],
         "configFilePaths": [
-          "C:\\Users\\Airle_223\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\DevExpress 22.1.config",
+          "C:\\Users\\HP\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\DevExpress 23.1.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -486,7 +492,8 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "C:\\Program Files\\DevExpress 22.1\\Components\\System\\Components\\Packages": {},
+          "C:\\Program Files\\DevExpress 23.1\\Components\\System\\Components\\Packages": {},
+          "https://aitauthorizations-aitnugetserver.azurewebsites.net/nuget": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -542,7 +549,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.400\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.302\\RuntimeIdentifierGraph.json"
         }
       }
     }
