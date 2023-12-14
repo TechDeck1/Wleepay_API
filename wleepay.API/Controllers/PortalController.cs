@@ -95,11 +95,10 @@ namespace wleepay.API.Controllers
                 //updated user
                 UserDetail updatedUser = null;
                 //set logged in status to true if first log in
+                
                 //if (!userDetails.IsLoggedIn)
                 //    updatedUser = await _userDetailsService.UpdateUserLoggedInStatus(userDetails.UserId, true);
 
-                var ipAddress = HttpContext.Connection.RemoteIpAddress.ToString();
-                _logger.LogInformation($"Action: {ControllerContext.ActionDescriptor.ActionName}, User: {user.Id}, Timestamp: {DateTime.UtcNow}, IP: {ipAddress}");
                 return Ok(new
                 {
                     UserId = user.Id,
@@ -142,7 +141,6 @@ namespace wleepay.API.Controllers
             return Ok("You have 3 failed login attemps. Your Wleepay portal account is locked. You must contact system administrator to unlock your account");
 
         }
-
 
         [HttpPost("UnLockAccount")]
         public async Task<IActionResult> UnlockAccount([FromBody] LockAccount model)
@@ -241,22 +239,25 @@ namespace wleepay.API.Controllers
 
                 // Check if the given date is expired (more than 2 minutes ago)
                 bool isExpired = minutesDifference >= 2;
+
+                object Data = null;
                 if (!isExpired)
                 {
                     if (userDetails.VerificationCode == model.Code)
                     {
-
                         var token = GenerateJSONWebToken(userDetails);
-                        //Get user role
+                       
                         //updated user
                         UserDetail updatedUser = null;
                         //set logged in status to true if first log in
                         if (!userDetails.IsLoggedIn)
                             updatedUser = await _userDetailsService.UpdateUserLoggedInStatus(userDetails.UserId, true);
 
+                        var ipAddress = HttpContext.Connection.RemoteIpAddress.ToString();
+                        _logger.LogInformation($"Action: {ControllerContext.ActionDescriptor.ActionName}, User: {userDetails.UserId}, Timestamp: {DateTime.UtcNow}, IP: {ipAddress}");
+                       
                         return Ok(new
                         {
-                            
                             Data = (new
                             {
                                 UserId = userDetails.UserId,
@@ -267,15 +268,13 @@ namespace wleepay.API.Controllers
                             isExpired = false,
                             Success= true,
                             Message="Verification is successfull"
-
-
                         });
                     }
                     else
                     {
                         return Ok(new
                         {
-                            Data="",
+                            Data,
                             isExpired = false,
                             Success = true,
                             Message ="You entered wrong OTP! please try again.",
@@ -286,7 +285,7 @@ namespace wleepay.API.Controllers
                 {
                     return Ok(new 
                     {
-                        Data = "",
+                        Data,
                         isExpired = true,
                         success=false,
                         Message = "Your OTP is expired! please try again."
