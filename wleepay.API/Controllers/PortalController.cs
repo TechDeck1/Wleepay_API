@@ -199,7 +199,7 @@ namespace wleepay.API.Controllers
             try
             {
                 var userDetails = await _userDetailsService.GetUserDetailsById(model.UserId);
-                string verificationCode = GenerateVerificationCode(6); // Generate a 6-digit verification code
+                string verificationCode = GenerateVerificationCode(4); // Generate a 4-digit verification code
                 string message = "Your one time code is " + verificationCode;
                 var code = _SMSService.sendMessage(message, userDetails.PhoneNumber);
                 var PhoneNumber = MaskCreditCard(userDetails.PhoneNumber);
@@ -288,7 +288,7 @@ namespace wleepay.API.Controllers
                     {
                         Data = "",
                         isExpired = true,
-                        sucess=false,
+                        success=false,
                         Message = "Your OTP is expired! please try again."
                     });
 
