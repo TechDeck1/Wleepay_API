@@ -264,3 +264,7 @@ wleepay.API/.vs/wleepay.API/v17/.suo
 /wleepay.API/obj/Debug/net5.0/ref/wleepay.API.dll
 /wleepay.API/obj/Debug/net5.0/refint/wleepay.API.dll
 wleepay.API/.vs/wleepay.API/FileContentIndex/048b051e-5d08-41df-b464-a764defbdbde.vsidx
+wleepay.API/.vs/wleepay.API/v17/.suo
+*.dll
+*.pdb
+*.v2

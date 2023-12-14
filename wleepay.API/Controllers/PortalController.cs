@@ -99,15 +99,14 @@ namespace wleepay.API.Controllers
                 //    updatedUser = await _userDetailsService.UpdateUserLoggedInStatus(userDetails.UserId, true);
 
                 var ipAddress = HttpContext.Connection.RemoteIpAddress.ToString();
-
                 _logger.LogInformation($"Action: {ControllerContext.ActionDescriptor.ActionName}, User: {user.Id}, Timestamp: {DateTime.UtcNow}, IP: {ipAddress}");
                 return Ok(new
                 {
                     UserId = user.Id,
                     Success = true,
-                    Token = token,
-                    IsLoggedInVerified = updatedUser != null ? updatedUser.IsLoggedIn : userDetails.IsLoggedIn,
-                    Role = userRole?[0]
+                    //Token = token,
+                    //IsLoggedInVerified = updatedUser != null ? updatedUser.IsLoggedIn : userDetails.IsLoggedIn,
+                    Role = userRole?[0],
                 });
 
             }
@@ -203,13 +202,15 @@ namespace wleepay.API.Controllers
                 string verificationCode = GenerateVerificationCode(6); // Generate a 6-digit verification code
                 string message = "Your one time code is " + verificationCode;
                 var code = _SMSService.sendMessage(message, userDetails.PhoneNumber);
+                var PhoneNumber = MaskCreditCard(userDetails.PhoneNumber);
+
                 if (code != null && code != " ")
                 {
 
                     var updateDatabase = await _userDetailsService.UpdateUserVerificationCode(model.UserId, verificationCode);
                     return Ok(new
                     {
-                        Phone = userDetails.PhoneNumber,
+                        Phone = PhoneNumber,
                         Sucess = true
 
                     });
@@ -255,11 +256,18 @@ namespace wleepay.API.Controllers
 
                         return Ok(new
                         {
-                            UserId = userDetails.UserId,
-                            isExpired = isExpired,
-                            Success = true,
-                            Token = token,
-                            IsLoggedInVerified = updatedUser != null ? updatedUser.IsLoggedIn : userDetails.IsLoggedIn,
+                            
+                            Data = (new
+                            {
+                                UserId = userDetails.UserId,
+                                Token = token,
+                                IsLoggedInVerified = updatedUser != null ? updatedUser.IsLoggedIn : userDetails.IsLoggedIn,
+
+                            }),
+                            isExpired = false,
+                            Success= true,
+                            Message="Verification is successfull"
+
 
                         });
                     }
@@ -267,8 +275,10 @@ namespace wleepay.API.Controllers
                     {
                         return Ok(new
                         {
-                            message="You entered wrong OTP! please try again.",
-                            sucess = true,
+                            Data="",
+                            isExpired = false,
+                            Success = true,
+                            Message ="You entered wrong OTP! please try again.",
                         });
                     }
                 }
@@ -276,8 +286,10 @@ namespace wleepay.API.Controllers
                 {
                     return Ok(new 
                     {
-                       isExpired = true,
-                       sucess=false,
+                        Data = "",
+                        isExpired = true,
+                        sucess=false,
+                        Message = "Your OTP is expired! please try again."
                     });
 
                 }
@@ -292,7 +304,6 @@ namespace wleepay.API.Controllers
             }
 
         }
-
 
 
         #region helper methods
@@ -329,6 +340,27 @@ namespace wleepay.API.Controllers
 
             return verificationCode.ToString();
         }
+
+        private string MaskCreditCard(string PhoneNumber)
+        {
+            // Check if the Phone number is at least 4 digits long
+            if (PhoneNumber.Length >= 4)
+            {
+                // Get the last 2 digits of the Phone number
+                string lastTwoDigits = PhoneNumber.Substring(PhoneNumber.Length - 2);
+
+                // Mask the rest of the Phone number with asterisks (*)
+                string maskedPhoneNumber = new string('*', PhoneNumber.Length - 2) + lastTwoDigits;
+
+                return maskedPhoneNumber;
+            }
+            else
+            {
+                // If the Phone number is less than 4 digits, return it as it is (no masking)
+                return PhoneNumber;
+            }
+        }
+
         #endregion
     }
 }
