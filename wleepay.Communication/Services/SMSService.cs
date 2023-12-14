@@ -40,7 +40,8 @@ namespace wleepay.Communication.Services
 
                 var messageResponse = MessageResource.Create(messageOptions);
                 Console.WriteLine(messageResponse.Body);
-                return messageResponse.Status.ToString();
+                var result = messageResponse.Status.ToString();
+                return result;
             }
             catch(Exception ex)
             {

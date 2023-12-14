@@ -95,8 +95,8 @@ namespace wleepay.API.Controllers
                 //updated user
                 UserDetail updatedUser = null;
                 //set logged in status to true if first log in
-                if (!userDetails.IsLoggedIn)
-                    updatedUser = await _userDetailsService.UpdateUserLoggedInStatus(userDetails.UserId, true);
+                //if (!userDetails.IsLoggedIn)
+                //    updatedUser = await _userDetailsService.UpdateUserLoggedInStatus(userDetails.UserId, true);
 
                 var ipAddress = HttpContext.Connection.RemoteIpAddress.ToString();
 
@@ -199,16 +199,22 @@ namespace wleepay.API.Controllers
         {
             try
             {
+                var userDetails = await _userDetailsService.GetUserDetailsById(model.UserId);
                 string verificationCode = GenerateVerificationCode(6); // Generate a 6-digit verification code
                 string message = "Your one time code is " + verificationCode;
-                var code = _SMSService.sendMessage(message, model.Phone);
-                var updateDatabase = await _userDetailsService.UpdateUserVerificationCode(model.UserId, verificationCode);
-                return Ok(new
+                var code = _SMSService.sendMessage(message, userDetails.PhoneNumber);
+                if (code != null && code != " ")
                 {
-                    Phone = model.Phone,
-                    Sucess = true
 
-                }); ;
+                    var updateDatabase = await _userDetailsService.UpdateUserVerificationCode(model.UserId, verificationCode);
+                    return Ok(new
+                    {
+                        Phone = userDetails.PhoneNumber,
+                        Sucess = true
+
+                    });
+                }
+                return BadRequest();
 
             }
             catch (Exception ex)
@@ -257,6 +263,14 @@ namespace wleepay.API.Controllers
 
                         });
                     }
+                    else
+                    {
+                        return Ok(new
+                        {
+                            message="You entered wrong OTP! please try again.",
+                            sucess = true,
+                        });
+                    }
                 }
                 else
                 {
@@ -267,6 +281,7 @@ namespace wleepay.API.Controllers
                     });
 
                 }
+
                 return BadRequest();
                 
             }
