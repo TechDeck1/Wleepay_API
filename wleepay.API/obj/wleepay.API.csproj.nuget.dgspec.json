@@ -75,6 +75,10 @@
               "target": "Package",
               "version": "[10.3.0, )"
             },
+            "MailKit": {
+              "target": "Package",
+              "version": "[3.5.0, )"
+            },
             "Microsoft.AspNet.WebApi.Core": {
               "target": "Package",
               "version": "[5.2.7, )"
@@ -197,6 +201,10 @@
               "target": "Package",
               "version": "[1.8.9, )"
             },
+            "MailKit": {
+              "target": "Package",
+              "version": "[3.5.0, )"
+            },
             "Microsoft.Extensions.Configuration.Abstractions": {
               "target": "Package",
               "version": "[5.0.0, )"
@@ -271,6 +279,10 @@
             "DevExpress.Xpo": {
               "target": "Package",
               "version": "[20.2.4, )"
+            },
+            "MailKit": {
+              "target": "Package",
+              "version": "[3.5.0, )"
             },
             "Microsoft.AspNetCore.Http.Features": {
               "target": "Package",
@@ -350,6 +362,10 @@
             "FluentValidation": {
               "target": "Package",
               "version": "[10.3.0, )"
+            },
+            "MailKit": {
+              "target": "Package",
+              "version": "[3.5.0, )"
             },
             "Microsoft.AspNet.Identity.Core": {
               "target": "Package",
@@ -445,6 +461,10 @@
         "netcoreapp3.1": {
           "targetAlias": "netcoreapp3.1",
           "dependencies": {
+            "MailKit": {
+              "target": "Package",
+              "version": "[3.5.0, )"
+            },
             "Microsoft.EntityFrameworkCore": {
               "target": "Package",
               "version": "[5.0.8, )"
@@ -515,6 +535,10 @@
             "Azure.Storage.Blobs": {
               "target": "Package",
               "version": "[12.9.1, )"
+            },
+            "MailKit": {
+              "target": "Package",
+              "version": "[3.5.0, )"
             },
             "Microsoft.AspNetCore.Hosting.Abstractions": {
               "target": "Package",

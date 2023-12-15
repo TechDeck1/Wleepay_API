@@ -684,3 +684,11 @@ D:\Offical\Wleepay_API\wleepay.API\obj\Debug\net5.0\refint\wleepay.API.dll
 D:\Offical\Wleepay_API\wleepay.API\obj\Debug\net5.0\wleepay.API.pdb
 D:\Offical\Wleepay_API\wleepay.API\obj\Debug\net5.0\wleepay.API.genruntimeconfig.cache
 D:\Offical\Wleepay_API\wleepay.API\obj\Debug\net5.0\ref\wleepay.API.dll
+D:\Offical\Wleepay_API\wleepay.API\bin\Debug\net5.0\MailKit.dll
+D:\Offical\Wleepay_API\wleepay.API\bin\Debug\net5.0\MimeKit.dll
+D:\Offical\Wleepay_API\wleepay.API\bin\Debug\net5.0\System.Formats.Asn1.dll
+D:\Offical\Wleepay_API\wleepay.API\bin\Debug\net5.0\System.Runtime.CompilerServices.Unsafe.dll
+D:\Offical\Wleepay_API\wleepay.API\bin\Debug\net5.0\System.Security.Cryptography.Pkcs.dll
+D:\Offical\Wleepay_API\wleepay.API\bin\Debug\net5.0\System.Text.Encoding.CodePages.dll
+D:\Offical\Wleepay_API\wleepay.API\bin\Debug\net5.0\runtimes\win\lib\netcoreapp3.1\System.Security.Cryptography.Pkcs.dll
+D:\Offical\Wleepay_API\wleepay.API\bin\Debug\net5.0\runtimes\win\lib\netcoreapp3.1\System.Text.Encoding.CodePages.dll

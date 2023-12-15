@@ -1,0 +1,499 @@
+2023-12-14 10:28:03 AM||DEBUG|wleepay.API.Program|init main 
+2023-12-14 10:28:11 AM||INFO|Microsoft.Hosting.Lifetime|Now listening on: https://localhost:5001 
+2023-12-14 10:28:11 AM||INFO|Microsoft.Hosting.Lifetime|Now listening on: https://localhost:5001 
+2023-12-14 10:28:11 AM||INFO|Microsoft.Hosting.Lifetime|Now listening on: http://localhost:5000 
+2023-12-14 10:28:11 AM||INFO|Microsoft.Hosting.Lifetime|Now listening on: http://localhost:5000 
+2023-12-14 10:28:11 AM||INFO|Microsoft.Hosting.Lifetime|Application started. Press Ctrl+C to shut down. 
+2023-12-14 10:28:11 AM||INFO|Microsoft.Hosting.Lifetime|Application started. Press Ctrl+C to shut down. 
+2023-12-14 10:28:11 AM||INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development 
+2023-12-14 10:28:11 AM||INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development 
+2023-12-14 10:28:11 AM||INFO|Microsoft.Hosting.Lifetime|Content root path: D:\Offical\Wleepay_API\wleepay.API 
+2023-12-14 10:28:11 AM||INFO|Microsoft.Hosting.Lifetime|Content root path: D:\Offical\Wleepay_API\wleepay.API 
+2023-12-14 10:36:05 AM||INFO|wleepay.API.Controllers.PortalController|Action: Login, User: 07ac193d-26e7-4039-9440-fbb53988b878, Timestamp: 12/14/2023 5:06:05 AM, IP: ::1 
+2023-12-14 10:36:05 AM||INFO|wleepay.API.Controllers.PortalController|Action: Login, User: 07ac193d-26e7-4039-9440-fbb53988b878, Timestamp: 12/14/2023 5:06:05 AM, IP: ::1 
+2023-12-14 10:36:07 AM|20504|WARN|Microsoft.EntityFrameworkCore.Query|Compiling a query which loads related collections for more than one collection navigation either via 'Include' or through projection but no 'QuerySplittingBehavior' has been configured. By default Entity Framework will use 'QuerySplittingBehavior.SingleQuery' which can potentially result in slow query performance. See https://go.microsoft.com/fwlink/?linkid=2134277 for more information. To identify the query that's triggering this warning call 'ConfigureWarnings(w => w.Throw(RelationalEventId.MultipleCollectionIncludeWarning))' 
+2023-12-14 10:36:07 AM|20504|WARN|Microsoft.EntityFrameworkCore.Query|Compiling a query which loads related collections for more than one collection navigation either via 'Include' or through projection but no 'QuerySplittingBehavior' has been configured. By default Entity Framework will use 'QuerySplittingBehavior.SingleQuery' which can potentially result in slow query performance. See https://go.microsoft.com/fwlink/?linkid=2134277 for more information. To identify the query that's triggering this warning call 'ConfigureWarnings(w => w.Throw(RelationalEventId.MultipleCollectionIncludeWarning))' 
+2023-12-14 11:11:16 AM||INFO|wleepay.API.Controllers.PortalController|Action: Login, User: 07ac193d-26e7-4039-9440-fbb53988b878, Timestamp: 12/14/2023 5:41:16 AM, IP: ::1 
+2023-12-14 11:11:16 AM||INFO|wleepay.API.Controllers.PortalController|Action: Login, User: 07ac193d-26e7-4039-9440-fbb53988b878, Timestamp: 12/14/2023 5:41:16 AM, IP: ::1 
+2023-12-14 11:26:29 AM||DEBUG|wleepay.API.Program|init main 
+2023-12-14 11:26:32 AM||INFO|Microsoft.Hosting.Lifetime|Now listening on: https://localhost:5001 
+2023-12-14 11:26:32 AM||INFO|Microsoft.Hosting.Lifetime|Now listening on: https://localhost:5001 
+2023-12-14 11:26:32 AM||INFO|Microsoft.Hosting.Lifetime|Now listening on: http://localhost:5000 
+2023-12-14 11:26:32 AM||INFO|Microsoft.Hosting.Lifetime|Now listening on: http://localhost:5000 
+2023-12-14 11:26:32 AM||INFO|Microsoft.Hosting.Lifetime|Application started. Press Ctrl+C to shut down. 
+2023-12-14 11:26:32 AM||INFO|Microsoft.Hosting.Lifetime|Application started. Press Ctrl+C to shut down. 
+2023-12-14 11:26:32 AM||INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development 
+2023-12-14 11:26:32 AM||INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development 
+2023-12-14 11:26:32 AM||INFO|Microsoft.Hosting.Lifetime|Content root path: D:\Offical\Wleepay_API\wleepay.API 
+2023-12-14 11:26:32 AM||INFO|Microsoft.Hosting.Lifetime|Content root path: D:\Offical\Wleepay_API\wleepay.API 
+2023-12-14 12:02:28 PM||DEBUG|wleepay.API.Program|init main 
+2023-12-14 12:02:34 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: https://localhost:5001 
+2023-12-14 12:02:34 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: https://localhost:5001 
+2023-12-14 12:02:34 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: http://localhost:5000 
+2023-12-14 12:02:34 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: http://localhost:5000 
+2023-12-14 12:02:34 PM||INFO|Microsoft.Hosting.Lifetime|Application started. Press Ctrl+C to shut down. 
+2023-12-14 12:02:34 PM||INFO|Microsoft.Hosting.Lifetime|Application started. Press Ctrl+C to shut down. 
+2023-12-14 12:02:34 PM||INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development 
+2023-12-14 12:02:34 PM||INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development 
+2023-12-14 12:02:34 PM||INFO|Microsoft.Hosting.Lifetime|Content root path: D:\Offical\Wleepay_API\wleepay.API 
+2023-12-14 12:02:34 PM||INFO|Microsoft.Hosting.Lifetime|Content root path: D:\Offical\Wleepay_API\wleepay.API 
+2023-12-14 12:03:03 PM||INFO|wleepay.API.Controllers.PortalController|Action: Login, User: 07ac193d-26e7-4039-9440-fbb53988b878, Timestamp: 12/14/2023 6:33:03 AM, IP: ::1 
+2023-12-14 12:03:03 PM||INFO|wleepay.API.Controllers.PortalController|Action: Login, User: 07ac193d-26e7-4039-9440-fbb53988b878, Timestamp: 12/14/2023 6:33:03 AM, IP: ::1 
+2023-12-14 12:03:04 PM|20504|WARN|Microsoft.EntityFrameworkCore.Query|Compiling a query which loads related collections for more than one collection navigation either via 'Include' or through projection but no 'QuerySplittingBehavior' has been configured. By default Entity Framework will use 'QuerySplittingBehavior.SingleQuery' which can potentially result in slow query performance. See https://go.microsoft.com/fwlink/?linkid=2134277 for more information. To identify the query that's triggering this warning call 'ConfigureWarnings(w => w.Throw(RelationalEventId.MultipleCollectionIncludeWarning))' 
+2023-12-14 12:03:04 PM|20504|WARN|Microsoft.EntityFrameworkCore.Query|Compiling a query which loads related collections for more than one collection navigation either via 'Include' or through projection but no 'QuerySplittingBehavior' has been configured. By default Entity Framework will use 'QuerySplittingBehavior.SingleQuery' which can potentially result in slow query performance. See https://go.microsoft.com/fwlink/?linkid=2134277 for more information. To identify the query that's triggering this warning call 'ConfigureWarnings(w => w.Throw(RelationalEventId.MultipleCollectionIncludeWarning))' 
+2023-12-14 12:11:53 PM||DEBUG|wleepay.API.Program|init main 
+2023-12-14 12:11:57 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: https://localhost:5001 
+2023-12-14 12:11:57 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: https://localhost:5001 
+2023-12-14 12:11:57 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: http://localhost:5000 
+2023-12-14 12:11:57 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: http://localhost:5000 
+2023-12-14 12:11:57 PM||INFO|Microsoft.Hosting.Lifetime|Application started. Press Ctrl+C to shut down. 
+2023-12-14 12:11:57 PM||INFO|Microsoft.Hosting.Lifetime|Application started. Press Ctrl+C to shut down. 
+2023-12-14 12:11:57 PM||INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development 
+2023-12-14 12:11:57 PM||INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development 
+2023-12-14 12:11:57 PM||INFO|Microsoft.Hosting.Lifetime|Content root path: D:\Offical\Wleepay_API\wleepay.API 
+2023-12-14 12:11:57 PM||INFO|Microsoft.Hosting.Lifetime|Content root path: D:\Offical\Wleepay_API\wleepay.API 
+2023-12-14 12:37:28 PM||DEBUG|wleepay.API.Program|init main 
+2023-12-14 12:37:32 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: https://localhost:5001 
+2023-12-14 12:37:32 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: https://localhost:5001 
+2023-12-14 12:37:32 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: http://localhost:5000 
+2023-12-14 12:37:32 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: http://localhost:5000 
+2023-12-14 12:37:32 PM||INFO|Microsoft.Hosting.Lifetime|Application started. Press Ctrl+C to shut down. 
+2023-12-14 12:37:32 PM||INFO|Microsoft.Hosting.Lifetime|Application started. Press Ctrl+C to shut down. 
+2023-12-14 12:37:32 PM||INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development 
+2023-12-14 12:37:32 PM||INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development 
+2023-12-14 12:37:32 PM||INFO|Microsoft.Hosting.Lifetime|Content root path: D:\Offical\Wleepay_API\wleepay.API 
+2023-12-14 12:37:32 PM||INFO|Microsoft.Hosting.Lifetime|Content root path: D:\Offical\Wleepay_API\wleepay.API 
+2023-12-14 13:11:49 PM||DEBUG|wleepay.API.Program|init main 
+2023-12-14 13:11:54 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: https://localhost:5001 
+2023-12-14 13:11:54 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: https://localhost:5001 
+2023-12-14 13:11:54 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: http://localhost:5000 
+2023-12-14 13:11:54 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: http://localhost:5000 
+2023-12-14 13:11:54 PM||INFO|Microsoft.Hosting.Lifetime|Application started. Press Ctrl+C to shut down. 
+2023-12-14 13:11:54 PM||INFO|Microsoft.Hosting.Lifetime|Application started. Press Ctrl+C to shut down. 
+2023-12-14 13:11:54 PM||INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development 
+2023-12-14 13:11:54 PM||INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development 
+2023-12-14 13:11:54 PM||INFO|Microsoft.Hosting.Lifetime|Content root path: D:\Offical\Wleepay_API\wleepay.API 
+2023-12-14 13:11:54 PM||INFO|Microsoft.Hosting.Lifetime|Content root path: D:\Offical\Wleepay_API\wleepay.API 
+2023-12-14 13:12:38 PM||INFO|wleepay.API.Controllers.PortalController|Action: Login, User: 07ac193d-26e7-4039-9440-fbb53988b878, Timestamp: 12/14/2023 7:42:38 AM, IP: ::1 
+2023-12-14 13:12:38 PM||INFO|wleepay.API.Controllers.PortalController|Action: Login, User: 07ac193d-26e7-4039-9440-fbb53988b878, Timestamp: 12/14/2023 7:42:38 AM, IP: ::1 
+2023-12-14 13:12:40 PM|20504|WARN|Microsoft.EntityFrameworkCore.Query|Compiling a query which loads related collections for more than one collection navigation either via 'Include' or through projection but no 'QuerySplittingBehavior' has been configured. By default Entity Framework will use 'QuerySplittingBehavior.SingleQuery' which can potentially result in slow query performance. See https://go.microsoft.com/fwlink/?linkid=2134277 for more information. To identify the query that's triggering this warning call 'ConfigureWarnings(w => w.Throw(RelationalEventId.MultipleCollectionIncludeWarning))' 
+2023-12-14 13:12:40 PM|20504|WARN|Microsoft.EntityFrameworkCore.Query|Compiling a query which loads related collections for more than one collection navigation either via 'Include' or through projection but no 'QuerySplittingBehavior' has been configured. By default Entity Framework will use 'QuerySplittingBehavior.SingleQuery' which can potentially result in slow query performance. See https://go.microsoft.com/fwlink/?linkid=2134277 for more information. To identify the query that's triggering this warning call 'ConfigureWarnings(w => w.Throw(RelationalEventId.MultipleCollectionIncludeWarning))' 
+2023-12-14 13:25:11 PM||DEBUG|wleepay.API.Program|init main 
+2023-12-14 13:25:17 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: https://localhost:5001 
+2023-12-14 13:25:17 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: https://localhost:5001 
+2023-12-14 13:25:17 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: http://localhost:5000 
+2023-12-14 13:25:17 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: http://localhost:5000 
+2023-12-14 13:25:17 PM||INFO|Microsoft.Hosting.Lifetime|Application started. Press Ctrl+C to shut down. 
+2023-12-14 13:25:17 PM||INFO|Microsoft.Hosting.Lifetime|Application started. Press Ctrl+C to shut down. 
+2023-12-14 13:25:17 PM||INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development 
+2023-12-14 13:25:17 PM||INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development 
+2023-12-14 13:25:17 PM||INFO|Microsoft.Hosting.Lifetime|Content root path: D:\Offical\Wleepay_API\wleepay.API 
+2023-12-14 13:25:17 PM||INFO|Microsoft.Hosting.Lifetime|Content root path: D:\Offical\Wleepay_API\wleepay.API 
+2023-12-14 13:44:41 PM||DEBUG|wleepay.API.Program|init main 
+2023-12-14 13:44:44 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: https://localhost:5001 
+2023-12-14 13:44:44 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: https://localhost:5001 
+2023-12-14 13:44:44 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: http://localhost:5000 
+2023-12-14 13:44:44 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: http://localhost:5000 
+2023-12-14 13:44:44 PM||INFO|Microsoft.Hosting.Lifetime|Application started. Press Ctrl+C to shut down. 
+2023-12-14 13:44:44 PM||INFO|Microsoft.Hosting.Lifetime|Application started. Press Ctrl+C to shut down. 
+2023-12-14 13:44:44 PM||INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development 
+2023-12-14 13:44:44 PM||INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development 
+2023-12-14 13:44:44 PM||INFO|Microsoft.Hosting.Lifetime|Content root path: D:\Offical\Wleepay_API\wleepay.API 
+2023-12-14 13:44:44 PM||INFO|Microsoft.Hosting.Lifetime|Content root path: D:\Offical\Wleepay_API\wleepay.API 
+2023-12-14 13:49:23 PM||DEBUG|wleepay.API.Program|init main 
+2023-12-14 13:49:26 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: https://localhost:5001 
+2023-12-14 13:49:26 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: https://localhost:5001 
+2023-12-14 13:49:26 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: http://localhost:5000 
+2023-12-14 13:49:26 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: http://localhost:5000 
+2023-12-14 13:49:26 PM||INFO|Microsoft.Hosting.Lifetime|Application started. Press Ctrl+C to shut down. 
+2023-12-14 13:49:26 PM||INFO|Microsoft.Hosting.Lifetime|Application started. Press Ctrl+C to shut down. 
+2023-12-14 13:49:26 PM||INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development 
+2023-12-14 13:49:26 PM||INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development 
+2023-12-14 13:49:26 PM||INFO|Microsoft.Hosting.Lifetime|Content root path: D:\Offical\Wleepay_API\wleepay.API 
+2023-12-14 13:49:26 PM||INFO|Microsoft.Hosting.Lifetime|Content root path: D:\Offical\Wleepay_API\wleepay.API 
+2023-12-14 13:53:19 PM||DEBUG|wleepay.API.Program|init main 
+2023-12-14 13:53:22 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: https://localhost:5001 
+2023-12-14 13:53:22 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: https://localhost:5001 
+2023-12-14 13:53:22 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: http://localhost:5000 
+2023-12-14 13:53:22 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: http://localhost:5000 
+2023-12-14 13:53:22 PM||INFO|Microsoft.Hosting.Lifetime|Application started. Press Ctrl+C to shut down. 
+2023-12-14 13:53:22 PM||INFO|Microsoft.Hosting.Lifetime|Application started. Press Ctrl+C to shut down. 
+2023-12-14 13:53:22 PM||INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development 
+2023-12-14 13:53:22 PM||INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development 
+2023-12-14 13:53:22 PM||INFO|Microsoft.Hosting.Lifetime|Content root path: D:\Offical\Wleepay_API\wleepay.API 
+2023-12-14 13:53:22 PM||INFO|Microsoft.Hosting.Lifetime|Content root path: D:\Offical\Wleepay_API\wleepay.API 
+2023-12-14 13:54:55 PM||INFO|wleepay.API.Controllers.PortalController|Action: Login, User: 07ac193d-26e7-4039-9440-fbb53988b878, Timestamp: 12/14/2023 8:24:55 AM, IP: ::1 
+2023-12-14 13:54:55 PM||INFO|wleepay.API.Controllers.PortalController|Action: Login, User: 07ac193d-26e7-4039-9440-fbb53988b878, Timestamp: 12/14/2023 8:24:55 AM, IP: ::1 
+2023-12-14 13:54:55 PM|20504|WARN|Microsoft.EntityFrameworkCore.Query|Compiling a query which loads related collections for more than one collection navigation either via 'Include' or through projection but no 'QuerySplittingBehavior' has been configured. By default Entity Framework will use 'QuerySplittingBehavior.SingleQuery' which can potentially result in slow query performance. See https://go.microsoft.com/fwlink/?linkid=2134277 for more information. To identify the query that's triggering this warning call 'ConfigureWarnings(w => w.Throw(RelationalEventId.MultipleCollectionIncludeWarning))' 
+2023-12-14 13:54:55 PM|20504|WARN|Microsoft.EntityFrameworkCore.Query|Compiling a query which loads related collections for more than one collection navigation either via 'Include' or through projection but no 'QuerySplittingBehavior' has been configured. By default Entity Framework will use 'QuerySplittingBehavior.SingleQuery' which can potentially result in slow query performance. See https://go.microsoft.com/fwlink/?linkid=2134277 for more information. To identify the query that's triggering this warning call 'ConfigureWarnings(w => w.Throw(RelationalEventId.MultipleCollectionIncludeWarning))' 
+2023-12-14 14:50:18 PM||DEBUG|wleepay.API.Program|init main 
+2023-12-14 14:50:23 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: https://localhost:5001 
+2023-12-14 14:50:23 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: https://localhost:5001 
+2023-12-14 14:50:23 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: http://localhost:5000 
+2023-12-14 14:50:23 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: http://localhost:5000 
+2023-12-14 14:50:23 PM||INFO|Microsoft.Hosting.Lifetime|Application started. Press Ctrl+C to shut down. 
+2023-12-14 14:50:23 PM||INFO|Microsoft.Hosting.Lifetime|Application started. Press Ctrl+C to shut down. 
+2023-12-14 14:50:23 PM||INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development 
+2023-12-14 14:50:23 PM||INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development 
+2023-12-14 14:50:23 PM||INFO|Microsoft.Hosting.Lifetime|Content root path: D:\Offical\Wleepay_API\wleepay.API 
+2023-12-14 14:50:23 PM||INFO|Microsoft.Hosting.Lifetime|Content root path: D:\Offical\Wleepay_API\wleepay.API 
+2023-12-14 14:52:21 PM||INFO|wleepay.API.Controllers.PortalController|Action: Login, User: 07ac193d-26e7-4039-9440-fbb53988b878, Timestamp: 12/14/2023 9:22:21 AM, IP: ::1 
+2023-12-14 14:52:21 PM||INFO|wleepay.API.Controllers.PortalController|Action: Login, User: 07ac193d-26e7-4039-9440-fbb53988b878, Timestamp: 12/14/2023 9:22:21 AM, IP: ::1 
+2023-12-14 14:52:22 PM|20504|WARN|Microsoft.EntityFrameworkCore.Query|Compiling a query which loads related collections for more than one collection navigation either via 'Include' or through projection but no 'QuerySplittingBehavior' has been configured. By default Entity Framework will use 'QuerySplittingBehavior.SingleQuery' which can potentially result in slow query performance. See https://go.microsoft.com/fwlink/?linkid=2134277 for more information. To identify the query that's triggering this warning call 'ConfigureWarnings(w => w.Throw(RelationalEventId.MultipleCollectionIncludeWarning))' 
+2023-12-14 14:52:22 PM|20504|WARN|Microsoft.EntityFrameworkCore.Query|Compiling a query which loads related collections for more than one collection navigation either via 'Include' or through projection but no 'QuerySplittingBehavior' has been configured. By default Entity Framework will use 'QuerySplittingBehavior.SingleQuery' which can potentially result in slow query performance. See https://go.microsoft.com/fwlink/?linkid=2134277 for more information. To identify the query that's triggering this warning call 'ConfigureWarnings(w => w.Throw(RelationalEventId.MultipleCollectionIncludeWarning))' 
+2023-12-14 15:14:35 PM||INFO|wleepay.API.Controllers.PortalController|Action: Login, User: 07ac193d-26e7-4039-9440-fbb53988b878, Timestamp: 12/14/2023 9:44:35 AM, IP: ::1 
+2023-12-14 15:14:35 PM||INFO|wleepay.API.Controllers.PortalController|Action: Login, User: 07ac193d-26e7-4039-9440-fbb53988b878, Timestamp: 12/14/2023 9:44:35 AM, IP: ::1 
+2023-12-14 15:17:41 PM||DEBUG|wleepay.API.Program|init main 
+2023-12-14 15:17:45 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: https://localhost:5001 
+2023-12-14 15:17:45 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: https://localhost:5001 
+2023-12-14 15:17:45 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: http://localhost:5000 
+2023-12-14 15:17:45 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: http://localhost:5000 
+2023-12-14 15:17:45 PM||INFO|Microsoft.Hosting.Lifetime|Application started. Press Ctrl+C to shut down. 
+2023-12-14 15:17:45 PM||INFO|Microsoft.Hosting.Lifetime|Application started. Press Ctrl+C to shut down. 
+2023-12-14 15:17:45 PM||INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development 
+2023-12-14 15:17:45 PM||INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development 
+2023-12-14 15:17:45 PM||INFO|Microsoft.Hosting.Lifetime|Content root path: D:\Offical\Wleepay_API\wleepay.API 
+2023-12-14 15:17:45 PM||INFO|Microsoft.Hosting.Lifetime|Content root path: D:\Offical\Wleepay_API\wleepay.API 
+2023-12-14 15:22:25 PM||INFO|wleepay.API.Controllers.PortalController|Action: Login, User: b17ad4f6-1470-4687-8c8b-6bd9d11a2724, Timestamp: 12/14/2023 9:52:25 AM, IP: ::1 
+2023-12-14 15:22:25 PM||INFO|wleepay.API.Controllers.PortalController|Action: Login, User: b17ad4f6-1470-4687-8c8b-6bd9d11a2724, Timestamp: 12/14/2023 9:52:25 AM, IP: ::1 
+2023-12-14 15:22:25 PM|20504|WARN|Microsoft.EntityFrameworkCore.Query|Compiling a query which loads related collections for more than one collection navigation either via 'Include' or through projection but no 'QuerySplittingBehavior' has been configured. By default Entity Framework will use 'QuerySplittingBehavior.SingleQuery' which can potentially result in slow query performance. See https://go.microsoft.com/fwlink/?linkid=2134277 for more information. To identify the query that's triggering this warning call 'ConfigureWarnings(w => w.Throw(RelationalEventId.MultipleCollectionIncludeWarning))' 
+2023-12-14 15:22:25 PM|20504|WARN|Microsoft.EntityFrameworkCore.Query|Compiling a query which loads related collections for more than one collection navigation either via 'Include' or through projection but no 'QuerySplittingBehavior' has been configured. By default Entity Framework will use 'QuerySplittingBehavior.SingleQuery' which can potentially result in slow query performance. See https://go.microsoft.com/fwlink/?linkid=2134277 for more information. To identify the query that's triggering this warning call 'ConfigureWarnings(w => w.Throw(RelationalEventId.MultipleCollectionIncludeWarning))' 
+2023-12-14 15:23:10 PM||INFO|wleepay.API.Controllers.PortalController|Action: Login, User: 07ac193d-26e7-4039-9440-fbb53988b878, Timestamp: 12/14/2023 9:53:10 AM, IP: ::1 
+2023-12-14 15:23:10 PM||INFO|wleepay.API.Controllers.PortalController|Action: Login, User: 07ac193d-26e7-4039-9440-fbb53988b878, Timestamp: 12/14/2023 9:53:10 AM, IP: ::1 
+2023-12-14 15:32:33 PM||DEBUG|wleepay.API.Program|init main 
+2023-12-14 15:32:36 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: https://localhost:5001 
+2023-12-14 15:32:36 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: https://localhost:5001 
+2023-12-14 15:32:36 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: http://localhost:5000 
+2023-12-14 15:32:36 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: http://localhost:5000 
+2023-12-14 15:32:36 PM||INFO|Microsoft.Hosting.Lifetime|Application started. Press Ctrl+C to shut down. 
+2023-12-14 15:32:36 PM||INFO|Microsoft.Hosting.Lifetime|Application started. Press Ctrl+C to shut down. 
+2023-12-14 15:32:36 PM||INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development 
+2023-12-14 15:32:36 PM||INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development 
+2023-12-14 15:32:36 PM||INFO|Microsoft.Hosting.Lifetime|Content root path: D:\Offical\Wleepay_API\wleepay.API 
+2023-12-14 15:32:36 PM||INFO|Microsoft.Hosting.Lifetime|Content root path: D:\Offical\Wleepay_API\wleepay.API 
+2023-12-14 15:39:10 PM||ERROR|wleepay.API.Controllers.AccountController|System.NullReferenceException: Object reference not set to an instance of an object.
+   at wleepay.Storage.Services.StorageService.UploadImageWithURL(String imageURL, String containerName, String id) in D:\Offical\Wleepay_API\wleepay.Storage\Services\StorageService.cs:line 198
+   at wleepay.API.Controllers.AccountController.Register(AddUserDetailsResource userDetail) in D:\Offical\Wleepay_API\wleepay.API\Controllers\AccountController.cs:line 137 
+2023-12-14 15:39:10 PM||ERROR|wleepay.API.Controllers.AccountController|System.NullReferenceException: Object reference not set to an instance of an object.
+   at wleepay.Storage.Services.StorageService.UploadImageWithURL(String imageURL, String containerName, String id) in D:\Offical\Wleepay_API\wleepay.Storage\Services\StorageService.cs:line 198
+   at wleepay.API.Controllers.AccountController.Register(AddUserDetailsResource userDetail) in D:\Offical\Wleepay_API\wleepay.API\Controllers\AccountController.cs:line 137 
+2023-12-14 15:40:43 PM||DEBUG|wleepay.API.Program|init main 
+2023-12-14 15:40:46 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: https://localhost:5001 
+2023-12-14 15:40:46 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: https://localhost:5001 
+2023-12-14 15:40:46 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: http://localhost:5000 
+2023-12-14 15:40:46 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: http://localhost:5000 
+2023-12-14 15:40:46 PM||INFO|Microsoft.Hosting.Lifetime|Application started. Press Ctrl+C to shut down. 
+2023-12-14 15:40:46 PM||INFO|Microsoft.Hosting.Lifetime|Application started. Press Ctrl+C to shut down. 
+2023-12-14 15:40:46 PM||INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development 
+2023-12-14 15:40:46 PM||INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development 
+2023-12-14 15:40:46 PM||INFO|Microsoft.Hosting.Lifetime|Content root path: D:\Offical\Wleepay_API\wleepay.API 
+2023-12-14 15:40:46 PM||INFO|Microsoft.Hosting.Lifetime|Content root path: D:\Offical\Wleepay_API\wleepay.API 
+2023-12-14 15:47:15 PM|20102|ERROR|Microsoft.EntityFrameworkCore.Database.Command|Failed executing DbCommand (174ms) [Parameters=[@p0='?' (DbType = DateTime2), @p1='?' (Size = 4000), @p2='?' (Size = 20), @p3='?' (Size = 50), @p4='?' (DbType = Int32), @p5='?' (DbType = DateTime2), @p6='?' (Size = 450)], CommandType='Text', CommandTimeout='30']
+SET NOCOUNT ON;
+INSERT INTO [KYCDocuments] ([CreatedDate], [DocumentImage], [DocumentNumber], [ExtractInfo], [Type], [UpdatedDate], [UserId])
+VALUES (@p0, @p1, @p2, @p3, @p4, @p5, @p6);
+SELECT [Id]
+FROM [KYCDocuments]
+WHERE @@ROWCOUNT = 1 AND [Id] = scope_identity(); 
+2023-12-14 15:47:15 PM|20102|ERROR|Microsoft.EntityFrameworkCore.Database.Command|Failed executing DbCommand (174ms) [Parameters=[@p0='?' (DbType = DateTime2), @p1='?' (Size = 4000), @p2='?' (Size = 20), @p3='?' (Size = 50), @p4='?' (DbType = Int32), @p5='?' (DbType = DateTime2), @p6='?' (Size = 450)], CommandType='Text', CommandTimeout='30']
+SET NOCOUNT ON;
+INSERT INTO [KYCDocuments] ([CreatedDate], [DocumentImage], [DocumentNumber], [ExtractInfo], [Type], [UpdatedDate], [UserId])
+VALUES (@p0, @p1, @p2, @p3, @p4, @p5, @p6);
+SELECT [Id]
+FROM [KYCDocuments]
+WHERE @@ROWCOUNT = 1 AND [Id] = scope_identity(); 
+2023-12-14 15:47:16 PM|10000|ERROR|Microsoft.EntityFrameworkCore.Update|An exception occurred in the database while saving changes for context type 'wleepay.Data.Context.WPContext'.
+Microsoft.EntityFrameworkCore.DbUpdateException: An error occurred while updating the entries. See the inner exception for details.
+ ---> Microsoft.Data.SqlClient.SqlException (0x80131904): The INSERT statement conflicted with the FOREIGN KEY constraint "FK_KYCDocuments_DocumentType_Type". The conflict occurred in database "wleepay-prod", table "dbo.DocumentType", column 'Id'.
+The statement has been terminated.
+   at Microsoft.Data.SqlClient.SqlCommand.<>c.<ExecuteDbDataReaderAsync>b__169_0(Task`1 result)
+   at System.Threading.Tasks.ContinuationResultTaskFromResultTask`2.InnerInvoke()
+   at System.Threading.Tasks.Task.<>c.<.cctor>b__277_0(Object obj)
+   at System.Threading.ExecutionContext.RunInternal(ExecutionContext executionContext, ContextCallback callback, Object state)
+--- End of stack trace from previous location ---
+   at System.Threading.Tasks.Task.ExecuteWithThreadLocal(Task& currentTaskSlot, Thread threadPoolThread)
+--- End of stack trace from previous location ---
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.ReaderModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+ClientConnectionId:c4325572-39e3-475b-88e0-a47b43e23ced
+Error Number:547,State:0,Class:16
+   --- End of inner exception stack trace ---
+   at Microsoft.EntityFrameworkCore.Update.ReaderModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChangesAsync(IList`1 entriesToSave, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChangesAsync(DbContext _, Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.SqlServer.Storage.Internal.SqlServerExecutionStrategy.ExecuteAsync[TState,TResult](TState state, Func`4 operation, Func`4 verifySucceeded, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.DbContext.SaveChangesAsync(Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken) Microsoft.EntityFrameworkCore.DbUpdateException: An error occurred while updating the entries. See the inner exception for details.
+ ---> Microsoft.Data.SqlClient.SqlException (0x80131904): The INSERT statement conflicted with the FOREIGN KEY constraint "FK_KYCDocuments_DocumentType_Type". The conflict occurred in database "wleepay-prod", table "dbo.DocumentType", column 'Id'.
+The statement has been terminated.
+   at Microsoft.Data.SqlClient.SqlCommand.<>c.<ExecuteDbDataReaderAsync>b__169_0(Task`1 result)
+   at System.Threading.Tasks.ContinuationResultTaskFromResultTask`2.InnerInvoke()
+   at System.Threading.Tasks.Task.<>c.<.cctor>b__277_0(Object obj)
+   at System.Threading.ExecutionContext.RunInternal(ExecutionContext executionContext, ContextCallback callback, Object state)
+--- End of stack trace from previous location ---
+   at System.Threading.Tasks.Task.ExecuteWithThreadLocal(Task& currentTaskSlot, Thread threadPoolThread)
+--- End of stack trace from previous location ---
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.ReaderModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+ClientConnectionId:c4325572-39e3-475b-88e0-a47b43e23ced
+Error Number:547,State:0,Class:16
+   --- End of inner exception stack trace ---
+   at Microsoft.EntityFrameworkCore.Update.ReaderModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChangesAsync(IList`1 entriesToSave, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChangesAsync(DbContext _, Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.SqlServer.Storage.Internal.SqlServerExecutionStrategy.ExecuteAsync[TState,TResult](TState state, Func`4 operation, Func`4 verifySucceeded, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.DbContext.SaveChangesAsync(Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)
+2023-12-14 15:47:16 PM|10000|ERROR|Microsoft.EntityFrameworkCore.Update|An exception occurred in the database while saving changes for context type 'wleepay.Data.Context.WPContext'.
+Microsoft.EntityFrameworkCore.DbUpdateException: An error occurred while updating the entries. See the inner exception for details.
+ ---> Microsoft.Data.SqlClient.SqlException (0x80131904): The INSERT statement conflicted with the FOREIGN KEY constraint "FK_KYCDocuments_DocumentType_Type". The conflict occurred in database "wleepay-prod", table "dbo.DocumentType", column 'Id'.
+The statement has been terminated.
+   at Microsoft.Data.SqlClient.SqlCommand.<>c.<ExecuteDbDataReaderAsync>b__169_0(Task`1 result)
+   at System.Threading.Tasks.ContinuationResultTaskFromResultTask`2.InnerInvoke()
+   at System.Threading.Tasks.Task.<>c.<.cctor>b__277_0(Object obj)
+   at System.Threading.ExecutionContext.RunInternal(ExecutionContext executionContext, ContextCallback callback, Object state)
+--- End of stack trace from previous location ---
+   at System.Threading.Tasks.Task.ExecuteWithThreadLocal(Task& currentTaskSlot, Thread threadPoolThread)
+--- End of stack trace from previous location ---
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.ReaderModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+ClientConnectionId:c4325572-39e3-475b-88e0-a47b43e23ced
+Error Number:547,State:0,Class:16
+   --- End of inner exception stack trace ---
+   at Microsoft.EntityFrameworkCore.Update.ReaderModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChangesAsync(IList`1 entriesToSave, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChangesAsync(DbContext _, Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.SqlServer.Storage.Internal.SqlServerExecutionStrategy.ExecuteAsync[TState,TResult](TState state, Func`4 operation, Func`4 verifySucceeded, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.DbContext.SaveChangesAsync(Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken) Microsoft.EntityFrameworkCore.DbUpdateException: An error occurred while updating the entries. See the inner exception for details.
+ ---> Microsoft.Data.SqlClient.SqlException (0x80131904): The INSERT statement conflicted with the FOREIGN KEY constraint "FK_KYCDocuments_DocumentType_Type". The conflict occurred in database "wleepay-prod", table "dbo.DocumentType", column 'Id'.
+The statement has been terminated.
+   at Microsoft.Data.SqlClient.SqlCommand.<>c.<ExecuteDbDataReaderAsync>b__169_0(Task`1 result)
+   at System.Threading.Tasks.ContinuationResultTaskFromResultTask`2.InnerInvoke()
+   at System.Threading.Tasks.Task.<>c.<.cctor>b__277_0(Object obj)
+   at System.Threading.ExecutionContext.RunInternal(ExecutionContext executionContext, ContextCallback callback, Object state)
+--- End of stack trace from previous location ---
+   at System.Threading.Tasks.Task.ExecuteWithThreadLocal(Task& currentTaskSlot, Thread threadPoolThread)
+--- End of stack trace from previous location ---
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.ReaderModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+ClientConnectionId:c4325572-39e3-475b-88e0-a47b43e23ced
+Error Number:547,State:0,Class:16
+   --- End of inner exception stack trace ---
+   at Microsoft.EntityFrameworkCore.Update.ReaderModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChangesAsync(IList`1 entriesToSave, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChangesAsync(DbContext _, Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.SqlServer.Storage.Internal.SqlServerExecutionStrategy.ExecuteAsync[TState,TResult](TState state, Func`4 operation, Func`4 verifySucceeded, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.DbContext.SaveChangesAsync(Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)
+2023-12-14 15:47:56 PM||ERROR|wleepay.API.Controllers.AccountController|Microsoft.EntityFrameworkCore.DbUpdateException: An error occurred while updating the entries. See the inner exception for details.
+ ---> Microsoft.Data.SqlClient.SqlException (0x80131904): The INSERT statement conflicted with the FOREIGN KEY constraint "FK_KYCDocuments_DocumentType_Type". The conflict occurred in database "wleepay-prod", table "dbo.DocumentType", column 'Id'.
+The statement has been terminated.
+   at Microsoft.Data.SqlClient.SqlCommand.<>c.<ExecuteDbDataReaderAsync>b__169_0(Task`1 result)
+   at System.Threading.Tasks.ContinuationResultTaskFromResultTask`2.InnerInvoke()
+   at System.Threading.Tasks.Task.<>c.<.cctor>b__277_0(Object obj)
+   at System.Threading.ExecutionContext.RunInternal(ExecutionContext executionContext, ContextCallback callback, Object state)
+--- End of stack trace from previous location ---
+   at System.Threading.Tasks.Task.ExecuteWithThreadLocal(Task& currentTaskSlot, Thread threadPoolThread)
+--- End of stack trace from previous location ---
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.ReaderModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+ClientConnectionId:c4325572-39e3-475b-88e0-a47b43e23ced
+Error Number:547,State:0,Class:16
+   --- End of inner exception stack trace ---
+   at Microsoft.EntityFrameworkCore.Update.ReaderModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChangesAsync(IList`1 entriesToSave, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChangesAsync(DbContext _, Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.SqlServer.Storage.Internal.SqlServerExecutionStrategy.ExecuteAsync[TState,TResult](TState state, Func`4 operation, Func`4 verifySucceeded, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.DbContext.SaveChangesAsync(Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.DbContext.SaveChangesAsync(Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)
+   at wleepay.Data.UnitOfWork.CommitAsync() in D:\Offical\Wleepay_API\wleepay.Data\UnitOfWork.cs:line 50
+   at wleepay.Services.KYCDocumentsService.AddOrUpdateKYCDocument(KYCdocuments document) in D:\Offical\Wleepay_API\wleepay.Services\KYCDocumentsService.cs:line 29
+   at wleepay.API.Controllers.AccountController.Register(AddUserDetailsResource userDetail) in D:\Offical\Wleepay_API\wleepay.API\Controllers\AccountController.cs:line 167 
+2023-12-14 15:47:56 PM||ERROR|wleepay.API.Controllers.AccountController|Microsoft.EntityFrameworkCore.DbUpdateException: An error occurred while updating the entries. See the inner exception for details.
+ ---> Microsoft.Data.SqlClient.SqlException (0x80131904): The INSERT statement conflicted with the FOREIGN KEY constraint "FK_KYCDocuments_DocumentType_Type". The conflict occurred in database "wleepay-prod", table "dbo.DocumentType", column 'Id'.
+The statement has been terminated.
+   at Microsoft.Data.SqlClient.SqlCommand.<>c.<ExecuteDbDataReaderAsync>b__169_0(Task`1 result)
+   at System.Threading.Tasks.ContinuationResultTaskFromResultTask`2.InnerInvoke()
+   at System.Threading.Tasks.Task.<>c.<.cctor>b__277_0(Object obj)
+   at System.Threading.ExecutionContext.RunInternal(ExecutionContext executionContext, ContextCallback callback, Object state)
+--- End of stack trace from previous location ---
+   at System.Threading.Tasks.Task.ExecuteWithThreadLocal(Task& currentTaskSlot, Thread threadPoolThread)
+--- End of stack trace from previous location ---
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.ReaderModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+ClientConnectionId:c4325572-39e3-475b-88e0-a47b43e23ced
+Error Number:547,State:0,Class:16
+   --- End of inner exception stack trace ---
+   at Microsoft.EntityFrameworkCore.Update.ReaderModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChangesAsync(IList`1 entriesToSave, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChangesAsync(DbContext _, Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.SqlServer.Storage.Internal.SqlServerExecutionStrategy.ExecuteAsync[TState,TResult](TState state, Func`4 operation, Func`4 verifySucceeded, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.DbContext.SaveChangesAsync(Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.DbContext.SaveChangesAsync(Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)
+   at wleepay.Data.UnitOfWork.CommitAsync() in D:\Offical\Wleepay_API\wleepay.Data\UnitOfWork.cs:line 50
+   at wleepay.Services.KYCDocumentsService.AddOrUpdateKYCDocument(KYCdocuments document) in D:\Offical\Wleepay_API\wleepay.Services\KYCDocumentsService.cs:line 29
+   at wleepay.API.Controllers.AccountController.Register(AddUserDetailsResource userDetail) in D:\Offical\Wleepay_API\wleepay.API\Controllers\AccountController.cs:line 167 
+2023-12-14 15:47:57 PM|1|ERROR|Microsoft.AspNetCore.Diagnostics.DeveloperExceptionPageMiddleware|An unhandled exception has occurred while executing the request. Microsoft.Data.SqlClient.SqlException (0x80131904): The INSERT statement conflicted with the FOREIGN KEY constraint "FK_KYCDocuments_DocumentType_Type". The conflict occurred in database "wleepay-prod", table "dbo.DocumentType", column 'Id'.
+The statement has been terminated.
+   at wleepay.API.Controllers.AccountController.Register(AddUserDetailsResource userDetail) in D:\Offical\Wleepay_API\wleepay.API\Controllers\AccountController.cs:line 214
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.TaskOfIActionResultExecutor.Execute(IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeActionMethodAsync>g__Awaited|12_0(ControllerActionInvoker invoker, ValueTask`1 actionResultValueTask)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeNextActionFilterAsync>g__Awaited|10_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeInnerFilterAsync>g__Awaited|13_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeFilterPipelineAsync>g__Awaited|19_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Logged|17_1(ResourceInvoker invoker)
+   at Microsoft.AspNetCore.Routing.EndpointMiddleware.<Invoke>g__AwaitRequestTask|6_0(Endpoint endpoint, Task requestTask, ILogger logger)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Session.SessionMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Session.SessionMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Diagnostics.DeveloperExceptionPageMiddleware.Invoke(HttpContext context)
+ClientConnectionId:c4325572-39e3-475b-88e0-a47b43e23ced
+Error Number:547,State:0,Class:16
+2023-12-14 15:47:57 PM|1|ERROR|Microsoft.AspNetCore.Diagnostics.DeveloperExceptionPageMiddleware|An unhandled exception has occurred while executing the request. Microsoft.Data.SqlClient.SqlException (0x80131904): The INSERT statement conflicted with the FOREIGN KEY constraint "FK_KYCDocuments_DocumentType_Type". The conflict occurred in database "wleepay-prod", table "dbo.DocumentType", column 'Id'.
+The statement has been terminated.
+   at wleepay.API.Controllers.AccountController.Register(AddUserDetailsResource userDetail) in D:\Offical\Wleepay_API\wleepay.API\Controllers\AccountController.cs:line 214
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.TaskOfIActionResultExecutor.Execute(IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeActionMethodAsync>g__Awaited|12_0(ControllerActionInvoker invoker, ValueTask`1 actionResultValueTask)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeNextActionFilterAsync>g__Awaited|10_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeInnerFilterAsync>g__Awaited|13_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeFilterPipelineAsync>g__Awaited|19_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Logged|17_1(ResourceInvoker invoker)
+   at Microsoft.AspNetCore.Routing.EndpointMiddleware.<Invoke>g__AwaitRequestTask|6_0(Endpoint endpoint, Task requestTask, ILogger logger)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Session.SessionMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Session.SessionMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Diagnostics.DeveloperExceptionPageMiddleware.Invoke(HttpContext context)
+ClientConnectionId:c4325572-39e3-475b-88e0-a47b43e23ced
+Error Number:547,State:0,Class:16
+2023-12-14 16:06:38 PM||DEBUG|wleepay.API.Program|init main 
+2023-12-14 16:06:40 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: https://localhost:5001 
+2023-12-14 16:06:40 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: https://localhost:5001 
+2023-12-14 16:06:40 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: http://localhost:5000 
+2023-12-14 16:06:40 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: http://localhost:5000 
+2023-12-14 16:06:40 PM||INFO|Microsoft.Hosting.Lifetime|Application started. Press Ctrl+C to shut down. 
+2023-12-14 16:06:40 PM||INFO|Microsoft.Hosting.Lifetime|Application started. Press Ctrl+C to shut down. 
+2023-12-14 16:06:40 PM||INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development 
+2023-12-14 16:06:40 PM||INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development 
+2023-12-14 16:06:40 PM||INFO|Microsoft.Hosting.Lifetime|Content root path: D:\Offical\Wleepay_API\wleepay.API 
+2023-12-14 16:06:40 PM||INFO|Microsoft.Hosting.Lifetime|Content root path: D:\Offical\Wleepay_API\wleepay.API 
+2023-12-14 16:43:04 PM||DEBUG|wleepay.API.Program|init main 
+2023-12-14 16:43:07 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: https://localhost:5001 
+2023-12-14 16:43:07 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: https://localhost:5001 
+2023-12-14 16:43:07 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: http://localhost:5000 
+2023-12-14 16:43:07 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: http://localhost:5000 
+2023-12-14 16:43:07 PM||INFO|Microsoft.Hosting.Lifetime|Application started. Press Ctrl+C to shut down. 
+2023-12-14 16:43:07 PM||INFO|Microsoft.Hosting.Lifetime|Application started. Press Ctrl+C to shut down. 
+2023-12-14 16:43:07 PM||INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development 
+2023-12-14 16:43:07 PM||INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development 
+2023-12-14 16:43:07 PM||INFO|Microsoft.Hosting.Lifetime|Content root path: D:\Offical\Wleepay_API\wleepay.API 
+2023-12-14 16:43:07 PM||INFO|Microsoft.Hosting.Lifetime|Content root path: D:\Offical\Wleepay_API\wleepay.API 
+2023-12-14 16:45:02 PM||DEBUG|wleepay.API.Program|init main 
+2023-12-14 16:45:05 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: https://localhost:5001 
+2023-12-14 16:45:05 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: https://localhost:5001 
+2023-12-14 16:45:05 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: http://localhost:5000 
+2023-12-14 16:45:05 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: http://localhost:5000 
+2023-12-14 16:45:05 PM||INFO|Microsoft.Hosting.Lifetime|Application started. Press Ctrl+C to shut down. 
+2023-12-14 16:45:05 PM||INFO|Microsoft.Hosting.Lifetime|Application started. Press Ctrl+C to shut down. 
+2023-12-14 16:45:05 PM||INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development 
+2023-12-14 16:45:05 PM||INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development 
+2023-12-14 16:45:05 PM||INFO|Microsoft.Hosting.Lifetime|Content root path: D:\Offical\Wleepay_API\wleepay.API 
+2023-12-14 16:45:05 PM||INFO|Microsoft.Hosting.Lifetime|Content root path: D:\Offical\Wleepay_API\wleepay.API 
+2023-12-14 16:50:41 PM||DEBUG|wleepay.API.Program|init main 
+2023-12-14 16:50:44 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: https://localhost:5001 
+2023-12-14 16:50:44 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: https://localhost:5001 
+2023-12-14 16:50:44 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: http://localhost:5000 
+2023-12-14 16:50:44 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: http://localhost:5000 
+2023-12-14 16:50:44 PM||INFO|Microsoft.Hosting.Lifetime|Application started. Press Ctrl+C to shut down. 
+2023-12-14 16:50:44 PM||INFO|Microsoft.Hosting.Lifetime|Application started. Press Ctrl+C to shut down. 
+2023-12-14 16:50:44 PM||INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development 
+2023-12-14 16:50:44 PM||INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development 
+2023-12-14 16:50:44 PM||INFO|Microsoft.Hosting.Lifetime|Content root path: D:\Offical\Wleepay_API\wleepay.API 
+2023-12-14 16:50:44 PM||INFO|Microsoft.Hosting.Lifetime|Content root path: D:\Offical\Wleepay_API\wleepay.API 
+2023-12-14 18:02:40 PM||DEBUG|wleepay.API.Program|init main 
+2023-12-14 18:02:45 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: https://localhost:5001 
+2023-12-14 18:02:45 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: https://localhost:5001 
+2023-12-14 18:02:45 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: http://localhost:5000 
+2023-12-14 18:02:45 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: http://localhost:5000 
+2023-12-14 18:02:45 PM||INFO|Microsoft.Hosting.Lifetime|Application started. Press Ctrl+C to shut down. 
+2023-12-14 18:02:45 PM||INFO|Microsoft.Hosting.Lifetime|Application started. Press Ctrl+C to shut down. 
+2023-12-14 18:02:45 PM||INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development 
+2023-12-14 18:02:45 PM||INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development 
+2023-12-14 18:02:45 PM||INFO|Microsoft.Hosting.Lifetime|Content root path: D:\Offical\Wleepay_API\wleepay.API 
+2023-12-14 18:02:45 PM||INFO|Microsoft.Hosting.Lifetime|Content root path: D:\Offical\Wleepay_API\wleepay.API 
+2023-12-14 18:08:25 PM||DEBUG|wleepay.API.Program|init main 
+2023-12-14 18:08:31 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: https://localhost:5001 
+2023-12-14 18:08:31 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: https://localhost:5001 
+2023-12-14 18:08:31 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: http://localhost:5000 
+2023-12-14 18:08:31 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: http://localhost:5000 
+2023-12-14 18:08:31 PM||INFO|Microsoft.Hosting.Lifetime|Application started. Press Ctrl+C to shut down. 
+2023-12-14 18:08:31 PM||INFO|Microsoft.Hosting.Lifetime|Application started. Press Ctrl+C to shut down. 
+2023-12-14 18:08:31 PM||INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development 
+2023-12-14 18:08:31 PM||INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development 
+2023-12-14 18:08:31 PM||INFO|Microsoft.Hosting.Lifetime|Content root path: D:\Offical\Wleepay_API\wleepay.API 
+2023-12-14 18:08:31 PM||INFO|Microsoft.Hosting.Lifetime|Content root path: D:\Offical\Wleepay_API\wleepay.API 
+2023-12-14 18:09:02 PM||INFO|wleepay.API.Controllers.PortalController|Action: Login, User: 07ac193d-26e7-4039-9440-fbb53988b878, Timestamp: 12/14/2023 12:39:02 PM, IP: ::1 
+2023-12-14 18:09:02 PM||INFO|wleepay.API.Controllers.PortalController|Action: Login, User: 07ac193d-26e7-4039-9440-fbb53988b878, Timestamp: 12/14/2023 12:39:02 PM, IP: ::1 
+2023-12-14 18:09:03 PM|20504|WARN|Microsoft.EntityFrameworkCore.Query|Compiling a query which loads related collections for more than one collection navigation either via 'Include' or through projection but no 'QuerySplittingBehavior' has been configured. By default Entity Framework will use 'QuerySplittingBehavior.SingleQuery' which can potentially result in slow query performance. See https://go.microsoft.com/fwlink/?linkid=2134277 for more information. To identify the query that's triggering this warning call 'ConfigureWarnings(w => w.Throw(RelationalEventId.MultipleCollectionIncludeWarning))' 
+2023-12-14 18:09:03 PM|20504|WARN|Microsoft.EntityFrameworkCore.Query|Compiling a query which loads related collections for more than one collection navigation either via 'Include' or through projection but no 'QuerySplittingBehavior' has been configured. By default Entity Framework will use 'QuerySplittingBehavior.SingleQuery' which can potentially result in slow query performance. See https://go.microsoft.com/fwlink/?linkid=2134277 for more information. To identify the query that's triggering this warning call 'ConfigureWarnings(w => w.Throw(RelationalEventId.MultipleCollectionIncludeWarning))' 
+2023-12-14 18:13:03 PM||DEBUG|wleepay.API.Program|init main 
+2023-12-14 18:13:05 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: https://localhost:5001 
+2023-12-14 18:13:05 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: https://localhost:5001 
+2023-12-14 18:13:05 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: http://localhost:5000 
+2023-12-14 18:13:05 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: http://localhost:5000 
+2023-12-14 18:13:05 PM||INFO|Microsoft.Hosting.Lifetime|Application started. Press Ctrl+C to shut down. 
+2023-12-14 18:13:05 PM||INFO|Microsoft.Hosting.Lifetime|Application started. Press Ctrl+C to shut down. 
+2023-12-14 18:13:05 PM||INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development 
+2023-12-14 18:13:05 PM||INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development 
+2023-12-14 18:13:05 PM||INFO|Microsoft.Hosting.Lifetime|Content root path: D:\Offical\Wleepay_API\wleepay.API 
+2023-12-14 18:13:05 PM||INFO|Microsoft.Hosting.Lifetime|Content root path: D:\Offical\Wleepay_API\wleepay.API 
+2023-12-14 18:28:52 PM||DEBUG|wleepay.API.Program|init main 
+2023-12-14 18:28:54 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: https://localhost:5001 
+2023-12-14 18:28:54 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: https://localhost:5001 
+2023-12-14 18:28:54 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: http://localhost:5000 
+2023-12-14 18:28:54 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: http://localhost:5000 
+2023-12-14 18:28:54 PM||INFO|Microsoft.Hosting.Lifetime|Application started. Press Ctrl+C to shut down. 
+2023-12-14 18:28:54 PM||INFO|Microsoft.Hosting.Lifetime|Application started. Press Ctrl+C to shut down. 
+2023-12-14 18:28:54 PM||INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development 
+2023-12-14 18:28:54 PM||INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development 
+2023-12-14 18:28:54 PM||INFO|Microsoft.Hosting.Lifetime|Content root path: D:\Offical\Wleepay_API\wleepay.API 
+2023-12-14 18:28:54 PM||INFO|Microsoft.Hosting.Lifetime|Content root path: D:\Offical\Wleepay_API\wleepay.API 
+2023-12-14 18:30:13 PM||INFO|wleepay.API.Controllers.PortalController|Action: VerifyCode, User: 07ac193d-26e7-4039-9440-fbb53988b878, Timestamp: 12/14/2023 1:00:13 PM, IP: ::1 
+2023-12-14 18:30:13 PM||INFO|wleepay.API.Controllers.PortalController|Action: VerifyCode, User: 07ac193d-26e7-4039-9440-fbb53988b878, Timestamp: 12/14/2023 1:00:13 PM, IP: ::1 
+2023-12-14 19:08:04 PM||DEBUG|wleepay.API.Program|init main 
+2023-12-14 19:08:09 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: https://localhost:5001 
+2023-12-14 19:08:09 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: https://localhost:5001 
+2023-12-14 19:08:09 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: http://localhost:5000 
+2023-12-14 19:08:09 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: http://localhost:5000 
+2023-12-14 19:08:09 PM||INFO|Microsoft.Hosting.Lifetime|Application started. Press Ctrl+C to shut down. 
+2023-12-14 19:08:09 PM||INFO|Microsoft.Hosting.Lifetime|Application started. Press Ctrl+C to shut down. 
+2023-12-14 19:08:09 PM||INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development 
+2023-12-14 19:08:09 PM||INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development 
+2023-12-14 19:08:09 PM||INFO|Microsoft.Hosting.Lifetime|Content root path: D:\Offical\Wleepay_API\wleepay.API 
+2023-12-14 19:08:09 PM||INFO|Microsoft.Hosting.Lifetime|Content root path: D:\Offical\Wleepay_API\wleepay.API 
