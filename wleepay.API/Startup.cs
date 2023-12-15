@@ -26,6 +26,8 @@ using System;
 using wleepay.Core.Models;
 using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Identity.UI.Services;
+using IEmailSender = wleepay.Communication.Interface.IEmailSender;
 
 namespace wleepay.API
 {
@@ -137,6 +139,10 @@ namespace wleepay.API
             services.AddTransient<ITransferFeeService, TransferFeeService>();
 
             services.AddSingleton<IHTTPService, HTTPService>();
+
+            services.AddScoped<IEmailSender, EmailSenderService>();
+            services.AddTransient<ISecurityQuestionService, SecurityQuestionsService>();
+
 
 
             //swagger config

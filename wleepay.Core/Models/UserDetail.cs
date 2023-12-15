@@ -31,9 +31,14 @@ namespace wleepay.Core.Models
         public string VerificationCode { get; set; }
         public DateTime? VerificationExpiry { get; set; }
 
+        public int SecurityQuestionId { get; set; }
+        public string SecurityAnswerText { get; set; }
+
         public virtual ApplicationUser ApplicationUser { get; set; }
         public virtual KYCStatus KYCStatus { get; set; }
         public virtual County County { get; set; }
         public virtual KYCLevel KYCLevelDetail { get; set; }
+        public virtual SecurityQuestions SecurityQuestions { get; set; }
+
     }
 }

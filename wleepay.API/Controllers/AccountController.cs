@@ -24,6 +24,10 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using System.IO;
 using static System.Net.WebRequestMethods;
+using Microsoft.AspNetCore.Identity.UI.Services;
+using Microsoft.AspNetCore.WebUtilities;
+using IEmailSender = wleepay.Communication.Interface.IEmailSender;
+using Twilio.TwiML.Messaging;
 
 namespace wleepay.API.Controllers
 {
@@ -47,6 +51,9 @@ namespace wleepay.API.Controllers
         private readonly IConfiguration _configuration;
         public readonly IHostingEnvironment _hostingEnvironment;
         private readonly IUploadDocument _documentUploaderService;
+        private readonly IEmailSender _emailSender;
+
+
         public AccountController(UserManager<ApplicationUser> userManager,
             RoleManager<ApplicationRole> roleManager,
             SignInManager<ApplicationUser> signInManager,
@@ -61,7 +68,8 @@ namespace wleepay.API.Controllers
             IConfiguration configuration,
             IMapper mapper,
             IUploadDocument uploadDocument,
-            IHostingEnvironment hostingEnvironment)
+            IHostingEnvironment hostingEnvironment,
+            IEmailSender emailSender)
         {
             _userManager = userManager;
             _roleManager = roleManager;
@@ -78,6 +86,7 @@ namespace wleepay.API.Controllers
             _mapper = mapper;
             _hostingEnvironment = hostingEnvironment;
             _documentUploaderService = uploadDocument;
+            _emailSender = emailSender;
         }
 
         [HttpPost("Registration")]
@@ -85,7 +94,7 @@ namespace wleepay.API.Controllers
         {
             try
             {
-                var validator = new AddUserDetailsValidator();
+                var validator = new AddUserDetailsValidator(userDetail.Role.ToString());
                 var validationResult = await validator.ValidateAsync(userDetail);
 
                 if (!validationResult.IsValid)
@@ -398,6 +407,53 @@ namespace wleepay.API.Controllers
 
             //update user kyc status
             await _userDetailsService.UpdateUserKYCStatus(userId, kycStatus.GetHashCode());
+
+            return Ok();
+        }
+
+        [HttpPost("ForgotPassword")]
+        public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordResource forgotPasswordDto)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest();
+
+            var user = await _userManager.FindByEmailAsync(forgotPasswordDto.Email);
+            if (user == null)
+                return BadRequest("Invalid Request");
+
+            var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+            var param = new Dictionary<string, string?>
+                {
+                    {"token", token },
+                    {"email", forgotPasswordDto.Email }
+                };
+
+            var callback = QueryHelpers.AddQueryString(forgotPasswordDto.ClientURI, param);
+
+            //var message = new Message("", user.Email , "Reset password token", callback., null);
+
+            await _emailSender.SendForgotPasswordEmailLink("admintest1@yopmail.com", callback);
+
+            return Ok();
+        }
+
+        [HttpPost("ResetPassword")]
+        public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordResource resetPasswordDto)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest();
+
+            var user = await _userManager.FindByEmailAsync(resetPasswordDto.Email);
+            if (user == null)
+                return BadRequest("Invalid Request");
+
+            var resetPassResult = await _userManager.ResetPasswordAsync(user, resetPasswordDto.Token, resetPasswordDto.Password);
+            if (!resetPassResult.Succeeded)
+            {
+                var errors = resetPassResult.Errors.Select(e => e.Description);
+
+                return BadRequest(new { Errors = errors });
+            }
 
             return Ok();
         }

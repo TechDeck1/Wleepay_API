@@ -21,6 +21,7 @@ namespace wleepay.Core
         ITransactionStatusRepository TransactionStatus { get; }
         IAddressRepository Address { get; }
         IKYCLevelRepository KYCLevel { get; }
+        ISecurityQuestionsRepository SecurityQuestions { get; }
         Task<int> CommitAsync();
     }
 }

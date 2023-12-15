@@ -62,8 +62,17 @@ namespace wleepay.Data.Configurations
                 .Property(u => u.KYCLevel);
 
             builder
-            .Property(u => u.IsLoggedIn)
-            .IsRequired();
+                .Property(u => u.IsLoggedIn)
+                .IsRequired();
+
+            builder
+                .Property(u => u.VerificationCode);
+
+            builder.Property(u => u.VerificationExpiry);
+
+            builder.Property(u => u.SecurityQuestionId);
+
+            builder.Property(u => u.SecurityAnswerText).HasMaxLength(50);
 
             builder
                 .HasOne(u => u.ApplicationUser)
@@ -88,6 +97,12 @@ namespace wleepay.Data.Configurations
                  .WithMany(u => u.UserDetails)
                  .OnDelete(DeleteBehavior.ClientNoAction)
                  .HasForeignKey(u => u.KYCLevel);
+
+            builder
+                 .HasOne(u => u.SecurityQuestions)
+                 .WithMany(u => u.UserDetails)
+                 .OnDelete(DeleteBehavior.ClientNoAction)
+                 .HasForeignKey(u => u.SecurityQuestionId);
 
             builder.HasData(new UserDetail
             {

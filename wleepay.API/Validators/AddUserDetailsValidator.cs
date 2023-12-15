@@ -9,16 +9,11 @@ namespace wleepay.API.Validators
 {
     public class AddUserDetailsValidator: AbstractValidator<AddUserDetailsResource>
     {
-        public AddUserDetailsValidator()
+        public AddUserDetailsValidator(string role)
         {
             RuleFor(a => a.FirstName)
                 .NotEmpty()
                 .NotNull();
-
-            RuleFor(a => a.Pin.ToString())
-                .NotNull()
-                .NotEmpty()
-                .Length(12);
 
             RuleFor(a => a.PhoneNumber)
                 .NotEmpty()
@@ -44,6 +39,25 @@ namespace wleepay.API.Validators
             //    .NotEmpty()
             //    .GreaterThan(0)
             //    .NotNull();
+
+            if (role == "Staff")
+            {
+
+             RuleFor(a => a.Pin.ToString())
+                .NotNull()
+                .NotEmpty()
+                .Length(4);
+
+            }
+            else
+            {
+
+             RuleFor(a => a.Pin.ToString())
+                .NotNull()
+                .NotEmpty()
+                .Length(4);
+
+            }
         }
     }
 }

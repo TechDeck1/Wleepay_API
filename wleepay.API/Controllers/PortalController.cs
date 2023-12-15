@@ -42,6 +42,8 @@ namespace wleepay.API.Controllers
         private readonly IMapper _mapper;
         private readonly IConfiguration _configuration;
         private readonly ISMSService _SMSService;
+        private readonly IEmailSender _emailSender;
+
 
 
         public PortalController(UserManager<ApplicationUser> userManager,
@@ -51,7 +53,10 @@ namespace wleepay.API.Controllers
             ILogger<PortalController> logger,
             IConfiguration configuration,
             IMapper mapper,
-            ISMSService sMSService)
+            ISMSService sMSService,
+            IEmailSender emailSender)
+            
+
         {
             _userManager = userManager;
             _signInManager = signInManager;
@@ -61,6 +66,7 @@ namespace wleepay.API.Controllers
             _configuration = configuration;
             _mapper = mapper;
             _SMSService = sMSService;
+            _emailSender = emailSender;
         }
 
         
@@ -158,30 +164,12 @@ namespace wleepay.API.Controllers
         }
 
         [HttpPost("alertMail")]
-        public void SendEmail()
+        public void SendEmail(string email)
         {
             try
             {
-                var subject = "Failed Login attempt";
-                var recipientEmail = "admintest1@yopmail.com";
-                var body = "You have 3 failed login attemps. Your Wleepay portal account is locked. You must contact system administrator to unlock your account";
+                var result = _emailSender.SendEmailAsync(email);
 
-                // Sender's email address and credentials
-                string senderEmail = "ariel.ranjot@gmail.com";
-                string senderPassword = "R@nj0t@20*$"; // Use app-specific passwords or secure storage for passwords
-
-                // Create SMTP client
-                SmtpClient smtpClient = new SmtpClient("smtp.gmail.com"); // Use your SMTP server
-
-                // Port and SSL configuration
-                smtpClient.Port = 587; // Port for SMTP (e.g., 587 for Gmail)
-                smtpClient.EnableSsl = true;
-                smtpClient.UseDefaultCredentials = false;
-                smtpClient.Credentials = new NetworkCredential(senderEmail, senderPassword);
-
-                MailMessage mailMessage = new MailMessage(senderEmail, recipientEmail, subject, body);
-
-                smtpClient.Send(mailMessage);
             }
             catch (Exception ex)
             {
