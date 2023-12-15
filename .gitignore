@@ -268,3 +268,12 @@ wleepay.API/.vs/wleepay.API/v17/.suo
 *.dll
 *.pdb
 *.v2
+wleepay.API/.vs/wleepay.API/DesignTimeBuild/.dtbcache.v2
+wleepay.API/.vs/wleepay.API/DesignTimeBuild/.dtbcache.v2
+wleepay.API/.vs/wleepay.API/v17/.suo
+*.dll
+wleepay.API/obj/Debug/net5.0/wleepay.API.csproj.AssemblyReference.cache
+*.cache
+*.dll
+wleepay.API/obj/Debug/net5.0/wleepay.API.dll
+wleepay.API/obj/Debug/net5.0/wleepay.API.pdb

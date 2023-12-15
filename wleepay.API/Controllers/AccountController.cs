@@ -420,6 +420,8 @@ namespace wleepay.API.Controllers
             var user = await _userManager.FindByEmailAsync(forgotPasswordDto.Email);
             if (user == null)
                 return BadRequest("Invalid Request");
+            if (user.PhoneNumber == forgotPasswordDto.PhoneNumber && user.Email == forgotPasswordDto.Email) 
+            { 
 
             var token = await _userManager.GeneratePasswordResetTokenAsync(user);
             var param = new Dictionary<string, string?>
@@ -433,8 +435,11 @@ namespace wleepay.API.Controllers
             //var message = new Message("", user.Email , "Reset password token", callback., null);
 
             await _emailSender.SendForgotPasswordEmailLink("admintest1@yopmail.com", callback);
+                
+               return Ok();
 
-            return Ok();
+            }
+            return BadRequest();
         }
 
         [HttpPost("ResetPassword")]
