@@ -224,7 +224,6 @@ namespace wleepay.API.Controllers
 
                 var user = await _userManager.FindByEmailAsync(model.Email);
 
-
                 var expiryDate = userDetails.VerificationExpiry;
                 DateTime currentDate = DateTime.UtcNow; // Use UtcNow to compare in UTC
 
