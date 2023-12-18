@@ -28,6 +28,7 @@ using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using IEmailSender = wleepay.Communication.Interface.IEmailSender;
+using Microsoft.AspNet.Identity;
 
 namespace wleepay.API
 {
@@ -113,6 +114,7 @@ namespace wleepay.API
 
                 // User settings
                 options.User.RequireUniqueEmail = false;
+            
             });
 
             services.AddScoped<IUnitOfWork, UnitOfWork>();

@@ -36,6 +36,7 @@ namespace wleepay.API.Resources
     {
         public string Code { get; set; }
         public string UserId { get; set; }
+        public string Email { get; set; }
 
     }
 

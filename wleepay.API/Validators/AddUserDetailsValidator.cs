@@ -46,7 +46,7 @@ namespace wleepay.API.Validators
              RuleFor(a => a.Pin.ToString())
                 .NotNull()
                 .NotEmpty()
-                .Length(4);
+                .Length(12);
 
             }
             else

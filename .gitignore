@@ -277,3 +277,6 @@ wleepay.API/obj/Debug/net5.0/wleepay.API.csproj.AssemblyReference.cache
 *.dll
 wleepay.API/obj/Debug/net5.0/wleepay.API.dll
 wleepay.API/obj/Debug/net5.0/wleepay.API.pdb
+*.pdb
+*.dll
+*.cache

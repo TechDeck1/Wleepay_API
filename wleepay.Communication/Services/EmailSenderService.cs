@@ -48,7 +48,10 @@ namespace wleepay.Communication.Services
             //var recipientEmail = "admintest1@yopmail.com";
             var recipientEmail = email;
 
-            var body = "Reset password token "+ uri;
+            //var body = "Reset password token "+ uri;
+
+            var body = "Dear user,\n\nPlease click the following link to reset your password:\n";
+            body += "<a href='" + uri + "'>" + uri + "</a>"; // Creating a hyperlink using the <a> tag
 
             // Sender's email address and credentials
             string senderEmail = "mvctest17@gmail.com";

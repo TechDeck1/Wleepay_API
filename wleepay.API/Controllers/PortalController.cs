@@ -94,10 +94,12 @@ namespace wleepay.API.Controllers
             {
                 //get user
                 var userDetails = await _userDetailsService.GetUserDetailsById(user.Id);
-                //generate token
-                var token = GenerateJSONWebToken(userDetails);
                 //Get user role
+
                 var userRole = await _userManager.GetRolesAsync(user);
+
+                //generate token
+                var token = GenerateJSONWebToken(userDetails, userRole?[0]);
                 //updated user
                 UserDetail updatedUser = null;
                 //set logged in status to true if first log in
@@ -109,7 +111,7 @@ namespace wleepay.API.Controllers
                 {
                     UserId = user.Id,
                     Success = true,
-                    //Token = token,
+                    Token = token,
                     //IsLoggedInVerified = updatedUser != null ? updatedUser.IsLoggedIn : userDetails.IsLoggedIn,
                     Role = userRole?[0],
                 });
@@ -219,6 +221,10 @@ namespace wleepay.API.Controllers
             try
             {
                 var userDetails = await _userDetailsService.GetUserDetailsById(model.UserId);
+
+                var user = await _userManager.FindByEmailAsync(model.Email);
+
+
                 var expiryDate = userDetails.VerificationExpiry;
                 DateTime currentDate = DateTime.UtcNow; // Use UtcNow to compare in UTC
 
@@ -233,7 +239,9 @@ namespace wleepay.API.Controllers
                 {
                     if (userDetails.VerificationCode == model.Code)
                     {
-                        var token = GenerateJSONWebToken(userDetails);
+                        var userRole = await _userManager.GetRolesAsync(user);
+
+                        var token = GenerateJSONWebToken(userDetails, userRole?[0].ToString());
                        
                         //updated user
                         UserDetail updatedUser = null;
@@ -251,6 +259,7 @@ namespace wleepay.API.Controllers
                                 UserId = userDetails.UserId,
                                 Token = token,
                                 IsLoggedInVerified = updatedUser != null ? updatedUser.IsLoggedIn : userDetails.IsLoggedIn,
+                                Role = userRole?[0]
 
                             }),
                             isExpired = false,
@@ -294,13 +303,15 @@ namespace wleepay.API.Controllers
 
 
         #region helper methods
-        private string GenerateJSONWebToken(UserDetail userInfo)
+        private string GenerateJSONWebToken(UserDetail userInfo, string userRole)
         {
             var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:Secret"]));
             var authClaims = new List<Claim>
                 {
                     new Claim(ClaimTypes.Name, userInfo.FirstName),
                     new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                    new Claim(ClaimTypes.Role, userRole) // Adding a role claim
+
                 };
 
             var token = new JwtSecurityToken(

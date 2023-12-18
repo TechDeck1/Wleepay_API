@@ -420,24 +420,44 @@ namespace wleepay.API.Controllers
             var user = await _userManager.FindByEmailAsync(forgotPasswordDto.Email);
             if (user == null)
                 return BadRequest("Invalid Request");
-            if (user.PhoneNumber == forgotPasswordDto.PhoneNumber && user.Email == forgotPasswordDto.Email) 
-            { 
 
-            var token = await _userManager.GeneratePasswordResetTokenAsync(user);
-            var param = new Dictionary<string, string?>
+            var userDetails = await _userDetailsService.GetUserDetailsById(user.Id);
+            if (userDetails != null)
+            {
+                if (userDetails.PhoneNumber == forgotPasswordDto.PhoneNumber && user.Email == forgotPasswordDto.Email && userDetails.SecurityAnswerText == forgotPasswordDto.Answer)
+                {
+
+                    var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+                    var param = new Dictionary<string, string?>
                 {
                     {"token", token },
                     {"email", forgotPasswordDto.Email }
                 };
 
-            var callback = QueryHelpers.AddQueryString(forgotPasswordDto.ClientURI, param);
+                    var callback = QueryHelpers.AddQueryString(forgotPasswordDto.ClientURI, param);
 
-            //var message = new Message("", user.Email , "Reset password token", callback., null);
+                    //var message = new Message("", user.Email , "Reset password token", callback., null);
 
-            await _emailSender.SendForgotPasswordEmailLink("admintest1@yopmail.com", callback);
-                
-               return Ok();
+                    await _emailSender.SendForgotPasswordEmailLink("admintest1@yopmail.com", callback);
 
+                    return Ok(new 
+                    {
+                        Success = true,
+                        Message = "Link has been sent to you email to reset your password."
+                    });
+
+
+                }
+                else
+                {
+                    return Ok(new
+                    {
+                        Success=false,
+                        Message="You filled wrong details please try again"
+                    
+                    });
+
+                }
             }
             return BadRequest();
         }
@@ -449,6 +469,9 @@ namespace wleepay.API.Controllers
                 return BadRequest();
 
             var user = await _userManager.FindByEmailAsync(resetPasswordDto.Email);
+            //var validateToken  = await _userManager.VerifyUserTokenAsync(user, resetPasswordDto.Token);
+            var isValidToken = await _userManager.VerifyUserTokenAsync(user, _userManager.Options.Tokens.PasswordResetTokenProvider, "ResetPassword", resetPasswordDto.Token);
+
             if (user == null)
                 return BadRequest("Invalid Request");
 
