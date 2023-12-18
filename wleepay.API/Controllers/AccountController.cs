@@ -427,23 +427,22 @@ namespace wleepay.API.Controllers
                     var token = await _userManager.GeneratePasswordResetTokenAsync(user);
 
                     var param = new Dictionary<string, string?>
-                {
-                    {"token", token },
-                    {"email", forgotPasswordDto.Email }
-                };
+                    {
+                        {"token", token },
+                        {"email", forgotPasswordDto.Email }
+                    };
 
-                    var callback = QueryHelpers.AddQueryString(forgotPasswordDto.ClientURI, param);
+                    string callbackUrl = $"{forgotPasswordDto.ClientURI}?token={token}&email={Uri.EscapeDataString(forgotPasswordDto.Email)}";
 
-                    //var message = new Message("", user.Email , "Reset password token", callback., null);
+                    //var callback = QueryHelpers.AddQueryString(forgotPasswordDto.ClientURI, param);
 
-                    await _emailSender.SendForgotPasswordEmailLink("admintest1@yopmail.com", callback);
+                    await _emailSender.SendForgotPasswordEmailLink("admintest1@yopmail.com", callbackUrl);
 
                     return Ok(new 
                     {
                         Success = true,
                         Message = "Link has been sent to you email to reset your password."
                     });
-
 
                 }
                 else
@@ -471,15 +470,21 @@ namespace wleepay.API.Controllers
                 return BadRequest("Invalid Request");
 
             var isValidToken = await _userManager.VerifyUserTokenAsync(user, _userManager.Options.Tokens.PasswordResetTokenProvider, "ResetPassword", resetPasswordDto.Token);
+            if (isValidToken)
+            {
+                //generate password reset token
+                var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+                var updatedDetail = await _userManager.ResetPasswordAsync(user, resetPasswordDto.Token, resetPasswordDto.ConfirmPassword.ToString());
 
-            //generate password reset token
-            var token = await _userManager.GeneratePasswordResetTokenAsync(user);
-            var updatedDetail = await _userManager.ResetPasswordAsync(user, resetPasswordDto.Token, resetPasswordDto.ConfirmPassword.ToString());
-
-            if (updatedDetail.Succeeded)
-                return Ok("Password is successfully updated.");
+                if (updatedDetail.Succeeded)
+                    return Ok("Password is successfully updated.");
+                else
+                    return BadRequest(updatedDetail.Errors.FirstOrDefault());
+            }
             else
-                return BadRequest(updatedDetail.Errors.FirstOrDefault());
+            {
+                return Unauthorized();
+            }
 
         }
 

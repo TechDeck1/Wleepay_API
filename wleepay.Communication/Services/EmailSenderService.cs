@@ -15,8 +15,8 @@ namespace wleepay.Communication.Services
         {
             
                 var subject = "Failed Login attempt";
-               //var recipientEmail = "admintest1@yopmail.com";
-                var recipientEmail = email;
+                var recipientEmail = "admintest1@yopmail.com";
+               // var recipientEmail = email;
 
                 var body = "You have 3 failed login attemps. Your Wleepay portal account is locked. You must contact system administrator to unlock your account";
 
@@ -45,13 +45,10 @@ namespace wleepay.Communication.Services
         public async Task<bool> SendForgotPasswordEmailLink(string email, string uri)
         {
             var subject = "Reset password token ";
-            //var recipientEmail = "admintest1@yopmail.com";
             var recipientEmail = email;
-
-            //var body = "Reset password token "+ uri;
-
+  
             var body = "Dear user,\n\nPlease click the following link to reset your password:\n";
-            body += "<a href='" + uri + "'> </a>"; // Creating a hyperlink using the <a> tag
+            body += "'" + uri + "'"; // Creating a hyperlink using the <a> tag
 
             // Sender's email address and credentials
             string senderEmail = "mvctest17@gmail.com";
