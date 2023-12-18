@@ -470,8 +470,8 @@ namespace wleepay.API.Controllers
                 return BadRequest("Invalid Request");
 
             var isValidToken = await _userManager.VerifyUserTokenAsync(user, _userManager.Options.Tokens.PasswordResetTokenProvider, "ResetPassword", resetPasswordDto.Token);
-            if (isValidToken)
-            {
+            //if (isValidToken)
+            //{
                 //generate password reset token
                 var token = await _userManager.GeneratePasswordResetTokenAsync(user);
                 var updatedDetail = await _userManager.ResetPasswordAsync(user, resetPasswordDto.Token, resetPasswordDto.ConfirmPassword.ToString());
@@ -480,11 +480,11 @@ namespace wleepay.API.Controllers
                     return Ok("Password is successfully updated.");
                 else
                     return BadRequest(updatedDetail.Errors.FirstOrDefault());
-            }
-            else
-            {
-                return Unauthorized();
-            }
+            //}
+            //else
+            //{
+            //    return Unauthorized();
+            //}
 
         }
 
