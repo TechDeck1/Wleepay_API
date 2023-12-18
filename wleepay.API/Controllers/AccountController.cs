@@ -422,7 +422,7 @@ namespace wleepay.API.Controllers
             var userDetails = await _userDetailsService.GetUserDetailsById(user.Id);
             if (userDetails != null)
             {
-                if (userDetails.PhoneNumber == forgotPasswordDto.PhoneNumber && user.Email == forgotPasswordDto.Email && userDetails.SecurityAnswerText == forgotPasswordDto.Answer)
+                if (userDetails.PhoneNumber == forgotPasswordDto.PhoneNumber && user.Email == forgotPasswordDto.Email && userDetails.SecurityAnswerText == forgotPasswordDto.Answer && userDetails.SecurityQuestionId== forgotPasswordDto.SecurityQuestionId)
                 {
                     var token = await _userManager.GeneratePasswordResetTokenAsync(user);
 
