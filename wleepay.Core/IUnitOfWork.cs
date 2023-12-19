@@ -22,6 +22,7 @@ namespace wleepay.Core
         IAddressRepository Address { get; }
         IKYCLevelRepository KYCLevel { get; }
         ISecurityQuestionsRepository SecurityQuestions { get; }
+        ITokenStorageRepository TokenStorage { get; }
         Task<int> CommitAsync();
     }
 }

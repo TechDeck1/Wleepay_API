@@ -53,6 +53,8 @@ namespace wleepay.API.Controllers
         public readonly IHostingEnvironment _hostingEnvironment;
         private readonly IUploadDocument _documentUploaderService;
         private readonly IEmailSender _emailSender;
+        private readonly ITokenStorageService _tokenStorageService;
+
 
 
         public AccountController(UserManager<ApplicationUser> userManager,
@@ -70,7 +72,8 @@ namespace wleepay.API.Controllers
             IMapper mapper,
             IUploadDocument uploadDocument,
             IHostingEnvironment hostingEnvironment,
-            IEmailSender emailSender)
+            IEmailSender emailSender,
+            ITokenStorageService tokenStorageService)
         {
             _userManager = userManager;
             _roleManager = roleManager;
@@ -88,6 +91,7 @@ namespace wleepay.API.Controllers
             _hostingEnvironment = hostingEnvironment;
             _documentUploaderService = uploadDocument;
             _emailSender = emailSender;
+            _tokenStorageService = tokenStorageService;
         }
 
         [HttpPost("Registration")]
@@ -441,6 +445,10 @@ namespace wleepay.API.Controllers
                     //string callbackUrl = $"{forgotPasswordDto.ClientURI}?token={token}&email={Uri.EscapeDataString(forgotPasswordDto.Email)}";
 
                     //var callback = QueryHelpers.AddQueryString(forgotPasswordDto.ClientURI, param);
+                    TokenStorage tokenStorage = new TokenStorage();
+                    tokenStorage.UserId= user.Id;
+                    tokenStorage.Token= encodedToken;
+                    await _tokenStorageService.UpdateToken(tokenStorage);
 
                     await _emailSender.SendForgotPasswordEmailLink("ariel.ranjot@gmail.com", callbackUrl);
 
@@ -470,16 +478,28 @@ namespace wleepay.API.Controllers
         {
             if (!ModelState.IsValid)
                 return BadRequest();
+
             var user = await _userManager.FindByEmailAsync(resetPasswordDto.Email);
+            var tokenStorage = await _tokenStorageService.GetTokenStorageById(user.Id);
+
+            var expiryDate = tokenStorage.ExpirationTime;
+            DateTime currentDate = DateTime.UtcNow; // Use UtcNow to compare in UTC
+
+            TimeSpan difference = (TimeSpan)(currentDate - expiryDate);
+            int minutesDifference = (int)difference.TotalHours;
+
+            // Check if the given date is expired (more than 2 minutes ago)
+            bool isExpired = minutesDifference >= 2;
 
             if (user == null)
                 return BadRequest("Invalid Request");
 
             var isValidToken = await _userManager.VerifyUserTokenAsync(user, _userManager.Options.Tokens.PasswordResetTokenProvider, "ResetPassword", resetPasswordDto.Token);
-            if (isValidToken==true)
+            
+            if (isValidToken==true && !isExpired)
             {
                 //generate password reset token
-                var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+                //var token = await _userManager.GeneratePasswordResetTokenAsync(user);
                 var updatedDetail = await _userManager.ResetPasswordAsync(user, resetPasswordDto.Token, resetPasswordDto.ConfirmPassword.ToString());
 
                 if (updatedDetail.Succeeded)

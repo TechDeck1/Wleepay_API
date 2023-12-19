@@ -23,6 +23,8 @@ namespace wleepay.Data.Context
         public DbSet<TransferFee> TransferFees { get; set; }
         public DbSet<Address> Addresses { get; set; }
         public DbSet<SecurityQuestions> SecurityQuestions { get; set; }
+        public DbSet<TokenStorage> TokenStorage { get; set; }
+
 
         public WPContext(DbContextOptions<WPContext> options) : base(options)
         {
@@ -49,6 +51,8 @@ namespace wleepay.Data.Context
             builder.ApplyConfiguration(new TransferTypeConfiguration());
             builder.ApplyConfiguration(new KYCLevelConfiguration());
             builder.ApplyConfiguration(new SecurityQuestionsConfiguration());
+            builder.ApplyConfiguration(new TokenStorageConfiguration());
+
 
         }
     }
