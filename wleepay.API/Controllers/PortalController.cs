@@ -83,29 +83,39 @@ namespace wleepay.API.Controllers
                 return BadRequest("No user found.");
           
             var result = await _signInManager.CheckPasswordSignInAsync(user, loginRequest.Password, false);
-            if(result.IsLockedOut) return Ok(new
+
+
+            if (result.IsLockedOut)
             {
-                UserId = user.Id,
-                Success = false,
-                Message = "You have 3 failed login attemps. Your Wleepay portal account is locked. You must contact system administrator to unlock your account",
-            });
+                _logger.LogInformation("Login attempt for email {Email} from IP {IPAddress} at {Timestamp}", loginRequest.Email, GetClientIpAddress(), DateTime.UtcNow);
+
+                return Ok(new
+                {
+                    UserId = user.Id,
+                    Success = false,
+                    Message = "You have 3 failed login attemps. Your Wleepay portal account is locked. You must contact system administrator to unlock your account",
+                });
+            }
 
             if (result.Succeeded)
             {
                 //get user
                 var userDetails = await _userDetailsService.GetUserDetailsById(user.Id);
-                //Get user role
 
+                //Get user role
                 var userRole = await _userManager.GetRolesAsync(user);
 
                 //generate token
                 var token = GenerateJSONWebToken(userDetails, userRole?[0]);
+                
                 //updated user
                 UserDetail updatedUser = null;
-                //set logged in status to true if first log in
                 
+                //set logged in status to true if first log in
                 //if (!userDetails.IsLoggedIn)
                 //    updatedUser = await _userDetailsService.UpdateUserLoggedInStatus(userDetails.UserId, true);
+                
+                _logger.LogInformation("Login attempt for email {Email} from IP {IPAddress} at {Timestamp}", loginRequest.Email, GetClientIpAddress(), DateTime.UtcNow);
 
                 return Ok(new
                 {
@@ -117,6 +127,7 @@ namespace wleepay.API.Controllers
                 });
 
             }
+
             return BadRequest("Invalid login request.");
         }
 
@@ -358,6 +369,14 @@ namespace wleepay.API.Controllers
             }
         }
 
+        private string GetClientIpAddress()
+        {
+            if (HttpContext.Connection.RemoteIpAddress != null)
+            {
+                return HttpContext.Connection.RemoteIpAddress.ToString();
+            }
+            return "Unknown";
+        }
         #endregion
     }
 }

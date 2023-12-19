@@ -28,6 +28,7 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.WebUtilities;
 using IEmailSender = wleepay.Communication.Interface.IEmailSender;
 using Twilio.TwiML.Messaging;
+using System.Web;
 
 namespace wleepay.API.Controllers
 {
@@ -432,11 +433,16 @@ namespace wleepay.API.Controllers
                         {"email", forgotPasswordDto.Email }
                     };
 
-                    string callbackUrl = $"{forgotPasswordDto.ClientURI}?token={token}&email={Uri.EscapeDataString(forgotPasswordDto.Email)}";
+                    var encodedToken = HttpUtility.UrlEncode(token);
+
+                    string callbackUrl = $"{forgotPasswordDto.ClientURI}?token={encodedToken}&email={(forgotPasswordDto.Email)}";
+
+
+                    //string callbackUrl = $"{forgotPasswordDto.ClientURI}?token={token}&email={Uri.EscapeDataString(forgotPasswordDto.Email)}";
 
                     //var callback = QueryHelpers.AddQueryString(forgotPasswordDto.ClientURI, param);
 
-                    await _emailSender.SendForgotPasswordEmailLink("admintest1@yopmail.com", callbackUrl);
+                    await _emailSender.SendForgotPasswordEmailLink("ariel.ranjot@gmail.com", callbackUrl);
 
                     return Ok(new 
                     {
@@ -470,21 +476,26 @@ namespace wleepay.API.Controllers
                 return BadRequest("Invalid Request");
 
             var isValidToken = await _userManager.VerifyUserTokenAsync(user, _userManager.Options.Tokens.PasswordResetTokenProvider, "ResetPassword", resetPasswordDto.Token);
-            //if (isValidToken)
-            //{
+            if (isValidToken==true)
+            {
                 //generate password reset token
                 var token = await _userManager.GeneratePasswordResetTokenAsync(user);
                 var updatedDetail = await _userManager.ResetPasswordAsync(user, resetPasswordDto.Token, resetPasswordDto.ConfirmPassword.ToString());
 
                 if (updatedDetail.Succeeded)
-                    return Ok("Password is successfully updated.");
+                    return Ok(new
+                    {
+                        Success=true,
+                        Message= "Password is successfully updated."
+
+                    });
                 else
                     return BadRequest(updatedDetail.Errors.FirstOrDefault());
-            //}
-            //else
-            //{
-            //    return Unauthorized();
-            //}
+            }
+            else
+            {
+                return Unauthorized();
+            }
 
         }
 
