@@ -74,6 +74,9 @@ namespace wleepay.Data.Configurations
 
             builder.Property(u => u.SecurityAnswerText).HasMaxLength(50);
 
+            builder.Property(u => u.Status);
+
+
             builder
                 .HasOne(u => u.ApplicationUser)
                 .WithOne(u => u.UserDetail)

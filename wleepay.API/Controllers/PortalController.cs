@@ -26,6 +26,7 @@ using Newtonsoft.Json.Linq;
 using Microsoft.AspNetCore.Http;
 using wleepay.Communication.Interface;
 using DevExpress.Data.Filtering.Helpers;
+using wleepay.Core.Enums;
 
 namespace wleepay.API.Controllers
 {
@@ -83,6 +84,19 @@ namespace wleepay.API.Controllers
                 return BadRequest("No user found.");
           
             var result = await _signInManager.CheckPasswordSignInAsync(user, loginRequest.Password, false);
+            var userDetails = await _userDetailsService.GetUserDetailsById(user.Id);
+
+            Status statusEnumFromDatabase = (Status)userDetails.Status;
+
+            if (statusEnumFromDatabase == Status.DeActive)
+            {
+                return Ok(new
+                {
+                    UserId = user.Id,
+                    Success = false,
+                    Message = "Your Account is de-activated, please Contact to your system adminintrator.",
+                });
+            }
 
 
             if (result.IsLockedOut)
@@ -99,9 +113,7 @@ namespace wleepay.API.Controllers
 
             if (result.Succeeded)
             {
-                //get user
-                var userDetails = await _userDetailsService.GetUserDetailsById(user.Id);
-
+                
                 //Get user role
                 var userRole = await _userManager.GetRolesAsync(user);
 
@@ -116,12 +128,22 @@ namespace wleepay.API.Controllers
                 //    updatedUser = await _userDetailsService.UpdateUserLoggedInStatus(userDetails.UserId, true);
                 
                 _logger.LogInformation("Login attempt for email {Email} from IP {IPAddress} at {Timestamp}", loginRequest.Email, GetClientIpAddress(), DateTime.UtcNow);
+                
+                if (statusEnumFromDatabase == Status.Suspended)
+                {
+                    return Ok(new
+                    {
+                        UserId = user.Id,
+                        Success = true,
+                        Message = "Your Account is suspended, please Contact to your system adminintrator.",
+                    });
+                }
 
                 return Ok(new
                 {
                     UserId = user.Id,
                     Success = true,
-                    Token = token,
+                    //Token = token,
                     //IsLoggedInVerified = updatedUser != null ? updatedUser.IsLoggedIn : userDetails.IsLoggedIn,
                     Role = userRole?[0],
                 });
@@ -302,6 +324,62 @@ namespace wleepay.API.Controllers
 
                 return BadRequest();
                 
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+
+        }
+
+        [HttpPost("SuspendOrUnsuspendAccount")]
+        public async Task<IActionResult> SuspendUnsuspendAccount([FromBody] SuspendAccountResource model)
+        {
+            try
+            {
+                var user = await _userManager.FindByEmailAsync(model.EmailId);
+                if (user == null)
+                    return BadRequest("No user found.");
+
+                var userDetails = await _userDetailsService.GetUserDetailsById(user.Id);
+                if(userDetails != null)
+                {
+
+                    var result = await _userDetailsService.UpdateUserStatus(model.UserId, model.Status);
+                    return Ok(result.Status);
+
+                }
+
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+
+        }
+
+        [HttpPost("ActiveOrDeactivateAccount")]
+        public async Task<IActionResult> ActiveOrDeActiveAccount([FromBody] ActivateDeactivateAccountResource model)
+        {
+            try
+            {
+                var user = await _userManager.FindByEmailAsync(model.EmailId);
+                if (user == null)
+                    return BadRequest("No user found.");
+
+                var userDetails = await _userDetailsService.GetUserDetailsById(user.Id);
+                if (userDetails != null)
+                {
+
+                    var result = await _userDetailsService.UpdateUserStatus(model.UserId, model.Status);
+                    return Ok(result.Status);
+
+                }
+
+                return Ok();
             }
             catch (Exception ex)
             {

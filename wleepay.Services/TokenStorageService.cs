@@ -31,7 +31,7 @@ namespace wleepay.Services
             {
                 TokenToUpdate.ExpirationTime = DateTime.Now;
                 TokenToUpdate.Token = tokenStorage.Token;
-                await _unitOfWork.CommitAsync();
+                    await _unitOfWork.CommitAsync();
             }
             else 
             {

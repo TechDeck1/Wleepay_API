@@ -775,3 +775,306 @@ Error Number:207,State:1,Class:16
 2023-12-19 18:30:46 PM||INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development 
 2023-12-19 18:30:46 PM||INFO|Microsoft.Hosting.Lifetime|Content root path: D:\Offical\Wleepay_API\wleepay.API 
 2023-12-19 18:30:46 PM||INFO|Microsoft.Hosting.Lifetime|Content root path: D:\Offical\Wleepay_API\wleepay.API 
+2023-12-20 11:52:41 AM||DEBUG|wleepay.API.Program|init main 
+2023-12-20 11:52:45 AM||INFO|Microsoft.Hosting.Lifetime|Now listening on: https://localhost:5001 
+2023-12-20 11:52:45 AM||INFO|Microsoft.Hosting.Lifetime|Now listening on: https://localhost:5001 
+2023-12-20 11:52:45 AM||INFO|Microsoft.Hosting.Lifetime|Now listening on: http://localhost:5000 
+2023-12-20 11:52:45 AM||INFO|Microsoft.Hosting.Lifetime|Now listening on: http://localhost:5000 
+2023-12-20 11:52:45 AM||INFO|Microsoft.Hosting.Lifetime|Application started. Press Ctrl+C to shut down. 
+2023-12-20 11:52:45 AM||INFO|Microsoft.Hosting.Lifetime|Application started. Press Ctrl+C to shut down. 
+2023-12-20 11:52:45 AM||INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development 
+2023-12-20 11:52:45 AM||INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development 
+2023-12-20 11:52:45 AM||INFO|Microsoft.Hosting.Lifetime|Content root path: D:\Offical\Wleepay_API\wleepay.API 
+2023-12-20 11:52:45 AM||INFO|Microsoft.Hosting.Lifetime|Content root path: D:\Offical\Wleepay_API\wleepay.API 
+2023-12-20 13:18:21 PM||DEBUG|wleepay.API.Program|init main 
+2023-12-20 13:18:24 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: https://localhost:5001 
+2023-12-20 13:18:24 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: https://localhost:5001 
+2023-12-20 13:18:24 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: http://localhost:5000 
+2023-12-20 13:18:24 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: http://localhost:5000 
+2023-12-20 13:18:24 PM||INFO|Microsoft.Hosting.Lifetime|Application started. Press Ctrl+C to shut down. 
+2023-12-20 13:18:24 PM||INFO|Microsoft.Hosting.Lifetime|Application started. Press Ctrl+C to shut down. 
+2023-12-20 13:18:24 PM||INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development 
+2023-12-20 13:18:24 PM||INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development 
+2023-12-20 13:18:24 PM||INFO|Microsoft.Hosting.Lifetime|Content root path: D:\Offical\Wleepay_API\wleepay.API 
+2023-12-20 13:18:24 PM||INFO|Microsoft.Hosting.Lifetime|Content root path: D:\Offical\Wleepay_API\wleepay.API 
+2023-12-20 13:19:49 PM|20102|ERROR|Microsoft.EntityFrameworkCore.Database.Command|Failed executing DbCommand (188ms) [Parameters=[@__userId_0='?' (Size = 450)], CommandType='Text', CommandTimeout='30']
+SELECT TOP(1) [u].[Id], [u].[AccountNumber], [u].[CountyId], [u].[CreatedDate], [u].[DOB], [u].[FirstName], [u].[Gender], [u].[Image], [u].[IsLoggedIn], [u].[KYCDocumentImage], [u].[KYCLevel], [u].[KYCStatusId], [u].[LastName], [u].[LastTimeLoggedIn], [u].[PhoneNumber], [u].[SecurityAnswerText], [u].[SecurityQuestionId], [u].[Status], [u].[UpdatedDate], [u].[UserId], [u].[VerificationCode], [u].[VerificationExpiry], [k].[Id], [k].[AccountBalanceLimit], [k].[Description], [k].[Name], [k].[TransactionDayLimit], [k].[TransactionMonthLimit], [k0].[Id], [k0].[Name], [c].[Id], [c].[Name]
+FROM [UserDetail] AS [u]
+LEFT JOIN [KYCLevel] AS [k] ON [u].[KYCLevel] = [k].[Id]
+INNER JOIN [KYCStatus] AS [k0] ON [u].[KYCStatusId] = [k0].[Id]
+INNER JOIN [County] AS [c] ON [u].[CountyId] = [c].[Id]
+WHERE [u].[UserId] = @__userId_0 
+2023-12-20 13:19:49 PM|20102|ERROR|Microsoft.EntityFrameworkCore.Database.Command|Failed executing DbCommand (188ms) [Parameters=[@__userId_0='?' (Size = 450)], CommandType='Text', CommandTimeout='30']
+SELECT TOP(1) [u].[Id], [u].[AccountNumber], [u].[CountyId], [u].[CreatedDate], [u].[DOB], [u].[FirstName], [u].[Gender], [u].[Image], [u].[IsLoggedIn], [u].[KYCDocumentImage], [u].[KYCLevel], [u].[KYCStatusId], [u].[LastName], [u].[LastTimeLoggedIn], [u].[PhoneNumber], [u].[SecurityAnswerText], [u].[SecurityQuestionId], [u].[Status], [u].[UpdatedDate], [u].[UserId], [u].[VerificationCode], [u].[VerificationExpiry], [k].[Id], [k].[AccountBalanceLimit], [k].[Description], [k].[Name], [k].[TransactionDayLimit], [k].[TransactionMonthLimit], [k0].[Id], [k0].[Name], [c].[Id], [c].[Name]
+FROM [UserDetail] AS [u]
+LEFT JOIN [KYCLevel] AS [k] ON [u].[KYCLevel] = [k].[Id]
+INNER JOIN [KYCStatus] AS [k0] ON [u].[KYCStatusId] = [k0].[Id]
+INNER JOIN [County] AS [c] ON [u].[CountyId] = [c].[Id]
+WHERE [u].[UserId] = @__userId_0 
+2023-12-20 13:19:49 PM|10100|ERROR|Microsoft.EntityFrameworkCore.Query|An exception occurred while iterating over the results of a query for context type 'wleepay.Data.Context.WPContext'.
+Microsoft.Data.SqlClient.SqlException (0x80131904): Invalid column name 'Status'.
+   at Microsoft.Data.SqlClient.SqlCommand.<>c.<ExecuteDbDataReaderAsync>b__169_0(Task`1 result)
+   at System.Threading.Tasks.ContinuationResultTaskFromResultTask`2.InnerInvoke()
+   at System.Threading.Tasks.Task.<>c.<.cctor>b__277_0(Object obj)
+   at System.Threading.ExecutionContext.RunInternal(ExecutionContext executionContext, ContextCallback callback, Object state)
+--- End of stack trace from previous location ---
+   at System.Threading.Tasks.Task.ExecuteWithThreadLocal(Task& currentTaskSlot, Thread threadPoolThread)
+--- End of stack trace from previous location ---
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.AsyncEnumerator.InitializeReaderAsync(DbContext _, Boolean result, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.SqlServer.Storage.Internal.SqlServerExecutionStrategy.ExecuteAsync[TState,TResult](TState state, Func`4 operation, Func`4 verifySucceeded, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.AsyncEnumerator.MoveNextAsync()
+ClientConnectionId:5a7bb1ca-6a8e-4e99-bf4c-a8d6b2dca86a
+Error Number:207,State:1,Class:16 Microsoft.Data.SqlClient.SqlException (0x80131904): Invalid column name 'Status'.
+   at Microsoft.Data.SqlClient.SqlCommand.<>c.<ExecuteDbDataReaderAsync>b__169_0(Task`1 result)
+   at System.Threading.Tasks.ContinuationResultTaskFromResultTask`2.InnerInvoke()
+   at System.Threading.Tasks.Task.<>c.<.cctor>b__277_0(Object obj)
+   at System.Threading.ExecutionContext.RunInternal(ExecutionContext executionContext, ContextCallback callback, Object state)
+--- End of stack trace from previous location ---
+   at System.Threading.Tasks.Task.ExecuteWithThreadLocal(Task& currentTaskSlot, Thread threadPoolThread)
+--- End of stack trace from previous location ---
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.AsyncEnumerator.InitializeReaderAsync(DbContext _, Boolean result, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.SqlServer.Storage.Internal.SqlServerExecutionStrategy.ExecuteAsync[TState,TResult](TState state, Func`4 operation, Func`4 verifySucceeded, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.AsyncEnumerator.MoveNextAsync()
+ClientConnectionId:5a7bb1ca-6a8e-4e99-bf4c-a8d6b2dca86a
+Error Number:207,State:1,Class:16
+2023-12-20 13:19:49 PM|10100|ERROR|Microsoft.EntityFrameworkCore.Query|An exception occurred while iterating over the results of a query for context type 'wleepay.Data.Context.WPContext'.
+Microsoft.Data.SqlClient.SqlException (0x80131904): Invalid column name 'Status'.
+   at Microsoft.Data.SqlClient.SqlCommand.<>c.<ExecuteDbDataReaderAsync>b__169_0(Task`1 result)
+   at System.Threading.Tasks.ContinuationResultTaskFromResultTask`2.InnerInvoke()
+   at System.Threading.Tasks.Task.<>c.<.cctor>b__277_0(Object obj)
+   at System.Threading.ExecutionContext.RunInternal(ExecutionContext executionContext, ContextCallback callback, Object state)
+--- End of stack trace from previous location ---
+   at System.Threading.Tasks.Task.ExecuteWithThreadLocal(Task& currentTaskSlot, Thread threadPoolThread)
+--- End of stack trace from previous location ---
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.AsyncEnumerator.InitializeReaderAsync(DbContext _, Boolean result, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.SqlServer.Storage.Internal.SqlServerExecutionStrategy.ExecuteAsync[TState,TResult](TState state, Func`4 operation, Func`4 verifySucceeded, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.AsyncEnumerator.MoveNextAsync()
+ClientConnectionId:5a7bb1ca-6a8e-4e99-bf4c-a8d6b2dca86a
+Error Number:207,State:1,Class:16 Microsoft.Data.SqlClient.SqlException (0x80131904): Invalid column name 'Status'.
+   at Microsoft.Data.SqlClient.SqlCommand.<>c.<ExecuteDbDataReaderAsync>b__169_0(Task`1 result)
+   at System.Threading.Tasks.ContinuationResultTaskFromResultTask`2.InnerInvoke()
+   at System.Threading.Tasks.Task.<>c.<.cctor>b__277_0(Object obj)
+   at System.Threading.ExecutionContext.RunInternal(ExecutionContext executionContext, ContextCallback callback, Object state)
+--- End of stack trace from previous location ---
+   at System.Threading.Tasks.Task.ExecuteWithThreadLocal(Task& currentTaskSlot, Thread threadPoolThread)
+--- End of stack trace from previous location ---
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.AsyncEnumerator.InitializeReaderAsync(DbContext _, Boolean result, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.SqlServer.Storage.Internal.SqlServerExecutionStrategy.ExecuteAsync[TState,TResult](TState state, Func`4 operation, Func`4 verifySucceeded, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.AsyncEnumerator.MoveNextAsync()
+ClientConnectionId:5a7bb1ca-6a8e-4e99-bf4c-a8d6b2dca86a
+Error Number:207,State:1,Class:16
+2023-12-20 13:19:50 PM|1|ERROR|Microsoft.AspNetCore.Diagnostics.DeveloperExceptionPageMiddleware|An unhandled exception has occurred while executing the request. Microsoft.Data.SqlClient.SqlException (0x80131904): Invalid column name 'Status'.
+   at wleepay.API.Controllers.PortalController.SuspendAccount(SuspendAccountResource model) in D:\Offical\Wleepay_API\wleepay.API\Controllers\PortalController.cs:line 354
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.TaskOfIActionResultExecutor.Execute(IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeActionMethodAsync>g__Awaited|12_0(ControllerActionInvoker invoker, ValueTask`1 actionResultValueTask)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeNextActionFilterAsync>g__Awaited|10_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeInnerFilterAsync>g__Awaited|13_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeFilterPipelineAsync>g__Awaited|19_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Logged|17_1(ResourceInvoker invoker)
+   at Microsoft.AspNetCore.Routing.EndpointMiddleware.<Invoke>g__AwaitRequestTask|6_0(Endpoint endpoint, Task requestTask, ILogger logger)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Session.SessionMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Session.SessionMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Diagnostics.DeveloperExceptionPageMiddleware.Invoke(HttpContext context)
+ClientConnectionId:5a7bb1ca-6a8e-4e99-bf4c-a8d6b2dca86a
+Error Number:207,State:1,Class:16
+2023-12-20 13:19:50 PM|1|ERROR|Microsoft.AspNetCore.Diagnostics.DeveloperExceptionPageMiddleware|An unhandled exception has occurred while executing the request. Microsoft.Data.SqlClient.SqlException (0x80131904): Invalid column name 'Status'.
+   at wleepay.API.Controllers.PortalController.SuspendAccount(SuspendAccountResource model) in D:\Offical\Wleepay_API\wleepay.API\Controllers\PortalController.cs:line 354
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.TaskOfIActionResultExecutor.Execute(IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeActionMethodAsync>g__Awaited|12_0(ControllerActionInvoker invoker, ValueTask`1 actionResultValueTask)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeNextActionFilterAsync>g__Awaited|10_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeInnerFilterAsync>g__Awaited|13_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeFilterPipelineAsync>g__Awaited|19_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Logged|17_1(ResourceInvoker invoker)
+   at Microsoft.AspNetCore.Routing.EndpointMiddleware.<Invoke>g__AwaitRequestTask|6_0(Endpoint endpoint, Task requestTask, ILogger logger)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Session.SessionMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Session.SessionMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Diagnostics.DeveloperExceptionPageMiddleware.Invoke(HttpContext context)
+ClientConnectionId:5a7bb1ca-6a8e-4e99-bf4c-a8d6b2dca86a
+Error Number:207,State:1,Class:16
+2023-12-20 13:20:23 PM|20102|ERROR|Microsoft.EntityFrameworkCore.Database.Command|Failed executing DbCommand (135ms) [Parameters=[@__userId_0='?' (Size = 450)], CommandType='Text', CommandTimeout='30']
+SELECT TOP(1) [u].[Id], [u].[AccountNumber], [u].[CountyId], [u].[CreatedDate], [u].[DOB], [u].[FirstName], [u].[Gender], [u].[Image], [u].[IsLoggedIn], [u].[KYCDocumentImage], [u].[KYCLevel], [u].[KYCStatusId], [u].[LastName], [u].[LastTimeLoggedIn], [u].[PhoneNumber], [u].[SecurityAnswerText], [u].[SecurityQuestionId], [u].[Status], [u].[UpdatedDate], [u].[UserId], [u].[VerificationCode], [u].[VerificationExpiry], [k].[Id], [k].[AccountBalanceLimit], [k].[Description], [k].[Name], [k].[TransactionDayLimit], [k].[TransactionMonthLimit], [k0].[Id], [k0].[Name], [c].[Id], [c].[Name]
+FROM [UserDetail] AS [u]
+LEFT JOIN [KYCLevel] AS [k] ON [u].[KYCLevel] = [k].[Id]
+INNER JOIN [KYCStatus] AS [k0] ON [u].[KYCStatusId] = [k0].[Id]
+INNER JOIN [County] AS [c] ON [u].[CountyId] = [c].[Id]
+WHERE [u].[UserId] = @__userId_0 
+2023-12-20 13:20:23 PM|20102|ERROR|Microsoft.EntityFrameworkCore.Database.Command|Failed executing DbCommand (135ms) [Parameters=[@__userId_0='?' (Size = 450)], CommandType='Text', CommandTimeout='30']
+SELECT TOP(1) [u].[Id], [u].[AccountNumber], [u].[CountyId], [u].[CreatedDate], [u].[DOB], [u].[FirstName], [u].[Gender], [u].[Image], [u].[IsLoggedIn], [u].[KYCDocumentImage], [u].[KYCLevel], [u].[KYCStatusId], [u].[LastName], [u].[LastTimeLoggedIn], [u].[PhoneNumber], [u].[SecurityAnswerText], [u].[SecurityQuestionId], [u].[Status], [u].[UpdatedDate], [u].[UserId], [u].[VerificationCode], [u].[VerificationExpiry], [k].[Id], [k].[AccountBalanceLimit], [k].[Description], [k].[Name], [k].[TransactionDayLimit], [k].[TransactionMonthLimit], [k0].[Id], [k0].[Name], [c].[Id], [c].[Name]
+FROM [UserDetail] AS [u]
+LEFT JOIN [KYCLevel] AS [k] ON [u].[KYCLevel] = [k].[Id]
+INNER JOIN [KYCStatus] AS [k0] ON [u].[KYCStatusId] = [k0].[Id]
+INNER JOIN [County] AS [c] ON [u].[CountyId] = [c].[Id]
+WHERE [u].[UserId] = @__userId_0 
+2023-12-20 13:20:23 PM|10100|ERROR|Microsoft.EntityFrameworkCore.Query|An exception occurred while iterating over the results of a query for context type 'wleepay.Data.Context.WPContext'.
+Microsoft.Data.SqlClient.SqlException (0x80131904): Invalid column name 'Status'.
+   at Microsoft.Data.SqlClient.SqlCommand.<>c.<ExecuteDbDataReaderAsync>b__169_0(Task`1 result)
+   at System.Threading.Tasks.ContinuationResultTaskFromResultTask`2.InnerInvoke()
+   at System.Threading.Tasks.Task.<>c.<.cctor>b__277_0(Object obj)
+   at System.Threading.ExecutionContext.RunInternal(ExecutionContext executionContext, ContextCallback callback, Object state)
+--- End of stack trace from previous location ---
+   at System.Threading.Tasks.Task.ExecuteWithThreadLocal(Task& currentTaskSlot, Thread threadPoolThread)
+--- End of stack trace from previous location ---
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.AsyncEnumerator.InitializeReaderAsync(DbContext _, Boolean result, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.SqlServer.Storage.Internal.SqlServerExecutionStrategy.ExecuteAsync[TState,TResult](TState state, Func`4 operation, Func`4 verifySucceeded, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.AsyncEnumerator.MoveNextAsync()
+ClientConnectionId:5a7bb1ca-6a8e-4e99-bf4c-a8d6b2dca86a
+Error Number:207,State:1,Class:16 Microsoft.Data.SqlClient.SqlException (0x80131904): Invalid column name 'Status'.
+   at Microsoft.Data.SqlClient.SqlCommand.<>c.<ExecuteDbDataReaderAsync>b__169_0(Task`1 result)
+   at System.Threading.Tasks.ContinuationResultTaskFromResultTask`2.InnerInvoke()
+   at System.Threading.Tasks.Task.<>c.<.cctor>b__277_0(Object obj)
+   at System.Threading.ExecutionContext.RunInternal(ExecutionContext executionContext, ContextCallback callback, Object state)
+--- End of stack trace from previous location ---
+   at System.Threading.Tasks.Task.ExecuteWithThreadLocal(Task& currentTaskSlot, Thread threadPoolThread)
+--- End of stack trace from previous location ---
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.AsyncEnumerator.InitializeReaderAsync(DbContext _, Boolean result, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.SqlServer.Storage.Internal.SqlServerExecutionStrategy.ExecuteAsync[TState,TResult](TState state, Func`4 operation, Func`4 verifySucceeded, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.AsyncEnumerator.MoveNextAsync()
+ClientConnectionId:5a7bb1ca-6a8e-4e99-bf4c-a8d6b2dca86a
+Error Number:207,State:1,Class:16
+2023-12-20 13:20:23 PM|10100|ERROR|Microsoft.EntityFrameworkCore.Query|An exception occurred while iterating over the results of a query for context type 'wleepay.Data.Context.WPContext'.
+Microsoft.Data.SqlClient.SqlException (0x80131904): Invalid column name 'Status'.
+   at Microsoft.Data.SqlClient.SqlCommand.<>c.<ExecuteDbDataReaderAsync>b__169_0(Task`1 result)
+   at System.Threading.Tasks.ContinuationResultTaskFromResultTask`2.InnerInvoke()
+   at System.Threading.Tasks.Task.<>c.<.cctor>b__277_0(Object obj)
+   at System.Threading.ExecutionContext.RunInternal(ExecutionContext executionContext, ContextCallback callback, Object state)
+--- End of stack trace from previous location ---
+   at System.Threading.Tasks.Task.ExecuteWithThreadLocal(Task& currentTaskSlot, Thread threadPoolThread)
+--- End of stack trace from previous location ---
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.AsyncEnumerator.InitializeReaderAsync(DbContext _, Boolean result, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.SqlServer.Storage.Internal.SqlServerExecutionStrategy.ExecuteAsync[TState,TResult](TState state, Func`4 operation, Func`4 verifySucceeded, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.AsyncEnumerator.MoveNextAsync()
+ClientConnectionId:5a7bb1ca-6a8e-4e99-bf4c-a8d6b2dca86a
+Error Number:207,State:1,Class:16 Microsoft.Data.SqlClient.SqlException (0x80131904): Invalid column name 'Status'.
+   at Microsoft.Data.SqlClient.SqlCommand.<>c.<ExecuteDbDataReaderAsync>b__169_0(Task`1 result)
+   at System.Threading.Tasks.ContinuationResultTaskFromResultTask`2.InnerInvoke()
+   at System.Threading.Tasks.Task.<>c.<.cctor>b__277_0(Object obj)
+   at System.Threading.ExecutionContext.RunInternal(ExecutionContext executionContext, ContextCallback callback, Object state)
+--- End of stack trace from previous location ---
+   at System.Threading.Tasks.Task.ExecuteWithThreadLocal(Task& currentTaskSlot, Thread threadPoolThread)
+--- End of stack trace from previous location ---
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.AsyncEnumerator.InitializeReaderAsync(DbContext _, Boolean result, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.SqlServer.Storage.Internal.SqlServerExecutionStrategy.ExecuteAsync[TState,TResult](TState state, Func`4 operation, Func`4 verifySucceeded, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.AsyncEnumerator.MoveNextAsync()
+ClientConnectionId:5a7bb1ca-6a8e-4e99-bf4c-a8d6b2dca86a
+Error Number:207,State:1,Class:16
+2023-12-20 13:20:24 PM|1|ERROR|Microsoft.AspNetCore.Diagnostics.DeveloperExceptionPageMiddleware|An unhandled exception has occurred while executing the request. Microsoft.Data.SqlClient.SqlException (0x80131904): Invalid column name 'Status'.
+   at wleepay.API.Controllers.PortalController.SuspendAccount(SuspendAccountResource model) in D:\Offical\Wleepay_API\wleepay.API\Controllers\PortalController.cs:line 354
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.TaskOfIActionResultExecutor.Execute(IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeActionMethodAsync>g__Awaited|12_0(ControllerActionInvoker invoker, ValueTask`1 actionResultValueTask)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeNextActionFilterAsync>g__Awaited|10_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeInnerFilterAsync>g__Awaited|13_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeFilterPipelineAsync>g__Awaited|19_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Logged|17_1(ResourceInvoker invoker)
+   at Microsoft.AspNetCore.Routing.EndpointMiddleware.<Invoke>g__AwaitRequestTask|6_0(Endpoint endpoint, Task requestTask, ILogger logger)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Session.SessionMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Session.SessionMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Diagnostics.DeveloperExceptionPageMiddleware.Invoke(HttpContext context)
+ClientConnectionId:5a7bb1ca-6a8e-4e99-bf4c-a8d6b2dca86a
+Error Number:207,State:1,Class:16
+2023-12-20 13:20:24 PM|1|ERROR|Microsoft.AspNetCore.Diagnostics.DeveloperExceptionPageMiddleware|An unhandled exception has occurred while executing the request. Microsoft.Data.SqlClient.SqlException (0x80131904): Invalid column name 'Status'.
+   at wleepay.API.Controllers.PortalController.SuspendAccount(SuspendAccountResource model) in D:\Offical\Wleepay_API\wleepay.API\Controllers\PortalController.cs:line 354
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.TaskOfIActionResultExecutor.Execute(IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeActionMethodAsync>g__Awaited|12_0(ControllerActionInvoker invoker, ValueTask`1 actionResultValueTask)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeNextActionFilterAsync>g__Awaited|10_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeInnerFilterAsync>g__Awaited|13_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeFilterPipelineAsync>g__Awaited|19_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Logged|17_1(ResourceInvoker invoker)
+   at Microsoft.AspNetCore.Routing.EndpointMiddleware.<Invoke>g__AwaitRequestTask|6_0(Endpoint endpoint, Task requestTask, ILogger logger)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Session.SessionMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Session.SessionMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Diagnostics.DeveloperExceptionPageMiddleware.Invoke(HttpContext context)
+ClientConnectionId:5a7bb1ca-6a8e-4e99-bf4c-a8d6b2dca86a
+Error Number:207,State:1,Class:16
+2023-12-20 13:23:43 PM||DEBUG|wleepay.API.Program|init main 
+2023-12-20 13:23:45 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: https://localhost:5001 
+2023-12-20 13:23:45 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: https://localhost:5001 
+2023-12-20 13:23:45 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: http://localhost:5000 
+2023-12-20 13:23:45 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: http://localhost:5000 
+2023-12-20 13:23:45 PM||INFO|Microsoft.Hosting.Lifetime|Application started. Press Ctrl+C to shut down. 
+2023-12-20 13:23:45 PM||INFO|Microsoft.Hosting.Lifetime|Application started. Press Ctrl+C to shut down. 
+2023-12-20 13:23:45 PM||INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development 
+2023-12-20 13:23:45 PM||INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development 
+2023-12-20 13:23:45 PM||INFO|Microsoft.Hosting.Lifetime|Content root path: D:\Offical\Wleepay_API\wleepay.API 
+2023-12-20 13:23:45 PM||INFO|Microsoft.Hosting.Lifetime|Content root path: D:\Offical\Wleepay_API\wleepay.API 
+2023-12-20 13:29:30 PM||DEBUG|wleepay.API.Program|init main 
+2023-12-20 13:29:33 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: https://localhost:5001 
+2023-12-20 13:29:33 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: https://localhost:5001 
+2023-12-20 13:29:33 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: http://localhost:5000 
+2023-12-20 13:29:33 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: http://localhost:5000 
+2023-12-20 13:29:33 PM||INFO|Microsoft.Hosting.Lifetime|Application started. Press Ctrl+C to shut down. 
+2023-12-20 13:29:33 PM||INFO|Microsoft.Hosting.Lifetime|Application started. Press Ctrl+C to shut down. 
+2023-12-20 13:29:33 PM||INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development 
+2023-12-20 13:29:33 PM||INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development 
+2023-12-20 13:29:33 PM||INFO|Microsoft.Hosting.Lifetime|Content root path: D:\Offical\Wleepay_API\wleepay.API 
+2023-12-20 13:29:33 PM||INFO|Microsoft.Hosting.Lifetime|Content root path: D:\Offical\Wleepay_API\wleepay.API 
+2023-12-20 13:35:20 PM|3|WARN|Microsoft.AspNetCore.Identity.SignInManager|User is currently locked out. 
+2023-12-20 13:35:20 PM|3|WARN|Microsoft.AspNetCore.Identity.SignInManager|User is currently locked out. 
+2023-12-20 13:38:08 PM|3|WARN|Microsoft.AspNetCore.Identity.SignInManager|User is currently locked out. 
+2023-12-20 13:38:08 PM|3|WARN|Microsoft.AspNetCore.Identity.SignInManager|User is currently locked out. 
+2023-12-20 13:57:58 PM||DEBUG|wleepay.API.Program|init main 
+2023-12-20 13:58:01 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: https://localhost:5001 
+2023-12-20 13:58:01 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: https://localhost:5001 
+2023-12-20 13:58:01 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: http://localhost:5000 
+2023-12-20 13:58:01 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: http://localhost:5000 
+2023-12-20 13:58:01 PM||INFO|Microsoft.Hosting.Lifetime|Application started. Press Ctrl+C to shut down. 
+2023-12-20 13:58:01 PM||INFO|Microsoft.Hosting.Lifetime|Application started. Press Ctrl+C to shut down. 
+2023-12-20 13:58:01 PM||INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development 
+2023-12-20 13:58:01 PM||INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development 
+2023-12-20 13:58:01 PM||INFO|Microsoft.Hosting.Lifetime|Content root path: D:\Offical\Wleepay_API\wleepay.API 
+2023-12-20 13:58:01 PM||INFO|Microsoft.Hosting.Lifetime|Content root path: D:\Offical\Wleepay_API\wleepay.API 
+2023-12-20 13:58:58 PM|3|WARN|Microsoft.AspNetCore.Identity.SignInManager|User is currently locked out. 
+2023-12-20 13:58:58 PM|3|WARN|Microsoft.AspNetCore.Identity.SignInManager|User is currently locked out. 
+2023-12-20 13:58:58 PM||INFO|wleepay.API.Controllers.PortalController|Login attempt for email staffadmin1@wlee.com from IP ::1 at 12/20/2023 08:28:58 
+2023-12-20 13:58:58 PM||INFO|wleepay.API.Controllers.PortalController|Login attempt for email staffadmin1@wlee.com from IP ::1 at 12/20/2023 08:28:58 
+2023-12-20 14:00:17 PM||INFO|wleepay.API.Controllers.PortalController|Login attempt for email staffadmin1@wlee.com from IP ::1 at 12/20/2023 08:30:17 
+2023-12-20 14:00:17 PM||INFO|wleepay.API.Controllers.PortalController|Login attempt for email staffadmin1@wlee.com from IP ::1 at 12/20/2023 08:30:17 
+2023-12-20 14:00:35 PM||INFO|wleepay.API.Controllers.PortalController|Action: VerifyCode, User: 700fc277-6daf-4e4e-81bd-cf7872356e34, Timestamp: 12/20/2023 8:30:35 AM, IP: ::1 
+2023-12-20 14:00:35 PM||INFO|wleepay.API.Controllers.PortalController|Action: VerifyCode, User: 700fc277-6daf-4e4e-81bd-cf7872356e34, Timestamp: 12/20/2023 8:30:35 AM, IP: ::1 
+2023-12-20 14:00:36 PM|20504|WARN|Microsoft.EntityFrameworkCore.Query|Compiling a query which loads related collections for more than one collection navigation either via 'Include' or through projection but no 'QuerySplittingBehavior' has been configured. By default Entity Framework will use 'QuerySplittingBehavior.SingleQuery' which can potentially result in slow query performance. See https://go.microsoft.com/fwlink/?linkid=2134277 for more information. To identify the query that's triggering this warning call 'ConfigureWarnings(w => w.Throw(RelationalEventId.MultipleCollectionIncludeWarning))' 
+2023-12-20 14:00:36 PM|20504|WARN|Microsoft.EntityFrameworkCore.Query|Compiling a query which loads related collections for more than one collection navigation either via 'Include' or through projection but no 'QuerySplittingBehavior' has been configured. By default Entity Framework will use 'QuerySplittingBehavior.SingleQuery' which can potentially result in slow query performance. See https://go.microsoft.com/fwlink/?linkid=2134277 for more information. To identify the query that's triggering this warning call 'ConfigureWarnings(w => w.Throw(RelationalEventId.MultipleCollectionIncludeWarning))' 
+2023-12-20 14:00:50 PM|20504|WARN|Microsoft.EntityFrameworkCore.Query|Compiling a query which loads related collections for more than one collection navigation either via 'Include' or through projection but no 'QuerySplittingBehavior' has been configured. By default Entity Framework will use 'QuerySplittingBehavior.SingleQuery' which can potentially result in slow query performance. See https://go.microsoft.com/fwlink/?linkid=2134277 for more information. To identify the query that's triggering this warning call 'ConfigureWarnings(w => w.Throw(RelationalEventId.MultipleCollectionIncludeWarning))' 
+2023-12-20 14:00:50 PM|20504|WARN|Microsoft.EntityFrameworkCore.Query|Compiling a query which loads related collections for more than one collection navigation either via 'Include' or through projection but no 'QuerySplittingBehavior' has been configured. By default Entity Framework will use 'QuerySplittingBehavior.SingleQuery' which can potentially result in slow query performance. See https://go.microsoft.com/fwlink/?linkid=2134277 for more information. To identify the query that's triggering this warning call 'ConfigureWarnings(w => w.Throw(RelationalEventId.MultipleCollectionIncludeWarning))' 
+2023-12-20 14:00:50 PM|10102|WARN|Microsoft.EntityFrameworkCore.Query|The query uses a row limiting operator ('Skip'/'Take') without an 'OrderBy' operator. This may lead to unpredictable results. 
+2023-12-20 14:00:50 PM|10102|WARN|Microsoft.EntityFrameworkCore.Query|The query uses a row limiting operator ('Skip'/'Take') without an 'OrderBy' operator. This may lead to unpredictable results. 
+2023-12-20 14:00:50 PM|10102|WARN|Microsoft.EntityFrameworkCore.Query|The query uses a row limiting operator ('Skip'/'Take') without an 'OrderBy' operator. This may lead to unpredictable results. 
+2023-12-20 14:00:50 PM|10102|WARN|Microsoft.EntityFrameworkCore.Query|The query uses a row limiting operator ('Skip'/'Take') without an 'OrderBy' operator. This may lead to unpredictable results. 
+2023-12-20 14:00:50 PM|10102|WARN|Microsoft.EntityFrameworkCore.Query|The query uses a row limiting operator ('Skip'/'Take') without an 'OrderBy' operator. This may lead to unpredictable results. 
+2023-12-20 14:00:50 PM|10102|WARN|Microsoft.EntityFrameworkCore.Query|The query uses a row limiting operator ('Skip'/'Take') without an 'OrderBy' operator. This may lead to unpredictable results. 
+2023-12-20 14:00:50 PM|10102|WARN|Microsoft.EntityFrameworkCore.Query|The query uses a row limiting operator ('Skip'/'Take') without an 'OrderBy' operator. This may lead to unpredictable results. 
+2023-12-20 14:00:50 PM|10102|WARN|Microsoft.EntityFrameworkCore.Query|The query uses a row limiting operator ('Skip'/'Take') without an 'OrderBy' operator. This may lead to unpredictable results. 
+2023-12-20 14:54:00 PM||INFO|wleepay.API.Controllers.PortalController|Login attempt for email staffadmin1@wlee.com from IP ::1 at 12/20/2023 09:24:00 
+2023-12-20 14:54:00 PM||INFO|wleepay.API.Controllers.PortalController|Login attempt for email staffadmin1@wlee.com from IP ::1 at 12/20/2023 09:24:00 
+2023-12-20 14:54:14 PM||INFO|wleepay.API.Controllers.PortalController|Action: VerifyCode, User: 700fc277-6daf-4e4e-81bd-cf7872356e34, Timestamp: 12/20/2023 9:24:14 AM, IP: ::1 
+2023-12-20 14:54:14 PM||INFO|wleepay.API.Controllers.PortalController|Action: VerifyCode, User: 700fc277-6daf-4e4e-81bd-cf7872356e34, Timestamp: 12/20/2023 9:24:14 AM, IP: ::1 

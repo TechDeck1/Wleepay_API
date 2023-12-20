@@ -1,7 +1,9 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using DevExpress.Utils.About;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
+using System.Xml.Linq;
 using wleepay.Core.Models;
 
 namespace wleepay.Data.Configurations
@@ -33,6 +35,14 @@ namespace wleepay.Data.Configurations
                 NormalizedName = "AGENT",
                 ConcurrencyStamp = "64559bb4-bcea-4c00-a7c9-ac0cd7037bfd"
             });
+            builder.HasData(new ApplicationRole
+            {
+                Id = "F58A3546-E959-4B1D-A40C-518EAF9D9788",
+                Name = "staff",
+                NormalizedName = "STAFF",
+                ConcurrencyStamp = "71EACF2C-9A1F-4602-9D47-6DE367F4F0EF"
+            });
+         
         }
     }
 }

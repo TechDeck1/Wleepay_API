@@ -147,5 +147,17 @@ namespace wleepay.Services
             }
             return userToUpdate;
         }
+
+        public async Task<UserDetail> UpdateUserStatus(string userId, int status )
+        {
+            var userToUpdate = await _unitOfWork.UserDetail.GetUserDetailsById(userId);
+            if (userToUpdate != null)
+            {
+                userToUpdate.UpdatedDate = DateTime.Now;
+                userToUpdate.Status = status;
+                await _unitOfWork.CommitAsync();
+            }
+            return userToUpdate;
+        }
     }
 }

@@ -30,6 +30,7 @@ namespace wleepay.Core.Models
         public DateTime? LastTimeLoggedIn { get; set; }
         public string VerificationCode { get; set; }
         public DateTime? VerificationExpiry { get; set; }
+        public int Status { get; set; }
 
         public int SecurityQuestionId { get; set; }
         public string SecurityAnswerText { get; set; }
