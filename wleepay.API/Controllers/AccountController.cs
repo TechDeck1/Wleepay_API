@@ -455,7 +455,7 @@ namespace wleepay.API.Controllers
                     return Ok(new 
                     {
                         Success = true,
-                        Message = "Link has been sent to you email to reset your password."
+                        Message = "Link has been sent to your email to reset your password."
                     });
 
                 }
@@ -464,8 +464,8 @@ namespace wleepay.API.Controllers
                     return Ok(new
                     {
                         Success=false,
-                        Message="You filled wrong details please try again"
-                    
+                        Message= "Please correct the details you entered and try again."
+
                     });
 
                 }

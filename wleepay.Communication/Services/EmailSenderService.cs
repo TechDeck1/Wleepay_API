@@ -47,11 +47,22 @@ namespace wleepay.Communication.Services
             var subject = "Reset password token ";
             var recipientEmail = email;
 
-            string resetPasswordLink = $"{uri}";
+            string resetPasswordLink = uri;
 
             var body = $"Dear user,\n\nPlease click the following link to reset your password:\n {resetPasswordLink}";
 
-            //string body = $"Dear user, Please click the following link to reset your password: {resetPasswordLink}";
+            //string body = $@"
+            //    <html>
+            //    <body>
+            //        <h1>Hello!</h1>
+            //        <p>This is a sample email template with dynamic links:</p>
+            //        <ul>
+            //            <li><a href='{resetPasswordLink}'>Click Here</a></li>
+            //        </ul>
+            //        <p>Thank you!</p>
+            //    </body>
+            //    </html>
+            //";
 
             // Sender's email address and credentials
             string senderEmail = "mvctest17@gmail.com";
