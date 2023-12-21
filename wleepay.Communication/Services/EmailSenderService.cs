@@ -11,14 +11,14 @@ namespace wleepay.Communication.Services
 {
     public class EmailSenderService : IEmailSender
     {
-        public async Task<bool>  SendEmailAsync(string email)
+        public async Task<bool>  SendEmailAsyncForLockAccount(string email)
         {
             
                 var subject = "Failed Login attempt";
-                var recipientEmail = "admintest1@yopmail.com";
+                var recipientEmail = "shikha0dev@gmail.com";
                // var recipientEmail = email;
 
-                var body = "You have 3 failed login attemps. Your Wleepay portal account is locked. You must contact system administrator to unlock your account";
+                var body = $"Dear Admin,\n\n Your staff's {email} account has been locked after 3 unsuccessful attempts.";
 
                 // Sender's email address and credentials
                 string senderEmail = "mvctest17@gmail.com";
@@ -45,7 +45,7 @@ namespace wleepay.Communication.Services
         public async Task<bool> SendForgotPasswordEmailLink(string email, string uri)
         {
             var subject = "Reset password token ";
-            var recipientEmail = email;
+            var recipientEmail = "clarkflores524@gmail.com";
 
             string resetPasswordLink = uri;
 
@@ -82,6 +82,37 @@ namespace wleepay.Communication.Services
             smtpClient.Send(mailMessage);
 
             return true;
+        }
+
+        public async Task<bool> SendEmailToSystemAdminstrator(string email)
+        {
+
+            var subject = "Failed Login attempt";
+            var recipientEmail = "shikha0dev@gmail.com";
+            // var recipientEmail = email;
+
+            var body = $"Dear Admin,\n\n Your staff's {email} has changed his account password.";
+
+            // Sender's email address and credentials
+            string senderEmail = "mvctest17@gmail.com";
+            string senderPassword = "bqhyobxynxwbkteo"; // Use app-specific passwords or secure storage for passwords
+
+            // Create SMTP client
+            SmtpClient smtpClient = new SmtpClient("smtp.gmail.com"); // Use your SMTP server
+
+            // Port and SSL configuration
+            smtpClient.Port = 587; // Port for SMTP (e.g., 587 for Gmail)
+            smtpClient.EnableSsl = true;
+            smtpClient.UseDefaultCredentials = false;
+            smtpClient.Credentials = new NetworkCredential(senderEmail, senderPassword);
+
+            MailMessage mailMessage = new MailMessage(senderEmail, recipientEmail, subject, body);
+
+            smtpClient.Send(mailMessage);
+
+            return true;
+
+
         }
     }
 }

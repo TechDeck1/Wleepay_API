@@ -57,6 +57,7 @@ namespace wleepay.API.Controllers
 
 
 
+
         public AccountController(UserManager<ApplicationUser> userManager,
             RoleManager<ApplicationRole> roleManager,
             SignInManager<ApplicationUser> signInManager,
@@ -450,7 +451,7 @@ namespace wleepay.API.Controllers
                     tokenStorage.Token= encodedToken;
                     await _tokenStorageService.UpdateToken(tokenStorage);
 
-                    await _emailSender.SendForgotPasswordEmailLink("ariel.ranjot@gmail.com", callbackUrl);
+                    await _emailSender.SendForgotPasswordEmailLink(forgotPasswordDto.Email, callbackUrl);
 
                     return Ok(new 
                     {
@@ -503,12 +504,15 @@ namespace wleepay.API.Controllers
                 var updatedDetail = await _userManager.ResetPasswordAsync(user, resetPasswordDto.Token, resetPasswordDto.ConfirmPassword.ToString());
 
                 if (updatedDetail.Succeeded)
+                {
+                    await _emailSender.SendEmailToSystemAdminstrator(resetPasswordDto.Email);
                     return Ok(new
                     {
-                        Success=true,
-                        Message= "Password is successfully updated."
+                        Success = true,
+                        Message = "Password is successfully updated."
 
                     });
+                }
                 else
                     return BadRequest(updatedDetail.Errors.FirstOrDefault());
             }
