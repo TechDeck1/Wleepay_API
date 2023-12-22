@@ -9,7 +9,7 @@ namespace wleepay.Communication.Interface
     public interface IEmailSender
     {
         Task<bool> SendEmailAsyncForLockAccount(string email);
-        Task<bool> SendForgotPasswordEmailLink(string email, string uri);
+        Task<bool> SendForgotPasswordEmailLink(string email, string uri, string username);
         Task<bool> SendEmailToSystemAdminstrator(string email);
 
     }

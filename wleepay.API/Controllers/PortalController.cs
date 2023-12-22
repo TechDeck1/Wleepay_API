@@ -82,11 +82,12 @@ namespace wleepay.API.Controllers
             if (user == null)
                 return BadRequest("No user found.");
           
-            var result = await _signInManager.CheckPasswordSignInAsync(user, loginRequest.Password, true);
+            var result = await _signInManager.PasswordSignInAsync(user, loginRequest.Password ,false, lockoutOnFailure: true);
 
             if (result.IsLockedOut)
             {
                 _logger.LogInformation("Login attempt for email {Email} from IP {IPAddress} at {Timestamp}", loginRequest.Email, GetClientIpAddress(), DateTime.UtcNow);
+                var mailSent = _emailSender.SendEmailAsyncForLockAccount(loginRequest.Email);
 
                 return Ok(new
                 {

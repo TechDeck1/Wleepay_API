@@ -42,14 +42,14 @@ namespace wleepay.Communication.Services
             
         }
 
-        public async Task<bool> SendForgotPasswordEmailLink(string email, string uri)
+        public async Task<bool> SendForgotPasswordEmailLink(string email, string uri, string username)
         {
             var subject = "Reset password token ";
             var recipientEmail = "clarkflores524@gmail.com";
 
             string resetPasswordLink = uri;
 
-            var body = $"Dear user,\n\nPlease click the following link to reset your password:\n {resetPasswordLink}";
+            var body = $"Dear {username},\n\nPlease click the following link to reset your password:\n {resetPasswordLink}";
 
             //string body = $@"
             //    <html>

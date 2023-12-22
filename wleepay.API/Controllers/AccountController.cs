@@ -137,7 +137,7 @@ namespace wleepay.API.Controllers
                     var roleEnumStringValue = userDetail.Role.HasValue ? ((Core.Enums.Role)userDetail.Role) : ((Core.Enums.Role)Core.Enums.Role.Member);
                     await _userManager.AddToRoleAsync(newUser, roleEnumStringValue.ToString());
                     //sign in user with identity
-                    var result = await _signInManager.CheckPasswordSignInAsync(newUser, userDetail.Pin.ToString(), false);
+                    var result = await _signInManager.PasswordSignInAsync(newUser, userDetail.Pin.ToString(), false, true);
 
                     //insert data in userdetails
                     var userDetailsToInsert = _mapper.Map<AddUserDetailsResource, UserDetail>(userDetail);
@@ -251,7 +251,7 @@ namespace wleepay.API.Controllers
             var user = await _userManager.FindByNameAsync(loginRequest.PhoneNo);
             if (user == null)
                 return BadRequest("Account does not exists.");
-            var result = await _signInManager.CheckPasswordSignInAsync(user, loginRequest.Pin.ToString(), false);
+            var result = await _signInManager.PasswordSignInAsync(user, loginRequest.Pin.ToString(), false, true);
             if (result.Succeeded)
             {
                 //get user
@@ -442,7 +442,7 @@ namespace wleepay.API.Controllers
 
                     string callbackUrl = $"{forgotPasswordDto.ClientURI}?token={encodedToken}&email={(forgotPasswordDto.Email)}";
 
-
+                    var username = userDetails.FirstName + " " + userDetails.LastName;
                     //string callbackUrl = $"{forgotPasswordDto.ClientURI}?token={token}&email={Uri.EscapeDataString(forgotPasswordDto.Email)}";
 
                     //var callback = QueryHelpers.AddQueryString(forgotPasswordDto.ClientURI, param);
@@ -451,7 +451,7 @@ namespace wleepay.API.Controllers
                     tokenStorage.Token= encodedToken;
                     await _tokenStorageService.UpdateToken(tokenStorage);
 
-                    await _emailSender.SendForgotPasswordEmailLink(forgotPasswordDto.Email, callbackUrl);
+                    await _emailSender.SendForgotPasswordEmailLink(forgotPasswordDto.Email, callbackUrl , username);
 
                     return Ok(new 
                     {
@@ -465,7 +465,7 @@ namespace wleepay.API.Controllers
                     return Ok(new
                     {
                         Success=false,
-                        Message= "Please correct the details you entered and try again."
+                        Message= "Please correct the entered details and try again."
 
                     });
 

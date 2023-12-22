@@ -49,7 +49,8 @@ namespace wleepay.API
 
             services.AddIdentity<ApplicationUser, ApplicationRole>(options =>
             {
-                options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
+                options.Lockout.AllowedForNewUsers = true;
+                options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(120);
                 options.Lockout.MaxFailedAccessAttempts = 3;
             })
                    .AddEntityFrameworkStores<WPContext>()
@@ -114,6 +115,8 @@ namespace wleepay.API
                 // Lockout settings
               
                 options.Lockout.AllowedForNewUsers = true;
+                options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(120);
+                options.Lockout.MaxFailedAccessAttempts = 3;
 
                 // User settings
                 options.User.RequireUniqueEmail = false;
