@@ -428,7 +428,7 @@ namespace wleepay.API.Controllers
             var userDetails = await _userDetailsService.GetUserDetailsById(user.Id);
             if (userDetails != null)
             {
-                if (userDetails.PhoneNumber == forgotPasswordDto.PhoneNumber && user.Email == forgotPasswordDto.Email && userDetails.SecurityAnswerText == forgotPasswordDto.Answer && userDetails.SecurityQuestionId== forgotPasswordDto.SecurityQuestionId)
+                if (userDetails.PhoneNumber == forgotPasswordDto.PhoneNumber && user.Email == forgotPasswordDto.Email && userDetails.SecurityAnswerText.ToLower() == forgotPasswordDto.Answer.ToLower() && userDetails.SecurityQuestionId== forgotPasswordDto.SecurityQuestionId)
                 {
                     var token = await _userManager.GeneratePasswordResetTokenAsync(user);
 
