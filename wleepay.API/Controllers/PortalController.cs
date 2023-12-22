@@ -111,6 +111,7 @@ namespace wleepay.API.Controllers
                 });
             }
 
+
             if (result.Succeeded)
             {
                 
@@ -122,11 +123,10 @@ namespace wleepay.API.Controllers
                 
                 //updated user
                 UserDetail updatedUser = null;
-                
+
                 //set logged in status to true if first log in
-                //if (!userDetails.IsLoggedIn)
-                //    updatedUser = await _userDetailsService.UpdateUserLoggedInStatus(userDetails.UserId, true);
-                
+              
+
                 _logger.LogInformation("Login attempt for email {Email} from IP {IPAddress} at {Timestamp}", loginRequest.Email, GetClientIpAddress(), DateTime.UtcNow);
                 
                 if (statusEnumFromDatabase == Status.Suspended)
@@ -136,6 +136,20 @@ namespace wleepay.API.Controllers
                         UserId = user.Id,
                         Success = true,
                         Message = "Your Account is suspended, please Contact to your system adminintrator.",
+                    });
+                }
+                if (userRole[0] == "SuperAdmin")
+                {
+                    if (!userDetails.IsLoggedIn)
+                        updatedUser = await _userDetailsService.UpdateUserLoggedInStatus(userDetails.UserId, true);
+
+                    return Ok(new
+                    {
+                        UserId = user.Id,
+                        Success = true,
+                        Token = token,
+                        IsLoggedInVerified = updatedUser != null ? updatedUser.IsLoggedIn : userDetails.IsLoggedIn,
+                        Role = userRole?[0],
                     });
                 }
 
