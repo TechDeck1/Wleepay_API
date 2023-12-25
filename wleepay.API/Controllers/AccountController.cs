@@ -57,6 +57,7 @@ namespace wleepay.API.Controllers
 
 
 
+
         public AccountController(UserManager<ApplicationUser> userManager,
             RoleManager<ApplicationRole> roleManager,
             SignInManager<ApplicationUser> signInManager,
@@ -136,7 +137,7 @@ namespace wleepay.API.Controllers
                     var roleEnumStringValue = userDetail.Role.HasValue ? ((Core.Enums.Role)userDetail.Role) : ((Core.Enums.Role)Core.Enums.Role.Member);
                     await _userManager.AddToRoleAsync(newUser, roleEnumStringValue.ToString());
                     //sign in user with identity
-                    var result = await _signInManager.CheckPasswordSignInAsync(newUser, userDetail.Pin.ToString(), false);
+                    var result = await _signInManager.PasswordSignInAsync(newUser, userDetail.Pin.ToString(), false, true);
 
                     //insert data in userdetails
                     var userDetailsToInsert = _mapper.Map<AddUserDetailsResource, UserDetail>(userDetail);
@@ -250,7 +251,7 @@ namespace wleepay.API.Controllers
             var user = await _userManager.FindByNameAsync(loginRequest.PhoneNo);
             if (user == null)
                 return BadRequest("Account does not exists.");
-            var result = await _signInManager.CheckPasswordSignInAsync(user, loginRequest.Pin.ToString(), false);
+            var result = await _signInManager.PasswordSignInAsync(user, loginRequest.Pin.ToString(), false, true);
             if (result.Succeeded)
             {
                 //get user
@@ -427,7 +428,7 @@ namespace wleepay.API.Controllers
             var userDetails = await _userDetailsService.GetUserDetailsById(user.Id);
             if (userDetails != null)
             {
-                if (userDetails.PhoneNumber == forgotPasswordDto.PhoneNumber && user.Email == forgotPasswordDto.Email && userDetails.SecurityAnswerText == forgotPasswordDto.Answer && userDetails.SecurityQuestionId== forgotPasswordDto.SecurityQuestionId)
+                if (userDetails.PhoneNumber == forgotPasswordDto.PhoneNumber && user.Email == forgotPasswordDto.Email && userDetails.SecurityAnswerText.ToLower() == forgotPasswordDto.Answer.ToLower() && userDetails.SecurityQuestionId== forgotPasswordDto.SecurityQuestionId)
                 {
                     var token = await _userManager.GeneratePasswordResetTokenAsync(user);
 
@@ -441,7 +442,7 @@ namespace wleepay.API.Controllers
 
                     string callbackUrl = $"{forgotPasswordDto.ClientURI}?token={encodedToken}&email={(forgotPasswordDto.Email)}";
 
-
+                    var username = userDetails.FirstName + " " + userDetails.LastName;
                     //string callbackUrl = $"{forgotPasswordDto.ClientURI}?token={token}&email={Uri.EscapeDataString(forgotPasswordDto.Email)}";
 
                     //var callback = QueryHelpers.AddQueryString(forgotPasswordDto.ClientURI, param);
@@ -450,12 +451,12 @@ namespace wleepay.API.Controllers
                     tokenStorage.Token= encodedToken;
                     await _tokenStorageService.UpdateToken(tokenStorage);
 
-                    await _emailSender.SendForgotPasswordEmailLink("ariel.ranjot@gmail.com", callbackUrl);
+                    await _emailSender.SendForgotPasswordEmailLink(forgotPasswordDto.Email, callbackUrl , username);
 
                     return Ok(new 
                     {
                         Success = true,
-                        Message = "Link has been sent to you email to reset your password."
+                        Message = "Link has been sent to your email to reset your password."
                     });
 
                 }
@@ -464,8 +465,8 @@ namespace wleepay.API.Controllers
                     return Ok(new
                     {
                         Success=false,
-                        Message="You filled wrong details please try again"
-                    
+                        Message= "Please correct the entered details and try again."
+
                     });
 
                 }
@@ -503,12 +504,15 @@ namespace wleepay.API.Controllers
                 var updatedDetail = await _userManager.ResetPasswordAsync(user, resetPasswordDto.Token, resetPasswordDto.ConfirmPassword.ToString());
 
                 if (updatedDetail.Succeeded)
+                {
+                    await _emailSender.SendEmailToSystemAdminstrator(resetPasswordDto.Email);
                     return Ok(new
                     {
-                        Success=true,
-                        Message= "Password is successfully updated."
+                        Success = true,
+                        Message = "Password is successfully updated."
 
                     });
+                }
                 else
                     return BadRequest(updatedDetail.Errors.FirstOrDefault());
             }

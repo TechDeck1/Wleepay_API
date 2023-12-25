@@ -47,7 +47,12 @@ namespace wleepay.API
             //services.Configure<JwtConfig>(Configuration.GetSection("JwtConfig"));
             services.AddDbContext<WPContext>(options => options.UseSqlServer(Configuration.GetConnectionString("WleePayDataBase")));
 
-            services.AddIdentity<ApplicationUser, ApplicationRole>()
+            services.AddIdentity<ApplicationUser, ApplicationRole>(options =>
+            {
+                options.Lockout.AllowedForNewUsers = true;
+                options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(60);
+                options.Lockout.MaxFailedAccessAttempts = 3;
+            })
                    .AddEntityFrameworkStores<WPContext>()
                    .AddDefaultTokenProviders();
 
@@ -108,13 +113,15 @@ namespace wleepay.API
                 options.Password.RequireUppercase = false;
 
                 // Lockout settings
-                options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
-                options.Lockout.MaxFailedAccessAttempts = 5;
+              
                 options.Lockout.AllowedForNewUsers = true;
+                options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(60);
+                options.Lockout.MaxFailedAccessAttempts = 3;
 
                 // User settings
                 options.User.RequireUniqueEmail = false;
-            
+                options.SignIn.RequireConfirmedAccount = false;
+
             });
 
             services.AddScoped<IUnitOfWork, UnitOfWork>();
