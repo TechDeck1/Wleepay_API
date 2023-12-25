@@ -82,7 +82,8 @@ namespace wleepay.API.Controllers
             var user = await _userManager.FindByEmailAsync(loginRequest.Email);
             if (user == null)
                 return BadRequest("No user found.");
-          
+
+            var userDetails = await _userDetailsService.GetUserDetailsById(user.Id);
             var result = await _signInManager.PasswordSignInAsync(user, loginRequest.Password ,false, lockoutOnFailure: true);
 
             Status statusEnumFromDatabase = (Status)userDetails.Status;
@@ -121,25 +122,10 @@ namespace wleepay.API.Controllers
                 //generate token
                 var token = GenerateJSONWebToken(userDetails, userRole?[0]);
                 
-                _logger.LogInformation("Login attempt for email {Email} from IP {IPAddress} at {Timestamp}", loginRequest.Email, GetClientIpAddress(), DateTime.UtcNow);
-                if (userRole[0] == "Staff")
-                {
-                    return Ok(new
-                    {
-                        UserId = user.Id,
-                        Success = true,
-                        //Token = token,
-                        //IsLoggedInVerified = updatedUser != null ? updatedUser.IsLoggedIn : userDetails.IsLoggedIn,
-                        Role = userRole?[0],
-                    });
-                }
-
                 //updated user
                 UserDetail updatedUser = null;
 
                 //set logged in status to true if first log in
-              
-
                 _logger.LogInformation("Login attempt for email {Email} from IP {IPAddress} at {Timestamp}", loginRequest.Email, GetClientIpAddress(), DateTime.UtcNow);
                 
                 if (statusEnumFromDatabase == Status.Suspended)
