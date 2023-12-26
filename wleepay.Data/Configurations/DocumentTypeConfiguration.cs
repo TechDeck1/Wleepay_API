@@ -43,6 +43,12 @@ namespace wleepay.Data.Configurations
                 Id = 3,
                 Name = "Voter Card"
             });
+
+            builder.HasData(new DocumentType
+            {
+                Id = 4,
+                Name = "Passport"
+            });
         }
     }
 }

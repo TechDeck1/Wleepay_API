@@ -101,11 +101,11 @@ namespace wleepay.Data.Configurations
                  .OnDelete(DeleteBehavior.ClientNoAction)
                  .HasForeignKey(u => u.KYCLevel);
 
-            builder
-                 .HasOne(u => u.SecurityQuestions)
-                 .WithMany(u => u.UserDetails)
-                 .OnDelete(DeleteBehavior.ClientNoAction)
-                 .HasForeignKey(u => u.SecurityQuestionId);
+            //builder
+            //     .HasOne(u => u.SecurityQuestions)
+            //     .WithMany(u => u.UserDetails)
+            //     .OnDelete(DeleteBehavior.ClientNoAction)
+            //     .HasForeignKey(u => u.SecurityQuestionId);
 
             builder.HasData(new UserDetail
             {

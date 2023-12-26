@@ -151,6 +151,7 @@ namespace wleepay.API.Controllers
                     {
                         var profileURL = await _storageService.UploadImageWithURL(userDetailsToInsert.Image, "user-profile-picture", newUser.Id);
                         //var profileURL = userDetailsToInsert.Image + "";
+                        //var profileURL = _storageService.UploadUserProfileImage(userDetailsToInsert.Image, newUser.Id);
                         userDetailsToInsert.Image = profileURL;
                     }
 
@@ -175,6 +176,144 @@ namespace wleepay.API.Controllers
                         {
                             //insert data in kyc document
                             var kycDetailsToAdd = _mapper.Map<AddUserDetailsResource, KYCdocuments>(userDetail);
+                            kycDetailsToAdd.UserId = newUser.Id;
+                            kycDetailsToAdd.CreatedDate = DateTime.Now;
+                            kycDetailsToAdd.UpdatedDate = DateTime.Now;
+
+                            await _kycDocumentsService.AddOrUpdateKYCDocument(kycDetailsToAdd);
+                        }
+
+                        //create wallet for register user by role
+                        if (roleEnumStringValue == Core.Enums.Role.Member)
+                        {
+                            await _walletService.CreateCustomerWallet(newUser.Id);
+                        }
+                        else if (roleEnumStringValue == Core.Enums.Role.Agent)
+                        {
+                            await _walletService.CreateAgentWallet(newUser.Id);
+                        }
+
+                        //add user address
+                        if (userDetail.Address != null)
+                        {
+                            var addressToInsert = _mapper.Map<AddressResource, Address>(userDetail.Address);
+                            addressToInsert.UserId = updatedDetails.UserId;
+                            await _addressService.AddOrUpdateAddress(addressToInsert);
+                        }
+
+                        //generate jwt token
+                        var token = GenerateJSONWebToken(userDetailsToInsert);
+
+                        //send registration sucess message on mobile number
+                        _smsService.sendMessage(MessagesTemplates.RegistrationSuccessMessage(updatedDetails.AccountNumber, updatedDetails?.KYCLevelDetail?.Name), updatedDetails.PhoneNumber);
+                        return Ok(new
+                        {
+                            Success = true,
+                            Token = token,
+                            UserId = userDetailsToInsert.UserId,
+                            FirstName = updatedDetails.FirstName,
+                            LastName = updatedDetails.LastName,
+                            ProfilePic = updatedDetails.Image,
+                            PhoneNumber = updatedDetails.PhoneNumber,
+                            AccountNumber = updatedDetails.AccountNumber
+                        });
+                    }
+                    else
+                        return BadRequest("Can't create user.");
+                }
+                else
+                    return BadRequest(isUserCreated.Errors.FirstOrDefault().Description);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.ToString());
+                throw ex.InnerException;
+            }
+        }
+
+        [HttpPost("RegisterStaff")]
+        public async Task<IActionResult> RegisterStaff([FromBody] AddStaffDetailsResource userDetail)
+        {
+            try
+            {
+                var validator = new AddStaffDetailsValidator();
+                var validationResult = await validator.ValidateAsync(userDetail);
+
+                if (!validationResult.IsValid)
+                    return BadRequest(validationResult.Errors);
+
+                //check for super admin
+                if (userDetail.Role == 0)
+                    return BadRequest("You can't create Super Admin.");
+
+                //check if user exists with email
+                ApplicationUser applicationUser = new ApplicationUser();
+                if (!string.IsNullOrEmpty(userDetail.EmailId))
+                    applicationUser = await _userManager.FindByEmailAsync(userDetail.EmailId);
+
+                if (applicationUser != null && !string.IsNullOrEmpty(applicationUser.Id))
+                    return BadRequest("Email is already in use.");
+
+                //check if phone number already exists
+                var userExistWithPhone = await _userDetailsService.IsPhoneAlreadyRegistered(userDetail.PhoneNumber);
+                if (userExistWithPhone == true)
+                    return BadRequest("Phone number is already in use.");
+
+                //create new user with identity
+
+                var newUser = new ApplicationUser() { UserName = userDetail.PhoneNumber, Id = Guid.NewGuid().ToString() };
+                if (!string.IsNullOrEmpty(userDetail.EmailId))
+                    newUser.Email = userDetail.EmailId;
+
+                var isUserCreated = await _userManager.CreateAsync(newUser);
+
+                if (isUserCreated.Succeeded)
+                {
+                    //assign role to user
+                    var roleEnumStringValue = userDetail.Role.HasValue ? ((Core.Enums.Role)userDetail.Role) : ((Core.Enums.Role)Core.Enums.Role.Member);
+                    await _userManager.AddToRoleAsync(newUser, roleEnumStringValue.ToString());
+                   
+                    //sign in user with identity
+                    //var result = await _signInManager.PasswordSignInAsync(newUser, "Admin@123456", false, true);
+
+                    //insert data in userdetails
+                    var userDetailsToInsert = _mapper.Map<AddStaffDetailsResource, UserDetail>(userDetail);
+                    userDetailsToInsert.UserId = newUser.Id;
+
+                    //generate account number for user
+                    userDetailsToInsert.AccountNumber = await GenerateUniqueAccountNumber();
+
+                    //save smile identity image to blob for user profile
+                    if (!string.IsNullOrEmpty(userDetailsToInsert.Image))
+                    {
+                        //var profileURL = await _storageService.UploadImageWithURL(userDetailsToInsert.Image, "user-profile-picture", newUser.Id);
+                        //var profileURL = userDetailsToInsert.Image + "";
+                        var profileURL = _storageService.UploadUserProfileImage(userDetailsToInsert.Image, newUser.Id);
+
+                        userDetailsToInsert.Image = profileURL;
+                    }
+
+                    if (!string.IsNullOrEmpty(userDetailsToInsert.KYCDocumentImage))
+                    {
+                        var documentURL = _storageService.UploadKYCDocument(userDetailsToInsert.KYCDocumentImage, newUser.Id);
+                        //var profileURL = userDetailsToInsert.Image + "";
+                        userDetailsToInsert.KYCDocumentImage = documentURL.ToString();
+                        if (userDetailsToInsert.KYCLevel == Core.Enums.KYCLevel.L1.GetHashCode())
+                        {
+                            //update kyc level from l1 to l2 for new document upload
+                            userDetailsToInsert.KYCLevel = Core.Enums.KYCLevel.L2.GetHashCode();
+                        }
+                    }
+
+                    //save data
+                    var updatedDetails = await _userDetailsService.AddOrUpdateUserDetails(userDetailsToInsert);
+                    if (updatedDetails.UserId != null)
+                    {
+                        //kyc document is optional in registration
+                        if (userDetail.DocumentTypeId.HasValue)
+                        {
+                            //insert data in kyc document
+                            var kycDetailsToAdd = _mapper.Map<AddStaffDetailsResource, KYCdocuments>(userDetail);
                             kycDetailsToAdd.UserId = newUser.Id;
                             kycDetailsToAdd.CreatedDate = DateTime.Now;
                             kycDetailsToAdd.UpdatedDate = DateTime.Now;
@@ -523,6 +662,87 @@ namespace wleepay.API.Controllers
 
         }
 
+        [HttpPost("LinkForCompleteStaffLogin")]
+        public async Task<IActionResult> LinkForLoginSetup([FromBody] LinkForLoginSetupResource linkForLoginSetup )
+        {
+            var user = await _userManager.FindByEmailAsync(linkForLoginSetup.Email);
+            if (user == null)
+                return BadRequest("Invalid Request");
+
+            var userDetails = await _userDetailsService.GetUserDetailsById(user.Id);
+            if (userDetails != null)
+            {
+                if (userDetails.PhoneNumber == linkForLoginSetup.PhoneNumber && user.Email == linkForLoginSetup.Email)
+                {
+                    string callbackUrl = $"{linkForLoginSetup.ClientURI}?email={(linkForLoginSetup.Email)}";
+                    var username = userDetails.FirstName + " " + userDetails.LastName;
+                    await _emailSender.SendEmailToStaffToCompleteLoginProcess(linkForLoginSetup.Email, callbackUrl, username);
+
+                    return Ok(new
+                    {
+                        Success = true,
+                        Message = "Link has been sent to your email to complete your login process."
+                    });
+
+                }
+                else
+                {
+                    return Ok(new
+                    {
+                        Success = false,
+                        Message = "Link is not valid"
+
+                    });
+
+                }
+            }
+            return BadRequest();
+        }
+
+        [HttpPost("LoginSetup")]
+        public async Task<IActionResult> SetupLoginPassword([FromBody] SetupLoginResources setupLogin)
+        {
+
+            var user = await _userManager.FindByEmailAsync(setupLogin.Email);
+            if (user == null)
+                return BadRequest("Invalid Request");
+
+            var userDetails = await _userDetailsService.GetUserDetailsById(user.Id);
+            if (userDetails != null)
+            {
+                if (user.Email == setupLogin.Email)
+                {
+                    var addPasswordResult = await _userManager.AddPasswordAsync(user, setupLogin.ConfirmPassword);
+
+                    if (addPasswordResult.Succeeded)
+                    {
+                        userDetails.SecurityAnswerText = setupLogin.Answer;
+                        userDetails.SecurityQuestionId = setupLogin.SecurityQuestionId;                    
+                        var updatedDetails = await _userDetailsService.AddOrUpdateUserDetails(userDetails);
+                        await _emailSender.EmailAccountSuccessfullySetup(setupLogin.Email, setupLogin.ConfirmPassword);
+
+                        return Ok(new
+                        {
+                            Success = true,
+                            Message = "Password is successfully genrated."
+
+                        });
+                    }
+                }
+                else
+                {
+                    return Ok(new
+                    {
+                        Success = false,
+                        Message = "Email is not valid"
+
+                    });
+
+                }
+            }
+            return BadRequest();
+        }
+
         #region helper methods
         private string GenerateJSONWebToken(UserDetail userInfo)
         {
@@ -557,8 +777,7 @@ namespace wleepay.API.Controllers
 
             return accountNumber;
         }
-        #endregion
-
+    
         private async Task<string> uploadDocument(IFormFile file, string userId, string containerName = "kyc-document")
         {
             try
@@ -579,5 +798,6 @@ namespace wleepay.API.Controllers
                 throw Ex.InnerException;
             }
         }
+        #endregion
     }
 }

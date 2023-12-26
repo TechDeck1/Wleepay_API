@@ -27,11 +27,11 @@ namespace wleepay.Core.Models
         public DateTime CreatedDate { get; set; }
         public DateTime UpdatedDate { get; set; }
         public string KYCDocumentImage { get; set; }
-        public DateTime? LastTimeLoggedIn { get; set; }
         public string VerificationCode { get; set; }
         public DateTime? VerificationExpiry { get; set; }
         public int Status { get; set; }
-
+        public string WleePhoneNumber { get; set; }
+        public DateTime HireDate { get; set; }
         public int SecurityQuestionId { get; set; }
         public string SecurityAnswerText { get; set; }
 

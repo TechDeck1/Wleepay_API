@@ -11,6 +11,10 @@ namespace wleepay.Communication.Interface
         Task<bool> SendEmailAsyncForLockAccount(string email);
         Task<bool> SendForgotPasswordEmailLink(string email, string uri, string username);
         Task<bool> SendEmailToSystemAdminstrator(string email);
+        Task<bool> SendEmailToStaffToCompleteLoginProcess(string email, string uri, string username);
+        Task<bool> EmailAccountSuccessfullySetup(string email, string password);
+
+
 
     }
 }

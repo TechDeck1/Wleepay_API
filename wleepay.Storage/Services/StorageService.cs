@@ -204,6 +204,11 @@ namespace wleepay.Storage.Services
             try
             {
                 var docFolderPath = Path.Combine(_hostingEnvironment.WebRootPath, "KYCDocument");
+                int commaIndex = docData.IndexOf(',');
+                if (commaIndex >= 0)
+                {
+                    docData = docData.Substring(commaIndex + 1);
+                }
                 byte[] image = Convert.FromBase64String(docData);
                 File.WriteAllBytes(Path.Combine(docFolderPath,$"{userId}.jpg"), image);
                 return Path.Combine(docFolderPath, $"{userId}.jpg");
@@ -215,6 +220,24 @@ namespace wleepay.Storage.Services
             
         }
 
-
+        public string UploadUserProfileImage(string imageData, string userId)
+        {
+            try
+            {
+                var docFolderPath = Path.Combine(_hostingEnvironment.WebRootPath, "Images");
+                int commaIndex = imageData.IndexOf(',');
+                if (commaIndex >= 0)
+                {
+                    imageData = imageData.Substring(commaIndex + 1);
+                }
+                byte[] image = Convert.FromBase64String(imageData);
+                File.WriteAllBytes(Path.Combine(docFolderPath, $"{userId}.jpg"), image);
+                return Path.Combine(docFolderPath, $"{userId}.jpg");
+            }
+            catch (Exception ex)
+            {
+                return "";
+            }
+        }
     }
 }
