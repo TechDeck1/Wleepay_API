@@ -11,7 +11,7 @@ namespace wleepay.Communication.Services
 {
     public class EmailSenderService : IEmailSender
     {
-        public async Task<bool>  SendEmailAsyncForLockAccount(string email)
+        public async Task<bool> SendEmailAsyncForLockAccount(string email)
         {
             
                 var subject = "Failed Login attempt";
@@ -106,7 +106,7 @@ namespace wleepay.Communication.Services
         {
 
             var subject = "Failed Login attempt";
-            var recipientEmail = "ariel.ranjot@gmail.com";
+            var recipientEmail = "ariel.shubhams@gmail.com";
             // var recipientEmail = email;
 
             string resetPasswordLink = uri;
