@@ -1,0 +1,31 @@
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
+using System.Threading.Tasks;
+using wleepay.Core.Models;
+using wleepay.Core.Services;
+using AutoMapper;
+using Microsoft.AspNetCore.Identity;
+
+namespace wleepay.API.Controllers
+{
+    public class SystemActivityController : Controller
+    {
+
+        private readonly ISystemActivityLogsService _systemActivityLogsService;
+
+        public SystemActivityController(
+            ISystemActivityLogsService systemActivityLogsService
+            )
+        {
+           
+            _systemActivityLogsService = systemActivityLogsService;
+        }
+
+        [HttpGet("SystemLogs")]
+        public async Task<IActionResult> GetSystemAllLogs()
+        {
+            var logs = _systemActivityLogsService.GetAllSystemLogs();
+            return Ok(logs);
+        }
+    }
+}

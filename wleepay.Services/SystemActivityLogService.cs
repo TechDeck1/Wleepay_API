@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.SqlServer.Management.Smo;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
@@ -21,7 +22,14 @@ namespace wleepay.Services
         {
             systemActivityLog.CreatedDate = DateTime.Now;
             await _unitOfWork.SystemActivity.AddAsync(systemActivityLog);
-           _unitOfWork.CommitAsync();
+            _unitOfWork.CommitAsync();
             return systemActivityLog;        }
+
+        public async Task<IList<SystemActivityLog>> GetAllSystemLogs()
+        {
+            var systemLogs = new SystemActivityLog();
+            var token = await _unitOfWork.SystemActivity.GetAllActivityLogs();
+            return token; throw new NotImplementedException();
+        }
     }
 }
