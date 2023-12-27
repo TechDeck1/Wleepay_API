@@ -74,7 +74,7 @@ namespace wleepay.Communication.Services
         public async Task<bool> SendEmailToSystemAdminstrator(string email)
         {
 
-            var subject = "Failed Login attempt";
+            var subject = "Change Password";
             var recipientEmail = "shikha0dev@gmail.com";
             // var recipientEmail = email;
 
@@ -105,7 +105,7 @@ namespace wleepay.Communication.Services
         public async Task<bool> SendEmailToStaffToCompleteLoginProcess(string email, string uri, string username)
         {
 
-            var subject = "Failed Login attempt";
+            var subject = "Complete Login process";
             var recipientEmail = "ariel.shubhams@gmail.com";
             // var recipientEmail = email;
 
@@ -138,7 +138,7 @@ namespace wleepay.Communication.Services
         public async Task<bool> EmailAccountSuccessfullySetup(string email, string password)
         {
 
-            var subject = "Failed Login attempt";
+            var subject = "Account Created";
             var recipientEmail = "ariel.ranjot@gmail.com";
             // var recipientEmail = email;
 
@@ -167,7 +167,7 @@ namespace wleepay.Communication.Services
 
         public async Task<bool> EmailForAccountActivated(string email)
         {
-            var subject = "Failed Login attempt";
+            var subject = "Account Activated";
             var recipientEmail = "ariel.ranjot@gmail.com";
             // var recipientEmail = email;
 
@@ -195,7 +195,7 @@ namespace wleepay.Communication.Services
 
         public async Task<bool> EmailForAccountDeactivated(string email)
         {
-            var subject = "Failed Login attempt";
+            var subject = "Account De-Activated";
             var recipientEmail = "ariel.ranjot@gmail.com";
             // var recipientEmail = email;
 
