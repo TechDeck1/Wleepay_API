@@ -164,5 +164,61 @@ namespace wleepay.Communication.Services
             return true;
 
         }
+
+        public async Task<bool> EmailForAccountActivated(string email)
+        {
+            var subject = "Failed Login attempt";
+            var recipientEmail = "ariel.ranjot@gmail.com";
+            // var recipientEmail = email;
+
+            var body = $"Dear Admin,\n\n Account is succesfully De-Activated for {email}. user cannot log in to his/her account";
+
+            // Sender's email address and credentials
+            string senderEmail = "mvctest17@gmail.com";
+            string senderPassword = "bqhyobxynxwbkteo"; // Use app-specific passwords or secure storage for passwords
+
+            // Create SMTP client
+            SmtpClient smtpClient = new SmtpClient("smtp.gmail.com"); // Use your SMTP server
+
+            // Port and SSL configuration
+            smtpClient.Port = 587; // Port for SMTP (e.g., 587 for Gmail)
+            smtpClient.EnableSsl = true;
+            smtpClient.UseDefaultCredentials = false;
+            smtpClient.Credentials = new NetworkCredential(senderEmail, senderPassword);
+
+            MailMessage mailMessage = new MailMessage(senderEmail, recipientEmail, subject, body);
+
+            smtpClient.Send(mailMessage);
+
+            return true;
+        }
+
+        public async Task<bool> EmailForAccountDeactivated(string email)
+        {
+            var subject = "Failed Login attempt";
+            var recipientEmail = "ariel.ranjot@gmail.com";
+            // var recipientEmail = email;
+
+            var body = $"Dear Admin,\n\n Account is succesfully Activated for {email}. user can now log in to his/her account";
+
+            // Sender's email address and credentials
+            string senderEmail = "mvctest17@gmail.com";
+            string senderPassword = "bqhyobxynxwbkteo"; // Use app-specific passwords or secure storage for passwords
+
+            // Create SMTP client
+            SmtpClient smtpClient = new SmtpClient("smtp.gmail.com"); // Use your SMTP server
+
+            // Port and SSL configuration
+            smtpClient.Port = 587; // Port for SMTP (e.g., 587 for Gmail)
+            smtpClient.EnableSsl = true;
+            smtpClient.UseDefaultCredentials = false;
+            smtpClient.Credentials = new NetworkCredential(senderEmail, senderPassword);
+
+            MailMessage mailMessage = new MailMessage(senderEmail, recipientEmail, subject, body);
+
+            smtpClient.Send(mailMessage);
+
+            return true;
+        }
     }
 }

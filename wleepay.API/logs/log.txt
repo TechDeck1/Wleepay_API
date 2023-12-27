@@ -779,3 +779,58 @@ wleepay.API.Resources.AddStaffDetailsResource -> wleepay.Core.Models.UserDetail
 2023-12-26 18:02:24 PM|2|WARN|Microsoft.AspNetCore.Identity.SignInManager|User failed to provide the correct password. 
 2023-12-26 18:03:49 PM||INFO|wleepay.API.Controllers.PortalController|Login attempt for email testingstaffonboard33@wlee.com from IP ::1 at 12/26/2023 12:33:49 
 2023-12-26 18:03:49 PM||INFO|wleepay.API.Controllers.PortalController|Login attempt for email testingstaffonboard33@wlee.com from IP ::1 at 12/26/2023 12:33:49 
+2023-12-27 13:34:48 PM||DEBUG|wleepay.API.Program|init main 
+2023-12-27 13:34:50 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: https://localhost:5001 
+2023-12-27 13:34:50 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: https://localhost:5001 
+2023-12-27 13:34:50 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: http://localhost:5000 
+2023-12-27 13:34:50 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: http://localhost:5000 
+2023-12-27 13:34:50 PM||INFO|Microsoft.Hosting.Lifetime|Application started. Press Ctrl+C to shut down. 
+2023-12-27 13:34:50 PM||INFO|Microsoft.Hosting.Lifetime|Application started. Press Ctrl+C to shut down. 
+2023-12-27 13:34:50 PM||INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development 
+2023-12-27 13:34:50 PM||INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development 
+2023-12-27 13:34:50 PM||INFO|Microsoft.Hosting.Lifetime|Content root path: D:\Offical\Wleepay_API\wleepay.API 
+2023-12-27 13:34:50 PM||INFO|Microsoft.Hosting.Lifetime|Content root path: D:\Offical\Wleepay_API\wleepay.API 
+2023-12-27 13:35:52 PM||DEBUG|wleepay.API.Program|init main 
+2023-12-27 13:35:54 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: https://localhost:5001 
+2023-12-27 13:35:54 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: https://localhost:5001 
+2023-12-27 13:35:54 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: http://localhost:5000 
+2023-12-27 13:35:54 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: http://localhost:5000 
+2023-12-27 13:35:54 PM||INFO|Microsoft.Hosting.Lifetime|Application started. Press Ctrl+C to shut down. 
+2023-12-27 13:35:54 PM||INFO|Microsoft.Hosting.Lifetime|Application started. Press Ctrl+C to shut down. 
+2023-12-27 13:35:54 PM||INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development 
+2023-12-27 13:35:54 PM||INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development 
+2023-12-27 13:35:54 PM||INFO|Microsoft.Hosting.Lifetime|Content root path: D:\Offical\Wleepay_API\wleepay.API 
+2023-12-27 13:35:54 PM||INFO|Microsoft.Hosting.Lifetime|Content root path: D:\Offical\Wleepay_API\wleepay.API 
+2023-12-27 13:36:54 PM||DEBUG|wleepay.API.Program|init main 
+2023-12-27 13:36:56 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: https://localhost:5001 
+2023-12-27 13:36:56 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: https://localhost:5001 
+2023-12-27 13:36:56 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: http://localhost:5000 
+2023-12-27 13:36:56 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: http://localhost:5000 
+2023-12-27 13:36:56 PM||INFO|Microsoft.Hosting.Lifetime|Application started. Press Ctrl+C to shut down. 
+2023-12-27 13:36:56 PM||INFO|Microsoft.Hosting.Lifetime|Application started. Press Ctrl+C to shut down. 
+2023-12-27 13:36:56 PM||INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development 
+2023-12-27 13:36:56 PM||INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development 
+2023-12-27 13:36:56 PM||INFO|Microsoft.Hosting.Lifetime|Content root path: D:\Offical\Wleepay_API\wleepay.API 
+2023-12-27 13:36:56 PM||INFO|Microsoft.Hosting.Lifetime|Content root path: D:\Offical\Wleepay_API\wleepay.API 
+2023-12-27 13:40:37 PM||DEBUG|wleepay.API.Program|init main 
+2023-12-27 13:40:41 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: https://localhost:5001 
+2023-12-27 13:40:41 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: https://localhost:5001 
+2023-12-27 13:40:41 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: http://localhost:5000 
+2023-12-27 13:40:41 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: http://localhost:5000 
+2023-12-27 13:40:41 PM||INFO|Microsoft.Hosting.Lifetime|Application started. Press Ctrl+C to shut down. 
+2023-12-27 13:40:41 PM||INFO|Microsoft.Hosting.Lifetime|Application started. Press Ctrl+C to shut down. 
+2023-12-27 13:40:41 PM||INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development 
+2023-12-27 13:40:41 PM||INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development 
+2023-12-27 13:40:41 PM||INFO|Microsoft.Hosting.Lifetime|Content root path: D:\Offical\Wleepay_API\wleepay.API 
+2023-12-27 13:40:41 PM||INFO|Microsoft.Hosting.Lifetime|Content root path: D:\Offical\Wleepay_API\wleepay.API 
+2023-12-27 13:43:49 PM||DEBUG|wleepay.API.Program|init main 
+2023-12-27 13:43:51 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: https://localhost:5001 
+2023-12-27 13:43:51 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: https://localhost:5001 
+2023-12-27 13:43:51 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: http://localhost:5000 
+2023-12-27 13:43:51 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: http://localhost:5000 
+2023-12-27 13:43:51 PM||INFO|Microsoft.Hosting.Lifetime|Application started. Press Ctrl+C to shut down. 
+2023-12-27 13:43:51 PM||INFO|Microsoft.Hosting.Lifetime|Application started. Press Ctrl+C to shut down. 
+2023-12-27 13:43:51 PM||INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development 
+2023-12-27 13:43:51 PM||INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development 
+2023-12-27 13:43:51 PM||INFO|Microsoft.Hosting.Lifetime|Content root path: D:\Offical\Wleepay_API\wleepay.API 
+2023-12-27 13:43:51 PM||INFO|Microsoft.Hosting.Lifetime|Content root path: D:\Offical\Wleepay_API\wleepay.API 

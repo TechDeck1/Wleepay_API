@@ -13,7 +13,8 @@ namespace wleepay.Communication.Interface
         Task<bool> SendEmailToSystemAdminstrator(string email);
         Task<bool> SendEmailToStaffToCompleteLoginProcess(string email, string uri, string username);
         Task<bool> EmailAccountSuccessfullySetup(string email, string password);
-
+        Task<bool> EmailForAccountActivated(string email);
+        Task<bool> EmailForAccountDeactivated(string email);
 
 
     }

@@ -341,7 +341,13 @@ namespace wleepay.API.Controllers
 
                         //generate jwt token
                         var token = GenerateJSONWebToken(userDetailsToInsert);
-
+                      
+                        LinkForLoginSetupResource linkForLoginSetup = new LinkForLoginSetupResource();
+                        linkForLoginSetup.Email = userDetail.EmailId;
+                        linkForLoginSetup.PhoneNumber = userDetail.PhoneNumber;
+                        linkForLoginSetup.ClientURI = "http://localhost:4200/#/account/account-setup";
+                        var result = GenerateLinkForLoginSetup(linkForLoginSetup);
+                        
                         //send registration sucess message on mobile number
                         _smsService.sendMessage(MessagesTemplates.RegistrationSuccessMessage(updatedDetails.AccountNumber, updatedDetails?.KYCLevelDetail?.Name), updatedDetails.PhoneNumber);
                         return Ok(new
@@ -662,43 +668,6 @@ namespace wleepay.API.Controllers
 
         }
 
-        [HttpPost("LinkForCompleteStaffLogin")]
-        public async Task<IActionResult> LinkForLoginSetup([FromBody] LinkForLoginSetupResource linkForLoginSetup )
-        {
-            var user = await _userManager.FindByEmailAsync(linkForLoginSetup.Email);
-            if (user == null)
-                return BadRequest("Invalid Request");
-
-            var userDetails = await _userDetailsService.GetUserDetailsById(user.Id);
-            if (userDetails != null)
-            {
-                if (userDetails.PhoneNumber == linkForLoginSetup.PhoneNumber && user.Email == linkForLoginSetup.Email)
-                {
-                    string callbackUrl = $"{linkForLoginSetup.ClientURI}?email={(linkForLoginSetup.Email)}";
-                    var username = userDetails.FirstName + " " + userDetails.LastName;
-                    await _emailSender.SendEmailToStaffToCompleteLoginProcess(linkForLoginSetup.Email, callbackUrl, username);
-
-                    return Ok(new
-                    {
-                        Success = true,
-                        Message = "Link has been sent to your email to complete your login process."
-                    });
-
-                }
-                else
-                {
-                    return Ok(new
-                    {
-                        Success = false,
-                        Message = "Link is not valid"
-
-                    });
-
-                }
-            }
-            return BadRequest();
-        }
-
         [HttpPost("LoginSetup")]
         public async Task<IActionResult> SetupLoginPassword([FromBody] SetupLoginResources setupLogin)
         {
@@ -797,6 +766,29 @@ namespace wleepay.API.Controllers
                 _logger.LogError("Error in uploadDocument helper method");
                 throw Ex.InnerException;
             }
+        }
+
+        private async Task<bool> GenerateLinkForLoginSetup(LinkForLoginSetupResource linkForLoginSetup)
+        {
+            var user = await _userManager.FindByEmailAsync(linkForLoginSetup.Email);
+            if (user == null)
+                return false;
+
+            var userDetails = await _userDetailsService.GetUserDetailsById(user.Id);
+            if (userDetails != null)
+            {
+                if (userDetails.PhoneNumber == linkForLoginSetup.PhoneNumber && user.Email == linkForLoginSetup.Email)
+                {
+                    string callbackUrl = $"{linkForLoginSetup.ClientURI}?email={(linkForLoginSetup.Email)}";
+                    var username = userDetails.FirstName + " " + userDetails.LastName;
+                    await _emailSender.SendEmailToStaffToCompleteLoginProcess(linkForLoginSetup.Email, callbackUrl, username);
+
+                    return true;
+
+                }
+               
+            }
+            return false;
         }
         #endregion
     }

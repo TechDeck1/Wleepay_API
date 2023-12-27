@@ -128,15 +128,6 @@ namespace wleepay.API.Controllers
                 //set logged in status to true if first log in
                 _logger.LogInformation("Login attempt for email {Email} from IP {IPAddress} at {Timestamp}", loginRequest.Email, GetClientIpAddress(), DateTime.UtcNow);
                 
-                if (statusEnumFromDatabase == Status.Suspended)
-                {
-                    return Ok(new
-                    {
-                        UserId = user.Id,
-                        Success = true,
-                        Message = "Your Account is suspended, please Contact to your system adminintrator.",
-                    });
-                }
                 if (userRole[0] == "SuperAdmin")
                 {
                     if (!userDetails.IsLoggedIn)
@@ -210,22 +201,6 @@ namespace wleepay.API.Controllers
             return Ok("Your account is unlocked by system administrator");
 
         }
-
-        [HttpPost("alertMail")]
-        public void SendEmail(string email)
-        {
-            try
-            {
-                var result = _emailSender.SendEmailAsyncForLockAccount(email);
-
-            }
-            catch (Exception ex)
-            {
-                // Handle exceptions or errors here
-                Console.WriteLine("Error sending email: " + ex.Message);
-            }
-        }
-
 
         [HttpPost("SendCode")]
         public async Task<IActionResult> SendOTP([FromBody] SendCode model)
