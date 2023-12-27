@@ -1,0 +1,14 @@
+﻿using Microsoft.AspNetCore.Identity;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Text;
+namespace wleepay.Core.Enums
+{
+    public enum GenericMessagesForSystemLogs
+    {
+        [Description("User is succesfully logged in")] SuccessfullyLoggedIn,
+        [Description("Wleepay portal account is locked after 3 failed login attempts")] AccountLocked,
+        [Description("Wleepay portal account is De-Activated")] AccountDeActivated
+    }
+}

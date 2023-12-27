@@ -29,6 +29,7 @@ using Microsoft.AspNetCore.WebUtilities;
 using IEmailSender = wleepay.Communication.Interface.IEmailSender;
 using Twilio.TwiML.Messaging;
 using System.Web;
+using wleepay.Core.Enums;
 
 namespace wleepay.API.Controllers
 {
@@ -108,7 +109,7 @@ namespace wleepay.API.Controllers
 
                 //check for super admin
                 if (userDetail.Role == 0)
-                    return BadRequest("You can't create Super Admin.");
+                    return BadRequest(Messages.IsSuperAdmin.ToDescriptionString());
 
                 //check if user exists with email
                 ApplicationUser applicationUser = new ApplicationUser();
@@ -116,12 +117,12 @@ namespace wleepay.API.Controllers
                     applicationUser = await _userManager.FindByEmailAsync(userDetail.EmailId);
 
                 if (applicationUser != null && !string.IsNullOrEmpty(applicationUser.Id))
-                    return BadRequest("Email is already in use.");
+                    return BadRequest(Messages.EmailAlreadyUsed.ToDescriptionString());
 
                 //check if phone number already exists
                 var userExistWithPhone = await _userDetailsService.IsPhoneAlreadyRegistered(userDetail.PhoneNumber);
                 if (userExistWithPhone == true)
-                    return BadRequest("Phone number is already in use.");
+                    return BadRequest(Messages.PhoneAlreadyUsed.ToDescriptionString());
 
                 //create new user with identity
 
@@ -219,7 +220,7 @@ namespace wleepay.API.Controllers
                         });
                     }
                     else
-                        return BadRequest("Can't create user.");
+                        return BadRequest(Messages.UserNotCreated.ToDescriptionString());
                 }
                 else
                     return BadRequest(isUserCreated.Errors.FirstOrDefault().Description);
@@ -568,7 +569,7 @@ namespace wleepay.API.Controllers
 
             var user = await _userManager.FindByEmailAsync(forgotPasswordDto.Email);
             if (user == null)
-                return BadRequest("Invalid Request");
+                return BadRequest(Messages.NotFound.ToDescriptionString());
 
             var userDetails = await _userDetailsService.GetUserDetailsById(user.Id);
             if (userDetails != null)
@@ -601,7 +602,7 @@ namespace wleepay.API.Controllers
                     return Ok(new 
                     {
                         Success = true,
-                        Message = "Link has been sent to your email to reset your password."
+                        Message = Messages.LinkSentForResetPassword.ToDescriptionString()
                     });
 
                 }
@@ -610,7 +611,7 @@ namespace wleepay.API.Controllers
                     return Ok(new
                     {
                         Success=false,
-                        Message= "Please correct the entered details and try again."
+                        Message=Messages.DetailsNotCorrect.ToDescriptionString()
 
                     });
 
@@ -638,7 +639,7 @@ namespace wleepay.API.Controllers
             bool isExpired = minutesDifference >= 2;
 
             if (user == null)
-                return BadRequest("Invalid Request");
+                return BadRequest(Messages.NotFound.ToDescriptionString());
 
             var isValidToken = await _userManager.VerifyUserTokenAsync(user, _userManager.Options.Tokens.PasswordResetTokenProvider, "ResetPassword", resetPasswordDto.Token);
             
@@ -654,7 +655,7 @@ namespace wleepay.API.Controllers
                     return Ok(new
                     {
                         Success = true,
-                        Message = "Password is successfully updated."
+                        Message = Messages.PasswordUpdated.ToDescriptionString(),
 
                     });
                 }
@@ -674,7 +675,7 @@ namespace wleepay.API.Controllers
 
             var user = await _userManager.FindByEmailAsync(setupLogin.Email);
             if (user == null)
-                return BadRequest("Invalid Request");
+                return BadRequest(Messages.NotFound.ToDescriptionString());
 
             var userDetails = await _userDetailsService.GetUserDetailsById(user.Id);
             if (userDetails != null)
@@ -693,7 +694,7 @@ namespace wleepay.API.Controllers
                         return Ok(new
                         {
                             Success = true,
-                            Message = "Password is successfully genrated."
+                            Message = Messages.PasswordGenerated.ToDescriptionString()
 
                         });
                     }
@@ -703,7 +704,7 @@ namespace wleepay.API.Controllers
                     return Ok(new
                     {
                         Success = false,
-                        Message = "Email is not valid"
+                        Message = Messages.EmailNotValid.ToDescriptionString()
 
                     });
 

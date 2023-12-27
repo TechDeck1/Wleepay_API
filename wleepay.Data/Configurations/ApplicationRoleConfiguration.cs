@@ -35,6 +35,7 @@ namespace wleepay.Data.Configurations
                 NormalizedName = "AGENT",
                 ConcurrencyStamp = "64559bb4-bcea-4c00-a7c9-ac0cd7037bfd"
             });
+
             builder.HasData(new ApplicationRole
             {
                 Id = "F58A3546-E959-4B1D-A40C-518EAF9D9788",

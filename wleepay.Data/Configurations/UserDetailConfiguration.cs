@@ -55,11 +55,21 @@ namespace wleepay.Data.Configurations
                 .Property(u => u.Image);
 
             builder
+              .Property(u => u.KYCDocumentImage);
+
+            builder
                 .Property(u => u.CountyId)
                 .IsRequired();
 
             builder
                 .Property(u => u.KYCLevel);
+
+
+            builder
+                .Property(u => u.CreatedDate);
+
+            builder
+               .Property(u => u.UpdatedDate);
 
             builder
                 .Property(u => u.IsLoggedIn)
@@ -75,6 +85,14 @@ namespace wleepay.Data.Configurations
             builder.Property(u => u.SecurityAnswerText).HasMaxLength(50);
 
             builder.Property(u => u.Status);
+
+            builder
+               .Property(u => u.HireDate);
+
+            builder.Property(u => u.AccountNumber);
+
+            builder
+               .Property(u => u.WleePhoneNumber);
 
 
             builder
@@ -101,11 +119,6 @@ namespace wleepay.Data.Configurations
                  .OnDelete(DeleteBehavior.ClientNoAction)
                  .HasForeignKey(u => u.KYCLevel);
 
-            //builder
-            //     .HasOne(u => u.SecurityQuestions)
-            //     .WithMany(u => u.UserDetails)
-            //     .OnDelete(DeleteBehavior.ClientNoAction)
-            //     .HasForeignKey(u => u.SecurityQuestionId);
 
             builder.HasData(new UserDetail
             {

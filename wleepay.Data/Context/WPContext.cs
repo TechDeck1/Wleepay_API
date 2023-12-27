@@ -24,7 +24,7 @@ namespace wleepay.Data.Context
         public DbSet<Address> Addresses { get; set; }
         public DbSet<SecurityQuestions> SecurityQuestions { get; set; }
         public DbSet<TokenStorage> TokenStorage { get; set; }
-
+        public DbSet<SystemActivityLog> SystemActivities { get; set; }
 
         public WPContext(DbContextOptions<WPContext> options) : base(options)
         {
@@ -52,7 +52,7 @@ namespace wleepay.Data.Context
             builder.ApplyConfiguration(new KYCLevelConfiguration());
             builder.ApplyConfiguration(new SecurityQuestionsConfiguration());
             builder.ApplyConfiguration(new TokenStorageConfiguration());
-
+            builder.ApplyConfiguration(new SystemActivitiesConfiguration());
 
         }
     }

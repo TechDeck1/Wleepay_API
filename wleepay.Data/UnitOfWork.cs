@@ -27,6 +27,8 @@ namespace wleepay.Data
         private IKYCLevelRepository _kycLevelRepository;
         private ISecurityQuestionsRepository _securityQuestionsRepository;
         private ITokenStorageRepository _tokenStorageRepository;
+        private ISystemActivityLogsRepository _systemActivityLogsRepository;
+
 
         public UnitOfWork(WPContext context) {
             this._context = context;
@@ -48,6 +50,7 @@ namespace wleepay.Data
         public IKYCLevelRepository KYCLevel => _kycLevelRepository = _kycLevelRepository ?? new KYCLevelRepository(_context);
         public ISecurityQuestionsRepository SecurityQuestions => _securityQuestionsRepository = _securityQuestionsRepository ?? new SecurityQuestionsRepository(_context);
         public ITokenStorageRepository TokenStorage => _tokenStorageRepository=_tokenStorageRepository ?? new TokenStorageRepository(_context);
+        public ISystemActivityLogsRepository SystemActivity => _systemActivityLogsRepository= _systemActivityLogsRepository ?? new SystemActivityLogsRepository(_context);
 
         public async Task<int> CommitAsync()
         {

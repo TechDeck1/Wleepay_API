@@ -11,6 +11,5 @@ namespace wleepay.Core.Services
         Task<TokenStorage> GetTokenStorageById(string userId);
         Task<TokenStorage> UpdateToken(TokenStorage tokenStorage);
 
-
     }
 }

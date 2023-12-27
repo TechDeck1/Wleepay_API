@@ -152,6 +152,8 @@ namespace wleepay.API
             services.AddScoped<IEmailSender, EmailSenderService>();
             services.AddTransient<ISecurityQuestionService, SecurityQuestionsService>();
             services.AddTransient<ITokenStorageService, TokenStorageService>();
+            services.AddTransient<ISystemActivityLogsService, SystemActivityLogService>();
+
 
 
 

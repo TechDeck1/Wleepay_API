@@ -44,7 +44,7 @@ namespace wleepay.API.Controllers
         private readonly IConfiguration _configuration;
         private readonly ISMSService _SMSService;
         private readonly IEmailSender _emailSender;
-
+        private readonly ISystemActivityLogsService _systemActivityLogsService;
 
 
         public PortalController(UserManager<ApplicationUser> userManager,
@@ -55,7 +55,8 @@ namespace wleepay.API.Controllers
             IConfiguration configuration,
             IMapper mapper,
             ISMSService sMSService,
-            IEmailSender emailSender)
+            IEmailSender emailSender,
+            ISystemActivityLogsService systemActivityLogsService)
             
 
         {
@@ -68,6 +69,7 @@ namespace wleepay.API.Controllers
             _mapper = mapper;
             _SMSService = sMSService;
             _emailSender = emailSender;
+            _systemActivityLogsService = systemActivityLogsService;
         }
 
         
@@ -81,34 +83,44 @@ namespace wleepay.API.Controllers
 
             var user = await _userManager.FindByEmailAsync(loginRequest.Email);
             if (user == null)
-                return BadRequest("No user found.");
+                return BadRequest(Messages.NotFound.ToDescriptionString());
 
             var userDetails = await _userDetailsService.GetUserDetailsById(user.Id);
             var result = await _signInManager.PasswordSignInAsync(user, loginRequest.Password ,false, lockoutOnFailure: true);
+           
+            SystemActivityLog systemActivityLog = new SystemActivityLog();
+            systemActivityLog.UserId = user.Id;
+            systemActivityLog.Email = loginRequest.Email;
+            systemActivityLog.IpAddress = GetClientIpAddress();
+            systemActivityLog.Action = ActionsForSystemLogs.Login.ToDescriptionString();
 
             Status statusEnumFromDatabase = (Status)userDetails.Status;
 
             if (statusEnumFromDatabase == Status.DeActive)
             {
+                systemActivityLog.Description = GenericMessagesForSystemLogs.AccountDeActivated.ToDescriptionString();
+                var addLogs = await _systemActivityLogsService.AddSystemLogs(systemActivityLog);
                 return Ok(new
                 {
                     UserId = user.Id,
                     Success = false,
-                    Message = "Your Account is de-activated, please Contact to your system adminintrator.",
+                    Message = Messages.AccountDeActivated.ToDescriptionString(),
                 });
             }
 
-
             if (result.IsLockedOut)
             {
-                _logger.LogInformation("Login attempt for email {Email} from IP {IPAddress} at {Timestamp}", loginRequest.Email, GetClientIpAddress(), DateTime.UtcNow);
+                //_logger.LogInformation("Login attempt for email {Email} from IP {IPAddress} at {Timestamp}", loginRequest.Email, GetClientIpAddress(), DateTime.UtcNow);
+              
                 var mailSent = _emailSender.SendEmailAsyncForLockAccount(loginRequest.Email);
+                systemActivityLog.Description = GenericMessagesForSystemLogs.AccountLocked.ToDescriptionString() + mailSent;
+                var addLogs = await _systemActivityLogsService.AddSystemLogs(systemActivityLog);
 
                 return Ok(new
                 {
                     UserId = user.Id,
                     Success = false,
-                    Message = "You have 3 failed login attemps. Your Wleepay portal account is locked. You must contact system administrator to unlock your account",
+                    Message = Messages.AccountLocked.ToDescriptionString(),
                 });
             }
 
@@ -126,8 +138,13 @@ namespace wleepay.API.Controllers
                 UserDetail updatedUser = null;
 
                 //set logged in status to true if first log in
-                _logger.LogInformation("Login attempt for email {Email} from IP {IPAddress} at {Timestamp}", loginRequest.Email, GetClientIpAddress(), DateTime.UtcNow);
+                //_logger.LogInformation("Login attempt for email {Email} from IP {IPAddress} at {Timestamp}", loginRequest.Email, GetClientIpAddress(), DateTime.UtcNow);
+
+
+                systemActivityLog.Description = GenericMessagesForSystemLogs.SuccessfullyLoggedIn.ToDescriptionString();
                 
+                var addLogs= await _systemActivityLogsService.AddSystemLogs(systemActivityLog);
+
                 if (userRole[0] == "SuperAdmin")
                 {
                     if (!userDetails.IsLoggedIn)
@@ -147,14 +164,12 @@ namespace wleepay.API.Controllers
                 {
                     UserId = user.Id,
                     Success = true,
-                    //Token = token,
-                    //IsLoggedInVerified = updatedUser != null ? updatedUser.IsLoggedIn : userDetails.IsLoggedIn,
                     Role = userRole?[0],
                 });
 
             }
 
-            return BadRequest("Invalid login request.");
+            return BadRequest(Messages.BadRequest.ToDescriptionString());
         }
 
         [HttpPost("TaxRates")]
@@ -183,7 +198,7 @@ namespace wleepay.API.Controllers
                 await _userManager.SetLockoutEnabledAsync(user, true);
                 await _userManager.SetLockoutEndDateAsync(user, DateTimeOffset.MaxValue); // Lock indefinitely
             }
-            return Ok("You have 3 failed login attemps. Your Wleepay portal account is locked. You must contact system administrator to unlock your account");
+            return Ok(GenericMessagesForSystemLogs.AccountLocked.ToDescriptionString());
 
         }
 
@@ -198,7 +213,7 @@ namespace wleepay.API.Controllers
                 await _userManager.SetLockoutEnabledAsync(user, false);
 
             }
-            return Ok("Your account is unlocked by system administrator");
+            return Ok(Messages.UnlockAccount.ToDescriptionString());
 
         }
 
@@ -284,7 +299,7 @@ namespace wleepay.API.Controllers
                             }),
                             isExpired = false,
                             Success= true,
-                            Message="Verification is successfull"
+                            Message=Messages.VerificationSuccessfull.ToDescriptionString()
                         });
                     }
                     else
@@ -294,7 +309,7 @@ namespace wleepay.API.Controllers
                             Data,
                             isExpired = false,
                             Success = true,
-                            Message ="You entered wrong OTP! please try again.",
+                            Message =Messages.WrongOtp.ToDescriptionString(),
                         });
                     }
                 }
@@ -305,7 +320,7 @@ namespace wleepay.API.Controllers
                         Data,
                         isExpired = true,
                         success=false,
-                        Message = "Your OTP is expired! please try again."
+                        Message = Messages.OtpExpired.ToDescriptionString(),
                     });
 
                 }
@@ -328,7 +343,7 @@ namespace wleepay.API.Controllers
             {
                 var user = await _userManager.FindByEmailAsync(model.EmailId);
                 if (user == null)
-                    return BadRequest("No user found.");
+                    return BadRequest(Messages.NotFound.ToDescriptionString());
 
                 var userDetails = await _userDetailsService.GetUserDetailsById(user.Id);
                 if(userDetails != null)
