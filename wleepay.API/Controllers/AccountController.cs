@@ -168,6 +168,7 @@ namespace wleepay.API.Controllers
                         }
                     }
 
+                    userDetailsToInsert.Status = (int)Status.Active;
                     //save data
                     var updatedDetails = await _userDetailsService.AddOrUpdateUserDetails(userDetailsToInsert);
                     if (updatedDetails.UserId != null)
@@ -245,7 +246,7 @@ namespace wleepay.API.Controllers
 
                 //check for super admin
                 if (userDetail.Role == 0)
-                    return BadRequest("You can't create Super Admin.");
+                    return BadRequest(Messages.IsSuperAdmin.ToDescriptionString());
 
                 //check if user exists with email
                 ApplicationUser applicationUser = new ApplicationUser();
@@ -253,12 +254,12 @@ namespace wleepay.API.Controllers
                     applicationUser = await _userManager.FindByEmailAsync(userDetail.EmailId);
 
                 if (applicationUser != null && !string.IsNullOrEmpty(applicationUser.Id))
-                    return BadRequest("Email is already in use.");
+                    return BadRequest(Messages.EmailAlreadyUsed.ToDescriptionString());
 
                 //check if phone number already exists
                 var userExistWithPhone = await _userDetailsService.IsPhoneAlreadyRegistered(userDetail.PhoneNumber);
                 if (userExistWithPhone == true)
-                    return BadRequest("Phone number is already in use.");
+                    return BadRequest(Messages.PhoneAlreadyUsed.ToDescriptionString());
 
                 //create new user with identity
 
@@ -364,7 +365,7 @@ namespace wleepay.API.Controllers
                         });
                     }
                     else
-                        return BadRequest("Can't create user.");
+                        return BadRequest(Messages.BadRequest.ToDescriptionString());
                 }
                 else
                     return BadRequest(isUserCreated.Errors.FirstOrDefault().Description);
