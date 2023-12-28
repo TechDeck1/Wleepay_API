@@ -14,7 +14,13 @@ namespace wleepay.API.Mapping
         {
 
             CreateMap<UserDetailResource, UserDetail>().ReverseMap();
-            CreateMap<ApplicationUser, ApplicationUserResource>().ReverseMap();
+            CreateMap<ApplicationUser, ApplicationUserResource>()
+                .ForPath(dest => dest.UserRoles.Name, src => src.MapFrom(x => x.UserRoles.FirstOrDefault().Role.Name))
+                .ForPath(dest => dest.UserRoles.Id, src => src.MapFrom(x => x.UserRoles.FirstOrDefault().Role.Id))
+                .ForPath(dest => dest.UserRoles.NormalizedName, src => src.MapFrom(x => x.UserRoles.FirstOrDefault().Role.NormalizedName))
+
+
+                .ReverseMap();
             CreateMap<ApplicationUser, UserAccountResource>().ReverseMap();
             
             CreateMap<AddUserDetailsResource, UserDetail>().ReverseMap();
@@ -61,7 +67,7 @@ namespace wleepay.API.Mapping
                    .ForMember(dest => dest.Type, src => src.MapFrom(x => x.DocumentTypeId))
                    .ForMember(dest => dest.DocumentImage, src => src.MapFrom(x => x.KYCDocumentImage))
                    .ReverseMap();
-
+            
         }
     }
 }
