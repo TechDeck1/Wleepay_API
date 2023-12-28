@@ -42,5 +42,13 @@ namespace wleepay.API.Controllers
             var logs = await _systemActivityLogsService.FilterLogsByEmail(email);
             return Ok(logs);
         }
+
+
+        [HttpDelete("DeleteLogsById/{id}")]
+        public async Task<IActionResult> DeleteLogsById(int id)
+        {
+            var result = await _systemActivityLogsService.DeleteLogsById(id);
+            return Ok(result);
+        }
     }
 }

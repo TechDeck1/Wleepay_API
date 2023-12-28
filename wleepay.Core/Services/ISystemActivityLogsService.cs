@@ -12,6 +12,8 @@ namespace wleepay.Core.Services
         Task<IList<SystemActivityLog>> GetAllSystemLogs(int pageIndex, int pageSize);
         Task<IList<SystemActivityLog>> GetAllSystemById(string userId);
         Task<IList<SystemActivityLog>> FilterLogsByEmail(string email);
+        Task<bool> DeleteLogsById(int id);
+
 
 
 

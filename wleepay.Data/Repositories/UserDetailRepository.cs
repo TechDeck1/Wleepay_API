@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using wleepay.Core.Enums;
 using wleepay.Core.Models;
 using wleepay.Core.Repositories;
 using wleepay.Data.Context;
@@ -134,5 +135,6 @@ namespace wleepay.Data.Repositories
         {
             return await WPContext.UserDetail.AnyAsync(u => u.AccountNumber == accountNumber);
         }
+
     }
 }

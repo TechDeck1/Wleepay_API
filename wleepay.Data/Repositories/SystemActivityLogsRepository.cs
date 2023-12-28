@@ -23,6 +23,17 @@ namespace wleepay.Data.Repositories
             get { return Context as WPContext; }
         }
 
+        public async Task<bool> DeleteLogsById(int id)
+        {
+            var entityToDelete = WPContext.SystemActivities.Find(id); // Retrieve the entity by its primary key
+            if (entityToDelete != null)
+            {
+                WPContext.SystemActivities.Remove(entityToDelete); // Mark the entity for deletion
+                WPContext.SaveChanges(); // Save changes to delete the entity from the database
+            }
+            return true;
+        }
+
         public  async Task<IList<SystemActivityLog>> FilterLogsByEmail(string email)
         {
             var filteredData = await WPContext.SystemActivities
@@ -48,6 +59,6 @@ namespace wleepay.Data.Repositories
             return logs;
         }
 
-
+      
     }
 }
