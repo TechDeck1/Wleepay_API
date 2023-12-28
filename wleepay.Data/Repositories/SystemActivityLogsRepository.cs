@@ -8,6 +8,7 @@ using wleepay.Core.Models;
 using wleepay.Core.Repositories;
 using wleepay.Data.Context;
 using System.Linq;
+using MailKit.Search;
 
 
 namespace wleepay.Data.Repositories
@@ -20,6 +21,14 @@ namespace wleepay.Data.Repositories
         private WPContext WPContext
         {
             get { return Context as WPContext; }
+        }
+
+        public  async Task<IList<SystemActivityLog>> FilterLogsByEmail(string email)
+        {
+            var filteredData = await WPContext.SystemActivities
+                .Where(entity => entity.Email.Contains(email)).ToListAsync();
+            return filteredData;
+                
         }
 
         public async Task<IList<SystemActivityLog>> GetActivityLogsById(string userId)

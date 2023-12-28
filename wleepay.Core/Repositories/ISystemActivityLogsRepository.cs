@@ -10,6 +10,8 @@ namespace wleepay.Core.Repositories
     {
         Task<IList<SystemActivityLog>> GetAllActivityLogs(int pageIndex, int pageSize);
         Task<IList<SystemActivityLog>> GetActivityLogsById(string userId);
+        Task<IList<SystemActivityLog>> FilterLogsByEmail(string email);
+
 
 
     }

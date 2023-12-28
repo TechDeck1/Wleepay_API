@@ -11,6 +11,8 @@ namespace wleepay.Core.Services
         Task<SystemActivityLog> AddSystemLogs(SystemActivityLog systemActivityLog);
         Task<IList<SystemActivityLog>> GetAllSystemLogs(int pageIndex, int pageSize);
         Task<IList<SystemActivityLog>> GetAllSystemById(string userId);
+        Task<IList<SystemActivityLog>> FilterLogsByEmail(string email);
+
 
 
     }

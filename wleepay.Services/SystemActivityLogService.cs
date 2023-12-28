@@ -25,6 +25,12 @@ namespace wleepay.Services
             _unitOfWork.CommitAsync();
             return systemActivityLog;        }
 
+        public async Task<IList<SystemActivityLog>> FilterLogsByEmail(string email)
+        {
+            var filteredLogs = await _unitOfWork.SystemActivity.FilterLogsByEmail(email);
+            return filteredLogs;
+        }
+
         public async Task<IList<SystemActivityLog>> GetAllSystemById(string userId)
         {
             var logs = await _unitOfWork.SystemActivity.GetActivityLogsById(userId);

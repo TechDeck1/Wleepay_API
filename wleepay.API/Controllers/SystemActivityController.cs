@@ -35,5 +35,12 @@ namespace wleepay.API.Controllers
             var logs = await _systemActivityLogsService.GetAllSystemById(userId);
             return Ok(logs);
         }
+
+        [HttpPost("FilterLogsByEmail/{email}")]
+        public async Task<IActionResult> FilterLogsByEmail(string email)
+        {
+            var logs = await _systemActivityLogsService.FilterLogsByEmail(email);
+            return Ok(logs);
+        }
     }
 }
