@@ -17,7 +17,6 @@ namespace wleepay.Core.Models
 
         public IList<ApplicationUserRole> UserRoles { get; set; }
         public virtual UserDetail UserDetail { get; set; }
-
         public virtual Address Address { get; set; }
         public virtual ICollection<KYCdocuments> KYCdocuments { get; set; }
         public virtual ICollection<Wallet> Wallets { get; set; }

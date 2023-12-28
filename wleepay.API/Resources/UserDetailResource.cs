@@ -22,6 +22,14 @@ namespace wleepay.API.Resources
         public bool IsLoggedIn { get; set; } = false;
         public string AccountNumber { get; set; }
         public string KYCDocumentImage { get; set; }
+        public string VerificationCode { get; set; }
+        public DateTime? VerificationExpiry { get; set; }
+        public int Status { get; set; }
+        public string WleePhoneNumber { get; set; }
+        public DateTime HireDate { get; set; }
+        public int SecurityQuestionId { get; set; }
+        public string SecurityAnswerText { get; set; }
+        public int SecurityQuestionsId { get; set; }
 
         public virtual KYCStatus KYCStatus { get; set; }
         public virtual KYCLevel KYCLevelDetail { get; set; }

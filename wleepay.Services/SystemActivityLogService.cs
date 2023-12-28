@@ -29,7 +29,7 @@ namespace wleepay.Services
         {
             var systemLogs = new SystemActivityLog();
             var token = await _unitOfWork.SystemActivity.GetAllActivityLogs();
-            return token; throw new NotImplementedException();
+            return token;
         }
     }
 }

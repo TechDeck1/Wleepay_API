@@ -52,7 +52,7 @@ namespace wleepay.Data.Repositories
             int takeCount = pageSize;
             int skipCount = pageIndex * pageSize;
 
-            return await WPContext.Users
+            var result= await WPContext.Users
                 .Include(s => s.UserDetail)
                     .ThenInclude(s => s.KYCLevelDetail)
                 .Include(s => s.UserDetail)
@@ -69,6 +69,8 @@ namespace wleepay.Data.Repositories
                 //.Include(s => s.Wallets)
                 //    .ThenInclude(s => s.Currency)
                 .ToListAsync();
+
+            return result;
         }
 
         public async Task<ApplicationUser> GetApplicationUser(string userId = "", string name = "", string phoneNumber = "", bool fetchWallet = false, bool fetchKYCDoc = false, int role = 0)
