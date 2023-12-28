@@ -28,9 +28,14 @@ namespace wleepay.Data.Repositories
             return logs;
         }
 
-        public async Task<IList<SystemActivityLog>> GetAllActivityLogs()
+        public async Task<IList<SystemActivityLog>> GetAllActivityLogs(int pageIndex = 0, int pageSize = 10)
         {
-            var logs = await WPContext.SystemActivities.ToListAsync();
+            int takeCount = pageSize;
+            int skipCount = pageIndex * pageSize;
+            var logs = await WPContext.SystemActivities
+                .Skip(skipCount)
+                .Take(takeCount)
+                .ToListAsync();
             return logs;
         }
 

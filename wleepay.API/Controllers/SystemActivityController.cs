@@ -5,6 +5,7 @@ using wleepay.Core.Models;
 using wleepay.Core.Services;
 using AutoMapper;
 using Microsoft.AspNetCore.Identity;
+using wleepay.API.Resources;
 
 namespace wleepay.API.Controllers
 {
@@ -21,10 +22,10 @@ namespace wleepay.API.Controllers
             _systemActivityLogsService = systemActivityLogsService;
         }
 
-        [HttpGet("SystemLogs")]
-        public async Task<IActionResult> GetSystemAllLogs()
+        [HttpPost("SystemLogs")]
+        public async Task<IActionResult> GetSystemAllLogs([FromBody]PagingRequest request)
         {
-            var logs =await _systemActivityLogsService.GetAllSystemLogs();
+            var logs =await _systemActivityLogsService.GetAllSystemLogs(request.Index, request.Size);
             return Ok(logs);
         }
 

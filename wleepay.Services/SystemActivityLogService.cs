@@ -31,9 +31,9 @@ namespace wleepay.Services
             return logs;
         }
 
-        public async Task<IList<SystemActivityLog>> GetAllSystemLogs()
+        public async Task<IList<SystemActivityLog>> GetAllSystemLogs(int pageIndex=0, int pageSize = 10)
         {
-            var logs = await _unitOfWork.SystemActivity.GetAllActivityLogs();
+            var logs = await _unitOfWork.SystemActivity.GetAllActivityLogs(pageIndex,pageSize);
             return logs;
         }
     }

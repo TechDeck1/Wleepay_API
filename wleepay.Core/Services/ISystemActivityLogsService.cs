@@ -9,7 +9,7 @@ namespace wleepay.Core.Services
     public interface ISystemActivityLogsService
     {
         Task<SystemActivityLog> AddSystemLogs(SystemActivityLog systemActivityLog);
-        Task<IList<SystemActivityLog>> GetAllSystemLogs();
+        Task<IList<SystemActivityLog>> GetAllSystemLogs(int pageIndex, int pageSize);
         Task<IList<SystemActivityLog>> GetAllSystemById(string userId);
 
 
