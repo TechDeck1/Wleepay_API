@@ -10,6 +10,8 @@ namespace wleepay.Core.Services
     {
         Task<SystemActivityLog> AddSystemLogs(SystemActivityLog systemActivityLog);
         Task<IList<SystemActivityLog>> GetAllSystemLogs();
+        Task<IList<SystemActivityLog>> GetAllSystemById(string userId);
+
 
     }
 }

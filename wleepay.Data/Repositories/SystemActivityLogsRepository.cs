@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using DevExpress.Data.ODataLinq.Helpers;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -6,6 +7,8 @@ using System.Threading.Tasks;
 using wleepay.Core.Models;
 using wleepay.Core.Repositories;
 using wleepay.Data.Context;
+using System.Linq;
+
 
 namespace wleepay.Data.Repositories
 {
@@ -19,10 +22,18 @@ namespace wleepay.Data.Repositories
             get { return Context as WPContext; }
         }
 
+        public async Task<IList<SystemActivityLog>> GetActivityLogsById(string userId)
+        {
+            var logs = await WPContext.SystemActivities.Where(user => user.UserId == userId).ToListAsync();
+            return logs;
+        }
+
         public async Task<IList<SystemActivityLog>> GetAllActivityLogs()
         {
-            var tokenStorage = await WPContext.SystemActivities.ToListAsync();
-            return tokenStorage;
+            var logs = await WPContext.SystemActivities.ToListAsync();
+            return logs;
         }
+
+
     }
 }

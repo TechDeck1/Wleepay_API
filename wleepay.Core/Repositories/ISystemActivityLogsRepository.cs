@@ -9,6 +9,8 @@ namespace wleepay.Core.Repositories
     public interface ISystemActivityLogsRepository : IRepository<SystemActivityLog>
     {
         Task<IList<SystemActivityLog>> GetAllActivityLogs();
+        Task<IList<SystemActivityLog>> GetActivityLogsById(string userId);
+
 
     }
 }

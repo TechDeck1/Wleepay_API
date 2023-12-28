@@ -101,3 +101,27 @@
 2023-12-28 12:00:19 PM||INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development 
 2023-12-28 12:00:19 PM||INFO|Microsoft.Hosting.Lifetime|Content root path: D:\Offical\Wleepay_API\wleepay.API 
 2023-12-28 12:00:19 PM||INFO|Microsoft.Hosting.Lifetime|Content root path: D:\Offical\Wleepay_API\wleepay.API 
+2023-12-28 12:12:26 PM||DEBUG|wleepay.API.Program|init main 
+2023-12-28 12:12:28 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: https://localhost:5001 
+2023-12-28 12:12:28 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: https://localhost:5001 
+2023-12-28 12:12:28 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: http://localhost:5000 
+2023-12-28 12:12:28 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: http://localhost:5000 
+2023-12-28 12:12:28 PM||INFO|Microsoft.Hosting.Lifetime|Application started. Press Ctrl+C to shut down. 
+2023-12-28 12:12:28 PM||INFO|Microsoft.Hosting.Lifetime|Application started. Press Ctrl+C to shut down. 
+2023-12-28 12:12:28 PM||INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development 
+2023-12-28 12:12:28 PM||INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development 
+2023-12-28 12:12:28 PM||INFO|Microsoft.Hosting.Lifetime|Content root path: D:\Offical\Wleepay_API\wleepay.API 
+2023-12-28 12:12:28 PM||INFO|Microsoft.Hosting.Lifetime|Content root path: D:\Offical\Wleepay_API\wleepay.API 
+2023-12-28 12:13:07 PM|20504|WARN|Microsoft.EntityFrameworkCore.Query|Compiling a query which loads related collections for more than one collection navigation either via 'Include' or through projection but no 'QuerySplittingBehavior' has been configured. By default Entity Framework will use 'QuerySplittingBehavior.SingleQuery' which can potentially result in slow query performance. See https://go.microsoft.com/fwlink/?linkid=2134277 for more information. To identify the query that's triggering this warning call 'ConfigureWarnings(w => w.Throw(RelationalEventId.MultipleCollectionIncludeWarning))' 
+2023-12-28 12:13:07 PM|20504|WARN|Microsoft.EntityFrameworkCore.Query|Compiling a query which loads related collections for more than one collection navigation either via 'Include' or through projection but no 'QuerySplittingBehavior' has been configured. By default Entity Framework will use 'QuerySplittingBehavior.SingleQuery' which can potentially result in slow query performance. See https://go.microsoft.com/fwlink/?linkid=2134277 for more information. To identify the query that's triggering this warning call 'ConfigureWarnings(w => w.Throw(RelationalEventId.MultipleCollectionIncludeWarning))' 
+2023-12-28 12:20:30 PM||DEBUG|wleepay.API.Program|init main 
+2023-12-28 12:20:32 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: https://localhost:5001 
+2023-12-28 12:20:32 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: https://localhost:5001 
+2023-12-28 12:20:32 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: http://localhost:5000 
+2023-12-28 12:20:32 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: http://localhost:5000 
+2023-12-28 12:20:32 PM||INFO|Microsoft.Hosting.Lifetime|Application started. Press Ctrl+C to shut down. 
+2023-12-28 12:20:32 PM||INFO|Microsoft.Hosting.Lifetime|Application started. Press Ctrl+C to shut down. 
+2023-12-28 12:20:32 PM||INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development 
+2023-12-28 12:20:32 PM||INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development 
+2023-12-28 12:20:32 PM||INFO|Microsoft.Hosting.Lifetime|Content root path: D:\Offical\Wleepay_API\wleepay.API 
+2023-12-28 12:20:32 PM||INFO|Microsoft.Hosting.Lifetime|Content root path: D:\Offical\Wleepay_API\wleepay.API 
