@@ -675,7 +675,11 @@ namespace wleepay.API.Controllers
 
             var user = await _userManager.FindByEmailAsync(setupLogin.Email);
             if (user == null)
-                return BadRequest(Messages.NotFound.ToDescriptionString());
+                return Ok(new
+                {
+                    Success = true,
+                    Message = Messages.NotFound.ToDescriptionString(),
+                });
 
             var userDetails = await _userDetailsService.GetUserDetailsById(user.Id);
             if (userDetails != null)
@@ -686,6 +690,7 @@ namespace wleepay.API.Controllers
 
                     if (addPasswordResult.Succeeded)
                     {
+                        userDetails.Status = (int)Status.Active;
                         userDetails.SecurityAnswerText = setupLogin.Answer;
                         userDetails.SecurityQuestionId = setupLogin.SecurityQuestionId;                    
                         var updatedDetails = await _userDetailsService.AddOrUpdateUserDetails(userDetails);
