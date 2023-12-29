@@ -628,6 +628,7 @@ namespace wleepay.API.Controllers
             if (!ModelState.IsValid)
                 return BadRequest();
 
+            //get user by email
             var user = await _userManager.FindByEmailAsync(resetPasswordDto.Email);
             var tokenStorage = await _tokenStorageService.GetTokenStorageById(user.Id);
 
@@ -648,7 +649,6 @@ namespace wleepay.API.Controllers
             if (isValidToken==true && !isExpired)
             {
                 //generate password reset token
-                //var token = await _userManager.GeneratePasswordResetTokenAsync(user);
                 var updatedDetail = await _userManager.ResetPasswordAsync(user, resetPasswordDto.Token, resetPasswordDto.ConfirmPassword.ToString());
 
                 if (updatedDetail.Succeeded)

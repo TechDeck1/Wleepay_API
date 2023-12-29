@@ -209,7 +209,7 @@ namespace wleepay.API.Controllers
 
             if (user != null)
             {
-                // Lock the user account
+                // UnLock the user account
                 await _userManager.SetLockoutEnabledAsync(user, false);
 
             }
@@ -222,15 +222,16 @@ namespace wleepay.API.Controllers
         {
             try
             {
+                //get user details
                 var userDetails = await _userDetailsService.GetUserDetailsById(model.UserId);
                 string verificationCode = GenerateVerificationCode(4); // Generate a 4-digit verification code
                 string message = "Your one time code is " + verificationCode;
-                var code = _SMSService.sendMessage(message, userDetails.PhoneNumber);
+                var code = _SMSService.sendMessage(message, userDetails.PhoneNumber);// service for send otp
                 var PhoneNumber = MaskCreditCard(userDetails.PhoneNumber);
 
                 if (code != null && code != " ")
                 {
-
+                    //update database
                     var updateDatabase = await _userDetailsService.UpdateUserVerificationCode(model.UserId, verificationCode);
                     return Ok(new
                     {
@@ -256,10 +257,12 @@ namespace wleepay.API.Controllers
         {
             try
             {
+                //get user details
                 var userDetails = await _userDetailsService.GetUserDetailsById(model.UserId);
 
                 var user = await _userManager.FindByEmailAsync(model.Email);
 
+                //logic for getting time difference from expiry date and current date
                 var expiryDate = userDetails.VerificationExpiry;
                 DateTime currentDate = DateTime.UtcNow; // Use UtcNow to compare in UTC
 
@@ -280,6 +283,7 @@ namespace wleepay.API.Controllers
                        
                         //updated user
                         UserDetail updatedUser = null;
+
                         //set logged in status to true if first log in
                         if (!userDetails.IsLoggedIn)
                             updatedUser = await _userDetailsService.UpdateUserLoggedInStatus(userDetails.UserId, true);
@@ -341,14 +345,16 @@ namespace wleepay.API.Controllers
         {
             try
             {
+                //get user details using identity
                 var user = await _userManager.FindByEmailAsync(model.EmailId);
                 if (user == null)
                     return BadRequest(Messages.NotFound.ToDescriptionString());
 
+                //get users detail
                 var userDetails = await _userDetailsService.GetUserDetailsById(user.Id);
                 if(userDetails != null)
                 {
-
+                    //update activity status 
                     var result = await _userDetailsService.UpdateUserStatus(model.UserId, model.Status);
                     return Ok(result.Status);
 
@@ -369,6 +375,7 @@ namespace wleepay.API.Controllers
         {
             try
             {
+                //get user details using identity
                 var user = await _userManager.FindByEmailAsync(model.EmailId);
                 if (user == null)
                     return BadRequest("No user found.");
@@ -376,6 +383,7 @@ namespace wleepay.API.Controllers
                 var userDetails = await _userDetailsService.GetUserDetailsById(user.Id);
                 if (userDetails != null)
                 {
+                    //update activity status for user
                     var result = await _userDetailsService.UpdateUserStatus(model.UserId, model.Status);
                     await _emailSender.EmailForAccountActivated(model.EmailId);
                     return Ok(result.Status);

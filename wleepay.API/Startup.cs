@@ -223,7 +223,7 @@ namespace wleepay.API
 
             app.UseSession();
 
-            app.UseHttpsRedirection();
+            // app.UseHttpsRedirection();
 
             app.UseDefaultFiles();
             app.UseStaticFiles();
