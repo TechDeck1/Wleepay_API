@@ -21,6 +21,8 @@ namespace wleepay.Core.Services
         Task<Transaction> InitiateCashout(Transaction transactionDetail);
         Task<double> CalculateTotalTransactionAmount(long walletId, bool isMonthly);
         Task<IList<Transaction>> GetCashoutTransactions();
+        Task<IList<Transaction>> GetTopUpTransactions();
+
 
     }
 }

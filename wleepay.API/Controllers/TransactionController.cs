@@ -186,11 +186,22 @@ namespace wleepay.API.Controllers
             return Ok(result);
         }
 
-        [HttpPut("Cashout")]
+        [HttpGet("Cashout")]
         public async Task<IActionResult> CashoutTransactions()
         {
 
             var result = await _transactionService.GetCashoutTransactions();
+            if (result == null)
+                return BadRequest("Invalid UserId");
+
+            return Ok(result);
+        }
+
+        [HttpGet("TopUp")]
+        public async Task<IActionResult> TopUpTransactions()
+        {
+
+            var result = await _transactionService.GetTopUpTransactions();
             if (result == null)
                 return BadRequest("Invalid UserId");
 

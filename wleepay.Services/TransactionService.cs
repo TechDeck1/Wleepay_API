@@ -106,6 +106,10 @@ namespace wleepay.Services
         {
             return await _unitOfWork.Transaction.GetCashoutTransactions();
         }
+        public async Task<IList<Transaction>> GetTopUpTransactions()
+        {
+            return await _unitOfWork.Transaction.GetTopUpTransactions();
+        }
 
         #region Helper function
         private Transaction GetTaxTransaction(long fromWalletId, double amount, long parentTransactionId, int currency)
