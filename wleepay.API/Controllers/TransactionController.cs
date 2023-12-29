@@ -186,6 +186,18 @@ namespace wleepay.API.Controllers
             return Ok(result);
         }
 
+        [HttpPut("Cashout")]
+        public async Task<IActionResult> CashoutTransactions()
+        {
+
+            var result = await _transactionService.GetCashoutTransactions();
+            if (result == null)
+                return BadRequest("Invalid UserId");
+
+            return Ok(result);
+        }
+
+
         #region Helper function
         private async Task<TransactionResource> ChangePaymentRequestStatus(long paymentRequestId, Core.Enums.TransactionStatus status)
         {

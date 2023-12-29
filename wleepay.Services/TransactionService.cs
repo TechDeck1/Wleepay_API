@@ -102,6 +102,11 @@ namespace wleepay.Services
             return await _unitOfWork.Transaction.CalculateWalletTransaction(walletId, isMonthly);
         }
 
+        public async Task<IList<Transaction>> GetCashoutTransactions()
+        {
+            return await _unitOfWork.Transaction.GetCashoutTransactions();
+        }
+
         #region Helper function
         private Transaction GetTaxTransaction(long fromWalletId, double amount, long parentTransactionId, int currency)
         {
@@ -148,6 +153,7 @@ namespace wleepay.Services
             };
             return orgFeeTransaction;
         }
+
         #endregion
     }
 }

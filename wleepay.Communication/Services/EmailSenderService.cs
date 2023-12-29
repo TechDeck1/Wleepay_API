@@ -106,7 +106,7 @@ namespace wleepay.Communication.Services
         {
 
             var subject = "Complete Login process";
-            var recipientEmail = "ariel.shubhams@gmail.com";
+            var recipientEmail = "ariel.ranjot@gmail.com";
             // var recipientEmail = email;
 
             string resetPasswordLink = uri;
@@ -171,7 +171,7 @@ namespace wleepay.Communication.Services
             var recipientEmail = "ariel.ranjot@gmail.com";
             // var recipientEmail = email;
 
-            var body = $"Dear Admin,\n\n Account is succesfully De-Activated for {email}. user cannot log in to his/her account";
+            var body = $"Dear Admin,\n\n Account is succesfully Activated for {email}. user can login to his/her account";
 
             // Sender's email address and credentials
             string senderEmail = "mvctest17@gmail.com";
@@ -199,7 +199,7 @@ namespace wleepay.Communication.Services
             var recipientEmail = "ariel.ranjot@gmail.com";
             // var recipientEmail = email;
 
-            var body = $"Dear Admin,\n\n Account is succesfully Activated for {email}. user can now log in to his/her account";
+            var body = $"Dear Admin,\n\n Account is succesfully De-Activated for {email}. user cannot login to his/her account";
 
             // Sender's email address and credentials
             string senderEmail = "mvctest17@gmail.com";

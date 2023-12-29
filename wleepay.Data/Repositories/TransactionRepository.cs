@@ -209,5 +209,11 @@ namespace wleepay.Data.Repositories
             var todayEndDate = DateTime.Today.Date.AddHours(23);
             return itemDate >= todayStartDate && itemDate <= todayEndDate;
         }
+
+        public async Task<IList<Transaction>> GetCashoutTransactions()
+        {
+            var cashOutTransactions = await WPContext.Transactions.Where(u=>u.TransferTypeId == (int)TransferTypes.CashOut).ToListAsync();
+            return cashOutTransactions;
+        }
     }
 }
