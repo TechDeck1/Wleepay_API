@@ -376,8 +376,8 @@ namespace wleepay.API.Controllers
                 var userDetails = await _userDetailsService.GetUserDetailsById(user.Id);
                 if (userDetails != null)
                 {
-
                     var result = await _userDetailsService.UpdateUserStatus(model.UserId, model.Status);
+                    await _emailSender.EmailForAccountActivated(model.EmailId);
                     return Ok(result.Status);
 
                 }

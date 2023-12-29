@@ -238,6 +238,7 @@ namespace wleepay.API.Controllers
         {
             try
             {
+                var baseUrl = _configuration.GetSection("BaseUrl").Value;
                 var validator = new AddStaffDetailsValidator();
                 var validationResult = await validator.ValidateAsync(userDetail);
 
@@ -347,7 +348,7 @@ namespace wleepay.API.Controllers
                         LinkForLoginSetupResource linkForLoginSetup = new LinkForLoginSetupResource();
                         linkForLoginSetup.Email = userDetail.EmailId;
                         linkForLoginSetup.PhoneNumber = userDetail.PhoneNumber;
-                        linkForLoginSetup.ClientURI = "http://localhost:4200/#/account/account-setup";
+                        linkForLoginSetup.ClientURI = baseUrl;
                         var result = GenerateLinkForLoginSetup(linkForLoginSetup);
                         
                         //send registration sucess message on mobile number
