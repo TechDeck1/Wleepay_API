@@ -679,7 +679,7 @@ namespace wleepay.API.Controllers
             if (user == null)
                 return Ok(new
                 {
-                    Success = true,
+                    Success = false,
                     Message = Messages.NotFound.ToDescriptionString(),
                 });
 
