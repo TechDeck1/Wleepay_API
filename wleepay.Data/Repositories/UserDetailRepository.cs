@@ -136,5 +136,27 @@ namespace wleepay.Data.Repositories
             return await WPContext.UserDetail.AnyAsync(u => u.AccountNumber == accountNumber);
         }
 
+        public async Task<IEnumerable<ApplicationUser>> GetAllUsersById(Core.Enums.Role role, int pageIndex = 0, int pageSize = 10, string createdBy="")
+        {
+            int takeCount = pageSize;
+            int skipCount = pageIndex * pageSize;
+
+            var result = await WPContext.Users
+                .Include(s => s.UserDetail)
+                    .ThenInclude(s => s.KYCLevelDetail)
+                .Include(s => s.UserDetail)
+                    .ThenInclude(s => s.KYCStatus)
+                .Include(s => s.UserRoles)
+                    .ThenInclude(s => s.Role)
+                .Include(s => s.Address)
+                .OrderByDescending(w => w.UserDetail.FirstName)
+                .Where(s => s.UserRoles.FirstOrDefault().Role.Name == role.ToString() && s.UserDetail.CreatedBy==createdBy)
+                .Skip(skipCount)
+                .Take(takeCount)
+                .ToListAsync();
+
+            return result;
+        }
+
     }
 }

@@ -344,6 +344,13 @@ namespace wleepay.API.Controllers
             return Ok(transactionResource);
         }
 
+        [HttpPost("GetAllUsersById")]
+        public async Task<IActionResult> GetAllUsersById([FromBody] AgentRequest request)
+        {
+            var userList = await _userDetailsService.GetAllUsersById(request.Role ,request.Index, request.Size, request.CreatedBy);
+            var userListResource = _mapper.Map<IEnumerable<ApplicationUser>, IEnumerable<ApplicationUserResource>>(userList);
+            return Ok(userListResource);
+        }
         #region helper methods
         private async Task<string> uploadDocument(IFormFile file, string userId, string containerName = "kyc-document")
         {

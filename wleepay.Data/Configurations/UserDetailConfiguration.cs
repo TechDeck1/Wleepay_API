@@ -94,6 +94,8 @@ namespace wleepay.Data.Configurations
             builder
                .Property(u => u.WleePhoneNumber);
 
+            builder.Property(u => u.CreatedBy);
+
 
             builder
                 .HasOne(u => u.ApplicationUser)

@@ -15,5 +15,7 @@ namespace wleepay.Core.Repositories
         Task<UserDetail> GetUserDetailsByPhone(string phone);
         Task<IEnumerable<ApplicationUser>> GetUserDetailsByRole(int role);
         Task<IEnumerable<ApplicationUser>> GetUsers(Core.Enums.Role role, int pageIndex = 0, int pageSize = 10);
+        Task<IEnumerable<ApplicationUser>> GetAllUsersById(Core.Enums.Role role, int pageIndex, int pageSize, string createdBy);
+
     }
 }

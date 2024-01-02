@@ -28,6 +28,7 @@ namespace wleepay.API.Resources
         public string SecurityAnswerText { get; set; }
         public bool RememberMe { get; set; } = false; // Default value is set to false
         public Role? Role { get; set; }
+        public string CreatedBy { get; set; }
         public DateTime HireDate { get; set; }
         public AddressResource? Address { get; set; }
 

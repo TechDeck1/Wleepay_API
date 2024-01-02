@@ -160,5 +160,10 @@ namespace wleepay.Services
             }
             return userToUpdate;
         }
+
+        public async Task<IEnumerable<ApplicationUser>> GetAllUsersById(Core.Enums.Role role, int pageIndex, int pageSize, string createdBy)
+        {
+            return await _unitOfWork.UserDetail.GetAllUsersById(role, pageIndex, pageSize, createdBy);
+        }
     }
 }
