@@ -212,13 +212,22 @@ namespace wleepay.Data.Repositories
 
         public async Task<IList<Transaction>> GetCashoutTransactions()
         {
-            var cashOutTransactions = await WPContext.Transactions.Where(u=>u.TransferTypeId == (int)TransferTypes.CashOut).Include(s => s.TransferType).ToListAsync();
+            var cashOutTransactions = await WPContext.Transactions.Where(u=>u.TransferTypeId == (int)TransferTypes.CashOut)
+                .Include(s => s.FromWallet.ApplicationUser.UserDetail)
+                .Include(s => s.FromWallet.Currency)
+                .Include(s => s.ToWallet.ApplicationUser.UserDetail)
+                .Include(s => s.TransferType)
+                .ToListAsync();
             return cashOutTransactions;
         }
 
         public async Task<IList<Transaction>> GetTopUpTransactions()
         {
-            var cashOutTransactions = await WPContext.Transactions.Where(u => u.TransferTypeId == (int)TransferTypes.TopUp).Include(s => s.TransferType).ToListAsync();
+            var cashOutTransactions = await WPContext.Transactions.Where(u => u.TransferTypeId == (int)TransferTypes.TopUp)
+                .Include(s => s.FromWallet.ApplicationUser.UserDetail)
+                .Include(s => s.FromWallet.Currency)
+                .Include(s => s.ToWallet.ApplicationUser.UserDetail)
+                .Include(s => s.TransferType).ToListAsync();
             return cashOutTransactions;
         }
     }
