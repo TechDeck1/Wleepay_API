@@ -220,5 +220,44 @@ namespace wleepay.Communication.Services
 
             return true;
         }
+
+        public async Task<bool> EmailForAccountCreationToSystemAdmins(string[] emails, string userEmail)
+        {
+            var subject = "A New Account Created";
+            var recipientEmail = "ariel.ranjot@gmail.com";
+            // var recipientEmail = email;
+
+            var body = $"Dear Admin,\n\n Account is succesfully created for {userEmail}.";
+
+            // Sender's email address and credentials
+            string senderEmail = "mvctest17@gmail.com";
+            string senderPassword = "bqhyobxynxwbkteo"; // Use app-specific passwords or secure storage for passwords
+
+            // Create SMTP client
+            SmtpClient smtpClient = new SmtpClient("smtp.gmail.com"); // Use your SMTP server
+
+            // Port and SSL configuration
+            smtpClient.Port = 587; // Port for SMTP (e.g., 587 for Gmail)
+            smtpClient.EnableSsl = true;
+            smtpClient.UseDefaultCredentials = false;
+            smtpClient.Credentials = new NetworkCredential(senderEmail, senderPassword);
+
+            foreach (var recipientMail in emails)
+            {
+                MailMessage mailMessage = new MailMessage(senderEmail, recipientMail, subject, body);
+                mailMessage.IsBodyHtml = true; // You can set this to true if the body contains HTML
+                smtpClient.Send(mailMessage);
+
+            }
+            //MailMessage mailMessage = new MailMessage(senderEmail, recipientEmail, subject, body);
+
+
+            return true;
+        }
+
+        public Task<bool> EmailForAccountCreationToSystemAdmins(string[] email)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

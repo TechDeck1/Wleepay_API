@@ -15,6 +15,8 @@ namespace wleepay.Communication.Interface
         Task<bool> EmailAccountSuccessfullySetup(string email, string password);
         Task<bool> EmailForAccountActivated(string email);
         Task<bool> EmailForAccountDeactivated(string email);
+        Task<bool> EmailForAccountCreationToSystemAdmins(string[] email);
+
 
 
     }

@@ -676,6 +676,8 @@ namespace wleepay.API.Controllers
         {
 
             var user = await _userManager.FindByEmailAsync(setupLogin.Email);
+
+            var allSuperAdmins = await _userDetailsService.GetUserByRole((int)Role.SuperAdmin);
             if (user == null)
                 return Ok(new
                 {
@@ -696,7 +698,10 @@ namespace wleepay.API.Controllers
                         userDetails.SecurityAnswerText = setupLogin.Answer;
                         userDetails.SecurityQuestionId = setupLogin.SecurityQuestionId;                    
                         var updatedDetails = await _userDetailsService.AddOrUpdateUserDetails(userDetails);
-                        await _emailSender.EmailAccountSuccessfullySetup(setupLogin.Email, setupLogin.ConfirmPassword);
+                        var userMail= await _emailSender.EmailAccountSuccessfullySetup(setupLogin.Email, setupLogin.ConfirmPassword);
+
+                      //  await _emailSender.EmailForAccountCreationToSystemAdmins(,setupLogin.Email);
+
 
                         return Ok(new
                         {
