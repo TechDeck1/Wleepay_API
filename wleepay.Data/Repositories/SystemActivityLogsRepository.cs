@@ -9,7 +9,8 @@ using wleepay.Core.Repositories;
 using wleepay.Data.Context;
 using System.Linq;
 using MailKit.Search;
-
+using Microsoft.SqlServer.Management.Smo;
+using wleepay.Core.DTO.Response;
 
 namespace wleepay.Data.Repositories
 {
@@ -48,17 +49,25 @@ namespace wleepay.Data.Repositories
             return logs;
         }
 
-        public async Task<IList<SystemActivityLog>> GetAllActivityLogs(int pageIndex = 0, int pageSize = 10)
+        public async Task<ActivityResponseResource> GetAllActivityLogs(int pageIndex = 0, int pageSize = 10)
         {
             int takeCount = pageSize;
             int skipCount = pageIndex * pageSize;
-            var logs = await WPContext.SystemActivities
-                .Skip(skipCount)
-                .Take(takeCount)
+            var logs = await WPContext.SystemActivities               
                 .ToListAsync();
-            return logs;
+            var TotalCount=logs.Count();
+            var activityLogs = logs.Skip(skipCount)
+                             .Take(takeCount);
+
+            ActivityResponseResource response = new ActivityResponseResource();
+            response.ActivityLogs = activityLogs.Reverse().ToList();
+            response.TotalCount = TotalCount;
+
+
+            return response;
+
         }
 
-      
+
     }
 }

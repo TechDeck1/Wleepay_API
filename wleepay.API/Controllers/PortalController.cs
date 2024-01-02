@@ -116,6 +116,7 @@ namespace wleepay.API.Controllers
                 systemActivityLog.Description = GenericMessagesForSystemLogs.AccountLocked.ToDescriptionString() + mailSent;
                 var addLogs = await _systemActivityLogsService.AddSystemLogs(systemActivityLog);
 
+
                 return Ok(new
                 {
                     UserId = user.Id,

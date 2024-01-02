@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using wleepay.Core;
+using wleepay.Core.DTO.Response;
 using wleepay.Core.Models;
 using wleepay.Core.Services;
 
@@ -43,10 +44,12 @@ namespace wleepay.Services
             return logs;
         }
 
-        public async Task<IList<SystemActivityLog>> GetAllSystemLogs(int pageIndex=0, int pageSize = 10)
+        public async Task<ActivityResponseResource> GetAllSystemLogs(int pageIndex=0, int pageSize = 10)
         {
             var logs = await _unitOfWork.SystemActivity.GetAllActivityLogs(pageIndex,pageSize);
             return logs;
         }
+
+       
     }
 }
