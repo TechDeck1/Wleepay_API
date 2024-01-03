@@ -186,7 +186,7 @@ namespace wleepay.API.Controllers
             return Ok(result);
         }
 
-        [HttpGet("Cashout")]
+        [HttpPost("Cashout")]
         public async Task<IActionResult> CashoutTransactions(Pagination pagination)
         {
 
@@ -199,7 +199,7 @@ namespace wleepay.API.Controllers
             return Ok(transactionResources);
         }
 
-        [HttpGet("TopUp")]
+        [HttpPost("TopUp")]
         public async Task<IActionResult> TopUpTransactions(Pagination pagination)
         {
 

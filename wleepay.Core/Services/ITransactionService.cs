@@ -20,8 +20,8 @@ namespace wleepay.Core.Services
         Task<IEnumerable<Transaction>> GetPaymentRequestByStatus(IEnumerable<long> walletIds, PaymentRequestType type, Core.Enums.TransactionStatus transferStatus, int pageSize, int pageIndex);
         Task<Transaction> InitiateCashout(Transaction transactionDetail);
         Task<double> CalculateTotalTransactionAmount(long walletId, bool isMonthly);
-        Task<IList<Transaction>> GetCashoutTransactions(int pageIndex = 0, int pageSize = 10);
-        Task<IList<Transaction>> GetTopUpTransactions(int pageIndex = 0, int pageSize = 10);
+        Task<IList<Transaction>> GetCashoutTransactions(int pageIndex, int pageSize);
+        Task<IList<Transaction>> GetTopUpTransactions(int pageIndex, int pageSize);
 
 
     }

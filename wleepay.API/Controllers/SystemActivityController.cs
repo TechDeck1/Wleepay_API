@@ -15,8 +15,7 @@ namespace wleepay.API.Controllers
         private readonly ISystemActivityLogsService _systemActivityLogsService;
 
         public SystemActivityController(
-            ISystemActivityLogsService systemActivityLogsService
-            )
+            ISystemActivityLogsService systemActivityLogsService)
         {
            
             _systemActivityLogsService = systemActivityLogsService;
@@ -42,7 +41,6 @@ namespace wleepay.API.Controllers
             var logs = await _systemActivityLogsService.FilterLogsByEmail(filterLogs.email , filterLogs.Index, filterLogs.Size);
             return Ok(logs);
         }
-
 
         [HttpDelete("DeleteLogsById/{id}")]
         public async Task<IActionResult> DeleteLogsById(int id)

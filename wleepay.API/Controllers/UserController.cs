@@ -203,7 +203,6 @@ namespace wleepay.API.Controllers
             
         }
 
-
         [HttpPost("DocumentKYCImage")]
         public async Task<IActionResult> DocumentKYCImage(documentKycImage documentKycImage)
         {
@@ -348,6 +347,14 @@ namespace wleepay.API.Controllers
         public async Task<IActionResult> GetAllUsersById([FromBody] AgentRequest request)
         {
             var userList = await _userDetailsService.GetAllUsersById(request.Role ,request.Index, request.Size, request.CreatedBy);
+            var userListResource = _mapper.Map<IEnumerable<ApplicationUser>, IEnumerable<ApplicationUserResource>>(userList);
+            return Ok(userListResource);
+        }
+
+        [HttpPost("GetAllUsersByRole/{role}")]
+        public async Task<IActionResult> GetAllUsersByRole(int role)
+        {
+            var userList = await _userDetailsService.GetUserByRole(role);
             var userListResource = _mapper.Map<IEnumerable<ApplicationUser>, IEnumerable<ApplicationUserResource>>(userList);
             return Ok(userListResource);
         }
