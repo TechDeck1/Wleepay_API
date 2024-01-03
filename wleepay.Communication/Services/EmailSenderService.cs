@@ -8,6 +8,7 @@ using wleepay.Communication.Interface;
 using Twilio.TwiML.Messaging;
 using wleepay.Communication.EmailTemplates;
 using static wleepay.Communication.EmailTemplates.AccountDeactivatedTemplate;
+using static wleepay.Communication.EmailTemplates.AccountActivatedTemplate;
 
 namespace wleepay.Communication.Services
 {
@@ -169,11 +170,18 @@ namespace wleepay.Communication.Services
 
         public async Task<bool> EmailForAccountActivatedToSystemAdmin(string email, string name, string phone)
         {
-            var subject = "Account Activated";
+            var subject = "Wleepay portal account setup/activation confirmation notice (Do not reply)";
             var recipientEmail = "shikha0dev@gmail.com";
             // var recipientEmail = email;
 
-            var body = $"Dear Admin,\n\n Account is succesfully Activated for {email}. user can login to his/her account";
+            AccountActivatedTemplateForSystemAdmin template = new AccountActivatedTemplateForSystemAdmin
+            {
+                StaffEmail = email,
+                StaffFirstName = name,
+                StaffPhoneNumber = phone
+            };
+
+            string emailHtml = template.GenerateHtml();
 
             // Sender's email address and credentials
             string senderEmail = "mvctest17@gmail.com";
@@ -188,7 +196,7 @@ namespace wleepay.Communication.Services
             smtpClient.UseDefaultCredentials = false;
             smtpClient.Credentials = new NetworkCredential(senderEmail, senderPassword);
 
-            MailMessage mailMessage = new MailMessage(senderEmail, recipientEmail, subject, body);
+            MailMessage mailMessage = new MailMessage(senderEmail, recipientEmail, subject, emailHtml);
 
             smtpClient.Send(mailMessage);
 
@@ -197,7 +205,7 @@ namespace wleepay.Communication.Services
 
         public async Task<bool> EmailForAccountDeactivatedToSystemAdmin(string email, string name, string phone )
         {
-            var subject = "Account De-Activated";
+            var subject = " Alert: Wleepay portal account DeActivation notice (Do not reply)";
             var recipientEmail = "shikha0dev@gmail.com";
             // var recipientEmail = email;
 
@@ -232,7 +240,7 @@ namespace wleepay.Communication.Services
 
         public async Task<bool> EmailForAccountDeactivatedToStaff(string email, string name, string phone)
         {
-            var subject = "Account De-Activated";
+            var subject = " Alert: Wleepay portal account DeActivation notice (Do not reply)";
             var recipientEmail = "shikha0dev@gmail.com";
             // var recipientEmail = email;
 
@@ -298,5 +306,39 @@ namespace wleepay.Communication.Services
             return true;
         }
 
+        public async Task<bool> EmailForAccountActivatedToStaff(string email, string name, string phone)
+        {
+            var subject = " Alert: Wleepay portal account setup/activation notice (Do not reply)";
+            var recipientEmail = "shikha0dev@gmail.com";
+            // var recipientEmail = email;
+
+            AccountActivatedTemplateForSystemAdmin template = new AccountActivatedTemplateForSystemAdmin
+            {
+                StaffEmail = email,
+                StaffFirstName = name,
+                StaffPhoneNumber = phone
+            };
+
+            string emailHtml = template.GenerateHtml();
+
+            // Sender's email address and credentials
+            string senderEmail = "mvctest17@gmail.com";
+            string senderPassword = "bqhyobxynxwbkteo"; // Use app-specific passwords or secure storage for passwords
+
+            // Create SMTP client
+            SmtpClient smtpClient = new SmtpClient("smtp.gmail.com"); // Use your SMTP server
+
+            // Port and SSL configuration
+            smtpClient.Port = 587; // Port for SMTP (e.g., 587 for Gmail)
+            smtpClient.EnableSsl = true;
+            smtpClient.UseDefaultCredentials = false;
+            smtpClient.Credentials = new NetworkCredential(senderEmail, senderPassword);
+
+            MailMessage mailMessage = new MailMessage(senderEmail, recipientEmail, subject, emailHtml);
+
+            smtpClient.Send(mailMessage);
+
+            return true;
+        }
     }
 }

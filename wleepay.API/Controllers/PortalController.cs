@@ -111,11 +111,9 @@ namespace wleepay.API.Controllers
             if (result.IsLockedOut)
             {
                 //_logger.LogInformation("Login attempt for email {Email} from IP {IPAddress} at {Timestamp}", loginRequest.Email, GetClientIpAddress(), DateTime.UtcNow);
-              
                 var mailSent = _emailSender.SendEmailAsyncForLockAccount(loginRequest.Email);
                 systemActivityLog.Description = GenericMessagesForSystemLogs.AccountLocked.ToDescriptionString() + mailSent;
                 var addLogs = await _systemActivityLogsService.AddSystemLogs(systemActivityLog);
-
 
                 return Ok(new
                 {
@@ -246,7 +244,6 @@ namespace wleepay.API.Controllers
             }
             catch (Exception ex)
             {
-
                 throw ex;
             }
            
@@ -330,38 +327,6 @@ namespace wleepay.API.Controllers
 
                 }
 
-                return BadRequest();
-                
-            }
-            catch (Exception ex)
-            {
-
-                throw ex;
-            }
-
-        }
-
-        [HttpPost("SuspendOrUnsuspendAccount")]
-        public async Task<IActionResult> SuspendUnsuspendAccount([FromBody] SuspendAccountResource model)
-        {
-            try
-            {
-                //get user details using identity
-                var user = await _userManager.FindByEmailAsync(model.EmailId);
-                if (user == null)
-                    return BadRequest(Messages.NotFound.ToDescriptionString());
-
-                //get users detail
-                var userDetails = await _userDetailsService.GetUserDetailsById(user.Id);
-                if(userDetails != null)
-                {
-                    //update activity status 
-                    var result = await _userDetailsService.UpdateUserStatus(model.UserId, model.Status);
-                    return Ok(result.Status);
-
-                }
-
-                return Ok();
             }
             catch (Exception ex)
             {
@@ -388,6 +353,7 @@ namespace wleepay.API.Controllers
                     var result = await _userDetailsService.UpdateUserStatus(model.UserId, model.Status);
                     if (model.Status == (int)Status.Active)
                     {
+                        await _emailSender.EmailForAccountActivatedToStaff(model.EmailId, userDetails.FirstName, userDetails.PhoneNumber);
                         await _emailSender.EmailForAccountActivatedToSystemAdmin(model.EmailId, userDetails.FirstName , userDetails.PhoneNumber);
                     }
                     else
