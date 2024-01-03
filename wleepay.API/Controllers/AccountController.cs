@@ -700,8 +700,7 @@ namespace wleepay.API.Controllers
                         userDetails.SecurityQuestionId = setupLogin.SecurityQuestionId;                    
                         var updatedDetails = await _userDetailsService.AddOrUpdateUserDetails(userDetails);
                         var userMail= await _emailSender.EmailAccountSuccessfullySetup(setupLogin.Email, setupLogin.ConfirmPassword);
-
-                      //  await _emailSender.EmailForAccountCreationToSystemAdmins(,setupLogin.Email);
+                        var emailToAdmins= await _emailSender.EmailForAccountCreationToSystemAdmins(setupLogin.Email, setupLogin.Email);
 
 
                         return Ok(new

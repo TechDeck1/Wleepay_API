@@ -386,7 +386,14 @@ namespace wleepay.API.Controllers
                 {
                     //update activity status for user
                     var result = await _userDetailsService.UpdateUserStatus(model.UserId, model.Status);
-                    await _emailSender.EmailForAccountActivated(model.EmailId);
+                    if (model.Status == (int)Status.Active)
+                    {
+                        await _emailSender.EmailForAccountActivatedToSystemAdmin(model.EmailId, userDetails.FirstName , userDetails.PhoneNumber);
+                    }
+                    else
+                    {
+                        await _emailSender.EmailForAccountDeactivatedToSystemAdmin(model.EmailId, userDetails.FirstName, userDetails.PhoneNumber);
+                    }
                     return Ok(result.Status);
 
                 }
