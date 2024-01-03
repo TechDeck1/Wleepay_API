@@ -210,24 +210,35 @@ namespace wleepay.Data.Repositories
             return itemDate >= todayStartDate && itemDate <= todayEndDate;
         }
 
-        public async Task<IList<Transaction>> GetCashoutTransactions()
+        public async Task<IList<Transaction>> GetCashoutTransactions(int pageIndex = 0, int pageSize = 10)
         {
+            int takeCount = pageSize;
+            int skipCount = pageIndex * pageSize;
             var cashOutTransactions = await WPContext.Transactions.Where(u=>u.TransferTypeId == (int)TransferTypes.CashOut)
                 .Include(s => s.FromWallet.ApplicationUser.UserDetail)
                 .Include(s => s.FromWallet.Currency)
                 .Include(s => s.ToWallet.ApplicationUser.UserDetail)
                 .Include(s => s.TransferType)
+                .OrderByDescending(w => w.CreatedDate)
+                .Skip(skipCount)
+                .Take(takeCount)
                 .ToListAsync();
             return cashOutTransactions;
         }
 
-        public async Task<IList<Transaction>> GetTopUpTransactions()
+        public async Task<IList<Transaction>> GetTopUpTransactions(int pageIndex = 0, int pageSize = 10)
         {
+            int takeCount = pageSize;
+            int skipCount = pageIndex * pageSize;
             var cashOutTransactions = await WPContext.Transactions.Where(u => u.TransferTypeId == (int)TransferTypes.TopUp)
                 .Include(s => s.FromWallet.ApplicationUser.UserDetail)
                 .Include(s => s.FromWallet.Currency)
                 .Include(s => s.ToWallet.ApplicationUser.UserDetail)
-                .Include(s => s.TransferType).ToListAsync();
+                .Include(s => s.TransferType)
+                .OrderByDescending(w => w.CreatedDate)
+                .Skip(skipCount)
+                .Take(takeCount)
+                .ToListAsync();
             return cashOutTransactions;
         }
     }

@@ -17,7 +17,5 @@ namespace wleepay.Communication.Interface
         Task<bool> EmailForAccountDeactivated(string email);
         Task<bool> EmailForAccountCreationToSystemAdmins(string[] email);
 
-
-
     }
 }

@@ -18,8 +18,8 @@ namespace wleepay.Core.Repositories
         Task<Transaction> CreatePaymentRequest(Transaction transactionDetail);
         Task<Transaction> GetTransactionDetails(long transactionId);
         Task<double> CalculateWalletTransaction(long walletId, bool isMonthly = false);
-        Task<IList<Transaction>> GetCashoutTransactions();
-        Task<IList<Transaction>> GetTopUpTransactions();
+        Task<IList<Transaction>> GetCashoutTransactions(int pageIndex = 0, int pageSize = 10);
+        Task<IList<Transaction>> GetTopUpTransactions(int pageIndex = 0, int pageSize = 10);
 
 
     }

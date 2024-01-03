@@ -187,10 +187,10 @@ namespace wleepay.API.Controllers
         }
 
         [HttpGet("Cashout")]
-        public async Task<IActionResult> CashoutTransactions()
+        public async Task<IActionResult> CashoutTransactions(Pagination pagination)
         {
 
-            var result = await _transactionService.GetCashoutTransactions();
+            var result = await _transactionService.GetCashoutTransactions(pagination.Index, pagination.Size);
             var transactionResources = result.Select(transaction => _mapper.Map<Transaction, TransactionHistoryResource>(transaction)).ToList();
 
             if (result == null)
@@ -200,10 +200,10 @@ namespace wleepay.API.Controllers
         }
 
         [HttpGet("TopUp")]
-        public async Task<IActionResult> TopUpTransactions()
+        public async Task<IActionResult> TopUpTransactions(Pagination pagination)
         {
 
-            var result = await _transactionService.GetTopUpTransactions();
+            var result = await _transactionService.GetTopUpTransactions(pagination.Index, pagination.Size);
             var transactionResources = result.Select(transaction => _mapper.Map<Transaction, TransactionHistoryResource>(transaction)).ToList();
 
             if (result == null)

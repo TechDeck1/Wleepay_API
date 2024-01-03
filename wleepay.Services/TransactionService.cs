@@ -102,13 +102,13 @@ namespace wleepay.Services
             return await _unitOfWork.Transaction.CalculateWalletTransaction(walletId, isMonthly);
         }
 
-        public async Task<IList<Transaction>> GetCashoutTransactions()
+        public async Task<IList<Transaction>> GetCashoutTransactions(int pageIndex = 0, int pageSize = 10)
         {
-            return await _unitOfWork.Transaction.GetCashoutTransactions();
+            return await _unitOfWork.Transaction.GetCashoutTransactions(pageIndex,pageSize);
         }
-        public async Task<IList<Transaction>> GetTopUpTransactions()
+        public async Task<IList<Transaction>> GetTopUpTransactions(int pageIndex = 0, int pageSize = 10)
         {
-            return await _unitOfWork.Transaction.GetTopUpTransactions();
+            return await _unitOfWork.Transaction.GetTopUpTransactions(pageIndex,pageSize);
         }
 
         #region Helper function
