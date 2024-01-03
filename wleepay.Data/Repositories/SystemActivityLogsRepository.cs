@@ -51,9 +51,7 @@ namespace wleepay.Data.Repositories
             response.ActivityLogs = activityLogs.OrderByDescending(x=>x.CreatedDate).ToList();
             response.TotalCount = TotalCount;
 
-
             return response;
-            //return filteredData;
                 
         }
 

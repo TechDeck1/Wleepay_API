@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using wleepay.Communication.Interface;
 using Twilio.TwiML.Messaging;
 using wleepay.Communication.EmailTemplates;
+using static wleepay.Communication.EmailTemplates.AccountDeactivatedTemplate;
 
 namespace wleepay.Communication.Services
 {
@@ -200,9 +201,11 @@ namespace wleepay.Communication.Services
             var recipientEmail = "shikha0dev@gmail.com";
             // var recipientEmail = email;
 
-            AccountDeactivatedTemplate template = new AccountDeactivatedTemplate
+            AccountDeactivatedTemplateForSystemAdmin template = new AccountDeactivatedTemplateForSystemAdmin
             {
-                StaffEmail = email
+                StaffEmail = email,
+                StaffFirstName = name,
+                StaffPhoneNumber = phone
             };
 
             string emailHtml = template.GenerateHtml();
@@ -224,6 +227,39 @@ namespace wleepay.Communication.Services
 
             smtpClient.Send(mailMessage);
 
+            return true;
+        }
+
+        public async Task<bool> EmailForAccountDeactivatedToStaff(string email, string name, string phone)
+        {
+            var subject = "Account De-Activated";
+            var recipientEmail = "shikha0dev@gmail.com";
+            // var recipientEmail = email;
+
+            AccountDeactivatedTemplateForStaff template = new AccountDeactivatedTemplateForStaff
+            {
+                StaffEmail = email,
+                StaffFirstName = name,
+                StaffPhoneNumber = phone
+            };
+
+            string emailHtml = template.GenerateHtml();
+
+            // Sender's email address and credentials
+            string senderEmail = "mvctest17@gmail.com";
+            string senderPassword = "bqhyobxynxwbkteo"; // Use app-specific passwords or secure storage for passwords
+
+            // Create SMTP client
+            SmtpClient smtpClient = new SmtpClient("smtp.gmail.com"); // Use your SMTP server
+
+            // Port and SSL configuration
+            smtpClient.Port = 587; // Port for SMTP (e.g., 587 for Gmail)
+            smtpClient.EnableSsl = true;
+            smtpClient.UseDefaultCredentials = false;
+            smtpClient.Credentials = new NetworkCredential(senderEmail, senderPassword);
+
+            MailMessage mailMessage = new MailMessage(senderEmail, recipientEmail, subject, emailHtml);
+            smtpClient.Send(mailMessage);
             return true;
         }
 

@@ -392,13 +392,14 @@ namespace wleepay.API.Controllers
                     }
                     else
                     {
+                        await _emailSender.EmailForAccountDeactivatedToStaff(model.EmailId, userDetails.FirstName, userDetails.PhoneNumber);
                         await _emailSender.EmailForAccountDeactivatedToSystemAdmin(model.EmailId, userDetails.FirstName, userDetails.PhoneNumber);
                     }
                     return Ok(result.Status);
 
                 }
 
-                return Ok();
+                return BadRequest();
             }
             catch (Exception ex)
             {
