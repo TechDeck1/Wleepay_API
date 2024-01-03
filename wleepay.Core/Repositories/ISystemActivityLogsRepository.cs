@@ -11,7 +11,7 @@ namespace wleepay.Core.Repositories
     {
         Task<ActivityResponseResource> GetAllActivityLogs(int pageIndex, int pageSize);
         Task<IList<SystemActivityLog>> GetActivityLogsById(string userId);
-        Task<IList<SystemActivityLog>> FilterLogsByEmail(string email);
+        Task<ActivityResponseResource> FilterLogsByEmail(string email, int index, int size);
         Task<bool> DeleteLogsById(int id);
 
 

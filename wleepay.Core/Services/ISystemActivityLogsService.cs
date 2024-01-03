@@ -12,7 +12,7 @@ namespace wleepay.Core.Services
         Task<SystemActivityLog> AddSystemLogs(SystemActivityLog systemActivityLog);
         Task<ActivityResponseResource> GetAllSystemLogs(int pageIndex, int pageSize);
         Task<IList<SystemActivityLog>> GetAllSystemById(string userId);
-        Task<IList<SystemActivityLog>> FilterLogsByEmail(string email);
+        Task<ActivityResponseResource> FilterLogsByEmail(string email, int index, int size);
         Task<bool> DeleteLogsById(int id);
 
 

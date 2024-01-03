@@ -32,9 +32,9 @@ namespace wleepay.Services
             return result;
         }
 
-        public async Task<IList<SystemActivityLog>> FilterLogsByEmail(string email)
+        public async Task<ActivityResponseResource> FilterLogsByEmail(string email, int index, int size)
         {
-            var filteredLogs = await _unitOfWork.SystemActivity.FilterLogsByEmail(email);
+            var filteredLogs = await _unitOfWork.SystemActivity.FilterLogsByEmail(email, index, size);
             return filteredLogs;
         }
 

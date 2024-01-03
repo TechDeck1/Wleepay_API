@@ -11,6 +11,8 @@ using System.Linq;
 using MailKit.Search;
 using Microsoft.SqlServer.Management.Smo;
 using wleepay.Core.DTO.Response;
+using static DevExpress.XtraPrinting.Native.PageSizeInfo;
+using Org.BouncyCastle.Utilities;
 
 namespace wleepay.Data.Repositories
 {
@@ -35,11 +37,23 @@ namespace wleepay.Data.Repositories
             return true;
         }
 
-        public  async Task<IList<SystemActivityLog>> FilterLogsByEmail(string email)
+        public  async Task<ActivityResponseResource> FilterLogsByEmail(string email, int index, int size)
         {
+            int takeCount = size;
+            int skipCount = index * size;
             var filteredData = await WPContext.SystemActivities
                 .Where(entity => entity.Email.Contains(email)).ToListAsync();
-            return filteredData;
+            var TotalCount = filteredData.Count();
+            var activityLogs = filteredData.Skip(skipCount)
+                             .Take(takeCount);
+
+            ActivityResponseResource response = new ActivityResponseResource();
+            response.ActivityLogs = activityLogs.Reverse().ToList();
+            response.TotalCount = TotalCount;
+
+
+            return response;
+            //return filteredData;
                 
         }
 

@@ -21,6 +21,8 @@ namespace wleepay.API.Resources
     public class FilterLogs 
     {
         public string email { get; set; }
+        public int Index { get; set; }
+        public int Size { get; set; }
     }
 
 }
