@@ -61,7 +61,7 @@ namespace wleepay.Data.Repositories
                 .Include(s => s.UserRoles)
                     .ThenInclude(s => s.Role)
                 .Include(s => s.Address)
-                .OrderByDescending(w => w.UserDetail.FirstName)
+                .OrderByDescending(w => w.UserDetail.CreatedDate)
                 .Where(s=>s.UserRoles.FirstOrDefault().Role.Name == role.ToString())
                 .Skip(skipCount)
                 .Take(takeCount)
