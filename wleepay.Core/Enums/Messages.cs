@@ -25,5 +25,7 @@ namespace wleepay.Core.Enums
         [Description("Password is successfully genrated.")] PasswordGenerated,
         [Description("Email is not valid")] EmailNotValid,
         [Description("Please correct the entered details and try again.")] DetailsNotCorrect,
+        [Description("Invalid Request")] InvalidRequest,
+
     }
 }

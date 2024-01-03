@@ -38,9 +38,9 @@ namespace wleepay.Services
             return filteredLogs;
         }
 
-        public async Task<IList<SystemActivityLog>> GetAllSystemById(string userId)
+        public async Task<ActivityResponseResource> GetAllSystemById(string userId, int pageIndex = 0, int pageSize = 10)
         {
-            var logs = await _unitOfWork.SystemActivity.GetActivityLogsById(userId);
+            var logs = await _unitOfWork.SystemActivity.GetActivityLogsById(userId,pageIndex,pageSize);
             return logs;
         }
 

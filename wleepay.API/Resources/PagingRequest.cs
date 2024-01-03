@@ -25,4 +25,11 @@ namespace wleepay.API.Resources
         public int Size { get; set; }
     }
 
+    public class SystemLogsPagination
+    {
+        public string UserId { get; set; }
+        public int Index { get; set; }
+        public int Size { get; set; }
+    }
+
 }

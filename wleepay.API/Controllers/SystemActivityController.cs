@@ -29,10 +29,10 @@ namespace wleepay.API.Controllers
             return Ok(logs);
         }
 
-        [HttpGet("SystemLogsById/{userId}")]
-        public async Task<IActionResult> GetSystemLogsById(string userId)
+        [HttpGet("SystemLogsById")]
+        public async Task<IActionResult> GetSystemLogsById(SystemLogsPagination request)
         {
-            var logs = await _systemActivityLogsService.GetAllSystemById(userId);
+            var logs = await _systemActivityLogsService.GetAllSystemById(request.UserId, request.Index , request.Size);
             return Ok(logs);
         }
 

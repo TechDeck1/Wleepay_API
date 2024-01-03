@@ -678,6 +678,7 @@ namespace wleepay.API.Controllers
             var user = await _userManager.FindByEmailAsync(setupLogin.Email);
 
             var allSuperAdmins = await _userDetailsService.GetUserByRole((int)Role.SuperAdmin);
+
             if (user == null)
                 return Ok(new
                 {
@@ -722,7 +723,10 @@ namespace wleepay.API.Controllers
 
                 }
             }
-            return BadRequest();
+            return Ok(new{
+                Success = false,
+                Message = Messages.InvalidRequest.ToDescriptionString()
+            });
         }
 
         #region helper methods
