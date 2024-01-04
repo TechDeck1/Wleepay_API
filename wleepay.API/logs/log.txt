@@ -906,3 +906,114 @@ Error Number:547,State:0,Class:16
 2024-01-04 14:02:06 PM||INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development 
 2024-01-04 14:02:06 PM||INFO|Microsoft.Hosting.Lifetime|Content root path: D:\Offical\Wleepay_API\wleepay.API 
 2024-01-04 14:02:06 PM||INFO|Microsoft.Hosting.Lifetime|Content root path: D:\Offical\Wleepay_API\wleepay.API 
+2024-01-04 14:56:39 PM|20504|WARN|Microsoft.EntityFrameworkCore.Query|Compiling a query which loads related collections for more than one collection navigation either via 'Include' or through projection but no 'QuerySplittingBehavior' has been configured. By default Entity Framework will use 'QuerySplittingBehavior.SingleQuery' which can potentially result in slow query performance. See https://go.microsoft.com/fwlink/?linkid=2134277 for more information. To identify the query that's triggering this warning call 'ConfigureWarnings(w => w.Throw(RelationalEventId.MultipleCollectionIncludeWarning))' 
+2024-01-04 14:56:39 PM|20504|WARN|Microsoft.EntityFrameworkCore.Query|Compiling a query which loads related collections for more than one collection navigation either via 'Include' or through projection but no 'QuerySplittingBehavior' has been configured. By default Entity Framework will use 'QuerySplittingBehavior.SingleQuery' which can potentially result in slow query performance. See https://go.microsoft.com/fwlink/?linkid=2134277 for more information. To identify the query that's triggering this warning call 'ConfigureWarnings(w => w.Throw(RelationalEventId.MultipleCollectionIncludeWarning))' 
+2024-01-04 14:56:39 PM|13|ERROR|Microsoft.AspNetCore.Server.Kestrel|Connection id "0HN0CVUHGILDB", Request id "0HN0CVUHGILDB:00000003": An unhandled exception was thrown by the application. System.InvalidOperationException: The connection does not support MultipleActiveResultSets.
+   at Microsoft.Data.SqlClient.SqlInternalConnectionTds.ValidateConnectionForExecute(SqlCommand command)
+   at Microsoft.Data.SqlClient.SqlInternalTransaction.Rollback()
+   at Microsoft.Data.SqlClient.SqlInternalTransaction.Dispose(Boolean disposing)
+   at Microsoft.Data.SqlClient.SqlInternalTransaction.Dispose()
+   at Microsoft.Data.SqlClient.SqlTransaction.Dispose(Boolean disposing)
+   at System.Data.Common.DbTransaction.Dispose()
+   at Microsoft.EntityFrameworkCore.Storage.RelationalTransaction.Dispose()
+   at Microsoft.EntityFrameworkCore.Storage.RelationalConnection.Dispose()
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.ServiceProviderEngineScope.Dispose()
+   at Microsoft.EntityFrameworkCore.DbContext.Dispose()
+   at wleepay.Data.UnitOfWork.Dispose() in D:\Offical\Wleepay_API\wleepay.Data\UnitOfWork.cs:line 62
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.ServiceProviderEngineScope.DisposeAsync()
+--- End of stack trace from previous location ---
+   at Microsoft.AspNetCore.Http.Features.RequestServicesFeature.<DisposeAsync>g__Awaited|9_0(RequestServicesFeature servicesFeature, ValueTask vt)
+   at Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http.HttpProtocol.<FireOnCompleted>g__ProcessEvents|227_0(HttpProtocol protocol, Stack`1 events)
+2024-01-04 14:56:39 PM|13|ERROR|Microsoft.AspNetCore.Server.Kestrel|Connection id "0HN0CVUHGILDB", Request id "0HN0CVUHGILDB:00000003": An unhandled exception was thrown by the application. System.InvalidOperationException: The connection does not support MultipleActiveResultSets.
+   at Microsoft.Data.SqlClient.SqlInternalConnectionTds.ValidateConnectionForExecute(SqlCommand command)
+   at Microsoft.Data.SqlClient.SqlInternalTransaction.Rollback()
+   at Microsoft.Data.SqlClient.SqlInternalTransaction.Dispose(Boolean disposing)
+   at Microsoft.Data.SqlClient.SqlInternalTransaction.Dispose()
+   at Microsoft.Data.SqlClient.SqlTransaction.Dispose(Boolean disposing)
+   at System.Data.Common.DbTransaction.Dispose()
+   at Microsoft.EntityFrameworkCore.Storage.RelationalTransaction.Dispose()
+   at Microsoft.EntityFrameworkCore.Storage.RelationalConnection.Dispose()
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.ServiceProviderEngineScope.Dispose()
+   at Microsoft.EntityFrameworkCore.DbContext.Dispose()
+   at wleepay.Data.UnitOfWork.Dispose() in D:\Offical\Wleepay_API\wleepay.Data\UnitOfWork.cs:line 62
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.ServiceProviderEngineScope.DisposeAsync()
+--- End of stack trace from previous location ---
+   at Microsoft.AspNetCore.Http.Features.RequestServicesFeature.<DisposeAsync>g__Awaited|9_0(RequestServicesFeature servicesFeature, ValueTask vt)
+   at Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http.HttpProtocol.<FireOnCompleted>g__ProcessEvents|227_0(HttpProtocol protocol, Stack`1 events)
+2024-01-04 14:57:30 PM||WARN|Microsoft.AspNetCore.Identity.UserManager|Invalid password for user. 
+2024-01-04 14:57:30 PM||WARN|Microsoft.AspNetCore.Identity.UserManager|Invalid password for user. 
+2024-01-04 14:57:30 PM|2|WARN|Microsoft.AspNetCore.Identity.SignInManager|User failed to provide the correct password. 
+2024-01-04 14:57:30 PM|2|WARN|Microsoft.AspNetCore.Identity.SignInManager|User failed to provide the correct password. 
+2024-01-04 14:57:54 PM||DEBUG|wleepay.API.Program|init main 
+2024-01-04 14:57:57 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: https://localhost:5001 
+2024-01-04 14:57:57 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: https://localhost:5001 
+2024-01-04 14:57:57 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: http://localhost:5000 
+2024-01-04 14:57:57 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: http://localhost:5000 
+2024-01-04 14:57:57 PM||INFO|Microsoft.Hosting.Lifetime|Application started. Press Ctrl+C to shut down. 
+2024-01-04 14:57:57 PM||INFO|Microsoft.Hosting.Lifetime|Application started. Press Ctrl+C to shut down. 
+2024-01-04 14:57:57 PM||INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development 
+2024-01-04 14:57:57 PM||INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development 
+2024-01-04 14:57:57 PM||INFO|Microsoft.Hosting.Lifetime|Content root path: D:\Offical\Wleepay_API\wleepay.API 
+2024-01-04 14:57:57 PM||INFO|Microsoft.Hosting.Lifetime|Content root path: D:\Offical\Wleepay_API\wleepay.API 
+2024-01-04 15:00:05 PM|10108|WARN|Microsoft.EntityFrameworkCore.Query|Collection navigations are only considered null if their parent entity is null. Use 'Any' to check whether collection navigation 'ApplicationUser.UserRoles' is empty. 
+2024-01-04 15:00:05 PM|10108|WARN|Microsoft.EntityFrameworkCore.Query|Collection navigations are only considered null if their parent entity is null. Use 'Any' to check whether collection navigation 'ApplicationUser.UserRoles' is empty. 
+2024-01-04 15:00:05 PM|20504|WARN|Microsoft.EntityFrameworkCore.Query|Compiling a query which loads related collections for more than one collection navigation either via 'Include' or through projection but no 'QuerySplittingBehavior' has been configured. By default Entity Framework will use 'QuerySplittingBehavior.SingleQuery' which can potentially result in slow query performance. See https://go.microsoft.com/fwlink/?linkid=2134277 for more information. To identify the query that's triggering this warning call 'ConfigureWarnings(w => w.Throw(RelationalEventId.MultipleCollectionIncludeWarning))' 
+2024-01-04 15:00:05 PM|20504|WARN|Microsoft.EntityFrameworkCore.Query|Compiling a query which loads related collections for more than one collection navigation either via 'Include' or through projection but no 'QuerySplittingBehavior' has been configured. By default Entity Framework will use 'QuerySplittingBehavior.SingleQuery' which can potentially result in slow query performance. See https://go.microsoft.com/fwlink/?linkid=2134277 for more information. To identify the query that's triggering this warning call 'ConfigureWarnings(w => w.Throw(RelationalEventId.MultipleCollectionIncludeWarning))' 
+2024-01-04 15:00:44 PM|13|ERROR|Microsoft.AspNetCore.Server.Kestrel|Connection id "0HN0D0TO50E5T", Request id "0HN0D0TO50E5T:00000003": An unhandled exception was thrown by the application. System.InvalidOperationException: The connection does not support MultipleActiveResultSets.
+   at Microsoft.Data.SqlClient.SqlInternalConnectionTds.ValidateConnectionForExecute(SqlCommand command)
+   at Microsoft.Data.SqlClient.SqlInternalTransaction.Rollback()
+   at Microsoft.Data.SqlClient.SqlInternalTransaction.Dispose(Boolean disposing)
+   at Microsoft.Data.SqlClient.SqlInternalTransaction.Dispose()
+   at Microsoft.Data.SqlClient.SqlTransaction.Dispose(Boolean disposing)
+   at System.Data.Common.DbTransaction.Dispose()
+   at Microsoft.EntityFrameworkCore.Storage.RelationalTransaction.Dispose()
+   at Microsoft.EntityFrameworkCore.Storage.RelationalConnection.Dispose()
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.ServiceProviderEngineScope.Dispose()
+   at Microsoft.EntityFrameworkCore.DbContext.Dispose()
+   at wleepay.Data.UnitOfWork.Dispose() in D:\Offical\Wleepay_API\wleepay.Data\UnitOfWork.cs:line 62
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.ServiceProviderEngineScope.DisposeAsync()
+--- End of stack trace from previous location ---
+   at Microsoft.AspNetCore.Http.Features.RequestServicesFeature.<DisposeAsync>g__Awaited|9_0(RequestServicesFeature servicesFeature, ValueTask vt)
+   at Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http.HttpProtocol.<FireOnCompleted>g__ProcessEvents|227_0(HttpProtocol protocol, Stack`1 events)
+2024-01-04 15:00:44 PM|13|ERROR|Microsoft.AspNetCore.Server.Kestrel|Connection id "0HN0D0TO50E5T", Request id "0HN0D0TO50E5T:00000003": An unhandled exception was thrown by the application. System.InvalidOperationException: The connection does not support MultipleActiveResultSets.
+   at Microsoft.Data.SqlClient.SqlInternalConnectionTds.ValidateConnectionForExecute(SqlCommand command)
+   at Microsoft.Data.SqlClient.SqlInternalTransaction.Rollback()
+   at Microsoft.Data.SqlClient.SqlInternalTransaction.Dispose(Boolean disposing)
+   at Microsoft.Data.SqlClient.SqlInternalTransaction.Dispose()
+   at Microsoft.Data.SqlClient.SqlTransaction.Dispose(Boolean disposing)
+   at System.Data.Common.DbTransaction.Dispose()
+   at Microsoft.EntityFrameworkCore.Storage.RelationalTransaction.Dispose()
+   at Microsoft.EntityFrameworkCore.Storage.RelationalConnection.Dispose()
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.ServiceProviderEngineScope.Dispose()
+   at Microsoft.EntityFrameworkCore.DbContext.Dispose()
+   at wleepay.Data.UnitOfWork.Dispose() in D:\Offical\Wleepay_API\wleepay.Data\UnitOfWork.cs:line 62
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.ServiceProviderEngineScope.DisposeAsync()
+--- End of stack trace from previous location ---
+   at Microsoft.AspNetCore.Http.Features.RequestServicesFeature.<DisposeAsync>g__Awaited|9_0(RequestServicesFeature servicesFeature, ValueTask vt)
+   at Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http.HttpProtocol.<FireOnCompleted>g__ProcessEvents|227_0(HttpProtocol protocol, Stack`1 events)
+2024-01-04 15:01:43 PM||INFO|wleepay.API.Controllers.PortalController|Action: VerifyCode, User: fc5be3e8-0247-484c-a272-eb12dd5a107c, Timestamp: 1/4/2024 9:31:43 AM, IP: ::1 
+2024-01-04 15:01:43 PM||INFO|wleepay.API.Controllers.PortalController|Action: VerifyCode, User: fc5be3e8-0247-484c-a272-eb12dd5a107c, Timestamp: 1/4/2024 9:31:43 AM, IP: ::1 
+2024-01-04 15:01:45 PM|20504|WARN|Microsoft.EntityFrameworkCore.Query|Compiling a query which loads related collections for more than one collection navigation either via 'Include' or through projection but no 'QuerySplittingBehavior' has been configured. By default Entity Framework will use 'QuerySplittingBehavior.SingleQuery' which can potentially result in slow query performance. See https://go.microsoft.com/fwlink/?linkid=2134277 for more information. To identify the query that's triggering this warning call 'ConfigureWarnings(w => w.Throw(RelationalEventId.MultipleCollectionIncludeWarning))' 
+2024-01-04 15:01:45 PM|20504|WARN|Microsoft.EntityFrameworkCore.Query|Compiling a query which loads related collections for more than one collection navigation either via 'Include' or through projection but no 'QuerySplittingBehavior' has been configured. By default Entity Framework will use 'QuerySplittingBehavior.SingleQuery' which can potentially result in slow query performance. See https://go.microsoft.com/fwlink/?linkid=2134277 for more information. To identify the query that's triggering this warning call 'ConfigureWarnings(w => w.Throw(RelationalEventId.MultipleCollectionIncludeWarning))' 
+2024-01-04 15:30:00 PM||DEBUG|wleepay.API.Program|init main 
+2024-01-04 15:30:04 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: https://localhost:5001 
+2024-01-04 15:30:04 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: https://localhost:5001 
+2024-01-04 15:30:04 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: http://localhost:5000 
+2024-01-04 15:30:04 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: http://localhost:5000 
+2024-01-04 15:30:04 PM||INFO|Microsoft.Hosting.Lifetime|Application started. Press Ctrl+C to shut down. 
+2024-01-04 15:30:04 PM||INFO|Microsoft.Hosting.Lifetime|Application started. Press Ctrl+C to shut down. 
+2024-01-04 15:30:04 PM||INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development 
+2024-01-04 15:30:04 PM||INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development 
+2024-01-04 15:30:04 PM||INFO|Microsoft.Hosting.Lifetime|Content root path: D:\Offical\Wleepay_API\wleepay.API 
+2024-01-04 15:30:04 PM||INFO|Microsoft.Hosting.Lifetime|Content root path: D:\Offical\Wleepay_API\wleepay.API 
+2024-01-04 15:33:08 PM||DEBUG|wleepay.API.Program|init main 
+2024-01-04 15:33:10 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: https://localhost:5001 
+2024-01-04 15:33:10 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: https://localhost:5001 
+2024-01-04 15:33:10 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: http://localhost:5000 
+2024-01-04 15:33:10 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: http://localhost:5000 
+2024-01-04 15:33:10 PM||INFO|Microsoft.Hosting.Lifetime|Application started. Press Ctrl+C to shut down. 
+2024-01-04 15:33:10 PM||INFO|Microsoft.Hosting.Lifetime|Application started. Press Ctrl+C to shut down. 
+2024-01-04 15:33:10 PM||INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development 
+2024-01-04 15:33:10 PM||INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development 
+2024-01-04 15:33:10 PM||INFO|Microsoft.Hosting.Lifetime|Content root path: D:\Offical\Wleepay_API\wleepay.API 
+2024-01-04 15:33:10 PM||INFO|Microsoft.Hosting.Lifetime|Content root path: D:\Offical\Wleepay_API\wleepay.API 

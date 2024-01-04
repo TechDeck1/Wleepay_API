@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using wleepay.Core.DTO.Response;
 using wleepay.Core.Enums;
 using wleepay.Core.Models;
 using wleepay.Core.Repositories;
@@ -210,7 +211,7 @@ namespace wleepay.Data.Repositories
             return itemDate >= todayStartDate && itemDate <= todayEndDate;
         }
 
-        public async Task<IList<Transaction>> GetCashoutTransactions(int pageIndex = 0, int pageSize =0 )
+        public async Task<TransactionResponseResource> GetCashoutTransactions(int pageIndex = 0, int pageSize =0 )
         {
             if (pageSize != 0)
             {
@@ -225,7 +226,16 @@ namespace wleepay.Data.Repositories
                     .Skip(skipCount)
                     .Take(takeCount)
                     .ToListAsync();
-                return cashOutTransactions;
+
+                var TotalCount = cashOutTransactions.Count();
+                var activityLogs = cashOutTransactions.Skip(skipCount)
+                                 .Take(takeCount);
+
+                TransactionResponseResource response = new TransactionResponseResource();
+                response.Transactions = activityLogs.OrderByDescending(x => x.CreatedDate).ToList();
+                response.TotalCount = TotalCount;
+
+                return response;
             }
             else
             {
@@ -236,18 +246,25 @@ namespace wleepay.Data.Repositories
                    .Include(s => s.TransferType)
                    .OrderByDescending(w => w.CreatedDate)
                    .ToListAsync();
-                return cashOutTransactions;
+
+                var TotalCount = cashOutTransactions.Count();
+
+                TransactionResponseResource response = new TransactionResponseResource();
+                response.Transactions = cashOutTransactions.OrderByDescending(x => x.CreatedDate).ToList();
+                response.TotalCount = TotalCount;
+
+                return response;
 
             }
         }
 
-        public async Task<IList<Transaction>> GetTopUpTransactions(int pageIndex = 0, int pageSize = 0)
+        public async Task<TransactionResponseResource> GetTopUpTransactions(int pageIndex = 0, int pageSize = 0)
         {
             if (pageSize != 0)
             {
                 int takeCount = pageSize;
                 int skipCount = pageIndex * pageSize;
-                var cashOutTransactions = await WPContext.Transactions.Where(u => u.TransferTypeId == (int)TransferTypes.TopUp)
+                var topUpTransactions = await WPContext.Transactions.Where(u => u.TransferTypeId == (int)TransferTypes.TopUp)
                     .Include(s => s.FromWallet.ApplicationUser.UserDetail)
                     .Include(s => s.FromWallet.Currency)
                     .Include(s => s.ToWallet.ApplicationUser.UserDetail)
@@ -256,11 +273,20 @@ namespace wleepay.Data.Repositories
                     .Skip(skipCount)
                     .Take(takeCount)
                     .ToListAsync();
-                return cashOutTransactions;
+
+                var TotalCount = topUpTransactions.Count();
+                var activityLogs = topUpTransactions.Skip(skipCount)
+                                 .Take(takeCount);
+
+                TransactionResponseResource response = new TransactionResponseResource();
+                response.Transactions = activityLogs.OrderByDescending(x => x.CreatedDate).ToList();
+                response.TotalCount = TotalCount;
+
+                return response;
             }
             else
             {
-                var cashOutTransactions = await WPContext.Transactions.Where(u => u.TransferTypeId == (int)TransferTypes.TopUp)
+                var topUpTransactions = await WPContext.Transactions.Where(u => u.TransferTypeId == (int)TransferTypes.TopUp)
                   .Include(s => s.FromWallet.ApplicationUser.UserDetail)
                   .Include(s => s.FromWallet.Currency)
                   .Include(s => s.ToWallet.ApplicationUser.UserDetail)
@@ -268,7 +294,13 @@ namespace wleepay.Data.Repositories
                   .OrderByDescending(w => w.CreatedDate)
                   .ToListAsync();
 
-                return cashOutTransactions;
+                var TotalCount = topUpTransactions.Count();
+
+                TransactionResponseResource response = new TransactionResponseResource();
+                response.Transactions = topUpTransactions.OrderByDescending(x => x.CreatedDate).ToList();
+                response.TotalCount = TotalCount;
+
+                return response;
 
             }
         }

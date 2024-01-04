@@ -8,6 +8,7 @@ using wleepay.Core.Services;
 using System.Linq;
 using wleepay.Core.Enums;
 using TransactionStatus = wleepay.Core.Enums.TransactionStatus;
+using wleepay.Core.DTO.Response;
 
 namespace wleepay.Services
 {
@@ -102,12 +103,12 @@ namespace wleepay.Services
             return await _unitOfWork.Transaction.CalculateWalletTransaction(walletId, isMonthly);
         }
 
-        public async Task<IList<Transaction>> GetCashoutTransactions(int pageIndex , int pageSize)
+        public async Task<TransactionResponseResource> GetCashoutTransactions(int pageIndex , int pageSize)
         {
             return await _unitOfWork.Transaction.GetCashoutTransactions(pageIndex, pageSize);
         }
 
-        public async Task<IList<Transaction>> GetTopUpTransactions(int pageIndex, int pageSize)
+        public async Task<TransactionResponseResource> GetTopUpTransactions(int pageIndex, int pageSize)
         {
             return await _unitOfWork.Transaction.GetTopUpTransactions(pageIndex, pageSize);
         }

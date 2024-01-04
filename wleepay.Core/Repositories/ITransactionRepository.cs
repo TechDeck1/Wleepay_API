@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using wleepay.Core.DTO.Response;
 using wleepay.Core.Models;
 
 namespace wleepay.Core.Repositories
@@ -18,8 +19,8 @@ namespace wleepay.Core.Repositories
         Task<Transaction> CreatePaymentRequest(Transaction transactionDetail);
         Task<Transaction> GetTransactionDetails(long transactionId);
         Task<double> CalculateWalletTransaction(long walletId, bool isMonthly = false);
-        Task<IList<Transaction>> GetCashoutTransactions(int pageIndex = 0, int pageSize = 0);
-        Task<IList<Transaction>> GetTopUpTransactions(int pageIndex = 0, int pageSize= 0);
+        Task<TransactionResponseResource> GetCashoutTransactions(int pageIndex = 0, int pageSize = 0);
+        Task<TransactionResponseResource> GetTopUpTransactions(int pageIndex = 0, int pageSize= 0);
 
 
     }

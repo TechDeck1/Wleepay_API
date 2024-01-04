@@ -191,12 +191,16 @@ namespace wleepay.API.Controllers
         {
 
             var result = await _transactionService.GetCashoutTransactions(pagination.Index, pagination.Size);
-            var transactionResources = result.Select(transaction => _mapper.Map<Transaction, TransactionHistoryResource>(transaction)).ToList();
+            var transactionResources = result.Transactions.Select(transaction => _mapper.Map<Transaction, TransactionHistoryResource>(transaction)).ToList();
 
             if (result == null)
                 return BadRequest("Invalid UserId");
 
-            return Ok(transactionResources);
+            return Ok(new
+            {
+                TotalCount = result.TotalCount,
+                Transactions = transactionResources
+            });
         }
 
         [HttpPost("TopUp")]
@@ -204,12 +208,17 @@ namespace wleepay.API.Controllers
         {
 
             var result = await _transactionService.GetTopUpTransactions(pagination.Index, pagination.Size);
-            var transactionResources = result.Select(transaction => _mapper.Map<Transaction, TransactionHistoryResource>(transaction)).ToList();
+            var transactionResources = result.Transactions.Select(transaction => _mapper.Map<Transaction, TransactionHistoryResource>(transaction)).ToList();
 
             if (result == null)
                 return BadRequest("Invalid UserId");
 
-            return Ok(transactionResources);
+            return Ok(new
+            {
+                TotalCount= result.TotalCount,
+                Transactions= transactionResources
+            });
+
         }
 
 
