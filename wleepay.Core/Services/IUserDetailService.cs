@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using wleepay.Core.DTO.Response;
 using wleepay.Core.Models;
 
 namespace wleepay.Core.Services
@@ -25,7 +26,7 @@ namespace wleepay.Core.Services
         Task<IEnumerable<Transaction>> GetIncomingOutGoingPaymentRequest(string userId, Core.Enums.PaymentRequestType type, Core.Enums.TransactionStatus transferStatus, int pageSize, int pageIndex);
         Task<UserDetail> UpdateUserVerificationCode(string UserId, string verificationCode);
         Task<UserDetail> UpdateUserStatus(string userId, int status);
-        Task<IEnumerable<ApplicationUser>> GetAllUsersById(Core.Enums.Role role, int pageIndex, int pageSize, string createdBy);
+        Task<UserDetailsResponseResource> GetAllUsersById(Core.Enums.Role role, int pageIndex, int pageSize, string createdBy);
 
 
     }

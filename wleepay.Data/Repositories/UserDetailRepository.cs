@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using wleepay.Core.DTO.Response;
 using wleepay.Core.Enums;
 using wleepay.Core.Models;
 using wleepay.Core.Repositories;
@@ -136,7 +137,7 @@ namespace wleepay.Data.Repositories
             return await WPContext.UserDetail.AnyAsync(u => u.AccountNumber == accountNumber);
         }
 
-        public async Task<IEnumerable<ApplicationUser>> GetAllUsersById(Core.Enums.Role role, int pageIndex = 0, int pageSize=0, string createdBy="")
+        public async Task<UserDetailsResponseResource> GetAllUsersById(Core.Enums.Role role, int pageIndex = 0, int pageSize=0, string createdBy="")
         {
             if (pageSize != 0)
             {
@@ -153,11 +154,18 @@ namespace wleepay.Data.Repositories
                     .Include(s => s.Address)
                     .OrderByDescending(w => w.UserDetail.FirstName)
                     .Where(s => s.UserRoles.FirstOrDefault().Role.Name == role.ToString() && s.UserDetail.CreatedBy == createdBy)
-                    .Skip(skipCount)
-                    .Take(takeCount)
                     .ToListAsync();
 
-                return result;
+                var TotalCount = result.Count();
+                var userDetails = result.Skip(skipCount)
+                                 .Take(takeCount);
+
+                UserDetailsResponseResource response = new UserDetailsResponseResource();
+                response.UserDetails = userDetails.OrderByDescending(x => x.UserDetail.CreatedDate).ToList();
+                response.TotalCount = TotalCount;
+
+                return response;
+
             }
             else
             {
@@ -173,7 +181,13 @@ namespace wleepay.Data.Repositories
                  .Where(s => s.UserRoles.FirstOrDefault().Role.Name == role.ToString() && s.UserDetail.CreatedBy == createdBy)
                  .ToListAsync();
 
-                return result;
+                var TotalCount = result.Count();
+
+                UserDetailsResponseResource response = new UserDetailsResponseResource();
+                response.UserDetails = result.OrderByDescending(x => x.UserDetail.CreatedDate).ToList();
+                response.TotalCount = TotalCount;
+
+                return response;
             }
         }
 

@@ -347,8 +347,12 @@ namespace wleepay.API.Controllers
         public async Task<IActionResult> GetAllUsersById([FromBody] AgentRequest request)
         {
             var userList = await _userDetailsService.GetAllUsersById(request.Role ,request.Index, request.Size, request.CreatedBy);
-            var userListResource = _mapper.Map<IEnumerable<ApplicationUser>, IEnumerable<ApplicationUserResource>>(userList);
-            return Ok(userListResource);
+            var userListResource = _mapper.Map<IEnumerable<ApplicationUser>, IEnumerable<ApplicationUserResource>>(userList.UserDetails);
+            return Ok(new
+            {
+                TotalCount=userList.TotalCount,
+                UserDetails=userList.UserDetails
+            });
         }
 
         [HttpPost("GetAllUsersByRole/{role}")]
