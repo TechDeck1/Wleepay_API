@@ -351,7 +351,7 @@ namespace wleepay.API.Controllers
             return Ok(new
             {
                 TotalCount=userList.TotalCount,
-                UserDetails=userList.UserDetails
+                UserDetails= userListResource
             });
         }
 
