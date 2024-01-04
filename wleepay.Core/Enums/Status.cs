@@ -6,6 +6,7 @@ namespace wleepay.Core.Enums
 {
     public enum Status
     {       
+
         Active = 1,
         DeActive = 2,
         

@@ -94,9 +94,9 @@ namespace wleepay.API.Controllers
             systemActivityLog.IpAddress = GetClientIpAddress();
             systemActivityLog.Action = ActionsForSystemLogs.Login.ToDescriptionString();
 
-            Status statusEnumFromDatabase = (Status)userDetails.Status;
+            //Status statusEnumFromDatabase = (Status)userDetails.Status;
 
-            if (statusEnumFromDatabase == Status.DeActive)
+            if (userDetails.Status == (int)Status.DeActive)
             {
                 systemActivityLog.Description = GenericMessagesForSystemLogs.AccountDeActivated.ToDescriptionString();
                 var addLogs = await _systemActivityLogsService.AddSystemLogs(systemActivityLog);
@@ -351,18 +351,30 @@ namespace wleepay.API.Controllers
                 var userDetails = await _userDetailsService.GetUserDetailsById(user.Id);
                 if (userDetails != null)
                 {
+                    SystemActivityLog systemActivityLog = new SystemActivityLog();
+                    systemActivityLog.UserId = user.Id;
+                    systemActivityLog.Email = model.EmailId;
+                    systemActivityLog.IpAddress = GetClientIpAddress();
                     //update activity status for user
                     var result = await _userDetailsService.UpdateUserStatus(model.UserId, model.Status);
                     if (model.Status == (int)Status.Active)
                     {
+                        systemActivityLog.Action = ActionsForSystemLogs.Activate.ToDescriptionString();
+                        systemActivityLog.Description = GenericMessagesForSystemLogs.AccountActivated.ToDescriptionString();
+
                         await _emailSender.EmailForAccountActivatedToStaff(model.EmailId, userDetails.FirstName, userDetails.PhoneNumber);
                         await _emailSender.EmailForAccountActivatedToSystemAdmin(model.EmailId, userDetails.FirstName , userDetails.PhoneNumber);
                     }
                     else
                     {
+                        systemActivityLog.Action = ActionsForSystemLogs.Deactivate.ToDescriptionString();
+                        systemActivityLog.Description = GenericMessagesForSystemLogs.AccountDeActivated.ToDescriptionString();
+
                         await _emailSender.EmailForAccountDeactivatedToStaff(model.EmailId, userDetails.FirstName, userDetails.PhoneNumber);
                         await _emailSender.EmailForAccountDeactivatedToSystemAdmin(model.EmailId, userDetails.FirstName, userDetails.PhoneNumber);
                     }
+
+                    var addLogs = await _systemActivityLogsService.AddSystemLogs(systemActivityLog);
                     return Ok(result.Status);
 
                 }

@@ -55,6 +55,8 @@ namespace wleepay.API.Controllers
         private readonly IUploadDocument _documentUploaderService;
         private readonly IEmailSender _emailSender;
         private readonly ITokenStorageService _tokenStorageService;
+        private readonly ISystemActivityLogsService _systemActivityLogsService;
+
 
 
 
@@ -75,7 +77,8 @@ namespace wleepay.API.Controllers
             IUploadDocument uploadDocument,
             IHostingEnvironment hostingEnvironment,
             IEmailSender emailSender,
-            ITokenStorageService tokenStorageService)
+            ITokenStorageService tokenStorageService,
+            ISystemActivityLogsService systemActivityLogsService)
         {
             _userManager = userManager;
             _roleManager = roleManager;
@@ -94,6 +97,7 @@ namespace wleepay.API.Controllers
             _documentUploaderService = uploadDocument;
             _emailSender = emailSender;
             _tokenStorageService = tokenStorageService;
+            _systemActivityLogsService = systemActivityLogsService;
         }
 
         [HttpPost("Registration")]
@@ -678,15 +682,25 @@ namespace wleepay.API.Controllers
         {
 
             var user = await _userManager.FindByEmailAsync(setupLogin.Email);
+            
+            SystemActivityLog systemActivityLog = new SystemActivityLog();
+            systemActivityLog.UserId = user.Id;
+            systemActivityLog.Email = setupLogin.Email;
+            systemActivityLog.IpAddress = GetClientIpAddress();
+            systemActivityLog.Action = ActionsForSystemLogs.CompleteLoginProcess.ToDescriptionString();
 
-            var allSuperAdmins = await _userDetailsService.GetUserByRole((int)Role.SuperAdmin);
+            // var allSuperAdmins = await _userDetailsService.GetUserByRole((int)Role.SuperAdmin);
 
             if (user == null)
+            {
+                systemActivityLog.Description = GenericMessagesForSystemLogs.NotExists.ToDescriptionString();
+                var addLogs = await _systemActivityLogsService.AddSystemLogs(systemActivityLog);
                 return Ok(new
                 {
                     Success = false,
                     Message = Messages.NotFound.ToDescriptionString(),
                 });
+            }
 
             var userDetails = await _userDetailsService.GetUserDetailsById(user.Id);
             if (userDetails != null)
@@ -703,7 +717,8 @@ namespace wleepay.API.Controllers
                         var updatedDetails = await _userDetailsService.AddOrUpdateUserDetails(userDetails);
                         var userMail= await _emailSender.EmailForAccountActivatedToStaff(setupLogin.Email, userDetails.FirstName, userDetails.PhoneNumber);
                         var emailToAdmins= await _emailSender.EmailForAccountActivatedToSystemAdmin(setupLogin.Email, userDetails.FirstName, userDetails.PhoneNumber);
-
+                        systemActivityLog.Description = GenericMessagesForSystemLogs.CompleteLoginProcess.ToDescriptionString();
+                        var addLogs = await _systemActivityLogsService.AddSystemLogs(systemActivityLog);
                         return Ok(new
                         {
                             Success = true,
@@ -714,6 +729,8 @@ namespace wleepay.API.Controllers
                 }
                 else
                 {
+                    systemActivityLog.Description = GenericMessagesForSystemLogs.Failed.ToDescriptionString();
+                    var addLogs = await _systemActivityLogsService.AddSystemLogs(systemActivityLog);
                     return Ok(new
                     {
                         Success = false,
@@ -806,6 +823,15 @@ namespace wleepay.API.Controllers
                
             }
             return false;
+        }
+
+        private string GetClientIpAddress()
+        {
+            if (HttpContext.Connection.RemoteIpAddress != null)
+            {
+                return HttpContext.Connection.RemoteIpAddress.ToString();
+            }
+            return "Unknown";
         }
         #endregion
     }
