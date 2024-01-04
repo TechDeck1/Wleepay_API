@@ -136,9 +136,9 @@ namespace wleepay.Data.Repositories
             return await WPContext.UserDetail.AnyAsync(u => u.AccountNumber == accountNumber);
         }
 
-        public async Task<IEnumerable<ApplicationUser>> GetAllUsersById(Core.Enums.Role role, int pageIndex = 0, int pageSize = 10, string createdBy="")
+        public async Task<IEnumerable<ApplicationUser>> GetAllUsersById(Core.Enums.Role role, int pageIndex = 0, int pageSize=0, string createdBy="")
         {
-            if (pageSize > 0)
+            if (pageSize != 0)
             {
                 int takeCount = pageSize;
                 int skipCount = pageIndex * pageSize;

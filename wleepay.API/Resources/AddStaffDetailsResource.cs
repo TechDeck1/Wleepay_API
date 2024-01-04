@@ -22,6 +22,7 @@ namespace wleepay.API.Resources
         public int? KYCLevel { get; set; }
         public string KYCDocumentImage { get; set; }
         public int SecurityQuestionId { get; set; }
+        public int SecurityQuestionsId { get; set; }
         public string SecurityAnswerText { get; set; }
         public bool RememberMe { get; set; } = false; // Default value is set to false
         public Role? Role { get; set; }

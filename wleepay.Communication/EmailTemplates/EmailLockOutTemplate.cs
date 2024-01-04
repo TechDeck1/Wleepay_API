@@ -16,7 +16,7 @@ namespace wleepay.Communication.EmailTemplates
 
             public string GenerateHtml()
             {
-                return $@"Dear Wleepay Administrator,
+                     return $@"Dear Wleepay Administrator,
                 
                 The following Wleepay staff ‘s portal login account has been locked after 3 unsuccessful login attempts. Please proceed to investigate this incident and unlock the staff’s account if necessary. The staff has also been notified: 
                 •	{StaffFirstName} 
@@ -39,7 +39,7 @@ namespace wleepay.Communication.EmailTemplates
 
             public string GenerateHtml()
             {
-                return $@"Dear {StaffFirstName},
+                     return $@"Dear {StaffFirstName},
 
                 Your Wleepay portal login account has been locked after 3 unsuccessful login attempts. Please contact the system administrator to unlock your account. 
                

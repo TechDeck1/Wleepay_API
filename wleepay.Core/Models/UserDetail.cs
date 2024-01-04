@@ -33,13 +33,14 @@ namespace wleepay.Core.Models
         public string WleePhoneNumber { get; set; }
         public DateTime HireDate { get; set; }
         public int SecurityQuestionId { get; set; }
+        public int SecurityQuestionsId { get; set; }
+
         public string SecurityAnswerText { get; set; }
         public string CreatedBy { get; set; }
         public virtual ApplicationUser ApplicationUser { get; set; }
         public virtual KYCStatus KYCStatus { get; set; }
         public virtual County County { get; set; }
         public virtual KYCLevel KYCLevelDetail { get; set; }
-        public virtual SecurityQuestions SecurityQuestions { get; set; }
 
     }
 }
