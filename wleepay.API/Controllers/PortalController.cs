@@ -111,8 +111,10 @@ namespace wleepay.API.Controllers
             if (result.IsLockedOut)
             {
                 //_logger.LogInformation("Login attempt for email {Email} from IP {IPAddress} at {Timestamp}", loginRequest.Email, GetClientIpAddress(), DateTime.UtcNow);
-                var mailSent = _emailSender.SendEmailAsyncForLockAccount(loginRequest.Email);
-                systemActivityLog.Description = GenericMessagesForSystemLogs.AccountLocked.ToDescriptionString() + mailSent;
+                var mailSentToStaff = _emailSender.SendEmailAsyncForLockAccountToStaff(loginRequest.Email, userDetails.FirstName,userDetails.PhoneNumber);
+                var mailSentToAdmin = _emailSender.SendEmailAsyncForLockAccountToSystemAdmin(loginRequest.Email, userDetails.FirstName, userDetails.PhoneNumber);
+
+                systemActivityLog.Description = GenericMessagesForSystemLogs.AccountLocked.ToDescriptionString();
                 var addLogs = await _systemActivityLogsService.AddSystemLogs(systemActivityLog);
 
                 return Ok(new

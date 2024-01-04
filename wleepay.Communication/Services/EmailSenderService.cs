@@ -9,19 +9,30 @@ using Twilio.TwiML.Messaging;
 using wleepay.Communication.EmailTemplates;
 using static wleepay.Communication.EmailTemplates.AccountDeactivatedTemplate;
 using static wleepay.Communication.EmailTemplates.AccountActivatedTemplate;
+using System.Numerics;
+using System.Xml.Linq;
+using static wleepay.Communication.EmailTemplates.PasswordChangeTemplate;
+using static wleepay.Communication.EmailTemplates.EmailLockOutTemplate;
 
 namespace wleepay.Communication.Services
 {
     public class EmailSenderService : IEmailSender
     {
-        public async Task<bool> SendEmailAsyncForLockAccount(string email)
+        public async Task<bool> SendEmailAsyncForLockAccountToSystemAdmin(string email, string name, string phone)
         {
             
                 var subject = "Failed Login attempt";
                 var recipientEmail = "shikha0dev@gmail.com";
-               // var recipientEmail = email;
+                // var recipientEmail = email;
 
-                var body = $"Dear Admin,\n\n Your staff's {email} account has been locked after 3 unsuccessful attempts.";
+                EmailLockOutTemplateForSystemAdmin template = new EmailLockOutTemplateForSystemAdmin
+                {
+                    StaffEmail = email,
+                    StaffFirstName = name,
+                    StaffPhoneNumber = phone
+                };
+
+                string emailHtml = template.GenerateHtml();
 
                 // Sender's email address and credentials
                 string senderEmail = "mvctest17@gmail.com";
@@ -36,13 +47,51 @@ namespace wleepay.Communication.Services
                 smtpClient.UseDefaultCredentials = false;
                 smtpClient.Credentials = new NetworkCredential(senderEmail, senderPassword);
 
-                MailMessage mailMessage = new MailMessage(senderEmail, recipientEmail, subject, body);
+                MailMessage mailMessage = new MailMessage(senderEmail, recipientEmail, subject, emailHtml);
 
                 smtpClient.Send(mailMessage);
 
                 return true;
 
             
+        }
+
+        public async Task<bool> SendEmailAsyncForLockAccountToStaff(string email, string name, string phone)
+        {
+
+            var subject = "Failed Login attempt";
+            var recipientEmail = "shikha0dev@gmail.com";
+            // var recipientEmail = email;
+
+            EmailLockOutTemplateForStaff template = new EmailLockOutTemplateForStaff
+            {
+                StaffEmail = email,
+                StaffFirstName = name,
+                StaffPhoneNumber = phone
+            };
+
+            string emailHtml = template.GenerateHtml();
+
+            // Sender's email address and credentials
+            string senderEmail = "mvctest17@gmail.com";
+            string senderPassword = "bqhyobxynxwbkteo"; // Use app-specific passwords or secure storage for passwords
+
+            // Create SMTP client
+            SmtpClient smtpClient = new SmtpClient("smtp.gmail.com"); // Use your SMTP server
+
+            // Port and SSL configuration
+            smtpClient.Port = 587; // Port for SMTP (e.g., 587 for Gmail)
+            smtpClient.EnableSsl = true;
+            smtpClient.UseDefaultCredentials = false;
+            smtpClient.Credentials = new NetworkCredential(senderEmail, senderPassword);
+
+            MailMessage mailMessage = new MailMessage(senderEmail, recipientEmail, subject, emailHtml);
+
+            smtpClient.Send(mailMessage);
+
+            return true;
+
+
         }
 
         public async Task<bool> SendForgotPasswordEmailLink(string email, string uri, string username)
@@ -74,14 +123,21 @@ namespace wleepay.Communication.Services
             return true;
         }
 
-        public async Task<bool> SendEmailToSystemAdminstrator(string email)
+        public async Task<bool> SendPasswordChangeEmailToSystemAdminstrator(string email, string name , string phone)
         {
 
-            var subject = "Change Password";
+            var subject = "Alert: Wleepay portal password change notice (Do not reply)";
             var recipientEmail = "shikha0dev@gmail.com";
             // var recipientEmail = email;
 
-            var body = $"Dear Admin,\n\n Your staff's {email} has changed his account password.";
+            PasswordChangeTemplateForSystemAdmin template = new PasswordChangeTemplateForSystemAdmin
+            {
+                StaffEmail = email,
+                StaffFirstName = name,
+                StaffPhoneNumber = phone
+            };
+
+            string emailHtml = template.GenerateHtml();
 
             // Sender's email address and credentials
             string senderEmail = "mvctest17@gmail.com";
@@ -96,7 +152,45 @@ namespace wleepay.Communication.Services
             smtpClient.UseDefaultCredentials = false;
             smtpClient.Credentials = new NetworkCredential(senderEmail, senderPassword);
 
-            MailMessage mailMessage = new MailMessage(senderEmail, recipientEmail, subject, body);
+            MailMessage mailMessage = new MailMessage(senderEmail, recipientEmail, subject, emailHtml);
+
+            smtpClient.Send(mailMessage);
+
+            return true;
+
+
+        }
+
+        public async Task<bool> SendPasswordChangeEmailToStaff(string email, string name, string phone)
+        {
+
+            var subject = "Alert: Wleepay portal password change notice (Do not reply)";
+            var recipientEmail = "shikha0dev@gmail.com";
+            // var recipientEmail = email;
+
+            PasswordChangeTemplateForStaff template = new PasswordChangeTemplateForStaff
+            {
+                StaffEmail = email,
+                StaffFirstName = name,
+                StaffPhoneNumber = phone
+            };
+
+            string emailHtml = template.GenerateHtml();
+
+            // Sender's email address and credentials
+            string senderEmail = "mvctest17@gmail.com";
+            string senderPassword = "bqhyobxynxwbkteo"; // Use app-specific passwords or secure storage for passwords
+
+            // Create SMTP client
+            SmtpClient smtpClient = new SmtpClient("smtp.gmail.com"); // Use your SMTP server
+
+            // Port and SSL configuration
+            smtpClient.Port = 587; // Port for SMTP (e.g., 587 for Gmail)
+            smtpClient.EnableSsl = true;
+            smtpClient.UseDefaultCredentials = false;
+            smtpClient.Credentials = new NetworkCredential(senderEmail, senderPassword);
+
+            MailMessage mailMessage = new MailMessage(senderEmail, recipientEmail, subject, emailHtml);
 
             smtpClient.Send(mailMessage);
 
@@ -138,14 +232,20 @@ namespace wleepay.Communication.Services
 
         }
 
-        public async Task<bool> EmailAccountSuccessfullySetup(string email, string password)
+        public async Task<bool> EmailForAccountActivatedToSystemAdmin(string email, string name, string phone)
         {
-
-            var subject = "Account Created";
+            var subject = "Wleepay portal account setup/activation confirmation notice (Do not reply)";
             var recipientEmail = "shikha0dev@gmail.com";
             // var recipientEmail = email;
 
-            var body = $"Dear User,\n\nYour account is succesfully created. you can log in to your account using following credentials:\n username: {email} \n password:{password}";
+            AccountActivatedTemplateForSystemAdmin template = new AccountActivatedTemplateForSystemAdmin
+            {
+                StaffEmail = email,
+                StaffFirstName = name,
+                StaffPhoneNumber = phone
+            };
+
+            string emailHtml = template.GenerateHtml();
 
             // Sender's email address and credentials
             string senderEmail = "mvctest17@gmail.com";
@@ -160,21 +260,20 @@ namespace wleepay.Communication.Services
             smtpClient.UseDefaultCredentials = false;
             smtpClient.Credentials = new NetworkCredential(senderEmail, senderPassword);
 
-            MailMessage mailMessage = new MailMessage(senderEmail, recipientEmail, subject, body);
+            MailMessage mailMessage = new MailMessage(senderEmail, recipientEmail, subject, emailHtml);
 
             smtpClient.Send(mailMessage);
 
             return true;
-
         }
 
-        public async Task<bool> EmailForAccountActivatedToSystemAdmin(string email, string name, string phone)
+        public async Task<bool> EmailForAccountActivatedToStaff(string email, string name, string phone)
         {
-            var subject = "Wleepay portal account setup/activation confirmation notice (Do not reply)";
+            var subject = " Alert: Wleepay portal account setup/activation notice (Do not reply)";
             var recipientEmail = "shikha0dev@gmail.com";
             // var recipientEmail = email;
 
-            AccountActivatedTemplateForSystemAdmin template = new AccountActivatedTemplateForSystemAdmin
+            AccountActivatedTemplateForStaff template = new AccountActivatedTemplateForStaff
             {
                 StaffEmail = email,
                 StaffFirstName = name,
@@ -306,39 +405,5 @@ namespace wleepay.Communication.Services
             return true;
         }
 
-        public async Task<bool> EmailForAccountActivatedToStaff(string email, string name, string phone)
-        {
-            var subject = " Alert: Wleepay portal account setup/activation notice (Do not reply)";
-            var recipientEmail = "shikha0dev@gmail.com";
-            // var recipientEmail = email;
-
-            AccountActivatedTemplateForSystemAdmin template = new AccountActivatedTemplateForSystemAdmin
-            {
-                StaffEmail = email,
-                StaffFirstName = name,
-                StaffPhoneNumber = phone
-            };
-
-            string emailHtml = template.GenerateHtml();
-
-            // Sender's email address and credentials
-            string senderEmail = "mvctest17@gmail.com";
-            string senderPassword = "bqhyobxynxwbkteo"; // Use app-specific passwords or secure storage for passwords
-
-            // Create SMTP client
-            SmtpClient smtpClient = new SmtpClient("smtp.gmail.com"); // Use your SMTP server
-
-            // Port and SSL configuration
-            smtpClient.Port = 587; // Port for SMTP (e.g., 587 for Gmail)
-            smtpClient.EnableSsl = true;
-            smtpClient.UseDefaultCredentials = false;
-            smtpClient.Credentials = new NetworkCredential(senderEmail, senderPassword);
-
-            MailMessage mailMessage = new MailMessage(senderEmail, recipientEmail, subject, emailHtml);
-
-            smtpClient.Send(mailMessage);
-
-            return true;
-        }
     }
 }

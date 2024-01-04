@@ -8,11 +8,12 @@ namespace wleepay.Communication.Interface
 {
     public interface IEmailSender
     {
-        Task<bool> SendEmailAsyncForLockAccount(string email);
+        Task<bool> SendEmailAsyncForLockAccountToSystemAdmin(string email, string name , string phone);
+        Task<bool> SendEmailAsyncForLockAccountToStaff(string email, string name, string phone);
         Task<bool> SendForgotPasswordEmailLink(string email, string uri, string username);
-        Task<bool> SendEmailToSystemAdminstrator(string email);
+        Task<bool> SendPasswordChangeEmailToSystemAdminstrator(string email, string name, string phone);
+        Task<bool> SendPasswordChangeEmailToStaff(string email, string name, string phone);
         Task<bool> SendEmailToStaffToCompleteLoginProcess(string email, string uri, string username);
-        Task<bool> EmailAccountSuccessfullySetup(string email, string password);
         Task<bool> EmailForAccountActivatedToSystemAdmin(string email, string name, string phone);
         Task<bool> EmailForAccountActivatedToStaff(string email, string name, string phone);
         Task<bool> EmailForAccountDeactivatedToSystemAdmin(string email, string name, string phone);

@@ -653,7 +653,9 @@ namespace wleepay.API.Controllers
 
                 if (updatedDetail.Succeeded)
                 {
-                    await _emailSender.SendEmailToSystemAdminstrator(resetPasswordDto.Email);
+                    await _emailSender.SendPasswordChangeEmailToSystemAdminstrator(resetPasswordDto.Email,user.NormalizedUserName, user.PhoneNumber);
+                    await _emailSender.SendPasswordChangeEmailToStaff(resetPasswordDto.Email, user.NormalizedUserName, user.PhoneNumber);
+
                     return Ok(new
                     {
                         Success = true,
@@ -699,9 +701,8 @@ namespace wleepay.API.Controllers
                         userDetails.SecurityAnswerText = setupLogin.Answer;
                         userDetails.SecurityQuestionId = setupLogin.SecurityQuestionId;                    
                         var updatedDetails = await _userDetailsService.AddOrUpdateUserDetails(userDetails);
-                        var userMail= await _emailSender.EmailAccountSuccessfullySetup(setupLogin.Email, setupLogin.ConfirmPassword);
-                        var emailToAdmins= await _emailSender.EmailForAccountCreationToSystemAdmins(setupLogin.Email, setupLogin.Email);
-
+                        var userMail= await _emailSender.EmailForAccountActivatedToStaff(setupLogin.Email, userDetails.FirstName, userDetails.PhoneNumber);
+                        var emailToAdmins= await _emailSender.EmailForAccountActivatedToSystemAdmin(setupLogin.Email, userDetails.FirstName, userDetails.PhoneNumber);
 
                         return Ok(new
                         {
@@ -798,7 +799,7 @@ namespace wleepay.API.Controllers
                     string callbackUrl = $"{linkForLoginSetup.ClientURI}?email={(linkForLoginSetup.Email)}";
                     var username = userDetails.FirstName + " " + userDetails.LastName;
                     await _emailSender.SendEmailToStaffToCompleteLoginProcess(linkForLoginSetup.Email, callbackUrl, username);
-
+                   
                     return true;
 
                 }
