@@ -30,6 +30,7 @@ using IEmailSender = wleepay.Communication.Interface.IEmailSender;
 using Twilio.TwiML.Messaging;
 using System.Web;
 using wleepay.Core.Enums;
+using System.Security.Cryptography;
 
 namespace wleepay.API.Controllers
 {
@@ -353,7 +354,7 @@ namespace wleepay.API.Controllers
                         linkForLoginSetup.Email = userDetail.EmailId;
                         linkForLoginSetup.PhoneNumber = userDetail.PhoneNumber;
                         linkForLoginSetup.ClientURI = baseUrl;
-                        var result = GenerateLinkForLoginSetup(linkForLoginSetup);
+                        var result = await GenerateLinkForLoginSetup(linkForLoginSetup);
                         
                         //send registration sucess message on mobile number
                         _smsService.sendMessage(MessagesTemplates.RegistrationSuccessMessage(updatedDetails.AccountNumber, updatedDetails?.KYCLevelDetail?.Name), updatedDetails.PhoneNumber);
@@ -680,12 +681,14 @@ namespace wleepay.API.Controllers
         [HttpPost("LoginSetup")]
         public async Task<IActionResult> SetupLoginPassword([FromBody] SetupLoginResources setupLogin)
         {
+            string secretKey = "1234567890123456";
+            string decryptedEmail = Decrypt(setupLogin.Email, secretKey);
 
-            var user = await _userManager.FindByEmailAsync(setupLogin.Email);
+            var user = await _userManager.FindByEmailAsync(decryptedEmail);
             
             SystemActivityLog systemActivityLog = new SystemActivityLog();
             systemActivityLog.UserId = user.Id;
-            systemActivityLog.Email = setupLogin.Email;
+            systemActivityLog.Email = decryptedEmail;
             systemActivityLog.IpAddress = GetClientIpAddress();
             systemActivityLog.Action = ActionsForSystemLogs.CompleteLoginProcess.ToDescriptionString();
 
@@ -705,7 +708,7 @@ namespace wleepay.API.Controllers
             var userDetails = await _userDetailsService.GetUserDetailsById(user.Id);
             if (userDetails != null)
             {
-                if (user.Email == setupLogin.Email)
+                if (user.Email == decryptedEmail)
                 {
                     var addPasswordResult = await _userManager.AddPasswordAsync(user, setupLogin.ConfirmPassword);
 
@@ -715,8 +718,8 @@ namespace wleepay.API.Controllers
                         userDetails.SecurityAnswerText = setupLogin.Answer;
                         userDetails.SecurityQuestionId = setupLogin.SecurityQuestionId;                    
                         var updatedDetails = await _userDetailsService.AddOrUpdateUserDetails(userDetails);
-                        var userMail= await _emailSender.EmailForAccountActivatedToStaff(setupLogin.Email, userDetails.FirstName, userDetails.PhoneNumber);
-                        var emailToAdmins= await _emailSender.EmailForAccountActivatedToSystemAdmin(setupLogin.Email, userDetails.FirstName, userDetails.PhoneNumber);
+                        var userMail= await _emailSender.EmailForAccountActivatedToStaff(decryptedEmail, userDetails.FirstName, userDetails.PhoneNumber);
+                        var emailToAdmins= await _emailSender.EmailForAccountActivatedToSystemAdmin(decryptedEmail, userDetails.FirstName, userDetails.PhoneNumber);
                         systemActivityLog.Description = GenericMessagesForSystemLogs.CompleteLoginProcess.ToDescriptionString();
                         var addLogs = await _systemActivityLogsService.AddSystemLogs(systemActivityLog);
                         return Ok(new
@@ -744,6 +747,84 @@ namespace wleepay.API.Controllers
                 Success = false,
                 Message = Messages.InvalidRequest.ToDescriptionString()
             });
+        }
+
+        [HttpPost("AccountAlreadySetup")]
+        public async Task<IActionResult> CheckIfAccountAlreadySetup(AccountExistVerificationResource resource)
+        {
+            string secretKey = "1234567890123456";
+            string decryptedEmail = Decrypt(resource.Email, secretKey);
+            var user = await _userManager.FindByEmailAsync(decryptedEmail);
+            if (user == null)
+            {
+                return Ok(new
+                {
+                    Success = false,
+                    Message = Messages.NotFound.ToDescriptionString(),
+                });
+            }
+            var userDetails = await _userDetailsService.GetUserDetailsById(user.Id);
+            if (userDetails.SecurityAnswerText == null) 
+            {
+                return Ok(new
+                {
+                    Success = true,
+                    Message = Messages.AccountNotAlreadySetup.ToDescriptionString(),
+                });
+            }
+            else
+            {
+                return Ok(new
+                {
+                    Success = false,
+                    Message = Messages.AccountAlreadySetup.ToDescriptionString(),
+                });
+            }
+
+        }
+
+        [HttpPost("CheckIfLinkIsExpired")]
+        public async Task<IActionResult> CheckIfLinkIsExpired(CheckTokenExpirationResource resource)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest();
+
+            //get user by email
+            var user = await _userManager.FindByEmailAsync(resource.Email);
+            var tokenStorage = await _tokenStorageService.GetTokenStorageById(user.Id);
+
+            var expiryDate = tokenStorage.ExpirationTime;
+            DateTime currentDate = DateTime.UtcNow; // Use UtcNow to compare in UTC
+
+            TimeSpan difference = (TimeSpan)(currentDate - expiryDate);
+            int minutesDifference = (int)difference.TotalHours;
+
+            // Check if the given date is expired (more than 2 minutes ago)
+            bool isExpired = minutesDifference >= 2;
+
+            if (user == null)
+                return BadRequest(Messages.NotFound.ToDescriptionString());
+
+            var isValidToken = await _userManager.VerifyUserTokenAsync(user, _userManager.Options.Tokens.PasswordResetTokenProvider, "ResetPassword", resource.Token);
+
+            if(isValidToken == true && !isExpired)
+            {
+
+                return Ok(new
+                {
+                    Success = true,
+                    Message = Messages.ResetPassword.ToDescriptionString(),
+                });
+            }
+            else
+            {
+                return Ok(new
+                {
+                    Success = false,
+                    Message = Messages.LinkExpired.ToDescriptionString(),
+                });
+            }
+
         }
 
         #region helper methods
@@ -807,13 +888,17 @@ namespace wleepay.API.Controllers
             var user = await _userManager.FindByEmailAsync(linkForLoginSetup.Email);
             if (user == null)
                 return false;
-
+           
             var userDetails = await _userDetailsService.GetUserDetailsById(user.Id);
             if (userDetails != null)
             {
                 if (userDetails.PhoneNumber == linkForLoginSetup.PhoneNumber && user.Email == linkForLoginSetup.Email)
                 {
-                    string callbackUrl = $"{linkForLoginSetup.ClientURI}?email={(linkForLoginSetup.Email)}";
+                    // Your secret key for encryption (16, 24, or 32 bytes for AES)
+                    string secretKey = "1234567890123456";
+                    // Encrypt the text
+                    string encryptedText = Encrypt(linkForLoginSetup.Email, secretKey);
+                    string callbackUrl = $"{linkForLoginSetup.ClientURI}?email={(encryptedText)}";
                     var username = userDetails.FirstName + " " + userDetails.LastName;
                     await _emailSender.SendEmailToStaffToCompleteLoginProcess(linkForLoginSetup.Email, callbackUrl, username);
                    
@@ -832,6 +917,59 @@ namespace wleepay.API.Controllers
                 return HttpContext.Connection.RemoteIpAddress.ToString();
             }
             return "Unknown";
+        }
+
+        public static string Encrypt(string text, string key)
+        {
+            using (Aes aesAlg = Aes.Create())
+            {
+                aesAlg.Key = Encoding.UTF8.GetBytes(key);
+                aesAlg.IV = new byte[16]; // For AES, IV is always 16 bytes
+
+                // Create an encryptor to perform the stream transform
+                ICryptoTransform encryptor = aesAlg.CreateEncryptor(aesAlg.Key, aesAlg.IV);
+
+                // Create the streams used for encryption
+                using (MemoryStream msEncrypt = new MemoryStream())
+                {
+                    using (CryptoStream csEncrypt = new CryptoStream(msEncrypt, encryptor, CryptoStreamMode.Write))
+                    {
+                        using (StreamWriter swEncrypt = new StreamWriter(csEncrypt))
+                        {
+                            // Write all data to the stream
+                            swEncrypt.Write(text);
+                        }
+                    }
+
+                    // Return the encrypted bytes from the memory stream
+                    return Convert.ToBase64String(msEncrypt.ToArray());
+                }
+            }
+        }
+
+        public static string Decrypt(string cipherText, string key)
+        {
+            using (Aes aesAlg = Aes.Create())
+            {
+                aesAlg.Key = Encoding.UTF8.GetBytes(key);
+                aesAlg.IV = new byte[16]; // For AES, IV is always 16 bytes
+
+                // Create a decryptor to perform the stream transform
+                ICryptoTransform decryptor = aesAlg.CreateDecryptor(aesAlg.Key, aesAlg.IV);
+
+                // Create the streams used for decryption
+                using (MemoryStream msDecrypt = new MemoryStream(Convert.FromBase64String(cipherText)))
+                {
+                    using (CryptoStream csDecrypt = new CryptoStream(msDecrypt, decryptor, CryptoStreamMode.Read))
+                    {
+                        using (StreamReader srDecrypt = new StreamReader(csDecrypt))
+                        {
+                            // Read the decrypted bytes from the decrypting stream
+                            return srDecrypt.ReadToEnd();
+                        }
+                    }
+                }
+            }
         }
         #endregion
     }

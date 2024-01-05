@@ -26,6 +26,11 @@ namespace wleepay.Core.Enums
         [Description("Email is not valid")] EmailNotValid,
         [Description("Please correct the entered details and try again.")] DetailsNotCorrect,
         [Description("Invalid Request")] InvalidRequest,
+        [Description("Account is already setup")] AccountAlreadySetup,
+        [Description("Account is not setup yet. please setup your account")] AccountNotAlreadySetup,
+        [Description("please reset your password")] LinkExpired,
+        [Description("please reset your password")] ResetPassword,
+
 
     }
 }

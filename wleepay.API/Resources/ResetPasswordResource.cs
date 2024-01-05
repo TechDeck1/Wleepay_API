@@ -11,4 +11,11 @@ namespace wleepay.API.Resources
         public string? Token { get; set; }
         
     }
+
+    public class CheckTokenExpirationResource
+    {
+        public string? Email { get; set; }
+        public string? Token { get; set; }
+
+    }
 }

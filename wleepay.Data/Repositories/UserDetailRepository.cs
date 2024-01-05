@@ -25,11 +25,12 @@ namespace wleepay.Data.Repositories
 
         public async Task<UserDetail> GetUserDetailsById(string userId)
         {
-            return await WPContext.UserDetail.Where(user => user.UserId == userId)
+            var userDetails= await WPContext.UserDetail.Where(user => user.UserId == userId)
                 .Include(s => s.KYCLevelDetail)
                 .Include(s => s.KYCStatus)
                 .Include(s => s.County)
                 .FirstOrDefaultAsync();
+            return userDetails;
         }
 
         public async Task<IEnumerable<ApplicationUser>> GetUserDetailsByRole(int role)

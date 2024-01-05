@@ -34,5 +34,10 @@ namespace wleepay.API.Resources
 
     }
 
+    public class AccountExistVerificationResource
+    {
+        public string? Email { get; set; }
+    }
+
 
 }

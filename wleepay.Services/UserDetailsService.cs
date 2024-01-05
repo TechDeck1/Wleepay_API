@@ -43,7 +43,8 @@ namespace wleepay.Services
 
         public async Task<UserDetail> GetUserDetailsById(string userId)
         {
-            return await _unitOfWork.UserDetail.GetUserDetailsById(userId);
+            var userDetails= await _unitOfWork.UserDetail.GetUserDetailsById(userId);
+            return userDetails;
         }
         public async Task<ApplicationUser> GetApplicationUserById(string userId)
         {
