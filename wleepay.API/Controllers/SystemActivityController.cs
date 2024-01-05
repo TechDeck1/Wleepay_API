@@ -21,8 +21,8 @@ namespace wleepay.API.Controllers
             _systemActivityLogsService = systemActivityLogsService;
         }
 
-        [HttpPost("SystemLogs")]
-        public async Task<IActionResult> GetSystemAllLogs([FromBody] Pagination request)
+        [HttpGet("SystemLogs")]
+        public async Task<IActionResult> GetSystemAllLogs(Pagination request)
         {
             var logs =await _systemActivityLogsService.GetAllSystemLogs(request.Index, request.Size);
             return Ok(logs);

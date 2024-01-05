@@ -650,7 +650,8 @@ namespace wleepay.API.Controllers
                 return BadRequest(Messages.NotFound.ToDescriptionString());
 
             var isValidToken = await _userManager.VerifyUserTokenAsync(user, _userManager.Options.Tokens.PasswordResetTokenProvider, "ResetPassword", resetPasswordDto.Token);
-            
+
+            var userDetails = await _userDetailsService.GetUserDetailsById(user.Id);
             if (isValidToken==true && !isExpired)
             {
                 //generate password reset token
@@ -658,8 +659,8 @@ namespace wleepay.API.Controllers
 
                 if (updatedDetail.Succeeded)
                 {
-                    await _emailSender.SendPasswordChangeEmailToSystemAdminstrator(resetPasswordDto.Email,user.NormalizedUserName, user.PhoneNumber);
-                    await _emailSender.SendPasswordChangeEmailToStaff(resetPasswordDto.Email, user.NormalizedUserName, user.PhoneNumber);
+                    await _emailSender.SendPasswordChangeEmailToSystemAdminstrator(resetPasswordDto.Email, userDetails.FirstName, user.PhoneNumber);
+                    await _emailSender.SendPasswordChangeEmailToStaff(resetPasswordDto.Email, userDetails.FirstName, userDetails.PhoneNumber);
 
                     return Ok(new
                     {
