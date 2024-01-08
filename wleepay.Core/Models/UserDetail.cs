@@ -33,7 +33,6 @@ namespace wleepay.Core.Models
         public string WleePhoneNumber { get; set; }
         public DateTime HireDate { get; set; }
         public int SecurityQuestionId { get; set; }
-        public int SecurityQuestionsId { get; set; }
 
         public string SecurityAnswerText { get; set; }
         public string CreatedBy { get; set; }

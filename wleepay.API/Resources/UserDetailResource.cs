@@ -29,7 +29,6 @@ namespace wleepay.API.Resources
         public DateTime HireDate { get; set; }
         public int SecurityQuestionId { get; set; }
         public string SecurityAnswerText { get; set; }
-        public int SecurityQuestionsId { get; set; }
 
         public virtual KYCStatus KYCStatus { get; set; }
         public virtual KYCLevel KYCLevelDetail { get; set; }
