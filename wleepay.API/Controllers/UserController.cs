@@ -110,7 +110,7 @@ namespace wleepay.API.Controllers
         public async Task<IActionResult> GetUserList([FromBody] PagingRequest request)
         {
             var userList = await _userDetailsService.GetUsers(request.Role, request.Index, request.Size);
-            var userListResource = _mapper.Map<IEnumerable<ApplicationUser>, IEnumerable<ApplicationUserResource>>(userList);
+            var userListResource = _mapper.Map<IEnumerable<ApplicationUser>, IEnumerable<ApplicationUserResource>>(userList.UserDetails);
             return Ok(userListResource);
         }
 

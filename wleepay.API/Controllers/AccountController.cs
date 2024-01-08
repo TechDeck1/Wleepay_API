@@ -899,7 +899,8 @@ namespace wleepay.API.Controllers
                     string secretKey = "1234567890123456";
                     // Encrypt the text
                     string encryptedText = Encrypt(linkForLoginSetup.Email, secretKey);
-                    string callbackUrl = $"{linkForLoginSetup.ClientURI}?email={(encryptedText)}";
+                    var token = HttpUtility.UrlEncode(encryptedText);
+                    string callbackUrl = $"{linkForLoginSetup.ClientURI}?email={(token)}";
                     var username = userDetails.FirstName + " " + userDetails.LastName;
                     await _emailSender.SendEmailToStaffToCompleteLoginProcess(linkForLoginSetup.Email, callbackUrl, username);
                    

@@ -50,11 +50,10 @@ namespace wleepay.Data.Repositories
                 .ToListAsync();
         }
 
-        public async Task<IEnumerable<ApplicationUser>> GetUsers(Core.Enums.Role role, int pageIndex = 0, int pageSize = 10)
+        public async Task<UserDetailsResponseResource> GetUsers(Core.Enums.Role role, int pageIndex = 0, int pageSize = 10)
         {
             int takeCount = pageSize;
             int skipCount = pageIndex * pageSize;
-
             var result= await WPContext.Users
                 .Include(s => s.UserDetail)
                     .ThenInclude(s => s.KYCLevelDetail)
@@ -73,7 +72,12 @@ namespace wleepay.Data.Repositories
                 //    .ThenInclude(s => s.Currency)
                 .ToListAsync();
 
-            return result;
+            var TotalCount = await WPContext.Users.Where(s => s.UserRoles.FirstOrDefault().Role.Name == role.ToString()).CountAsync();
+
+            UserDetailsResponseResource response = new UserDetailsResponseResource();
+            response.UserDetails = result;
+            response.TotalCount = TotalCount;
+            return response;
         }
 
         public async Task<ApplicationUser> GetApplicationUser(string userId = "", string name = "", string phoneNumber = "", bool fetchWallet = false, bool fetchKYCDoc = false, int role = 0)

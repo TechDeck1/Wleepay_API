@@ -113,7 +113,7 @@ namespace wleepay.Services
             return await _unitOfWork.UserDetail.GetUserDetailsByRole(role);
         }
 
-        public async Task<IEnumerable<ApplicationUser>> GetUsers(Core.Enums.Role role, int pageIndex, int pageSize)
+        public async Task<UserDetailsResponseResource> GetUsers(Core.Enums.Role role, int pageIndex, int pageSize)
         {
             return await _unitOfWork.UserDetail.GetUsers(role, pageIndex, pageSize);
         }
