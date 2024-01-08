@@ -131,7 +131,6 @@ namespace wleepay.Data.Repositories
 
             return await transactionQuery.Skip(skipCount).Take(takeCount).Include(t => t.TransactionStatus).ToListAsync();
         }
-
    
         public async Task<Transaction> GetTransactionDetails(long transactionId)
         {
@@ -213,7 +212,7 @@ namespace wleepay.Data.Repositories
 
         public async Task<TransactionResponseResource> GetCashoutTransactions(int pageIndex = 0, int pageSize =0 )
         {
-            if (pageSize != 0)
+            if (pageSize > 0)
             {
                 int takeCount = pageSize;
                 int skipCount = pageIndex * pageSize;
@@ -227,14 +226,11 @@ namespace wleepay.Data.Repositories
                     .Take(takeCount)
                     .ToListAsync();
 
-                var TotalCount = cashOutTransactions.Count();
-                var activityLogs = cashOutTransactions.Skip(skipCount)
-                                 .Take(takeCount);
+                var TotalCount = await WPContext.Transactions.Where(u => u.TransferTypeId == (int)TransferTypes.CashOut).CountAsync();
 
                 TransactionResponseResource response = new TransactionResponseResource();
-                response.Transactions = activityLogs.OrderByDescending(x => x.CreatedDate).ToList();
+                response.Transactions = cashOutTransactions;
                 response.TotalCount = TotalCount;
-
                 return response;
             }
             else
@@ -247,20 +243,18 @@ namespace wleepay.Data.Repositories
                    .OrderByDescending(w => w.CreatedDate)
                    .ToListAsync();
 
-                var TotalCount = cashOutTransactions.Count();
+                var TotalCount = await WPContext.Transactions.Where(u => u.TransferTypeId == (int)TransferTypes.CashOut).CountAsync();
 
                 TransactionResponseResource response = new TransactionResponseResource();
-                response.Transactions = cashOutTransactions.OrderByDescending(x => x.CreatedDate).ToList();
+                response.Transactions = cashOutTransactions;
                 response.TotalCount = TotalCount;
-
                 return response;
-
             }
         }
 
         public async Task<TransactionResponseResource> GetTopUpTransactions(int pageIndex = 0, int pageSize = 0)
         {
-            if (pageSize != 0)
+            if (pageSize > 0)
             {
                 int takeCount = pageSize;
                 int skipCount = pageIndex * pageSize;
@@ -274,14 +268,11 @@ namespace wleepay.Data.Repositories
                     .Take(takeCount)
                     .ToListAsync();
 
-                var TotalCount = topUpTransactions.Count();
-                var activityLogs = topUpTransactions.Skip(skipCount)
-                                 .Take(takeCount);
+                var TotalCount = await WPContext.Transactions.Where(u => u.TransferTypeId == (int)TransferTypes.TopUp).CountAsync();
 
                 TransactionResponseResource response = new TransactionResponseResource();
-                response.Transactions = activityLogs.OrderByDescending(x => x.CreatedDate).ToList();
+                response.Transactions = topUpTransactions;
                 response.TotalCount = TotalCount;
-
                 return response;
             }
             else
@@ -294,14 +285,12 @@ namespace wleepay.Data.Repositories
                   .OrderByDescending(w => w.CreatedDate)
                   .ToListAsync();
 
-                var TotalCount = topUpTransactions.Count();
+                var TotalCount = await WPContext.Transactions.Where(u => u.TransferTypeId == (int)TransferTypes.TopUp).CountAsync();
 
                 TransactionResponseResource response = new TransactionResponseResource();
-                response.Transactions = topUpTransactions.OrderByDescending(x => x.CreatedDate).ToList();
+                response.Transactions = topUpTransactions;
                 response.TotalCount = TotalCount;
-
                 return response;
-
             }
         }
     }

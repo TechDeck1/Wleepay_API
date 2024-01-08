@@ -140,7 +140,7 @@ namespace wleepay.Data.Repositories
 
         public async Task<UserDetailsResponseResource> GetAllUsersById(Core.Enums.Role role, int pageIndex = 0, int pageSize=0, string createdBy="")
         {
-            if (pageSize != 0)
+            if (pageSize > 0)
             {
                 int takeCount = pageSize;
                 int skipCount = pageIndex * pageSize;
@@ -153,16 +153,16 @@ namespace wleepay.Data.Repositories
                     .Include(s => s.UserRoles)
                         .ThenInclude(s => s.Role)
                     .Include(s => s.Address)
-                    .OrderByDescending(w => w.UserDetail.FirstName)
+                    .OrderByDescending(x => x.UserDetail.CreatedDate)
                     .Where(s => s.UserRoles.FirstOrDefault().Role.Name == role.ToString() && s.UserDetail.CreatedBy == createdBy)
+                    .Skip(skipCount)
+                    .Take(takeCount)
                     .ToListAsync();
 
-                var TotalCount = result.Count();
-                var userDetails = result.Skip(skipCount)
-                                 .Take(takeCount);
+                var TotalCount = await WPContext.Users.Where(s => s.UserRoles.FirstOrDefault().Role.Name == role.ToString() && s.UserDetail.CreatedBy == createdBy).CountAsync();
 
                 UserDetailsResponseResource response = new UserDetailsResponseResource();
-                response.UserDetails = userDetails.OrderByDescending(x => x.UserDetail.CreatedDate).ToList();
+                response.UserDetails = result;
                 response.TotalCount = TotalCount;
 
                 return response;
@@ -178,14 +178,14 @@ namespace wleepay.Data.Repositories
                  .Include(s => s.UserRoles)
                      .ThenInclude(s => s.Role)
                  .Include(s => s.Address)
-                 .OrderByDescending(w => w.UserDetail.FirstName)
+                 .OrderByDescending(x => x.UserDetail.CreatedDate)
                  .Where(s => s.UserRoles.FirstOrDefault().Role.Name == role.ToString() && s.UserDetail.CreatedBy == createdBy)
                  .ToListAsync();
 
-                var TotalCount = result.Count();
+                var TotalCount = await WPContext.Users.Where(s => s.UserRoles.FirstOrDefault().Role.Name == role.ToString() && s.UserDetail.CreatedBy == createdBy).CountAsync();
 
                 UserDetailsResponseResource response = new UserDetailsResponseResource();
-                response.UserDetails = result.OrderByDescending(x => x.UserDetail.CreatedDate).ToList();
+                response.UserDetails = result;
                 response.TotalCount = TotalCount;
 
                 return response;
