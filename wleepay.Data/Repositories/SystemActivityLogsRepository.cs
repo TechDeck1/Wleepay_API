@@ -42,13 +42,15 @@ namespace wleepay.Data.Repositories
             int takeCount = size;
             int skipCount = index * size;
             var filteredData = await WPContext.SystemActivities
-                .Where(entity => entity.Email.Contains(email)).ToListAsync();
-            var TotalCount = filteredData.Count();
-            var activityLogs = filteredData.Skip(skipCount)
-                             .Take(takeCount);
+                              .Where(entity => entity.Email.Contains(email))
+                              .Skip(skipCount)
+                              .Take(takeCount)
+                              .ToListAsync();
+            var TotalCount =await WPContext.SystemActivities
+                              .Where(entity => entity.Email.Contains(email)).CountAsync();
 
             ActivityResponseResource response = new ActivityResponseResource();
-            response.ActivityLogs = activityLogs.OrderByDescending(x => x.CreatedDate).ToList();
+            response.ActivityLogs = filteredData;
             response.TotalCount = TotalCount;
 
             return response;
@@ -57,18 +59,22 @@ namespace wleepay.Data.Repositories
 
         public async Task<ActivityResponseResource> GetActivityLogsById(string userId, int pageIndex = 0, int pageSize = 10)
         {
+            if (pageSize <= 0)
+            {
+                pageSize = 10;
+            }
             int takeCount = pageSize;
             int skipCount = pageIndex * pageSize;
-            var logs = await WPContext.SystemActivities.Where(user => user.UserId == userId).ToListAsync();
-            var TotalCount = logs.Count();
-            var activityLogs = logs.Skip(skipCount)
-                             .Take(takeCount);
+            var logs = await WPContext.SystemActivities.Where(user => user.UserId == userId)
+                                        .OrderByDescending(x => x.CreatedDate)
+                                        .Skip(skipCount)
+                                        .Take(takeCount)
+                                        .ToListAsync();
+            var TotalCount = await WPContext.SystemActivities.Where(user => user.UserId == userId).CountAsync();
 
             ActivityResponseResource response = new ActivityResponseResource();
-            response.ActivityLogs = activityLogs.OrderByDescending(x => x.CreatedDate).ToList();
+            response.ActivityLogs = logs;
             response.TotalCount = TotalCount;
-
-
             return response;
         }
 
@@ -87,11 +93,9 @@ namespace wleepay.Data.Repositories
                                             .Take(takeCount)
                                             .ToListAsync();
                 var TotalCount = await WPContext.SystemActivities.CountAsync();
-                //var activityLogs = logs.Skip(skipCount)
-                //                 .Take(takeCount);
 
                 ActivityResponseResource response = new ActivityResponseResource();
-                response.ActivityLogs = logs; //activityLogs.OrderByDescending(x => x.CreatedDate).ToList();
+                response.ActivityLogs = logs;
                 response.TotalCount = TotalCount;
                 return response;
 
@@ -99,7 +103,7 @@ namespace wleepay.Data.Repositories
             catch (Exception ex)
             {
 
-                throw;
+                throw ex;
             }
         }
     }
