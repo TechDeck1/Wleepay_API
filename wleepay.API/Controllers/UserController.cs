@@ -111,7 +111,11 @@ namespace wleepay.API.Controllers
         {
             var userList = await _userDetailsService.GetUsers(request.Role, request.Index, request.Size);
             var userListResource = _mapper.Map<IEnumerable<ApplicationUser>, IEnumerable<ApplicationUserResource>>(userList.UserDetails);
-            return Ok(userListResource);
+            return Ok(new
+            {
+                userDetails= userListResource,
+                TotalCount=userList.TotalCount
+            });
         }
 
         [HttpPut("phoneNumber")]
