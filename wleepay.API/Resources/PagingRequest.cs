@@ -7,6 +7,7 @@ namespace wleepay.API.Resources
 {
     public class PagingRequest
     {
+        public String Email { get; set; }
         public int Index { get; set; }
         public int Size { get; set; }
         public Core.Enums.Role Role { get; set; }
@@ -20,7 +21,7 @@ namespace wleepay.API.Resources
 
     public class FilterLogs 
     {
-        public string email { get; set; }
+        public string Email { get; set; }
         public int Index { get; set; }
         public int Size { get; set; }
     }

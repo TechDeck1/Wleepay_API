@@ -11,4 +11,12 @@ namespace wleepay.API.Resources
         public string PhoneNumber { get; set; }
         public Core.Enums.Role? Role { get; set; }
     }
+
+    public class SearchRequestByEmail
+    {
+        public string Email { get; set; }
+        public Core.Enums.Role Role { get; set; }
+        public int Index { get; set; }
+        public int Size { get; set; }
+    }
 }

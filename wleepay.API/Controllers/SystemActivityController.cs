@@ -38,7 +38,7 @@ namespace wleepay.API.Controllers
         [HttpGet("FilterLogsByEmail")]
         public async Task<IActionResult> FilterLogsByEmail(FilterLogs filterLogs)
         {
-            var logs = await _systemActivityLogsService.FilterLogsByEmail(filterLogs.email , filterLogs.Index, filterLogs.Size);
+            var logs = await _systemActivityLogsService.FilterLogsByEmail(filterLogs.Email , filterLogs.Index, filterLogs.Size);
             return Ok(logs);
         }
 

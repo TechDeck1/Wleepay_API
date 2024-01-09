@@ -55,13 +55,6 @@ D:\new wleepay\wleepay\wleepay.Services\obj\Release\netcoreapp3.1\wleepay.Servic
 D:\new wleepay\wleepay\wleepay.Services\obj\Release\netcoreapp3.1\wleepay.Services.csproj.CopyComplete
 D:\new wleepay\wleepay\wleepay.Services\obj\Release\netcoreapp3.1\wleepay.Services.dll
 D:\new wleepay\wleepay\wleepay.Services\obj\Release\netcoreapp3.1\wleepay.Services.pdb
-D:\Offical\Wleepay_API\wleepay.Services\obj\Release\netcoreapp3.1\wleepay.Services.csproj.AssemblyReference.cache
-D:\Offical\Wleepay_API\wleepay.Services\obj\Release\netcoreapp3.1\wleepay.Services.GeneratedMSBuildEditorConfig.editorconfig
-D:\Offical\Wleepay_API\wleepay.Services\obj\Release\netcoreapp3.1\wleepay.Services.AssemblyInfoInputs.cache
-D:\Offical\Wleepay_API\wleepay.Services\obj\Release\netcoreapp3.1\wleepay.Services.AssemblyInfo.cs
-D:\Offical\Wleepay_API\wleepay.Services\obj\Release\netcoreapp3.1\wleepay.Services.csproj.CoreCompileInputs.cache
-D:\Offical\Wleepay_API\wleepay.Services\obj\Release\netcoreapp3.1\wleepay.Services.dll
-D:\Offical\Wleepay_API\wleepay.Services\obj\Release\netcoreapp3.1\wleepay.Services.pdb
 D:\Offical\Wleepay_API\wleepay.Services\bin\Release\netcoreapp3.1\wleepay.Services.deps.json
 D:\Offical\Wleepay_API\wleepay.Services\bin\Release\netcoreapp3.1\wleepay.Services.dll
 D:\Offical\Wleepay_API\wleepay.Services\bin\Release\netcoreapp3.1\wleepay.Services.pdb
@@ -69,4 +62,11 @@ D:\Offical\Wleepay_API\wleepay.Services\bin\Release\netcoreapp3.1\wleepay.Core.d
 D:\Offical\Wleepay_API\wleepay.Services\bin\Release\netcoreapp3.1\wleepay.Data.dll
 D:\Offical\Wleepay_API\wleepay.Services\bin\Release\netcoreapp3.1\wleepay.Core.pdb
 D:\Offical\Wleepay_API\wleepay.Services\bin\Release\netcoreapp3.1\wleepay.Data.pdb
+D:\Offical\Wleepay_API\wleepay.Services\obj\Release\netcoreapp3.1\wleepay.Services.csproj.AssemblyReference.cache
+D:\Offical\Wleepay_API\wleepay.Services\obj\Release\netcoreapp3.1\wleepay.Services.GeneratedMSBuildEditorConfig.editorconfig
+D:\Offical\Wleepay_API\wleepay.Services\obj\Release\netcoreapp3.1\wleepay.Services.AssemblyInfoInputs.cache
+D:\Offical\Wleepay_API\wleepay.Services\obj\Release\netcoreapp3.1\wleepay.Services.AssemblyInfo.cs
+D:\Offical\Wleepay_API\wleepay.Services\obj\Release\netcoreapp3.1\wleepay.Services.csproj.CoreCompileInputs.cache
 D:\Offical\Wleepay_API\wleepay.Services\obj\Release\netcoreapp3.1\wleepay.Services.csproj.CopyComplete
+D:\Offical\Wleepay_API\wleepay.Services\obj\Release\netcoreapp3.1\wleepay.Services.dll
+D:\Offical\Wleepay_API\wleepay.Services\obj\Release\netcoreapp3.1\wleepay.Services.pdb

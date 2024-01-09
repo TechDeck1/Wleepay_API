@@ -167,5 +167,10 @@ namespace wleepay.Services
         {
             return await _unitOfWork.UserDetail.GetAllUsersById(role, pageIndex, pageSize, createdBy);
         }
+
+        public async Task<UserDetailsResponseResource> SearchUsersByEmail(string email, Core.Enums.Role role, int index, int size)
+        {
+            return await _unitOfWork.UserDetail.SearchApplicationUserByEmail(email, role , index, size );
+        }
     }
 }

@@ -109,13 +109,26 @@ namespace wleepay.API.Controllers
         [HttpPost("all")]
         public async Task<IActionResult> GetUserList([FromBody] PagingRequest request)
         {
-            var userList = await _userDetailsService.GetUsers(request.Role, request.Index, request.Size);
-            var userListResource = _mapper.Map<IEnumerable<ApplicationUser>, IEnumerable<ApplicationUserResource>>(userList.UserDetails);
-            return Ok(new
+            if (!string.IsNullOrEmpty(request.Email))
             {
-                userDetails= userListResource,
-                TotalCount=userList.TotalCount
-            });
+                var result = await _userDetailsService.SearchUsersByEmail(request.Email, request.Role, request.Index, request.Size);
+                var userDetailResource = _mapper.Map<IEnumerable<ApplicationUser>, IEnumerable<ApplicationUserResource>>(result.UserDetails);
+                return Ok(new
+                {
+                    TotalCount = result.TotalCount,
+                    UserDetails = userDetailResource
+                });
+            }
+            else
+            {
+                var userList = await _userDetailsService.GetUsers(request.Role, request.Index, request.Size);
+                var userListResource = _mapper.Map<IEnumerable<ApplicationUser>, IEnumerable<ApplicationUserResource>>(userList.UserDetails);
+                return Ok(new
+                {
+                    userDetails = userListResource,
+                    TotalCount = userList.TotalCount
+                });
+            }
         }
 
         [HttpPut("phoneNumber")]
@@ -365,6 +378,19 @@ namespace wleepay.API.Controllers
             var userList = await _userDetailsService.GetUserByRole(role);
             var userListResource = _mapper.Map<IEnumerable<ApplicationUser>, IEnumerable<ApplicationUserResource>>(userList);
             return Ok(userListResource);
+        }
+
+        [HttpPost("searchByEmail")]
+        public async Task<IActionResult> searchByEmail([FromBody] SearchRequestByEmail request)
+        {
+          var result=  await _userDetailsService.SearchUsersByEmail(request.Email, request.Role, request.Index, request.Size);
+
+          var userDetailResource = _mapper.Map<IEnumerable<ApplicationUser>, IEnumerable<ApplicationUserResource>>(result.UserDetails);
+          return Ok(new
+          {
+              TotalCount = result.TotalCount,
+              UserDetails = userDetailResource
+          });
         }
         #region helper methods
         private async Task<string> uploadDocument(IFormFile file, string userId, string containerName = "kyc-document")

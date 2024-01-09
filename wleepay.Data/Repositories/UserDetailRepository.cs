@@ -196,5 +196,45 @@ namespace wleepay.Data.Repositories
             }
         }
 
+        public async Task<UserDetailsResponseResource> SearchApplicationUserByEmail(string email, Core.Enums.Role role, int index, int size)
+        {
+            if (size <= 0)
+            {
+                size= 10;
+            }
+            int takeCount = size;
+            int skipCount = index * size;
+
+            var result = await WPContext.Users
+                .Include(s => s.UserDetail)
+                    .ThenInclude(s => s.KYCLevelDetail)
+                .Include(s => s.UserDetail)
+                    .ThenInclude(s => s.KYCStatus)
+                .Include(s => s.UserRoles)
+                    .ThenInclude(s => s.Role)
+                .Include(s => s.Address)
+                .OrderByDescending(w => w.UserDetail.CreatedDate)
+                .Where(entity => entity.Email.Contains(email) && entity.UserRoles.FirstOrDefault().Role.Name == role.ToString())
+                .Skip(skipCount)
+                .Take(takeCount)
+                .ToListAsync();
+
+
+            //var filteredData = await WPContext.Users
+            //                  .Where(entity => entity.Email.Contains(email) && entity.UserRoles.FirstOrDefault().Role.Name == role.ToString())
+            //                  .Skip(skipCount)
+            //                  .Take(takeCount)
+            //                  .ToListAsync();
+            var TotalCount = await WPContext.Users
+                              .Where(entity => entity.Email.Contains(email) && entity.UserRoles.FirstOrDefault().Role.Name == role.ToString()).CountAsync();
+
+            UserDetailsResponseResource response = new UserDetailsResponseResource();
+            response.UserDetails = result;
+            response.TotalCount = TotalCount;
+
+            return response;
+        }
+
+
     }
 }
