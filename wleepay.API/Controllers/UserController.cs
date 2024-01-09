@@ -380,18 +380,6 @@ namespace wleepay.API.Controllers
             return Ok(userListResource);
         }
 
-        [HttpPost("searchByEmail")]
-        public async Task<IActionResult> searchByEmail([FromBody] SearchRequestByEmail request)
-        {
-          var result=  await _userDetailsService.SearchUsersByEmail(request.Email, request.Role, request.Index, request.Size);
-
-          var userDetailResource = _mapper.Map<IEnumerable<ApplicationUser>, IEnumerable<ApplicationUserResource>>(result.UserDetails);
-          return Ok(new
-          {
-              TotalCount = result.TotalCount,
-              UserDetails = userDetailResource
-          });
-        }
         #region helper methods
         private async Task<string> uploadDocument(IFormFile file, string userId, string containerName = "kyc-document")
         {
