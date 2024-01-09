@@ -41,13 +41,13 @@ namespace wleepay.Data.Repositories
         {
             int takeCount = size;
             int skipCount = index * size;
-            var filteredData = await WPContext.SystemActivities
+            var filteredData = await WPContext.SystemActivities 
                               .Where(entity => entity.Email.Contains(email))
                               .Skip(skipCount)
                               .Take(takeCount)
-                              .ToListAsync();
+                              .ToListAsync(); //Get all the filtered records from systemActivity table
             var TotalCount =await WPContext.SystemActivities
-                              .Where(entity => entity.Email.Contains(email)).CountAsync();
+                              .Where(entity => entity.Email.Contains(email)).CountAsync(); // Get the total count of filtered records
 
             ActivityResponseResource response = new ActivityResponseResource();
             response.ActivityLogs = filteredData;

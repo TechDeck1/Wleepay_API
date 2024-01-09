@@ -573,7 +573,7 @@ namespace wleepay.API.Controllers
         [HttpPost("ForgotPassword")]
         public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordResource forgotPasswordDto)
         {
-
+            //get user detail by email
             var user = await _userManager.FindByEmailAsync(forgotPasswordDto.Email);
             if (user == null)
                 return BadRequest(Messages.NotFound.ToDescriptionString());
@@ -581,29 +581,26 @@ namespace wleepay.API.Controllers
             var userDetails = await _userDetailsService.GetUserDetailsById(user.Id);
             if (userDetails != null)
             {
+                //check if users phonenumber, email, security answer and security question matches
                 if (userDetails.PhoneNumber == forgotPasswordDto.PhoneNumber && user.Email == forgotPasswordDto.Email && userDetails.SecurityAnswerText.ToLower() == forgotPasswordDto.Answer.ToLower() && userDetails.SecurityQuestionId== forgotPasswordDto.SecurityQuestionId)
                 {
+                    //generated the token
                     var token = await _userManager.GeneratePasswordResetTokenAsync(user);
-
-                    var param = new Dictionary<string, string?>
-                    {
-                        {"token", token },
-                        {"email", forgotPasswordDto.Email }
-                    };
 
                     var encodedToken = HttpUtility.UrlEncode(token);
 
+                    // Created callback url
                     string callbackUrl = $"{forgotPasswordDto.ClientURI}?token={encodedToken}&email={(forgotPasswordDto.Email)}";
 
                     var username = userDetails.FirstName + " " + userDetails.LastName;
-                    //string callbackUrl = $"{forgotPasswordDto.ClientURI}?token={token}&email={Uri.EscapeDataString(forgotPasswordDto.Email)}";
 
-                    //var callback = QueryHelpers.AddQueryString(forgotPasswordDto.ClientURI, param);
+                    // Store token in db by userId
                     TokenStorage tokenStorage = new TokenStorage();
                     tokenStorage.UserId= user.Id;
                     tokenStorage.Token= encodedToken;
                     await _tokenStorageService.UpdateToken(tokenStorage);
 
+                    //send mail to user for forgot password link
                     await _emailSender.SendForgotPasswordEmailLink(forgotPasswordDto.Email, callbackUrl , username);
 
                     return Ok(new 
@@ -659,9 +656,11 @@ namespace wleepay.API.Controllers
 
                 if (updatedDetail.Succeeded)
                 {
+                    // send email to staff and admin for password change
                     await _emailSender.SendPasswordChangeEmailToSystemAdminstrator(resetPasswordDto.Email, userDetails.FirstName, user.PhoneNumber);
                     await _emailSender.SendPasswordChangeEmailToStaff(resetPasswordDto.Email, userDetails.FirstName, userDetails.PhoneNumber);
 
+                    // return response
                     return Ok(new
                     {
                         Success = true,
@@ -682,11 +681,12 @@ namespace wleepay.API.Controllers
         [HttpPost("LoginSetup")]
         public async Task<IActionResult> SetupLoginPassword([FromBody] SetupLoginResources setupLogin)
         {
-            string secretKey = "1234567890123456";
-            string decryptedEmail = Decrypt(setupLogin.Email, secretKey);
+            string secretKey = "1234567890123456"; //secret key
+            string decryptedEmail = Decrypt(setupLogin.Email, secretKey); // helper function for decryption
 
             var user = await _userManager.FindByEmailAsync(decryptedEmail);
             
+            //functionality for adding logs to the db
             SystemActivityLog systemActivityLog = new SystemActivityLog();
             systemActivityLog.UserId = user.Id;
             systemActivityLog.Email = decryptedEmail;
@@ -695,7 +695,7 @@ namespace wleepay.API.Controllers
 
             // var allSuperAdmins = await _userDetailsService.GetUserByRole((int)Role.SuperAdmin);
 
-            if (user == null)
+            if (user == null) //check if user is null
             {
                 systemActivityLog.Description = GenericMessagesForSystemLogs.NotExists.ToDescriptionString();
                 var addLogs = await _systemActivityLogsService.AddSystemLogs(systemActivityLog);
@@ -711,18 +711,24 @@ namespace wleepay.API.Controllers
             {
                 if (user.Email == decryptedEmail)
                 {
+                    //setup new password
                     var addPasswordResult = await _userManager.AddPasswordAsync(user, setupLogin.ConfirmPassword);
 
                     if (addPasswordResult.Succeeded)
                     {
                         userDetails.Status = (int)Status.Active;
                         userDetails.SecurityAnswerText = setupLogin.Answer;
-                        userDetails.SecurityQuestionId = setupLogin.SecurityQuestionId;                    
+                        userDetails.SecurityQuestionId = setupLogin.SecurityQuestionId;  
+                        //add user details
                         var updatedDetails = await _userDetailsService.AddOrUpdateUserDetails(userDetails);
+                        //email staff for account activation
                         var userMail= await _emailSender.EmailForAccountActivatedToStaff(decryptedEmail, userDetails.FirstName, userDetails.PhoneNumber);
+                        // email admin for staff's account activation
                         var emailToAdmins= await _emailSender.EmailForAccountActivatedToSystemAdmin(decryptedEmail, userDetails.FirstName, userDetails.PhoneNumber);
+                        //add logs
                         systemActivityLog.Description = GenericMessagesForSystemLogs.CompleteLoginProcess.ToDescriptionString();
                         var addLogs = await _systemActivityLogsService.AddSystemLogs(systemActivityLog);
+                        //return response
                         return Ok(new
                         {
                             Success = true,
@@ -753,9 +759,9 @@ namespace wleepay.API.Controllers
         [HttpPost("AccountAlreadySetup")]
         public async Task<IActionResult> CheckIfAccountAlreadySetup(AccountExistVerificationResource resource)
         {
-            string secretKey = "1234567890123456";
+            string secretKey = "1234567890123456"; //secret key for decryption
             string decryptedEmail = Decrypt(resource.Email, secretKey);
-            var user = await _userManager.FindByEmailAsync(decryptedEmail);
+            var user = await _userManager.FindByEmailAsync(decryptedEmail); //Get user details by email
             if (user == null)
             {
                 return Ok(new
@@ -765,6 +771,7 @@ namespace wleepay.API.Controllers
                 });
             }
             var userDetails = await _userDetailsService.GetUserDetailsById(user.Id);
+            //check if security answer exists or not and return response
             if (userDetails.SecurityAnswerText == null) 
             {
                 return Ok(new
@@ -808,6 +815,7 @@ namespace wleepay.API.Controllers
 
             var isValidToken = await _userManager.VerifyUserTokenAsync(user, _userManager.Options.Tokens.PasswordResetTokenProvider, "ResetPassword", resource.Token);
 
+            //return response if link is not expired
             if(isValidToken == true && !isExpired)
             {
 
