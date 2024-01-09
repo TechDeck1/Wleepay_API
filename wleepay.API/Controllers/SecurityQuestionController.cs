@@ -14,25 +14,16 @@ namespace wleepay.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [AllowAnonymous]
+
     public class SecurityQuestionController : Controller
     {
-        private readonly IUserDetailService _userDetailsService;
-        private readonly UserManager<ApplicationUser> _userManager;
-        private readonly IMapper _mapper;
-        private readonly ILogger<UserController> _logger;
+
         private readonly ISecurityQuestionService _securityQuestionService;
 
-        public SecurityQuestionController(UserManager<ApplicationUser> userManager,
-            IUserDetailService userDetailsService,
-            IMapper mapper,
-            ILogger<UserController> logger,
+        public SecurityQuestionController(
             ISecurityQuestionService securityQuestionService)
         {
-            _userManager = userManager;
-            _userDetailsService = userDetailsService;
-            _mapper = mapper;
-            _logger = logger;
+
             _securityQuestionService = securityQuestionService;
         }
 
@@ -40,7 +31,6 @@ namespace wleepay.API.Controllers
         public async Task<IActionResult> GetSecurityQuestions()
         {
             var questions = _securityQuestionService.GetAllSecurityQuestions();
-            //var questionResource = _mapper.Map<SecurityQuestions, SecurityQuestionResource>((SecurityQuestions)questions);
             return Ok(questions);
         }
     }

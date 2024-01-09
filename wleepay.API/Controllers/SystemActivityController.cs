@@ -1,10 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using System.Threading.Tasks;
-using wleepay.Core.Models;
 using wleepay.Core.Services;
-using AutoMapper;
-using Microsoft.AspNetCore.Identity;
 using wleepay.API.Resources;
 
 namespace wleepay.API.Controllers
