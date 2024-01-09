@@ -219,12 +219,6 @@ namespace wleepay.Data.Repositories
                 .Take(takeCount)
                 .ToListAsync();
 
-
-            //var filteredData = await WPContext.Users
-            //                  .Where(entity => entity.Email.Contains(email) && entity.UserRoles.FirstOrDefault().Role.Name == role.ToString())
-            //                  .Skip(skipCount)
-            //                  .Take(takeCount)
-            //                  .ToListAsync();
             var TotalCount = await WPContext.Users
                               .Where(entity => entity.Email.Contains(email) && entity.UserRoles.FirstOrDefault().Role.Name == role.ToString()).CountAsync();
 

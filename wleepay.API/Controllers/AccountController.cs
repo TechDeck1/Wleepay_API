@@ -720,11 +720,11 @@ namespace wleepay.API.Controllers
                         userDetails.SecurityAnswerText = setupLogin.Answer;
                         userDetails.SecurityQuestionId = setupLogin.SecurityQuestionId;  
                         //add user details
-                        var updatedDetails = await _userDetailsService.AddOrUpdateUserDetails(userDetails);
+                        await _userDetailsService.AddOrUpdateUserDetails(userDetails);
                         //email staff for account activation
-                        var userMail= await _emailSender.EmailForAccountActivatedToStaff(decryptedEmail, userDetails.FirstName, userDetails.PhoneNumber);
+                        await _emailSender.EmailForAccountActivatedToStaff(decryptedEmail, userDetails.FirstName, userDetails.PhoneNumber);
                         // email admin for staff's account activation
-                        var emailToAdmins= await _emailSender.EmailForAccountActivatedToSystemAdmin(decryptedEmail, userDetails.FirstName, userDetails.PhoneNumber);
+                        await _emailSender.EmailForAccountActivatedToSystemAdmin(decryptedEmail, userDetails.FirstName, userDetails.PhoneNumber);
                         //add logs
                         systemActivityLog.Description = GenericMessagesForSystemLogs.CompleteLoginProcess.ToDescriptionString();
                         var addLogs = await _systemActivityLogsService.AddSystemLogs(systemActivityLog);
