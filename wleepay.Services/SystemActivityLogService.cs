@@ -23,7 +23,7 @@ namespace wleepay.Services
         {
             systemActivityLog.CreatedDate = DateTime.Now;
             await _unitOfWork.SystemActivity.AddAsync(systemActivityLog);
-            _unitOfWork.CommitAsync();
+            await _unitOfWork.CommitAsync();
             return systemActivityLog;        }
 
         public async Task<bool> DeleteLogsById(int id)
