@@ -10,7 +10,7 @@ using wleepay.Data.Context;
 
 namespace wleepay.Data.Repositories
 {
-    public class SecurityQuestionsRepository : Repository<UserDetail>, ISecurityQuestionsRepository
+    public class SecurityQuestionsRepository : Repository<SecurityQuestions>, ISecurityQuestionsRepository
     {
 
         public SecurityQuestionsRepository(WPContext context)
