@@ -681,7 +681,7 @@ namespace wleepay.API.Controllers
         [HttpPost("LoginSetup")]
         public async Task<IActionResult> SetupLoginPassword([FromBody] SetupLoginResources setupLogin)
         {
-            string secretKey = "1234567890123456"; //secret key
+            var secretKey = _configuration.GetSection("SecretKey").Value; //secret key
             string decryptedEmail = Decrypt(setupLogin.Email, secretKey); // helper function for decryption
 
             var user = await _userManager.FindByEmailAsync(decryptedEmail);
@@ -759,7 +759,7 @@ namespace wleepay.API.Controllers
         [HttpPost("AccountAlreadySetup")]
         public async Task<IActionResult> CheckIfAccountAlreadySetup(AccountExistVerificationResource resource)
         {
-            string secretKey = "1234567890123456"; //secret key for decryption
+            var secretKey = _configuration.GetSection("SecretKey").Value; //secret key for decryption
             string decryptedEmail = Decrypt(resource.Email, secretKey);
             var user = await _userManager.FindByEmailAsync(decryptedEmail); //Get user details by email
             if (user == null)
