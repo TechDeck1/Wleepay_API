@@ -228,7 +228,7 @@ namespace wleepay.API.Controllers
                 string verificationCode = GenerateVerificationCode(4); // Generate a 4-digit verification code
                 string message = "Your one time code is " + verificationCode;
                 var code = _SMSService.sendMessage(message, userDetails.PhoneNumber);// service for send otp
-                var PhoneNumber = MaskCreditCard(userDetails.PhoneNumber);
+                var PhoneNumber = MaskPhoneNumber(userDetails.PhoneNumber);
 
                 if (code != null && code != " ")
                 {
@@ -427,7 +427,7 @@ namespace wleepay.API.Controllers
             return verificationCode.ToString();
         }
 
-        private string MaskCreditCard(string PhoneNumber)
+        private string MaskPhoneNumber(string PhoneNumber)
         {
             // Check if the Phone number is at least 4 digits long
             if (PhoneNumber.Length >= 4)
