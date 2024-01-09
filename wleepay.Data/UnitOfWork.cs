@@ -28,6 +28,8 @@ namespace wleepay.Data
         private ISecurityQuestionsRepository _securityQuestionsRepository;
         private ITokenStorageRepository _tokenStorageRepository;
         private ISystemActivityLogsRepository _systemActivityLogsRepository;
+        private IIssueTypeRepository _issueTypeRepository;
+
 
 
         public UnitOfWork(WPContext context) {
@@ -51,6 +53,9 @@ namespace wleepay.Data
         public ISecurityQuestionsRepository SecurityQuestions => _securityQuestionsRepository = _securityQuestionsRepository ?? new SecurityQuestionsRepository(_context);
         public ITokenStorageRepository TokenStorage => _tokenStorageRepository=_tokenStorageRepository ?? new TokenStorageRepository(_context);
         public ISystemActivityLogsRepository SystemActivity => _systemActivityLogsRepository= _systemActivityLogsRepository ?? new SystemActivityLogsRepository(_context);
+        public IIssueTypeRepository IssueType => _issueTypeRepository = _issueTypeRepository ?? new IssueTypeRepository(_context);
+
+
 
         public async Task<int> CommitAsync()
         {

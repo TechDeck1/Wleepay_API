@@ -25,6 +25,8 @@ namespace wleepay.Data.Context
         public DbSet<SecurityQuestions> SecurityQuestions { get; set; }
         public DbSet<TokenStorage> TokenStorage { get; set; }
         public DbSet<SystemActivityLog> SystemActivities { get; set; }
+        public DbSet<IssueType> IssueType { get; set; }
+
 
         public WPContext(DbContextOptions<WPContext> options) : base(options)
         {
@@ -53,6 +55,7 @@ namespace wleepay.Data.Context
             builder.ApplyConfiguration(new SecurityQuestionsConfiguration());
             builder.ApplyConfiguration(new TokenStorageConfiguration());
             builder.ApplyConfiguration(new SystemActivitiesConfiguration());
+            builder.ApplyConfiguration(new IssueTypeConfiguration());
 
         }
     }

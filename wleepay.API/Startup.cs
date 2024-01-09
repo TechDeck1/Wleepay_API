@@ -29,6 +29,8 @@ using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using IEmailSender = wleepay.Communication.Interface.IEmailSender;
 using Microsoft.AspNet.Identity;
+using wleepay.Core.Repositories;
+using wleepay.Data.Repositories;
 
 namespace wleepay.API
 {
@@ -153,9 +155,7 @@ namespace wleepay.API
             services.AddTransient<ISecurityQuestionService, SecurityQuestionsService>();
             services.AddTransient<ITokenStorageService, TokenStorageService>();
             services.AddTransient<ISystemActivityLogsService, SystemActivityLogService>();
-
-
-
+            services.AddTransient<IIssueTypeRepository, IssueTypeRepository>();
 
 
             //swagger config
