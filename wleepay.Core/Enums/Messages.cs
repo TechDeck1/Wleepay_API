@@ -30,6 +30,7 @@ namespace wleepay.Core.Enums
         [Description("Account is not setup yet. please setup your account")] AccountNotAlreadySetup,
         [Description("please reset your password")] LinkExpired,
         [Description("please reset your password")] ResetPassword,
+        [Description("The above Wleepay staff’s portal account is now DeActivated.")] AccountDeactivated,
 
 
     }

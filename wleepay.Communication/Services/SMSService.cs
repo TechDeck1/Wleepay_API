@@ -48,5 +48,33 @@ namespace wleepay.Communication.Services
                 return ex.Message.ToString();
             }
         }
+
+        public string sendSmsForAccountDeactivation(string message, string phoneNumber)
+        {
+            try
+            {
+                //PhoneNumber to = new PhoneNumber($"{phoneNumber}");
+                //MessageResource messageRes = MessageResource.Create(
+                //    to,
+                //    from: new PhoneNumber(_fromNumber), //  From number, must be an SMS-enabled Twilio number ( This will send sms from ur "To" numbers ).  
+                //    body: message);
+
+                //return messageRes.Status.ToString();
+                var messageOptions = new CreateMessageOptions(
+                new PhoneNumber("+917730036110"));
+                messageOptions.From = new PhoneNumber("+17342704104");
+                messageOptions.Body = message;
+
+
+                var messageResponse = MessageResource.Create(messageOptions);
+                Console.WriteLine(messageResponse.Body);
+                var result = messageResponse.Status.ToString();
+                return result;
+            }
+            catch (Exception ex)
+            {
+                return ex.Message.ToString();
+            }
+        }
     }
 }

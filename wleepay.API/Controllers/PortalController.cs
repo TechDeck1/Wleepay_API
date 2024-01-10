@@ -367,9 +367,11 @@ namespace wleepay.API.Controllers
                     }
                     else
                     {
+                        string message = "The wleepay staff with this email " + model.EmailId + " is now deactivated";
                         systemActivityLog.Action = ActionsForSystemLogs.Deactivate.ToDescriptionString();
                         systemActivityLog.Description = GenericMessagesForSystemLogs.AccountDeActivated.ToDescriptionString();
-
+                      
+                        _SMSService.sendMessage(message, userDetails.PhoneNumber);
                         await _emailSender.EmailForAccountDeactivatedToStaff(model.EmailId, userDetails.FirstName, userDetails.PhoneNumber);
                         await _emailSender.EmailForAccountDeactivatedToSystemAdmin(model.EmailId, userDetails.FirstName, userDetails.PhoneNumber);
                     }
