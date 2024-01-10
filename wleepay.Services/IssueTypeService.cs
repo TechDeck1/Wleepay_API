@@ -7,9 +7,10 @@ using wleepay.Core.Services;
 
 namespace wleepay.Services
 {
-    internal class IssueTypeService : IIssueTypeService
+    public class IssueTypeService : IIssueTypeService
     {
         private readonly IUnitOfWork _unitOfWork;
+
         public IssueTypeService(IUnitOfWork unitOfWork, ITransactionService transactionService)
         {
             this._unitOfWork = unitOfWork;
