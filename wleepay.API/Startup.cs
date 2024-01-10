@@ -152,10 +152,8 @@ namespace wleepay.API
             services.AddSingleton<IHTTPService, HTTPService>();
 
             services.AddScoped<IEmailSender, EmailSenderService>();
-            services.AddTransient<ISecurityQuestionService, SecurityQuestionsService>();
             services.AddTransient<ITokenStorageService, TokenStorageService>();
             services.AddTransient<ISystemActivityLogsService, SystemActivityLogService>();
-            services.AddTransient<IIssueTypeService, IssueTypeService>();
 
 
             //swagger config

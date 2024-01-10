@@ -12,5 +12,8 @@ namespace wleepay.Core.Services
         Task<IEnumerable<County>> GetAllCounty();
         Task<IEnumerable<DocumentType>> GetAllDocumentType();
         Task<IEnumerable<KYCStatus>> GetAllKYCStatus();
+        Task<IEnumerable<SecurityQuestions>> GetAllSecurityQuestions();
+        Task<IEnumerable<IssueType>> GetAllIssueTypes();
+
     }
 }

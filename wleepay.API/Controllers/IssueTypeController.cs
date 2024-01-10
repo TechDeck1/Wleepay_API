@@ -7,13 +7,13 @@ namespace wleepay.API.Controllers
 {
     public class IssueTypeController : Controller
     {
-        private readonly IIssueTypeService _issueTypeService;
+        private readonly ILookupService _lookupService;
 
         public IssueTypeController(
-            IIssueTypeService issueTypeService)
+            ILookupService lookupService)
         {
 
-            _issueTypeService = issueTypeService;
+            _lookupService = lookupService;
         }
 
         [HttpGet("IssueTypes")]
@@ -21,7 +21,7 @@ namespace wleepay.API.Controllers
         {
             try
             {
-                var issueTypes = _issueTypeService.GetAllIssueTypes();
+                var issueTypes = await _lookupService.GetAllIssueTypes();
                 return Ok(issueTypes);
 
             }

@@ -5,9 +5,8 @@ using wleepay.Core.Models;
 
 namespace wleepay.Core.Repositories
 {
-    public interface IIssueTypeRepository
+    public interface IIssueTypeRepository : IRepository<IssueType>
     {
-        IEnumerable<IssueType> GetAllIssueTypes();
 
     }
 }

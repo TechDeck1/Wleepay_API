@@ -6,9 +6,8 @@ using wleepay.Core.Models;
 
 namespace wleepay.Core.Services
 {
-    public interface ISecurityQuestionService
+    public interface ICustomerTicketsService
     {
-        IEnumerable<SecurityQuestions> GetAllSecurityQuestions();
-
+        Task<CustomerTickets> AddUpdateCustomerTickets(CustomerTickets customerTickets);
     }
 }

@@ -6,7 +6,7 @@ using wleepay.Core.Models;
 
 namespace wleepay.Core.Repositories
 {
-    public interface ISecurityQuestionsRepository
+    public interface ISecurityQuestionsRepository : IRepository<SecurityQuestions>
     {
         IEnumerable<SecurityQuestions> GetAllSecurityQuestions();
 

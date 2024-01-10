@@ -18,19 +18,19 @@ namespace wleepay.API.Controllers
     public class SecurityQuestionController : Controller
     {
 
-        private readonly ISecurityQuestionService _securityQuestionService;
+        private readonly ILookupService _lookupService;
 
         public SecurityQuestionController(
-            ISecurityQuestionService securityQuestionService)
+            ILookupService lookupService )
         {
 
-            _securityQuestionService = securityQuestionService;
+            _lookupService = lookupService;
         }
 
         [HttpGet("SecurityQuestions")]
         public async Task<IActionResult> GetSecurityQuestions()
         {
-            var questions = _securityQuestionService.GetAllSecurityQuestions();
+            var questions = await _lookupService.GetAllSecurityQuestions();
             return Ok(questions);
         }
     }

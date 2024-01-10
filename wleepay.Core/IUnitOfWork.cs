@@ -25,6 +25,8 @@ namespace wleepay.Core
         ITokenStorageRepository TokenStorage { get; }
         ISystemActivityLogsRepository SystemActivity { get; }
         IIssueTypeRepository IssueType { get; }
+        ICustomerTicketsRepository CustomerTickets { get; }
+
 
 
         Task<int> CommitAsync();
