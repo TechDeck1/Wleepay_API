@@ -26,6 +26,8 @@ namespace wleepay.Core
         ISystemActivityLogsRepository SystemActivity { get; }
         IIssueTypeRepository IssueType { get; }
         ICustomerTicketsRepository CustomerTickets { get; }
+        INotesRepository Notes { get; }
+
 
 
 

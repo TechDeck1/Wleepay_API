@@ -14,7 +14,7 @@ namespace wleepay.Services
     {
         private readonly IUnitOfWork _unitOfWork;
         
-        public SystemActivityLogService(IUnitOfWork unitOfWork, ITransactionService transactionService)
+        public SystemActivityLogService(IUnitOfWork unitOfWork)
         {
             this._unitOfWork = unitOfWork;
         }

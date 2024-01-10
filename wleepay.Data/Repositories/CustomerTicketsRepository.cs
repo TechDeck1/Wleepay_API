@@ -19,9 +19,35 @@ namespace wleepay.Data.Repositories
             get { return Context as WPContext; }
         }
 
-        public Task<CustomerTickets> AddUpdateCustomerTickets(CustomerTickets customerTickets)
+        public async Task<CustomerTickets> AddUpdateCustomerTickets(CustomerTickets customerTickets)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var tickets = await WPContext.CustomerTickets.AddAsync(customerTickets);
+
+                //if (customerTickets.Notes != null)
+                //{
+                //    foreach (var note in customerTickets.Notes)
+                //    {
+                //        Notes CustomerNotes = new Notes();
+                //        CustomerNotes.Note = note.ToString();
+                //        CustomerNotes.CreatedDate = DateTime.UtcNow;
+                //        CustomerNotes.CustomerTicketId = customerTickets.Id;
+                //        await WPContext.Notes.AddAsync(CustomerNotes);
+
+                //    }
+                //}
+
+                WPContext.SaveChanges();
+                return customerTickets;
+
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+
         }
     }
     

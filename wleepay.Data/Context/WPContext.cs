@@ -27,6 +27,8 @@ namespace wleepay.Data.Context
         public DbSet<SystemActivityLog> SystemActivities { get; set; }
         public DbSet<IssueType> IssueType { get; set; }
         public DbSet<CustomerTickets> CustomerTickets { get; set; }
+        public DbSet<Notes> Notes { get; set; }
+
 
 
 
@@ -59,6 +61,8 @@ namespace wleepay.Data.Context
             builder.ApplyConfiguration(new SystemActivitiesConfiguration());
             builder.ApplyConfiguration(new IssueTypeConfiguration());
             builder.ApplyConfiguration(new CustomerTicketsConfiguration());
+            builder.ApplyConfiguration(new NotesConfiguration());
+
 
 
         }

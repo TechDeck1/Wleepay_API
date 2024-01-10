@@ -11,14 +11,13 @@ namespace wleepay.Services
     public class TokenStorageService : ITokenStorageService
     {
         private readonly IUnitOfWork _unitOfWork;
-        public TokenStorageService(IUnitOfWork unitOfWork, ITransactionService transactionService)
+        public TokenStorageService(IUnitOfWork unitOfWork)
         {
             this._unitOfWork = unitOfWork;
         }
 
         public async Task<TokenStorage> GetTokenStorageById(string userId)
         {
-            var tokenStorage = new TokenStorage();
             var token = await _unitOfWork.TokenStorage.GetTokenStorageById(userId);
             return token;
 
@@ -39,7 +38,7 @@ namespace wleepay.Services
                 await _unitOfWork.TokenStorage.AddAsync(tokenStorage);
             }
 
-            _unitOfWork.CommitAsync();
+            await _unitOfWork.CommitAsync();
             return TokenToUpdate;
         }
     }

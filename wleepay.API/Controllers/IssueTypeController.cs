@@ -5,6 +5,8 @@ using wleepay.Core.Services;
 
 namespace wleepay.API.Controllers
 {
+    [Route("api/[controller]")]
+    [ApiController]
     public class IssueTypeController : Controller
     {
         private readonly ILookupService _lookupService;

@@ -21,9 +21,9 @@ namespace wleepay.Core.Models
         public int Status { get; set; }
         public DateTime CreatedDate { get; set; }
         public DateTime? UpdatedDate { get; set; }
+        public ICollection<Notes> Notes { get; set; }
 
         public virtual IssueType IssueType { get; set; }
-        public ICollection<Notes> Notes { get; set; }
 
 
     }
