@@ -586,11 +586,13 @@ namespace wleepay.API.Controllers
                 {
                     //generated the token
                     var token = await _userManager.GeneratePasswordResetTokenAsync(user);
-
+                    var secretKey = _configuration.GetSection("SecretKey").Value; //secret key
+                    string encryptedEmail = Encrypt(forgotPasswordDto.Email, secretKey);
+                    var EncodedEncryptedEmail = HttpUtility.UrlEncode(encryptedEmail);
                     var encodedToken = HttpUtility.UrlEncode(token);
 
                     // Created callback url
-                    string callbackUrl = $"{forgotPasswordDto.ClientURI}?token={encodedToken}&email={(forgotPasswordDto.Email)}";
+                    string callbackUrl = $"{forgotPasswordDto.ClientURI}?token={encodedToken}&email={(EncodedEncryptedEmail)}";
 
                     var username = userDetails.FirstName + " " + userDetails.LastName;
 
@@ -630,8 +632,11 @@ namespace wleepay.API.Controllers
             if (!ModelState.IsValid)
                 return BadRequest();
 
+            var secretKey = _configuration.GetSection("SecretKey").Value; //secret key
+            string decryptedEmail = Decrypt(resetPasswordDto.Email, secretKey); // helper function for decryption
+
             //get user by email
-            var user = await _userManager.FindByEmailAsync(resetPasswordDto.Email);
+            var user = await _userManager.FindByEmailAsync(decryptedEmail);
             var tokenStorage = await _tokenStorageService.GetTokenStorageById(user.Id);
 
             var expiryDate = tokenStorage.ExpirationTime;
@@ -657,8 +662,8 @@ namespace wleepay.API.Controllers
                 if (updatedDetail.Succeeded)
                 {
                     // send email to staff and admin for password change
-                    await _emailSender.SendPasswordChangeEmailToSystemAdminstrator(resetPasswordDto.Email, userDetails.FirstName, user.PhoneNumber);
-                    await _emailSender.SendPasswordChangeEmailToStaff(resetPasswordDto.Email, userDetails.FirstName, userDetails.PhoneNumber);
+                    await _emailSender.SendPasswordChangeEmailToSystemAdminstrator(decryptedEmail, userDetails.FirstName, user.PhoneNumber);
+                    await _emailSender.SendPasswordChangeEmailToStaff(decryptedEmail, userDetails.FirstName, userDetails.PhoneNumber);
 
                     // return response
                     return Ok(new
