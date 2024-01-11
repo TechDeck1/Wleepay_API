@@ -20,7 +20,7 @@ namespace wleepay.API.Controllers
         [HttpGet("SystemLogs")]
         public async Task<IActionResult> GetSystemAllLogs(Pagination request)
         {
-            if (string.IsNullOrEmpty(request.Email))
+            if (!string.IsNullOrEmpty(request.Email))
             {
                 var logs = await _systemActivityLogsService.FilterLogsByEmail(request.Email, request.Index, request.Size);
                 return Ok(logs);
