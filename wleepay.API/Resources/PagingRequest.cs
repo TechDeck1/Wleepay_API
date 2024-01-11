@@ -15,6 +15,7 @@ namespace wleepay.API.Resources
 
     public class Pagination
     {
+        public string Email { get; set; }
         public int Index { get; set; }
         public int Size { get; set; }
     }
