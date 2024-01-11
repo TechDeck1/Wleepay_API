@@ -586,7 +586,7 @@ namespace wleepay.API.Controllers
                 {
                     //generated the token
                     var token = await _userManager.GeneratePasswordResetTokenAsync(user);
-                    var secretKey = _configuration.GetSection("SecretKey").Value; //secret key
+                    var secretKey = _configuration.GetSection("SecretKeyForEncryptAndDecrypt").Value; //secret key
                     string encryptedEmail = Encrypt(forgotPasswordDto.Email, secretKey);
                     var EncodedEncryptedEmail = HttpUtility.UrlEncode(encryptedEmail);
                     var encodedToken = HttpUtility.UrlEncode(token);
@@ -632,7 +632,7 @@ namespace wleepay.API.Controllers
             if (!ModelState.IsValid)
                 return BadRequest();
 
-            var secretKey = _configuration.GetSection("SecretKey").Value; //secret key
+            var secretKey = _configuration.GetSection("SecretKeyForEncryptAndDecrypt").Value; //secret key
             string decryptedEmail = Decrypt(resetPasswordDto.Email, secretKey); // helper function for decryption
 
             //get user by email
@@ -686,7 +686,7 @@ namespace wleepay.API.Controllers
         [HttpPost("LoginSetup")]
         public async Task<IActionResult> SetupLoginPassword([FromBody] SetupLoginResources setupLogin)
         {
-            var secretKey = _configuration.GetSection("SecretKey").Value; //secret key
+            var secretKey = _configuration.GetSection("SecretKeyForEncryptAndDecrypt").Value; //secret key
             string decryptedEmail = Decrypt(setupLogin.Email, secretKey); // helper function for decryption
 
             var user = await _userManager.FindByEmailAsync(decryptedEmail);
@@ -764,7 +764,7 @@ namespace wleepay.API.Controllers
         [HttpPost("AccountAlreadySetup")]
         public async Task<IActionResult> CheckIfAccountAlreadySetup(AccountExistVerificationResource resource)
         {
-            var secretKey = _configuration.GetSection("SecretKey").Value; //secret key for decryption
+            var secretKey = _configuration.GetSection("SecretKeyForEncryptAndDecrypt").Value; //secret key for decryption
             string decryptedEmail = Decrypt(resource.Email, secretKey);
             var user = await _userManager.FindByEmailAsync(decryptedEmail); //Get user details by email
             if (user == null)
@@ -802,7 +802,7 @@ namespace wleepay.API.Controllers
             if (!ModelState.IsValid)
                 return BadRequest();
 
-            var secretKey = _configuration.GetSection("SecretKey").Value; //secret key
+            var secretKey = _configuration.GetSection("SecretKeyForEncryptAndDecrypt").Value; //secret key
             string decryptedEmail = Decrypt(resource.Email, secretKey); // helper function for decryption
 
             //get user by email
