@@ -802,8 +802,11 @@ namespace wleepay.API.Controllers
             if (!ModelState.IsValid)
                 return BadRequest();
 
+            var secretKey = _configuration.GetSection("SecretKey").Value; //secret key
+            string decryptedEmail = Decrypt(resource.Email, secretKey); // helper function for decryption
+
             //get user by email
-            var user = await _userManager.FindByEmailAsync(resource.Email);
+            var user = await _userManager.FindByEmailAsync(decryptedEmail);
             var tokenStorage = await _tokenStorageService.GetTokenStorageById(user.Id);
 
             var expiryDate = tokenStorage.ExpirationTime;
