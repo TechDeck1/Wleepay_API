@@ -172,5 +172,10 @@ namespace wleepay.Services
         {
             return await _unitOfWork.UserDetail.SearchApplicationUserByEmail(email, role , index, size );
         }
+
+        public async Task<ApplicationUser> VerifyUserAccountByPhone(string phone)
+        {
+            return await _unitOfWork.UserDetail.VerifyUserAccountByPhone(phone);
+        }
     }
 }

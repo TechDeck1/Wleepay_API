@@ -380,6 +380,19 @@ namespace wleepay.API.Controllers
             return Ok(userListResource);
         }
 
+        [HttpPost("VerifyUserAccountByPhone")]
+        public async Task<IActionResult> VerifyUserAccountByPhoneAsync([FromBody] SearchRequestForVerification request)
+        {
+            ApplicationUser userDetail = null;
+            if (!string.IsNullOrEmpty(request.PhoneNumber))
+                userDetail = await _userDetailsService.VerifyUserAccountByPhone(request.PhoneNumber);
+            if (userDetail == null) return Ok(new { 
+                status=false,
+                message="Phone Number does not exists" });
+            var userDetailResource = _mapper.Map<ApplicationUser, ApplicationUserResource>(userDetail);
+            return Ok(userDetailResource != null ? userDetailResource : string.Empty);
+        }
+
         #region helper methods
         private async Task<string> uploadDocument(IFormFile file, string userId, string containerName = "kyc-document")
         {

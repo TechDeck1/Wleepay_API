@@ -28,6 +28,8 @@ namespace wleepay.Core.Services
         Task<UserDetail> UpdateUserStatus(string userId, int status);
         Task<UserDetailsResponseResource> GetAllUsersById(Core.Enums.Role role, int pageIndex, int pageSize, string createdBy);
         Task<UserDetailsResponseResource> SearchUsersByEmail(string email, Core.Enums.Role role , int index, int size);
+        Task<ApplicationUser> VerifyUserAccountByPhone(string phone);
+
 
 
     }

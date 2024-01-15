@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Transactions;
 
 namespace wleepay.API.Resources
 {
@@ -15,5 +16,9 @@ namespace wleepay.API.Resources
         public DateTime UpdatedDate { get; set; }
         public CurrencyResource Currency { get; set; }
         public WalletTypeResource WalletType { get; set; }
+        public IEnumerable<TransactionResource> TransactionFrom { get; set; }
+        public IEnumerable<TransactionResource> TransactionTo { get; set; }
+
+
     }
 }

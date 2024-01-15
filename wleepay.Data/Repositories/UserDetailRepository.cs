@@ -232,6 +232,32 @@ namespace wleepay.Data.Repositories
             return response;
         }
 
+        public async Task<ApplicationUser> VerifyUserAccountByPhone(string phoneNumber = "")
+        {
+            var appUserQuery = WPContext.Users
+                .Include(s => s.UserRoles)
+                    .ThenInclude(s => s.Role)
+                .Include(s => s.UserDetail)
+                    .ThenInclude(s => s.KYCLevelDetail)
+                .Include(s => s.UserDetail)
+                    .ThenInclude(s => s.KYCStatus)
+                .Include(s => s.UserDetail)
+                    .ThenInclude(s => s.County)
+                .Include(s => s.Wallets)
+                        .ThenInclude(s => s.Currency)
+                .Include(s => s.Wallets)
+                        .ThenInclude(s => s.WalletType)
+                .Include(s=>s.Wallets)
+                        .ThenInclude(s=>s.TransactionFrom)
+                .Include(s => s.Wallets)
+                        .ThenInclude(s => s.TransactionTo)
+                 .AsQueryable();
+
+                appUserQuery = appUserQuery.Where(user => user.UserDetail.PhoneNumber == phoneNumber);
+
+                return await appUserQuery.FirstOrDefaultAsync();
+        }
+
 
     }
 }

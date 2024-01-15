@@ -19,4 +19,9 @@ namespace wleepay.API.Resources
         public int Index { get; set; }
         public int Size { get; set; }
     }
+
+    public class SearchRequestForVerification
+    {
+        public string PhoneNumber { get; set; }
+    }
 }
