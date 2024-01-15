@@ -12,6 +12,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using wleepay.API.Resources;
 using wleepay.API.Validators;
+using wleepay.Core.DTO.Response;
+using wleepay.Core.Enums;
 using wleepay.Core.Models;
 using wleepay.Core.Services;
 using wleepay.Storage.Interface;
@@ -383,14 +385,21 @@ namespace wleepay.API.Controllers
         [HttpPost("VerifyUserAccountByPhone")]
         public async Task<IActionResult> VerifyUserAccountByPhoneAsync([FromBody] SearchRequestForVerification request)
         {
-            ApplicationUser userDetail = null;
+            TransactionAndUserResponseResource result = null;
             if (!string.IsNullOrEmpty(request.PhoneNumber))
-                userDetail = await _userDetailsService.VerifyUserAccountByPhone(request.PhoneNumber);
-            if (userDetail == null) return Ok(new { 
+                result = await _userDetailsService.VerifyUserAccountByPhone(request.PhoneNumber);
+            if (result == null) return Ok(new { 
                 status=false,
                 message="Phone Number does not exists" });
-            var userDetailResource = _mapper.Map<ApplicationUser, ApplicationUserResource>(userDetail);
-            return Ok(userDetailResource != null ? userDetailResource : string.Empty);
+            var userDetailResource = _mapper.Map<ApplicationUser, ApplicationUserResource>(result.UserDetails);
+            var transactionResourceList = _mapper.Map<IEnumerable<Transaction>, IEnumerable<TransactionHistoryResource>>(result.Transactions);
+
+            return Ok(new {
+            status=true,
+            userDetails= userDetailResource,
+            transactions= transactionResourceList
+            });
+
         }
 
         #region helper methods

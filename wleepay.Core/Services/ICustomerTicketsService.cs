@@ -10,5 +10,7 @@ namespace wleepay.Core.Services
     {
         Task<CustomerTickets> AddUpdateCustomerTickets(CustomerTickets customerTickets);
         IEnumerable<CustomerTickets> GetAllCustomerTickets();
+        IEnumerable<CustomerTickets> GetCustomerTicketsByPhoneNumber(string phone);
+
     }
 }

@@ -11,6 +11,8 @@ namespace wleepay.Core.Repositories
 
         Task<CustomerTickets> AddUpdateCustomerTickets(CustomerTickets customerTickets);
         IEnumerable<CustomerTickets> GetAllCustomerTickets();
+        IEnumerable<CustomerTickets> GetCustomerTicketsByPhoneNumber(string phone);
+
 
     }
 }

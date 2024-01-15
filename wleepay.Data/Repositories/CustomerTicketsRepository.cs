@@ -57,8 +57,24 @@ namespace wleepay.Data.Repositories
         {
             try
             {
-                var tickets =  WPContext.CustomerTickets.ToList();
+                var tickets =  WPContext.CustomerTickets.OrderByDescending(x=>x.CreatedDate).ToList();
 
+                return tickets;
+
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+
+        }
+
+        public IEnumerable<CustomerTickets> GetCustomerTicketsByPhoneNumber(string phone)
+        {
+            try
+            {
+                var tickets = WPContext.CustomerTickets.Where(x=>x.PhoneNumber == phone).OrderByDescending(x => x.CreatedDate).ToList();
                 return tickets;
 
             }

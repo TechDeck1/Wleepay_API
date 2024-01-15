@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -232,7 +233,7 @@ namespace wleepay.Data.Repositories
             return response;
         }
 
-        public async Task<ApplicationUser> VerifyUserAccountByPhone(string phoneNumber = "")
+        public async Task<TransactionAndUserResponseResource> VerifyUserAccountByPhone(string phoneNumber = "")
         {
             var appUserQuery = WPContext.Users
                 .Include(s => s.UserRoles)
@@ -247,15 +248,30 @@ namespace wleepay.Data.Repositories
                         .ThenInclude(s => s.Currency)
                 .Include(s => s.Wallets)
                         .ThenInclude(s => s.WalletType)
-                .Include(s=>s.Wallets)
-                        .ThenInclude(s=>s.TransactionFrom)
-                .Include(s => s.Wallets)
-                        .ThenInclude(s => s.TransactionTo)
+                //.Include(s=>s.Wallets)
+                //        .ThenInclude(s=>s.TransactionFrom)
+                //.Include(s => s.Wallets)
+                //        .ThenInclude(s => s.TransactionTo)
                  .AsQueryable();
 
-                appUserQuery = appUserQuery.Where(user => user.UserDetail.PhoneNumber == phoneNumber);
+            appUserQuery = appUserQuery.Where(user => user.UserDetail.PhoneNumber == phoneNumber);
+            var UserDetails= await appUserQuery.FirstOrDefaultAsync();
 
-                return await appUserQuery.FirstOrDefaultAsync();
+            List<IList<Transaction>> transactionResultsList = new List<IList<Transaction>>();
+
+            foreach (var item in UserDetails?.Wallets)
+            {
+                var transactionQuery =WPContext.Transactions.Where(w => w.FromWalletId == item.Id || w.ToWalletId == item.Id);
+                var transactionsForWallet = transactionQuery.ToList();
+
+                transactionResultsList.Add(transactionsForWallet);
+            }
+
+            TransactionAndUserResponseResource transactionAndUserResponse = new TransactionAndUserResponseResource();
+            transactionAndUserResponse.UserDetails = UserDetails;
+            transactionAndUserResponse.Transactions = transactionResultsList.SelectMany(x => x).ToList(); ;
+
+            return transactionAndUserResponse;
         }
 
 

@@ -29,5 +29,11 @@ namespace wleepay.Services
             var tickets = _unitOfWork.CustomerTickets.GetAllCustomerTickets();
             return tickets;
         }
+
+        public IEnumerable<CustomerTickets> GetCustomerTicketsByPhoneNumber(string phone)
+        {
+            var tickets = _unitOfWork.CustomerTickets.GetCustomerTicketsByPhoneNumber(phone);
+            return tickets;
+        }
     }
 }
