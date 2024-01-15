@@ -27,6 +27,7 @@ using Microsoft.AspNetCore.Http;
 using wleepay.Communication.Interface;
 using DevExpress.Data.Filtering.Helpers;
 using wleepay.Core.Enums;
+using Microsoft.SqlServer.Management.Smo;
 
 namespace wleepay.API.Controllers
 {
@@ -110,9 +111,11 @@ namespace wleepay.API.Controllers
 
             if (result.IsLockedOut)
             {
+                await _userDetailsService.UpdateUserStatus(user.Id, (int)Status.DeActive);
+
                 //_logger.LogInformation("Login attempt for email {Email} from IP {IPAddress} at {Timestamp}", loginRequest.Email, GetClientIpAddress(), DateTime.UtcNow);
-                 await _emailSender.SendEmailAsyncForLockAccountToStaff(loginRequest.Email, userDetails.FirstName,userDetails.PhoneNumber);
-                 await  _emailSender.SendEmailAsyncForLockAccountToSystemAdmin(loginRequest.Email, userDetails.FirstName, userDetails.PhoneNumber);
+                await _emailSender.SendEmailAsyncForLockAccountToStaff(loginRequest.Email, userDetails.FirstName,userDetails.PhoneNumber);
+                await  _emailSender.SendEmailAsyncForLockAccountToSystemAdmin(loginRequest.Email, userDetails.FirstName, userDetails.PhoneNumber);
 
                 systemActivityLog.Description = GenericMessagesForSystemLogs.AccountLocked.ToDescriptionString();
                  await _systemActivityLogsService.AddSystemLogs(systemActivityLog);
@@ -124,7 +127,6 @@ namespace wleepay.API.Controllers
                     Message = Messages.AccountLocked.ToDescriptionString(),
                 });
             }
-
 
             if (result.Succeeded)
             {
@@ -210,6 +212,8 @@ namespace wleepay.API.Controllers
 
             if (user != null)
             {
+                await _userDetailsService.UpdateUserStatus(user.Id, (int)Status.Active);
+                
                 // UnLock the user account
                 await _userManager.SetLockoutEnabledAsync(user, false);
 
