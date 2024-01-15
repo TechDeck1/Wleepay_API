@@ -45,7 +45,7 @@ namespace wleepay.API.Controllers
         }
 
         [HttpPost("Report")]
-        public async Task<IActionResult> GetTrasactionHistoryByWalletId([FromBody] TransactionReportRequest request)
+        public async Task<IActionResult> GetTransactionsByType([FromBody] TransactionReportRequest request)
         {
             var transactionList = await _transactionService.GetTransactionsByType(request.TransferType, request.Index, request.Size);
             if (transactionList.Count() > 0)

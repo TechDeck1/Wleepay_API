@@ -94,7 +94,7 @@ namespace wleepay.API.Controllers
             else if (!string.IsNullOrEmpty(request.LoginName))
                 userDetail = await _userDetailsService.GetUserAccountByName(request.LoginName);
 
-            var userDetailResource = _mapper.Map<ApplicationUser, UserAccountResource>(userDetail);
+            var userDetailResource = _mapper.Map<ApplicationUser, ApplicationUserResource>(userDetail);
             return Ok(userDetailResource != null ? userDetailResource : string.Empty);
         }
 

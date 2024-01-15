@@ -62,14 +62,15 @@ namespace wleepay.Data.Repositories
                 .Include(s => s.UserRoles)
                     .ThenInclude(s => s.Role)
                 .Include(s => s.Address)
+                .Include(s => s.Wallets)
+                    .ThenInclude(s => s.Currency)
                 .OrderByDescending(w => w.UserDetail.CreatedDate)
                 .Where(s=>s.UserRoles.FirstOrDefault().Role.Name == role.ToString())
                 .Skip(skipCount)
                 .Take(takeCount)
                 //.Include(s => s.UserDetail)
                 //    .ThenInclude(s => s.County)
-                //.Include(s => s.Wallets)
-                //    .ThenInclude(s => s.Currency)
+                
                 .ToListAsync();
 
             var TotalCount = await WPContext.Users.Where(s => s.UserRoles.FirstOrDefault().Role.Name == role.ToString()).CountAsync();
@@ -213,6 +214,8 @@ namespace wleepay.Data.Repositories
                 .Include(s => s.UserRoles)
                     .ThenInclude(s => s.Role)
                 .Include(s => s.Address)
+                .Include(s => s.Wallets)
+                    .ThenInclude(s => s.Currency)
                 .OrderByDescending(w => w.UserDetail.CreatedDate)
                 .Where(entity => entity.Email.Contains(email) && entity.UserRoles.FirstOrDefault().Role.Name == role.ToString())
                 .Skip(skipCount)
