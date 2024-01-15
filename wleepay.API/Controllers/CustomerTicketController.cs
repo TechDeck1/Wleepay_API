@@ -42,5 +42,12 @@ namespace wleepay.API.Controllers
             var tickets = await _customerTicketsService.AddUpdateCustomerTickets(customerTicketsToInsert);
             return Ok(tickets);
         }
+
+        [HttpGet("GetAllCustomerTickets")]
+        public async Task<IActionResult> GetAllCustomerTickets()
+        {
+            var tickets = _customerTicketsService.GetAllCustomerTickets();
+            return Ok(tickets);
+        }
     }
 }

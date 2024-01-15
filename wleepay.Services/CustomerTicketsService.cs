@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Security.AccessControl;
 using System.Text;
 using System.Threading.Tasks;
 using wleepay.Core;
@@ -20,6 +21,12 @@ namespace wleepay.Services
         public async Task<CustomerTickets> AddUpdateCustomerTickets(CustomerTickets customerTickets)
         {
             var tickets = await _unitOfWork.CustomerTickets.AddUpdateCustomerTickets(customerTickets);
+            return tickets;
+        }
+
+        public IEnumerable<CustomerTickets> GetAllCustomerTickets()
+        {
+            var tickets = _unitOfWork.CustomerTickets.GetAllCustomerTickets();
             return tickets;
         }
     }

@@ -9,5 +9,6 @@ namespace wleepay.Core.Services
     public interface ICustomerTicketsService
     {
         Task<CustomerTickets> AddUpdateCustomerTickets(CustomerTickets customerTickets);
+        IEnumerable<CustomerTickets> GetAllCustomerTickets();
     }
 }

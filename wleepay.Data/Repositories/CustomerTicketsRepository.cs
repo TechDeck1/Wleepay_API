@@ -1,5 +1,7 @@
-﻿using System;
+﻿using DevExpress.Xpo;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using wleepay.Core.Models;
@@ -49,6 +51,26 @@ namespace wleepay.Data.Repositories
             }
 
         }
+
+
+        public  IEnumerable<CustomerTickets> GetAllCustomerTickets()
+        {
+            try
+            {
+                var tickets =  WPContext.CustomerTickets.ToList();
+
+                return tickets;
+
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+
+        }
+
+
     }
     
 
