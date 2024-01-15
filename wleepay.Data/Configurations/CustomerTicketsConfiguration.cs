@@ -33,9 +33,7 @@ namespace wleepay.Data.Configurations
               .IsRequired();
 
             builder
-             .Property(u => u.CustomerContact)
-             .HasMaxLength(50)
-             .IsRequired();
+             .Property(u => u.CustomerContact);
 
             builder
                 .Property(u => u.IssueTypeId)
