@@ -388,16 +388,26 @@ namespace wleepay.API.Controllers
             TransactionAndUserResponseResource result = null;
             if (!string.IsNullOrEmpty(request.PhoneNumber))
                 result = await _userDetailsService.VerifyUserAccountByPhone(request.PhoneNumber);
-            if (result == null) return Ok(new { 
-                status=false,
-                message="Phone Number does not exists" });
+          
+            object userDetails = null;
+            if (result == null) 
+            return Ok(new 
+            {
+                userDetails,
+                status =false,
+                message="Phone Number does not exists" 
+            });
+
             var userDetailResource = _mapper.Map<ApplicationUser, ApplicationUserResource>(result.UserDetails);
             var transactionResourceList = _mapper.Map<IEnumerable<Transaction>, IEnumerable<TransactionHistoryResource>>(result.Transactions);
 
             return Ok(new {
             status=true,
-            userDetails= userDetailResource,
-            transactions= transactionResourceList
+            userDetails = (new
+            {
+                userDetail = userDetailResource,
+                transactions = transactionResourceList
+            }),
             });
 
         }

@@ -272,7 +272,7 @@ namespace wleepay.API.Controllers
                 // Check if the given date is expired (more than 2 minutes ago)
                 bool isExpired = minutesDifference >= 2;
 
-                object Data = null;
+                object data = null;
                 if (!isExpired)
                 {
                     if (userDetails.VerificationCode == model.Code)
@@ -293,7 +293,7 @@ namespace wleepay.API.Controllers
                        
                         return Ok(new
                         {
-                            Data = (new
+                            data = (new
                             {
                                 UserId = userDetails.UserId,
                                 Token = token,
@@ -302,18 +302,18 @@ namespace wleepay.API.Controllers
 
                             }),
                             isExpired = false,
-                            Success= true,
-                            Message=Messages.VerificationSuccessfull.ToDescriptionString()
+                            success= true,
+                            message=Messages.VerificationSuccessfull.ToDescriptionString()
                         });
                     }
                     else
                     {
                         return Ok(new
                         {
-                            Data,
+                            data,
                             isExpired = false,
-                            Success = true,
-                            Message =Messages.WrongOtp.ToDescriptionString(),
+                            success = true,
+                            message =Messages.WrongOtp.ToDescriptionString(),
                         });
                     }
                 }
@@ -321,10 +321,10 @@ namespace wleepay.API.Controllers
                 {
                     return Ok(new 
                     {
-                        Data,
+                        data,
                         isExpired = true,
                         success=false,
-                        Message = Messages.OtpExpired.ToDescriptionString(),
+                        message = Messages.OtpExpired.ToDescriptionString(),
                     });
 
                 }

@@ -257,6 +257,11 @@ namespace wleepay.Data.Repositories
             appUserQuery = appUserQuery.Where(user => user.UserDetail.PhoneNumber == phoneNumber);
             var UserDetails= await appUserQuery.FirstOrDefaultAsync();
 
+            if(UserDetails == null)
+            {
+                return null;
+            }
+
             List<IList<Transaction>> transactionResultsList = new List<IList<Transaction>>();
 
             foreach (var item in UserDetails?.Wallets)
