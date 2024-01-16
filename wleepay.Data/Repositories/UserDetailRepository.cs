@@ -248,10 +248,6 @@ namespace wleepay.Data.Repositories
                         .ThenInclude(s => s.Currency)
                 .Include(s => s.Wallets)
                         .ThenInclude(s => s.WalletType)
-                //.Include(s=>s.Wallets)
-                //        .ThenInclude(s=>s.TransactionFrom)
-                //.Include(s => s.Wallets)
-                //        .ThenInclude(s => s.TransactionTo)
                  .AsQueryable();
 
             appUserQuery = appUserQuery.Where(user => user.UserDetail.PhoneNumber == phoneNumber);
@@ -266,7 +262,7 @@ namespace wleepay.Data.Repositories
 
             foreach (var item in UserDetails?.Wallets)
             {
-                var transactionQuery =WPContext.Transactions.Where(w => w.FromWalletId == item.Id || w.ToWalletId == item.Id);
+                var transactionQuery =WPContext.Transactions.Where(w => w.FromWalletId == item.Id || w.ToWalletId == item.Id).Include(x=>x.TransferType);
                 var transactionsForWallet = transactionQuery.ToList();
 
                 transactionResultsList.Add(transactionsForWallet);

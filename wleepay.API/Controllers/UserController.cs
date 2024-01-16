@@ -390,6 +390,7 @@ namespace wleepay.API.Controllers
                 result = await _userDetailsService.VerifyUserAccountByPhone(request.PhoneNumber);
           
             object userDetails = null;
+           
             if (result == null) 
             return Ok(new 
             {
