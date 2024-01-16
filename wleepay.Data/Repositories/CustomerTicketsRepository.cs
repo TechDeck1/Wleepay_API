@@ -59,6 +59,7 @@ namespace wleepay.Data.Repositories
             // Assuming WPContext is a properly configured and disposed database context
             var tickets = await WPContext.CustomerTickets.Where(x => x.PhoneNumber == phone)
                                                     .Include(x => x.Notes)
+                                                    .Include(x=>x.IssueType)
                                                     .OrderByDescending(x => x.CreatedDate)
                                                     .ToListAsync();
             return tickets;
