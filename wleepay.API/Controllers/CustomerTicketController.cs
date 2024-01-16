@@ -25,6 +25,7 @@ namespace wleepay.API.Controllers
         private readonly IMapper _mapper;
         private readonly ISMSService _sMSService;
         private readonly IEmailSender _emailSender;
+        private readonly INotesService _notesService;
 
 
         public CustomerTicketController(
@@ -33,7 +34,8 @@ namespace wleepay.API.Controllers
             IMapper mapper,
             ISMSService sMSService,
             IUserDetailService userDetailsService,
-            IEmailSender emailSender)
+            IEmailSender emailSender,
+            INotesService notesService)
         {
 
             _customerTicketsService = customerTickets;
@@ -42,6 +44,7 @@ namespace wleepay.API.Controllers
             _sMSService = sMSService;
             _userDetailsService = userDetailsService;
             _emailSender = emailSender;
+            _notesService = notesService;
         }
 
         [HttpPost("AddUpdateCustomerTickets")]
@@ -111,7 +114,7 @@ namespace wleepay.API.Controllers
         [HttpPost("ReplyForCustomerTicket")]
         public async Task<IActionResult> ReplyForCustomerTicket(CustomerTicketReplyResource request)
         {
-            var userDetail = await _userDetailsService.GetUserDetailsById(request.UserId);
+            var userDetail = await _userDetailsService.GetApplicationUserById(request.UserId);
             if (userDetail == null)
             {
                 return Ok(new
@@ -120,22 +123,28 @@ namespace wleepay.API.Controllers
                     message = "User does not exist",
                 });
             }
-            var ticketToUpdate = await _customerTicketsService.GetCustomerTicketsById(request.CustomerTicketId);
-            if(ticketToUpdate == null)
+            var ticket = await _customerTicketsService.GetCustomerTicketsById(request.CustomerTicketId);
+            if (ticket == null)
             {
                 return Ok(new
                 {
                     status = false,
-                    message = "Phone number does not exist.",
+                    message = "ticket does not exist.",
                 });
             }
-            ticketToUpdate.UpdatedDate = DateTime.UtcNow;
-            ticketToUpdate.Id = request.CustomerTicketId;
 
-            var tickets = await _customerTicketsService.AddUpdateCustomerTickets(ticketToUpdate);
-            if(tickets != null)
+            var notesToInsert = _mapper.Map<NotesResource, Notes>(request.Notes.FirstOrDefault());
+            var notes = await _notesService.AddUpdateNotes(notesToInsert);
+            if (notes != null)
             {
-                await _emailSender.ReplyForCustomerTicket(request.Notes.FirstOrDefault().Note, userDetail.ApplicationUser.Email, userDetail.FirstName);
+                if(ticket.CustomerContact == (int)CustomerServiceContactMethod.Email)
+                {
+                   await _emailSender.ReplyForCustomerTicket(request.Notes.FirstOrDefault().Note, userDetail.Email);
+                }
+                if (ticket.CustomerContact == (int)CustomerServiceContactMethod.Phone)
+                {
+                   _sMSService.replyCustomerForCustomerTicket(request.Notes.FirstOrDefault().Note, userDetail.PhoneNumber);
+                }
                 return Ok(new
                 {
                     status = true,
@@ -143,6 +152,56 @@ namespace wleepay.API.Controllers
                 });
             }
 
+            return BadRequest();
+        }
+
+        [HttpPost("CloseCustomerTicket")]
+        public async Task<IActionResult> CloseCustomerTicket(CustomerTicketCloseResource request)
+        {
+            //var userDetail = await _userDetailsService.GetApplicationUserById(request.UserId);
+            //if (userDetail == null)
+            //{
+            //    return Ok(new
+            //    {
+            //        status = false,
+            //        message = "User does not exist",
+            //    });
+            //}
+
+            var ticketToUpdated = await _customerTicketsService.GetCustomerTicketsById(request.CustomerTicketId);
+            if (ticketToUpdated == null)
+            {
+                return Ok(new
+                {
+                    status = false,
+                    message = "ticket does not exist.",
+                });
+            }
+
+            ticketToUpdated.Status = (int)CustomerTicketStatus.Closed;
+            ticketToUpdated.UpdatedDate = DateTime.UtcNow;
+
+            var tickets = await _customerTicketsService.AddUpdateCustomerTickets(ticketToUpdated);
+            if (tickets != null)
+            {
+                var message = "Customer ticked is closed successfully";
+                _sMSService.sendSmsForCustomerTicket(message, ticketToUpdated.PhoneNumber);
+                return Ok(new
+                {
+                    status = true,
+                    message = "Ticket is closed",
+                });
+
+            }
+
+            //if (ticket.CustomerContact == (int)CustomerServiceContactMethod.Email)
+            //{
+            //    await _emailSender.ReplyForCustomerTicket(request.Notes.FirstOrDefault().Note, userDetail.Email);
+            //}
+            //if (ticket.CustomerContact == (int)CustomerServiceContactMethod.Phone)
+            //{
+            //    _sMSService.replyCustomerForCustomerTicket(request.Notes.FirstOrDefault().Note, userDetail.PhoneNumber);
+            //}
             return BadRequest();
         }
     }

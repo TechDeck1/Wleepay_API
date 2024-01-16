@@ -21,6 +21,29 @@ namespace wleepay.Communication.Services
             _fromNumber = configuration.GetSection("Twillio:FromNumber").Value.ToString();
             TwilioClient.Init(accountSid, authToken);
         }
+
+        public string replyCustomerForCustomerTicket(string message, string phoneNumber)
+        {
+            try
+            {
+                var messageOptions = new CreateMessageOptions(
+                new PhoneNumber("+917730036110"));
+                messageOptions.From = new PhoneNumber("+17342704104");
+                messageOptions.Body = $"Dear Customer"+" "+ message;
+
+
+                var messageResponse = MessageResource.Create(messageOptions);
+                Console.WriteLine(messageResponse.Body);
+                var result = messageResponse.Status.ToString();
+                return result;
+            }
+            catch (Exception ex)
+            {
+
+                return ex.Message.ToString();
+            }
+        }
+
         public string sendMessage(string message, string phoneNumber)
         {
             try

@@ -155,6 +155,8 @@ namespace wleepay.API
             services.AddTransient<ITokenStorageService, TokenStorageService>();
             services.AddTransient<ISystemActivityLogsService, SystemActivityLogService>();
             services.AddTransient<ICustomerTicketsService, CustomerTicketsService>();
+            services.AddTransient<INotesService, NotesService>();
+
 
 
             //swagger config

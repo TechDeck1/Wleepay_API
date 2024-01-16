@@ -405,13 +405,13 @@ namespace wleepay.Communication.Services
             return true;
         }
 
-        public async Task<bool> ReplyForCustomerTicket(string Message, string email, string name)
+        public async Task<bool> ReplyForCustomerTicket(string Message, string email)
         {
             var subject = "Reply to customer For ticket generated";
             var recipientEmail = "ariel.ranjot@gmail.com";
             // var recipientEmail = email;
 
-            string template = $"Dear {name}\n\n {Message}";
+            string template = $"Dear Customer, \n\n {Message}";
 
             // Sender's email address and credentials
             string senderEmail = "mvctest17@gmail.com";
