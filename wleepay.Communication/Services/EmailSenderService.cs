@@ -405,5 +405,31 @@ namespace wleepay.Communication.Services
             return true;
         }
 
+        public async Task<bool> ReplyForCustomerTicket(string Message, string email, string name)
+        {
+            var subject = "Reply to customer For ticket generated";
+            var recipientEmail = "ariel.ranjot@gmail.com";
+            // var recipientEmail = email;
+
+            string template = $"Dear {name}\n\n {Message}";
+
+            // Sender's email address and credentials
+            string senderEmail = "mvctest17@gmail.com";
+            string senderPassword = "bqhyobxynxwbkteo"; // Use app-specific passwords or secure storage for passwords
+
+            // Create SMTP client
+            SmtpClient smtpClient = new SmtpClient("smtp.gmail.com"); // Use your SMTP server
+
+            // Port and SSL configuration
+            smtpClient.Port = 587; // Port for SMTP (e.g., 587 for Gmail)
+            smtpClient.EnableSsl = true;
+            smtpClient.UseDefaultCredentials = false;
+            smtpClient.Credentials = new NetworkCredential(senderEmail, senderPassword);
+
+            MailMessage mailMessage = new MailMessage(senderEmail, recipientEmail, subject, template);
+            smtpClient.Send(mailMessage);
+            
+            return true;
+        }
     }
 }

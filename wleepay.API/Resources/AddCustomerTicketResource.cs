@@ -9,7 +9,7 @@ namespace wleepay.API.Resources
         public int Id { get; set; }
         public string PhoneNumber { get; set; }
         public int IssueTypeId { get; set; }
-        public string CustomerContact { get; set; }
+        public int CustomerContact { get; set; }
         public int Status { get; set; }
         public string UserId { get; set; }
         public DateTime CreatedDate { get; set; }

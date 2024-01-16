@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.SqlServer.Management.Smo;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using wleepay.API.Resources;
 using wleepay.Communication.Interface;
@@ -23,6 +24,7 @@ namespace wleepay.API.Controllers
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IMapper _mapper;
         private readonly ISMSService _sMSService;
+        private readonly IEmailSender _emailSender;
 
 
         public CustomerTicketController(
@@ -30,7 +32,8 @@ namespace wleepay.API.Controllers
             UserManager<ApplicationUser> userManager,
             IMapper mapper,
             ISMSService sMSService,
-            IUserDetailService userDetailsService)
+            IUserDetailService userDetailsService,
+            IEmailSender emailSender)
         {
 
             _customerTicketsService = customerTickets;
@@ -38,6 +41,7 @@ namespace wleepay.API.Controllers
             _mapper = mapper;
             _sMSService = sMSService;
             _userDetailsService = userDetailsService;
+            _emailSender = emailSender;
         }
 
         [HttpPost("AddUpdateCustomerTickets")]
@@ -102,6 +106,44 @@ namespace wleepay.API.Controllers
         {
             var tickets = await _customerTicketsService.GetCustomerTicketsByPhoneNumber(request.PhoneNumber);
             return Ok(tickets);
+        }
+
+        [HttpPost("ReplyForCustomerTicket")]
+        public async Task<IActionResult> ReplyForCustomerTicket(CustomerTicketReplyResource request)
+        {
+            var userDetail = await _userDetailsService.GetUserDetailsById(request.UserId);
+            if (userDetail == null)
+            {
+                return Ok(new
+                {
+                    status = false,
+                    message = "User does not exist",
+                });
+            }
+            var ticketToUpdate = await _customerTicketsService.GetCustomerTicketsById(request.CustomerTicketId);
+            if(ticketToUpdate == null)
+            {
+                return Ok(new
+                {
+                    status = false,
+                    message = "Phone number does not exist.",
+                });
+            }
+            ticketToUpdate.UpdatedDate = DateTime.UtcNow;
+            ticketToUpdate.Id = request.CustomerTicketId;
+
+            var tickets = await _customerTicketsService.AddUpdateCustomerTickets(ticketToUpdate);
+            if(tickets != null)
+            {
+                await _emailSender.ReplyForCustomerTicket(request.Notes.FirstOrDefault().Note, userDetail.ApplicationUser.Email, userDetail.FirstName);
+                return Ok(new
+                {
+                    status = true,
+                    message = "Ticket is updated",
+                });
+            }
+
+            return BadRequest();
         }
     }
 }

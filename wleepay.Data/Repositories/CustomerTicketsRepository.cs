@@ -26,23 +26,37 @@ namespace wleepay.Data.Repositories
 
         public async Task<CustomerTickets> AddUpdateCustomerTickets(CustomerTickets customerTickets)
         {
-            var tickets = await WPContext.CustomerTickets.AddAsync(customerTickets);
-
-            if (customerTickets.Notes != null)
+            if (customerTickets.Id <= 0)
             {
-                foreach (var note in customerTickets.Notes)
-                {
-                    Notes CustomerNotes = new Notes();
-                    CustomerNotes.Note = note.ToString();
-                    CustomerNotes.CreatedDate = DateTime.UtcNow;
-                    CustomerNotes.CustomerTicketId = customerTickets.Id;
-                    CustomerNotes.IsDeleted= false;
-                    await WPContext.Notes.AddAsync(CustomerNotes);
+                await WPContext.CustomerTickets.AddAsync(customerTickets);
+                WPContext.SaveChanges();
 
-                }
+            }
+            else
+            {
+                var tickets = await WPContext.CustomerTickets.Where(x => x.Id == customerTickets.Id)
+                                                             .Include(x => x.Notes)
+                                                             .FirstOrDefaultAsync();
+                tickets.UpdatedDate = DateTime.UtcNow;
+
+                //if (customerTickets.Notes != null)
+                //{
+                //    foreach (var note in customerTickets.Notes)
+                //    {
+                //        Notes CustomerNotes = new Notes();
+                //        CustomerNotes.Note = note.ToString();
+                //        CustomerNotes.CreatedDate = DateTime.UtcNow;
+                //        CustomerNotes.CustomerTicketId = customerTickets.Id;
+                //        CustomerNotes.IsDeleted = false;
+                //        await WPContext.Notes.AddAsync(CustomerNotes);
+
+                //    }
+                //}
+
+                await WPContext.SaveChangesAsync();
             }
 
-            WPContext.SaveChanges();
+           
             return customerTickets;
 
         }
@@ -62,6 +76,15 @@ namespace wleepay.Data.Repositories
                                                     .Include(x => x.Notes)
                                                     .OrderByDescending(x => x.CreatedDate)
                                                     .ToListAsync();
+            return tickets;
+        }
+
+        public async Task<CustomerTickets> GetCustomerTicketsById(int Id)
+        {
+            // Assuming WPContext is a properly configured and disposed database context
+            var tickets = await WPContext.CustomerTickets.Where(x => x.Id == Id)
+                                                    .Include(x => x.Notes)
+                                                    .FirstOrDefaultAsync();
             return tickets;
         }
 
