@@ -30,8 +30,11 @@ namespace wleepay.Data.Configurations
 
             builder
               .Property(u => u.Note)
-              .HasMaxLength(250)
+              .HasMaxLength(500)
               .IsRequired();
+
+            builder
+             .Property(u => u.AddedBy);
 
 
             builder

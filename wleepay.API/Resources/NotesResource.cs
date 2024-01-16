@@ -9,6 +9,7 @@ namespace wleepay.API.Resources
         public int CustomerTicketId { get; set; }
         public DateTime CreatedDate { get; set; }
         public DateTime? UpdatedDate { get; set; }
+        public string AddedBy { get; set; }
         public bool IsDeleted { get; set; }
     }
 }
