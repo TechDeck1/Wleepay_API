@@ -28,18 +28,19 @@ namespace wleepay.Data.Repositories
         {
             var tickets = await WPContext.CustomerTickets.AddAsync(customerTickets);
 
-            //if (customerTickets.Notes != null)
-            //{
-            //    foreach (var note in customerTickets.Notes)
-            //    {
-            //        Notes CustomerNotes = new Notes();
-            //        CustomerNotes.Note = note.ToString();
-            //        CustomerNotes.CreatedDate = DateTime.UtcNow;
-            //        CustomerNotes.CustomerTicketId = customerTickets.Id;
-            //        await WPContext.Notes.AddAsync(CustomerNotes);
+            if (customerTickets.Notes != null)
+            {
+                foreach (var note in customerTickets.Notes)
+                {
+                    Notes CustomerNotes = new Notes();
+                    CustomerNotes.Note = note.ToString();
+                    CustomerNotes.CreatedDate = DateTime.UtcNow;
+                    CustomerNotes.CustomerTicketId = customerTickets.Id;
+                    CustomerNotes.IsDeleted= false;
+                    await WPContext.Notes.AddAsync(CustomerNotes);
 
-            //    }
-            //}
+                }
+            }
 
             WPContext.SaveChanges();
             return customerTickets;

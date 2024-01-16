@@ -11,6 +11,7 @@ namespace wleepay.API.Resources
         public int IssueTypeId { get; set; }
         public string CustomerContact { get; set; }
         public int Status { get; set; }
+        public string UserId { get; set; }
         public DateTime CreatedDate { get; set; }
         public DateTime? UpdatedDate { get; set; }
         public ICollection<NotesResource> Notes { get; set; }
