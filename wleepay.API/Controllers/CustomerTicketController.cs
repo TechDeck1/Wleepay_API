@@ -55,14 +55,14 @@ namespace wleepay.API.Controllers
         [HttpGet("GetAllCustomerTickets")]
         public async Task<IActionResult> GetAllCustomerTickets()
         {
-            var tickets = _customerTicketsService.GetAllCustomerTickets();
+            var tickets =await _customerTicketsService.GetAllCustomerTickets();
             return Ok(tickets);
         }
 
         [HttpPost("GetCustomerTicketsByPhone")]
         public async Task<IActionResult> GetCustomerTicketsByPhone(CustomerTicketRequest request)
         {
-            var tickets = _customerTicketsService.GetCustomerTicketsByPhoneNumber(request.PhoneNumber);
+            var tickets = await _customerTicketsService.GetCustomerTicketsByPhoneNumber(request.PhoneNumber);
             return Ok(tickets);
         }
     }

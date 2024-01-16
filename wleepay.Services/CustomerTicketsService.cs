@@ -24,15 +24,15 @@ namespace wleepay.Services
             return tickets;
         }
 
-        public IEnumerable<CustomerTickets> GetAllCustomerTickets()
+        public async Task<IEnumerable<CustomerTickets>> GetAllCustomerTickets()
         {
-            var tickets = _unitOfWork.CustomerTickets.GetAllCustomerTickets();
+            var tickets = await _unitOfWork.CustomerTickets.GetAllCustomerTickets();
             return tickets;
         }
 
-        public IEnumerable<CustomerTickets> GetCustomerTicketsByPhoneNumber(string phone)
+        public async Task<IEnumerable<CustomerTickets>> GetCustomerTicketsByPhoneNumber(string phone)
         {
-            var tickets = _unitOfWork.CustomerTickets.GetCustomerTicketsByPhoneNumber(phone);
+            var tickets =await _unitOfWork.CustomerTickets.GetCustomerTicketsByPhoneNumber(phone);
             return tickets;
         }
     }

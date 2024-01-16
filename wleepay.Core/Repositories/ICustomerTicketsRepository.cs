@@ -10,8 +10,8 @@ namespace wleepay.Core.Repositories
     {
 
         Task<CustomerTickets> AddUpdateCustomerTickets(CustomerTickets customerTickets);
-        IEnumerable<CustomerTickets> GetAllCustomerTickets();
-        IEnumerable<CustomerTickets> GetCustomerTicketsByPhoneNumber(string phone);
+        Task<IEnumerable<CustomerTickets>> GetAllCustomerTickets();
+        Task<IEnumerable<CustomerTickets>> GetCustomerTicketsByPhoneNumber(string phone);
 
 
     }

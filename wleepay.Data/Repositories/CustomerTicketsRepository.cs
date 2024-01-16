@@ -1,12 +1,15 @@
-﻿using DevExpress.Xpo;
+﻿using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using wleepay.Core.Enums;
 using wleepay.Core.Models;
 using wleepay.Core.Repositories;
 using wleepay.Data.Context;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.VisualBasic;
 
 namespace wleepay.Data.Repositories
 {
@@ -23,67 +26,42 @@ namespace wleepay.Data.Repositories
 
         public async Task<CustomerTickets> AddUpdateCustomerTickets(CustomerTickets customerTickets)
         {
-            try
-            {
-                var tickets = await WPContext.CustomerTickets.AddAsync(customerTickets);
+            var tickets = await WPContext.CustomerTickets.AddAsync(customerTickets);
 
-                //if (customerTickets.Notes != null)
-                //{
-                //    foreach (var note in customerTickets.Notes)
-                //    {
-                //        Notes CustomerNotes = new Notes();
-                //        CustomerNotes.Note = note.ToString();
-                //        CustomerNotes.CreatedDate = DateTime.UtcNow;
-                //        CustomerNotes.CustomerTicketId = customerTickets.Id;
-                //        await WPContext.Notes.AddAsync(CustomerNotes);
+            //if (customerTickets.Notes != null)
+            //{
+            //    foreach (var note in customerTickets.Notes)
+            //    {
+            //        Notes CustomerNotes = new Notes();
+            //        CustomerNotes.Note = note.ToString();
+            //        CustomerNotes.CreatedDate = DateTime.UtcNow;
+            //        CustomerNotes.CustomerTicketId = customerTickets.Id;
+            //        await WPContext.Notes.AddAsync(CustomerNotes);
 
-                //    }
-                //}
+            //    }
+            //}
 
-                WPContext.SaveChanges();
-                return customerTickets;
-
-            }
-            catch (Exception ex)
-            {
-
-                throw ex;
-            }
+            WPContext.SaveChanges();
+            return customerTickets;
 
         }
 
 
-        public  IEnumerable<CustomerTickets> GetAllCustomerTickets()
+        public async Task<IEnumerable<CustomerTickets>> GetAllCustomerTickets()
         {
-            try
-            {
-                var tickets =  WPContext.CustomerTickets.OrderByDescending(x=>x.CreatedDate).ToList();
-
-                return tickets;
-
-            }
-            catch (Exception ex)
-            {
-
-                throw ex;
-            }
+             var tickets = await  WPContext.CustomerTickets.Include(x=>x.Notes).OrderByDescending(x=>x.CreatedDate).ToListAsync();
+             return tickets;
 
         }
 
-        public IEnumerable<CustomerTickets> GetCustomerTicketsByPhoneNumber(string phone)
+        public async Task<IEnumerable<CustomerTickets>> GetCustomerTicketsByPhoneNumber(string phone)
         {
-            try
-            {
-                var tickets = WPContext.CustomerTickets.Where(x=>x.PhoneNumber == phone).OrderByDescending(x => x.CreatedDate).ToList();
-                return tickets;
-
-            }
-            catch (Exception ex)
-            {
-
-                throw ex;
-            }
-
+            // Assuming WPContext is a properly configured and disposed database context
+            var tickets = await WPContext.CustomerTickets.Where(x => x.PhoneNumber == phone)
+                                                    .Include(x => x.Notes)
+                                                    .OrderByDescending(x => x.CreatedDate)
+                                                    .ToListAsync();
+            return tickets;
         }
 
 
