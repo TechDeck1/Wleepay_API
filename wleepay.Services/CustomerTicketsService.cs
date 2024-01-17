@@ -4,6 +4,7 @@ using System.Security.AccessControl;
 using System.Text;
 using System.Threading.Tasks;
 using wleepay.Core;
+using wleepay.Core.DTO.Response;
 using wleepay.Core.Models;
 using wleepay.Core.Services;
 using static DevExpress.XtraPrinting.Native.PageSizeInfo;
@@ -24,15 +25,15 @@ namespace wleepay.Services
             return tickets;
         }
 
-        public async Task<IEnumerable<CustomerTickets>> GetAllCustomerTickets()
+        public async Task<CustomerServiceResponseResource> GetAllCustomerTickets(int pageIndex, int pageSize)
         {
-            var tickets = await _unitOfWork.CustomerTickets.GetAllCustomerTickets();
+            var tickets = await _unitOfWork.CustomerTickets.GetAllCustomerTickets(pageIndex , pageSize);
             return tickets;
         }
 
-        public async Task<IEnumerable<CustomerTickets>> GetCustomerTicketsByPhoneNumber(string phone)
+        public async Task<CustomerServiceResponseResource> GetCustomerTicketsByPhoneNumber(string phone, int pageIndex, int pageSize)
         {
-            var tickets =await _unitOfWork.CustomerTickets.GetCustomerTicketsByPhoneNumber(phone);
+            var tickets =await _unitOfWork.CustomerTickets.GetCustomerTicketsByPhoneNumber(phone, pageIndex , pageSize);
             return tickets;
         }
 

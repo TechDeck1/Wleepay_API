@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using wleepay.Core.DTO.Response;
 using wleepay.Core.Models;
 
 namespace wleepay.Core.Repositories
@@ -10,8 +11,8 @@ namespace wleepay.Core.Repositories
     {
 
         Task<CustomerTickets> AddUpdateCustomerTickets(CustomerTickets customerTickets);
-        Task<IEnumerable<CustomerTickets>> GetAllCustomerTickets();
-        Task<IEnumerable<CustomerTickets>> GetCustomerTicketsByPhoneNumber(string phone);
+        Task<CustomerServiceResponseResource> GetAllCustomerTickets(int pageIndex, int pageSize);
+        Task<CustomerServiceResponseResource> GetCustomerTicketsByPhoneNumber(string phone, int pageIndex, int pageSize);
         Task<CustomerTickets> GetCustomerTicketsById(int Id);
 
 

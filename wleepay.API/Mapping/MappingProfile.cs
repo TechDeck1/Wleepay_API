@@ -70,6 +70,8 @@ namespace wleepay.API.Mapping
 
             CreateMap<CustomerTickets, AddCustomerTicketResource>().ReverseMap();
             CreateMap<Notes, NotesResource>().ReverseMap();
+            CreateMap<IssueType, IssueTypeResource>().ReverseMap();
+
 
 
 

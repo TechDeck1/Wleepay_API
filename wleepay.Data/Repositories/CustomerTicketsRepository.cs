@@ -10,6 +10,8 @@ using wleepay.Core.Repositories;
 using wleepay.Data.Context;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.VisualBasic;
+using wleepay.Core.DTO.Response;
+using Microsoft.SqlServer.Management.Smo;
 
 namespace wleepay.Data.Repositories
 {
@@ -46,28 +48,57 @@ namespace wleepay.Data.Repositories
 
         }
 
-
-        public async Task<IEnumerable<CustomerTickets>> GetAllCustomerTickets()
+        public async Task<CustomerServiceResponseResource> GetAllCustomerTickets(int pageIndex, int pageSize)
         {
-             var tickets = await  WPContext.CustomerTickets.Include(x=>x.Notes).OrderByDescending(x=>x.CreatedDate).ToListAsync();
-             return tickets;
+            if (pageSize <= 0)
+            {
+                pageSize = 10;
+            }
+            int takeCount = pageSize;
+            int skipCount = pageIndex * pageSize;
+            var tickets = await  WPContext.CustomerTickets.Include(x=>x.Notes)
+                                                        .Include(x=>x.IssueType)
+                                                        .OrderByDescending(x=>x.CreatedDate)
+                                                        .Skip(skipCount)
+                                                        .Take(takeCount)
+                                                        .ToListAsync();
+            var totalCount = await WPContext.CustomerTickets.CountAsync();
+            CustomerServiceResponseResource customerServiceResponse = new CustomerServiceResponseResource();
+            customerServiceResponse.TotalCount=totalCount;
+            customerServiceResponse.CustomerTickets=tickets;
+            return customerServiceResponse;
 
         }
 
-        public async Task<IEnumerable<CustomerTickets>> GetCustomerTicketsByPhoneNumber(string phone)
+        public async Task<CustomerServiceResponseResource> GetCustomerTicketsByPhoneNumber(string phone, int pageIndex, int pageSize)
         {
-            // Assuming WPContext is a properly configured and disposed database context
+            if (pageSize <= 0)
+            {
+                pageSize = 10;
+            }
+            int takeCount = pageSize;
+            int skipCount = pageIndex * pageSize;
+
             var tickets = await WPContext.CustomerTickets.Where(x => x.PhoneNumber == phone)
                                                     .Include(x => x.Notes)
                                                     .Include(x=>x.IssueType)
                                                     .OrderByDescending(x => x.CreatedDate)
+                                                    .Skip(skipCount)
+                                                    .Take(takeCount)
                                                     .ToListAsync();
-            return tickets;
+
+            var totalCount = await WPContext.CustomerTickets.Where(x => x.PhoneNumber == phone).CountAsync();
+
+
+            CustomerServiceResponseResource customerServiceResponse = new CustomerServiceResponseResource();
+            customerServiceResponse.TotalCount = totalCount;
+            customerServiceResponse.CustomerTickets=tickets;
+
+            return customerServiceResponse;
         }
 
         public async Task<CustomerTickets> GetCustomerTicketsById(int Id)
         {
-            // Assuming WPContext is a properly configured and disposed database context
             var tickets = await WPContext.CustomerTickets.Where(x => x.Id == Id)
                                                     .Include(x => x.Notes)
                                                     .FirstOrDefaultAsync();

@@ -74,11 +74,11 @@ namespace wleepay.Data.Repositories
                 
                 .ToListAsync();
 
-            var TotalCount = await WPContext.Users.Where(s => s.UserRoles.FirstOrDefault().Role.Name == role.ToString()).CountAsync();
+            var totalCount = await WPContext.Users.Where(s => s.UserRoles.FirstOrDefault().Role.Name == role.ToString()).CountAsync();
 
             UserDetailsResponseResource response = new UserDetailsResponseResource();
             response.UserDetails = result;
-            response.TotalCount = TotalCount;
+            response.TotalCount = totalCount;
             return response;
         }
 
@@ -165,11 +165,11 @@ namespace wleepay.Data.Repositories
                     .Take(takeCount)
                     .ToListAsync();
 
-                var TotalCount = await WPContext.Users.Where(s => s.UserRoles.FirstOrDefault().Role.Name == role.ToString() && s.UserDetail.CreatedBy == createdBy).CountAsync();
+                var totalCount = await WPContext.Users.Where(s => s.UserRoles.FirstOrDefault().Role.Name == role.ToString() && s.UserDetail.CreatedBy == createdBy).CountAsync();
 
                 UserDetailsResponseResource response = new UserDetailsResponseResource();
                 response.UserDetails = result;
-                response.TotalCount = TotalCount;
+                response.TotalCount = totalCount;
 
                 return response;
 
@@ -188,11 +188,11 @@ namespace wleepay.Data.Repositories
                  .Where(s => s.UserRoles.FirstOrDefault().Role.Name == role.ToString() && s.UserDetail.CreatedBy == createdBy)
                  .ToListAsync();
 
-                var TotalCount = await WPContext.Users.Where(s => s.UserRoles.FirstOrDefault().Role.Name == role.ToString() && s.UserDetail.CreatedBy == createdBy).CountAsync();
+                var totalCount = await WPContext.Users.Where(s => s.UserRoles.FirstOrDefault().Role.Name == role.ToString() && s.UserDetail.CreatedBy == createdBy).CountAsync();
 
                 UserDetailsResponseResource response = new UserDetailsResponseResource();
                 response.UserDetails = result;
-                response.TotalCount = TotalCount;
+                response.TotalCount = totalCount;
 
                 return response;
             }
@@ -223,12 +223,12 @@ namespace wleepay.Data.Repositories
                 .Take(takeCount)
                 .ToListAsync();
 
-            var TotalCount = await WPContext.Users
+            var totalCount = await WPContext.Users
                               .Where(entity => entity.Email.Contains(email) && entity.UserRoles.FirstOrDefault().Role.Name == role.ToString()).CountAsync();
 
             UserDetailsResponseResource response = new UserDetailsResponseResource();
             response.UserDetails = result;
-            response.TotalCount = TotalCount;
+            response.TotalCount = totalCount;
 
             return response;
         }

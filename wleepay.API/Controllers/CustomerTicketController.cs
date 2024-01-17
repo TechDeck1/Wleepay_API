@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.SqlServer.Management.Smo;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using wleepay.API.Resources;
@@ -97,18 +98,31 @@ namespace wleepay.API.Controllers
            
         }
 
-        [HttpGet("GetAllCustomerTickets")]
-        public async Task<IActionResult> GetAllCustomerTickets()
+        [HttpPost("GetAllCustomerTickets")]
+        public async Task<IActionResult> GetAllCustomerTickets(Pagination pagination)
         {
-            var tickets =await _customerTicketsService.GetAllCustomerTickets();
-            return Ok(tickets);
+            var tickets = await _customerTicketsService.GetAllCustomerTickets(pagination.Index, pagination.Size);
+            var customerTicketsToInsert = _mapper.Map<IEnumerable<CustomerTickets>, IEnumerable<AddCustomerTicketResource>>(tickets.CustomerTickets);
+
+            return Ok(new 
+            {
+                totalCount=tickets.TotalCount,
+                customerTickets= customerTicketsToInsert
+            });
+
         }
 
         [HttpPost("GetCustomerTicketsByPhone")]
         public async Task<IActionResult> GetCustomerTicketsByPhone(CustomerTicketRequest request)
         {
-            var tickets = await _customerTicketsService.GetCustomerTicketsByPhoneNumber(request.PhoneNumber);
-            return Ok(tickets);
+            var tickets = await _customerTicketsService.GetCustomerTicketsByPhoneNumber(request.PhoneNumber, request.PageIndex, request.PageSize);
+            var customerTicketsToInsert = _mapper.Map<IEnumerable<CustomerTickets>, IEnumerable<AddCustomerTicketResource>>(tickets.CustomerTickets);
+
+            return Ok(new
+            {
+                totalCount = tickets.TotalCount,
+                customerTickets = customerTicketsToInsert
+            });
         }
 
         [HttpPost("ReplyForCustomerTicket")]
@@ -158,16 +172,6 @@ namespace wleepay.API.Controllers
         [HttpPost("CloseCustomerTicket")]
         public async Task<IActionResult> CloseCustomerTicket(CustomerTicketCloseResource request)
         {
-            //var userDetail = await _userDetailsService.GetApplicationUserById(request.UserId);
-            //if (userDetail == null)
-            //{
-            //    return Ok(new
-            //    {
-            //        status = false,
-            //        message = "User does not exist",
-            //    });
-            //}
-
             var ticketToUpdated = await _customerTicketsService.GetCustomerTicketsById(request.CustomerTicketId);
             if (ticketToUpdated == null)
             {
