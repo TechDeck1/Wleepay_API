@@ -5,8 +5,6 @@ using wleepay.API.Resources;
 
 namespace wleepay.API.Controllers
 {
-    [Route("api/[controller]")]
-    [ApiController]
     public class SystemActivityController : Controller
     {
 
@@ -35,7 +33,7 @@ namespace wleepay.API.Controllers
         }
 
         [HttpGet("SystemLogsById")]
-        public async Task<IActionResult> GetSystemLogsById(SystemLogsPagination request)
+        public async Task<IActionResult> GetSystemLogsById([FromQuery]SystemLogsPagination request)
         {
             var logs = await _systemActivityLogsService.GetAllSystemById(request.UserId, request.Index , request.Size);
             return Ok(logs);
