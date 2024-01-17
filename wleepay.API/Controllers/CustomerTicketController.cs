@@ -216,7 +216,7 @@ namespace wleepay.API.Controllers
                 }
 
                 var message = "Customer ticked is closed successfully";
-                _sMSService.sendSmsToCustomerForTicketClose(message, ticketToUpdated.PhoneNumber);
+                _sMSService.sendSmsForCustomerTicket(message, ticketToUpdated.PhoneNumber);
                 return Ok(new
                 {
                     status = true,
