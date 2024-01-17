@@ -586,11 +586,13 @@ namespace wleepay.API.Controllers
                 {
                     //generated the token
                     var token = await _userManager.GeneratePasswordResetTokenAsync(user);
-
+                    var secretKey = _configuration.GetSection("SecretKeyForEncryptAndDecrypt").Value; //secret key
+                    string encryptedEmail = Encrypt(forgotPasswordDto.Email, secretKey);
+                    var EncodedEncryptedEmail = HttpUtility.UrlEncode(encryptedEmail);
                     var encodedToken = HttpUtility.UrlEncode(token);
 
                     // Created callback url
-                    string callbackUrl = $"{forgotPasswordDto.ClientURI}?token={encodedToken}&email={(forgotPasswordDto.Email)}";
+                    string callbackUrl = $"{forgotPasswordDto.ClientURI}?token={encodedToken}&email={(EncodedEncryptedEmail)}";
 
                     var username = userDetails.FirstName + " " + userDetails.LastName;
 
@@ -630,8 +632,11 @@ namespace wleepay.API.Controllers
             if (!ModelState.IsValid)
                 return BadRequest();
 
+            var secretKey = _configuration.GetSection("SecretKeyForEncryptAndDecrypt").Value; //secret key
+            string decryptedEmail = Decrypt(resetPasswordDto.Email, secretKey); // helper function for decryption
+
             //get user by email
-            var user = await _userManager.FindByEmailAsync(resetPasswordDto.Email);
+            var user = await _userManager.FindByEmailAsync(decryptedEmail);
             var tokenStorage = await _tokenStorageService.GetTokenStorageById(user.Id);
 
             var expiryDate = tokenStorage.ExpirationTime;
@@ -657,8 +662,8 @@ namespace wleepay.API.Controllers
                 if (updatedDetail.Succeeded)
                 {
                     // send email to staff and admin for password change
-                    await _emailSender.SendPasswordChangeEmailToSystemAdminstrator(resetPasswordDto.Email, userDetails.FirstName, user.PhoneNumber);
-                    await _emailSender.SendPasswordChangeEmailToStaff(resetPasswordDto.Email, userDetails.FirstName, userDetails.PhoneNumber);
+                    await _emailSender.SendPasswordChangeEmailToSystemAdminstrator(decryptedEmail, userDetails.FirstName, user.PhoneNumber);
+                    await _emailSender.SendPasswordChangeEmailToStaff(decryptedEmail, userDetails.FirstName, userDetails.PhoneNumber);
 
                     // return response
                     return Ok(new
@@ -681,7 +686,7 @@ namespace wleepay.API.Controllers
         [HttpPost("LoginSetup")]
         public async Task<IActionResult> SetupLoginPassword([FromBody] SetupLoginResources setupLogin)
         {
-            var secretKey = _configuration.GetSection("SecretKey").Value; //secret key
+            var secretKey = _configuration.GetSection("SecretKeyForEncryptAndDecrypt").Value; //secret key
             string decryptedEmail = Decrypt(setupLogin.Email, secretKey); // helper function for decryption
 
             var user = await _userManager.FindByEmailAsync(decryptedEmail);
@@ -759,7 +764,7 @@ namespace wleepay.API.Controllers
         [HttpPost("AccountAlreadySetup")]
         public async Task<IActionResult> CheckIfAccountAlreadySetup(AccountExistVerificationResource resource)
         {
-            var secretKey = _configuration.GetSection("SecretKey").Value; //secret key for decryption
+            var secretKey = _configuration.GetSection("SecretKeyForEncryptAndDecrypt").Value; //secret key for decryption
             string decryptedEmail = Decrypt(resource.Email, secretKey);
             var user = await _userManager.FindByEmailAsync(decryptedEmail); //Get user details by email
             if (user == null)
@@ -797,8 +802,11 @@ namespace wleepay.API.Controllers
             if (!ModelState.IsValid)
                 return BadRequest();
 
+            var secretKey = _configuration.GetSection("SecretKeyForEncryptAndDecrypt").Value; //secret key
+            string decryptedEmail = Decrypt(resource.Email, secretKey); // helper function for decryption
+
             //get user by email
-            var user = await _userManager.FindByEmailAsync(resource.Email);
+            var user = await _userManager.FindByEmailAsync(decryptedEmail);
             var tokenStorage = await _tokenStorageService.GetTokenStorageById(user.Id);
 
             var expiryDate = tokenStorage.ExpirationTime;

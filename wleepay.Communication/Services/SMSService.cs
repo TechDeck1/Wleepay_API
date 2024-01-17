@@ -76,6 +76,28 @@ namespace wleepay.Communication.Services
         {
             try
             {
+                    var messageOptions = new CreateMessageOptions(
+                    new PhoneNumber("+917730036110"));
+                    messageOptions.From = new PhoneNumber("+17342704104");
+                    messageOptions.Body = message;
+
+
+                    var messageResponse = MessageResource.Create(messageOptions);
+                    Console.WriteLine(messageResponse.Body);
+                    var result = messageResponse.Status.ToString();
+                    return result;
+            }
+            catch (Exception ex)
+            {
+
+                return ex.Message.ToString();
+            }
+        }
+
+        public string sendSmsForAccountDeactivation(string message, string phoneNumber)
+        {
+            try
+            {
                 var messageOptions = new CreateMessageOptions(
                 new PhoneNumber("+917730036110"));
                 messageOptions.From = new PhoneNumber("+17342704104");

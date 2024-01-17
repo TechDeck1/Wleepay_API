@@ -22,8 +22,16 @@ namespace wleepay.API.Controllers
         [HttpGet("SystemLogs")]
         public async Task<IActionResult> GetSystemAllLogs(Pagination request)
         {
-            var logs =await _systemActivityLogsService.GetAllSystemLogs(request.Index, request.Size);
-            return Ok(logs);
+            if (!string.IsNullOrEmpty(request.Email))
+            {
+                var logs = await _systemActivityLogsService.FilterLogsByEmail(request.Email, request.Index, request.Size);
+                return Ok(logs);
+            }
+            else
+            {
+                var logs = await _systemActivityLogsService.GetAllSystemLogs(request.Index, request.Size);
+                return Ok(logs);
+            }
         }
 
         [HttpGet("SystemLogsById")]
