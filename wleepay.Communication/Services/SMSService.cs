@@ -72,7 +72,7 @@ namespace wleepay.Communication.Services
             }
         }
 
-        public string sendSmsForCustomerTicket(string message, string phoneNumber)
+        public string sendSmsToCustomerForTicketClose(string message, string phoneNumber)
         {
             try
             {

@@ -147,22 +147,20 @@ namespace wleepay.API.Controllers
                 });
             }
 
-            var notesToInsert = _mapper.Map<NotesResource, Notes>(request.Notes.FirstOrDefault());
-            var notes = await _notesService.AddUpdateNotes(notesToInsert);
-            if (notes != null)
+            if (request.Note != null)
             {
-                if(ticket.CustomerContact == (int)CustomerServiceContactMethod.Email)
+                if (ticket.CustomerContact == (int)CustomerServiceContactMethod.Email)
                 {
-                   await _emailSender.ReplyForCustomerTicket(request.Notes.FirstOrDefault().Note, userDetail.Email);
+                    await _emailSender.ReplyForCustomerTicket(request.Note, userDetail.Email);
                 }
                 if (ticket.CustomerContact == (int)CustomerServiceContactMethod.Phone)
                 {
-                   _sMSService.replyCustomerForCustomerTicket(request.Notes.FirstOrDefault().Note, userDetail.PhoneNumber);
+                    _sMSService.replyCustomerForCustomerTicket(request.Note, userDetail.PhoneNumber);
                 }
                 return Ok(new
                 {
                     status = true,
-                    message = "Ticket is updated",
+                    message = "Reply sent!",
                 });
             }
 
@@ -172,6 +170,16 @@ namespace wleepay.API.Controllers
         [HttpPost("CloseCustomerTicket")]
         public async Task<IActionResult> CloseCustomerTicket(CustomerTicketCloseResource request)
         {
+            var userDetail = await _userDetailsService.GetApplicationUserById(request.UserId);
+            if (userDetail == null)
+            {
+                return Ok(new
+                {
+                    status = false,
+                    message = "User does not exist",
+                });
+            }
+
             var ticketToUpdated = await _customerTicketsService.GetCustomerTicketsById(request.CustomerTicketId);
             if (ticketToUpdated == null)
             {
@@ -184,12 +192,31 @@ namespace wleepay.API.Controllers
 
             ticketToUpdated.Status = (int)CustomerTicketStatus.Closed;
             ticketToUpdated.UpdatedDate = DateTime.UtcNow;
-
             var tickets = await _customerTicketsService.AddUpdateCustomerTickets(ticketToUpdated);
+
             if (tickets != null)
             {
+                var notesToInsert = _mapper.Map<NotesResource, Notes>(request.Notes.FirstOrDefault());
+                var notes = await _notesService.AddUpdateNotes(notesToInsert);
+                if (notes != null)
+                {
+                    if (tickets.CustomerContact == (int)CustomerServiceContactMethod.Email)
+                    {
+                        await _emailSender.ReplyForCustomerTicket(request.Notes.FirstOrDefault().Note, userDetail.Email);
+                    }
+                    if (tickets.CustomerContact == (int)CustomerServiceContactMethod.Phone)
+                    {
+                        _sMSService.replyCustomerForCustomerTicket(request.Notes.FirstOrDefault().Note, userDetail.PhoneNumber);
+                    }
+                    return Ok(new
+                    {
+                        status = true,
+                        message = "Ticket is updated",
+                    });
+                }
+
                 var message = "Customer ticked is closed successfully";
-                _sMSService.sendSmsForCustomerTicket(message, ticketToUpdated.PhoneNumber);
+                _sMSService.sendSmsToCustomerForTicketClose(message, ticketToUpdated.PhoneNumber);
                 return Ok(new
                 {
                     status = true,
@@ -198,14 +225,6 @@ namespace wleepay.API.Controllers
 
             }
 
-            //if (ticket.CustomerContact == (int)CustomerServiceContactMethod.Email)
-            //{
-            //    await _emailSender.ReplyForCustomerTicket(request.Notes.FirstOrDefault().Note, userDetail.Email);
-            //}
-            //if (ticket.CustomerContact == (int)CustomerServiceContactMethod.Phone)
-            //{
-            //    _sMSService.replyCustomerForCustomerTicket(request.Notes.FirstOrDefault().Note, userDetail.PhoneNumber);
-            //}
             return BadRequest();
         }
     }

@@ -7,6 +7,6 @@ namespace wleepay.API.Resources
     {
         public int CustomerTicketId { get; set; }
         public string UserId { get; set; }
-        public ICollection<NotesResource> Notes { get; set; }
+        public string Note { get; set; }
     }
 }
