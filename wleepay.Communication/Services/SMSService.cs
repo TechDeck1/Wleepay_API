@@ -34,8 +34,8 @@ namespace wleepay.Communication.Services
 
                 //return messageRes.Status.ToString();
                 var messageOptions = new CreateMessageOptions(
-                new PhoneNumber("+917730036110"));
-                messageOptions.From = new PhoneNumber("+17342704104");
+                new PhoneNumber("+917018519190"));
+                messageOptions.From = new PhoneNumber("+18312194108");
                 messageOptions.Body = message;
 
 
@@ -55,8 +55,8 @@ namespace wleepay.Communication.Services
             try
             {
                     var messageOptions = new CreateMessageOptions(
-                    new PhoneNumber("+917730036110"));
-                    messageOptions.From = new PhoneNumber("+17342704104");
+                    new PhoneNumber("+917018519190"));
+                    messageOptions.From = new PhoneNumber("+18312194108");
                     messageOptions.Body = $"Dear Customer" + " " + message;
 
 
@@ -77,8 +77,8 @@ namespace wleepay.Communication.Services
             try
             {
                 var messageOptions = new CreateMessageOptions(
-                new PhoneNumber("+917730036110"));
-                messageOptions.From = new PhoneNumber("+17342704104");
+                new PhoneNumber("+917018519190"));
+                messageOptions.From = new PhoneNumber("+18312194108");
                 messageOptions.Body = message;
 
 
