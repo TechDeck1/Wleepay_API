@@ -8,6 +8,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using wleepay.API.Resources;
 using wleepay.Communication.Interface;
+using wleepay.Communication.Templates;
 using wleepay.Core.Enums;
 using wleepay.Core.Models;
 using wleepay.Core.Services;
@@ -27,6 +28,8 @@ namespace wleepay.API.Controllers
         private readonly ISMSService _sMSService;
         private readonly IEmailSender _emailSender;
         private readonly INotesService _notesService;
+        private readonly IWhatsAppService _whatsAppService;
+
 
 
         public CustomerTicketController(
@@ -36,7 +39,8 @@ namespace wleepay.API.Controllers
             ISMSService sMSService,
             IUserDetailService userDetailsService,
             IEmailSender emailSender,
-            INotesService notesService)
+            INotesService notesService,
+            IWhatsAppService whatsAppService)
         {
 
             _customerTicketsService = customerTickets;
@@ -46,6 +50,7 @@ namespace wleepay.API.Controllers
             _userDetailsService = userDetailsService;
             _emailSender = emailSender;
             _notesService = notesService;
+            _whatsAppService = whatsAppService;
         }
 
         [HttpPost("AddUpdateCustomerTickets")]
@@ -53,13 +58,13 @@ namespace wleepay.API.Controllers
         {
             try
             {
-                var userDetail = await _userDetailsService.GetUserDetailsById(customerTickets.UserId);
+                var userDetail = await _userDetailsService.GetApplicationUserById(customerTickets.UserId);
                 if (userDetail == null)
                 {
                     return Ok(new
                     {
                         status = false,
-                        message = "User does not exist",
+                        message = Messages.NotFound
                     });
                 }
                 if (userDetail.PhoneNumber != customerTickets.PhoneNumber)
@@ -67,7 +72,7 @@ namespace wleepay.API.Controllers
                     return Ok(new
                     {
                         status = false,
-                        message = "Phone number does not exist. please enter registered number",
+                        message = Messages.PhoneNumberNotExisted.ToString(),
                     });
                 }
 
@@ -78,13 +83,26 @@ namespace wleepay.API.Controllers
                 var tickets = await _customerTicketsService.AddUpdateCustomerTickets(customerTicketsToInsert);
                 if (tickets != null)
                 {
-                    var message = "Customer ticked is created successfully. you will be noticed further";
-                    _sMSService.sendSmsForCustomerTicket(message, customerTickets.PhoneNumber);
+                    var message = MessagesTemplates.CustomerTicketClosedMessage(tickets.IssueType.Type, tickets.Id);
+
+                    if (tickets.CustomerContact == (int)CustomerServiceContactMethod.Email)
+                    {
+                        await _emailSender.ReplyForCustomerTicket(message, userDetail.Email);
+                    }
+                    if (tickets.CustomerContact == (int)CustomerServiceContactMethod.Phone)
+                    {
+                        _sMSService.sendSmsForCustomerTicket(message, customerTickets.PhoneNumber);
+                    }
+                    if (tickets.CustomerContact == (int)CustomerServiceContactMethod.Whatsapp)
+                    {
+                        _whatsAppService.sendMessageForCustomerTicket(message, userDetail.PhoneNumber);
+                    }
+                   
                 }
                 return Ok(new
                 {
                     status = true,
-                    message = "Customer ticket is succesfully generated",
+                    message = Messages.CustomerTicketCreated.ToString()
                 });
             }
             catch (Exception ex)
@@ -134,7 +152,7 @@ namespace wleepay.API.Controllers
                 return Ok(new
                 {
                     status = false,
-                    message = "User does not exist",
+                    message = Messages.NotFound
                 });
             }
             var ticket = await _customerTicketsService.GetCustomerTicketsById(request.CustomerTicketId);
@@ -143,7 +161,7 @@ namespace wleepay.API.Controllers
                 return Ok(new
                 {
                     status = false,
-                    message = "ticket does not exist.",
+                    message = Messages.TicketNotFound
                 });
             }
 
@@ -155,12 +173,16 @@ namespace wleepay.API.Controllers
                 }
                 if (ticket.CustomerContact == (int)CustomerServiceContactMethod.Phone)
                 {
-                    _sMSService.replyCustomerForCustomerTicket(request.Note, userDetail.PhoneNumber);
+                    _sMSService.sendSmsForCustomerTicket(request.Note, userDetail.PhoneNumber);
+                }
+                if (ticket.CustomerContact == (int)CustomerServiceContactMethod.Whatsapp)
+                {
+                    _whatsAppService.sendMessageForCustomerTicket(request.Note, userDetail.PhoneNumber);
                 }
                 return Ok(new
                 {
                     status = true,
-                    message = "Reply sent!",
+                    message = Messages.MessageSent,
                 });
             }
 
@@ -176,7 +198,7 @@ namespace wleepay.API.Controllers
                 return Ok(new
                 {
                     status = false,
-                    message = "User does not exist",
+                    message = Messages.NotFound
                 });
             }
 
@@ -186,7 +208,7 @@ namespace wleepay.API.Controllers
                 return Ok(new
                 {
                     status = false,
-                    message = "ticket does not exist.",
+                    message = Messages.TicketNotFound
                 });
             }
 
@@ -197,30 +219,38 @@ namespace wleepay.API.Controllers
             if (tickets != null)
             {
                 var notesToInsert = _mapper.Map<NotesResource, Notes>(request.Notes.FirstOrDefault());
+                notesToInsert.CustomerTicketId = request.CustomerTicketId;
                 var notes = await _notesService.AddUpdateNotes(notesToInsert);
+                var message = MessagesTemplates.CustomerTicketClosedMessage(ticketToUpdated.IssueType.Type, ticketToUpdated.Id);
+
                 if (notes != null)
                 {
+
                     if (tickets.CustomerContact == (int)CustomerServiceContactMethod.Email)
                     {
-                        await _emailSender.ReplyForCustomerTicket(request.Notes.FirstOrDefault().Note, userDetail.Email);
+                        await _emailSender.ReplyForCustomerTicket(message, userDetail.Email);
                     }
                     if (tickets.CustomerContact == (int)CustomerServiceContactMethod.Phone)
                     {
-                        _sMSService.replyCustomerForCustomerTicket(request.Notes.FirstOrDefault().Note, userDetail.PhoneNumber);
+                        _sMSService.sendSmsForCustomerTicket(message, userDetail.PhoneNumber);
+                    }
+                    if (tickets.CustomerContact == (int)CustomerServiceContactMethod.Whatsapp)
+                    {
+                        _whatsAppService.sendMessageForCustomerTicket(message, userDetail.PhoneNumber);
                     }
                     return Ok(new
                     {
                         status = true,
-                        message = "Ticket is updated",
+                        message = Messages.TicketUpdated
                     });
                 }
 
-                var message = "Customer ticked is closed successfully";
                 _sMSService.sendSmsForCustomerTicket(message, ticketToUpdated.PhoneNumber);
+                
                 return Ok(new
                 {
                     status = true,
-                    message = "Ticket is closed",
+                    message = Messages.TicketClosed,
                 });
 
             }

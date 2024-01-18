@@ -10,7 +10,7 @@ namespace wleepay.Core.Enums
         [Description("User is succesfully logged in")] SuccessfullyLoggedIn,
         [Description("You have 3 failed login attemps. Your Wleepay portal account is locked. You must contact system administrator to unlock your account")] AccountLocked,
         [Description("Your Account is de-activated, please Contact to your system adminintrator.")] AccountDeActivated,
-        [Description("No user found.")] NotFound,
+        [Description("This user does not exist in the system. Please enter the registered phone number.")] NotFound,
         [Description("Invalid login request.")] BadRequest,
         [Description("Your account is unlocked by system administrator.")] UnlockAccount,
         [Description("Verification is successfull")] VerificationSuccessfull,
@@ -31,6 +31,13 @@ namespace wleepay.Core.Enums
         [Description("please reset your password")] LinkExpired,
         [Description("please reset your password")] ResetPassword,
         [Description("The above Wleepay staff’s portal account is now DeActivated.")] AccountDeactivated,
+        [Description("Phone number does not exist. please enter registered number.")] PhoneNumberNotExisted,
+        [Description("Customer ticked is created successfully")] CustomerTicketCreated,
+        [Description("No Ticket found.")] TicketNotFound,
+        [Description("Message is sent!")] MessageSent,
+        [Description("Ticket is closed!")] TicketClosed,
+        [Description("Ticket is updated!")] TicketUpdated,
+
 
 
     }
