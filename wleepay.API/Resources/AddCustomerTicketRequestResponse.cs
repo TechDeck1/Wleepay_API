@@ -1,10 +1,9 @@
 ﻿using System.Collections.Generic;
 using System;
-using wleepay.Core.Models;
 
 namespace wleepay.API.Resources
 {
-    public class AddCustomerTicketResource
+    public class AddCustomerTicketRequestResponse
     {
         public int Id { get; set; }
         public string PhoneNumber { get; set; }
@@ -15,7 +14,5 @@ namespace wleepay.API.Resources
         public DateTime CreatedDate { get; set; }
         public DateTime? UpdatedDate { get; set; }
         public ICollection<NotesResource> Notes { get; set; }
-        public IssueTypeResource IssueType { get; set; }
-
     }
 }

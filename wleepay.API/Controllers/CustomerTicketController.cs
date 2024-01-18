@@ -49,7 +49,7 @@ namespace wleepay.API.Controllers
         }
 
         [HttpPost("AddUpdateCustomerTickets")]
-        public async Task<IActionResult> AddUpdateCustomerTickets(AddCustomerTicketResource customerTickets)
+        public async Task<IActionResult> AddUpdateCustomerTickets(AddCustomerTicketRequestResponse customerTickets)
         {
             try
             {
@@ -73,7 +73,7 @@ namespace wleepay.API.Controllers
 
                 customerTickets.Status = (int)CustomerTicketStatus.Open;
                 customerTickets.CreatedDate = DateTime.UtcNow;
-                var customerTicketsToInsert = _mapper.Map<AddCustomerTicketResource, CustomerTickets>(customerTickets);
+                var customerTicketsToInsert = _mapper.Map<AddCustomerTicketRequestResponse, CustomerTickets>(customerTickets);
 
                 var tickets = await _customerTicketsService.AddUpdateCustomerTickets(customerTicketsToInsert);
                 if (tickets != null)
@@ -99,10 +99,10 @@ namespace wleepay.API.Controllers
         }
 
         [HttpPost("GetAllCustomerTickets")]
-        public async Task<IActionResult> GetAllCustomerTickets(Pagination pagination)
+        public async Task<IActionResult> GetAllCustomerTickets(CustomerTicketRequest request)
         {
-            var tickets = await _customerTicketsService.GetAllCustomerTickets(pagination.Index, pagination.Size);
-            var customerTicketsToInsert = _mapper.Map<IEnumerable<CustomerTickets>, IEnumerable<AddCustomerTicketResource>>(tickets.CustomerTickets);
+            var tickets = await _customerTicketsService.GetAllCustomerTickets(request.PhoneNumber, request.PageIndex, request.PageSize);
+            var customerTicketsToInsert = _mapper.Map<IEnumerable<CustomerTickets>, IEnumerable<AddCustomerTicketResponseResource>>(tickets.CustomerTickets);
 
             return Ok(new 
             {
@@ -116,7 +116,7 @@ namespace wleepay.API.Controllers
         public async Task<IActionResult> GetCustomerTicketsByPhone(CustomerTicketRequest request)
         {
             var tickets = await _customerTicketsService.GetCustomerTicketsByPhoneNumber(request.PhoneNumber, request.PageIndex, request.PageSize);
-            var customerTicketsToInsert = _mapper.Map<IEnumerable<CustomerTickets>, IEnumerable<AddCustomerTicketResource>>(tickets.CustomerTickets);
+            var customerTicketsToInsert = _mapper.Map<IEnumerable<CustomerTickets>, IEnumerable<AddCustomerTicketResponseResource>>(tickets.CustomerTickets);
 
             return Ok(new
             {
