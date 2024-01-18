@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using wleepay.API.Resources;
 using wleepay.Communication.Interface;
 using wleepay.Communication.Templates;
+using wleepay.Core.Common;
 using wleepay.Core.Enums;
 using wleepay.Core.Models;
 using wleepay.Core.Services;
@@ -64,7 +65,7 @@ namespace wleepay.API.Controllers
                     return Ok(new
                     {
                         status = false,
-                        message = Messages.NotFound
+                        message = Messages.NotFound.ToDescriptionString()
                     });
                 }
                 if (userDetail.PhoneNumber != customerTickets.PhoneNumber)
@@ -72,7 +73,7 @@ namespace wleepay.API.Controllers
                     return Ok(new
                     {
                         status = false,
-                        message = Messages.PhoneNumberNotExisted.ToString(),
+                        message = Messages.PhoneNumberNotExisted.ToDescriptionString(),
                     });
                 }
 
@@ -102,7 +103,7 @@ namespace wleepay.API.Controllers
                 return Ok(new
                 {
                     status = true,
-                    message = Messages.CustomerTicketCreated.ToString()
+                    message = Messages.CustomerTicketCreated.ToDescriptionString()
                 });
             }
             catch (Exception ex)
@@ -152,7 +153,7 @@ namespace wleepay.API.Controllers
                 return Ok(new
                 {
                     status = false,
-                    message = Messages.NotFound
+                    message = Messages.NotFound.ToDescriptionString()
                 });
             }
             var ticket = await _customerTicketsService.GetCustomerTicketsById(request.CustomerTicketId);
@@ -161,7 +162,7 @@ namespace wleepay.API.Controllers
                 return Ok(new
                 {
                     status = false,
-                    message = Messages.TicketNotFound
+                    message = Messages.TicketNotFound.ToDescriptionString()
                 });
             }
 
@@ -182,7 +183,7 @@ namespace wleepay.API.Controllers
                 return Ok(new
                 {
                     status = true,
-                    message = Messages.MessageSent,
+                    message = Messages.MessageSent.ToDescriptionString(),
                 });
             }
 
@@ -198,7 +199,7 @@ namespace wleepay.API.Controllers
                 return Ok(new
                 {
                     status = false,
-                    message = Messages.NotFound
+                    message = Messages.NotFound.ToDescriptionString()
                 });
             }
 
@@ -208,7 +209,7 @@ namespace wleepay.API.Controllers
                 return Ok(new
                 {
                     status = false,
-                    message = Messages.TicketNotFound
+                    message = Messages.TicketNotFound.ToDescriptionString()
                 });
             }
 
@@ -241,7 +242,7 @@ namespace wleepay.API.Controllers
                     return Ok(new
                     {
                         status = true,
-                        message = Messages.TicketUpdated
+                        message = Messages.TicketUpdated.ToDescriptionString()
                     });
                 }
 
@@ -250,7 +251,7 @@ namespace wleepay.API.Controllers
                 return Ok(new
                 {
                     status = true,
-                    message = Messages.TicketClosed,
+                    message = Messages.TicketClosed.ToDescriptionString(),
                 });
 
             }
