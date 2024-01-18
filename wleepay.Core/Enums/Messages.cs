@@ -32,11 +32,11 @@ namespace wleepay.Core.Enums
         [Description("please reset your password")] ResetPassword,
         [Description("The above Wleepay staff’s portal account is now DeActivated.")] AccountDeactivated,
         [Description("Phone number does not exist. please enter registered number.")] PhoneNumberNotExisted,
-        [Description("Customer ticked is created successfully")] CustomerTicketCreated,
+        [Description("Support ticket has been created.")] CustomerTicketCreated,
         [Description("No Ticket found.")] TicketNotFound,
         [Description("Message is sent!")] MessageSent,
-        [Description("Ticket is closed!")] TicketClosed,
-        [Description("Ticket is updated!")] TicketUpdated,
+        [Description("Ticket has been closed.")] TicketClosed,
+        [Description("Ticket has been updated.")] TicketUpdated,
 
 
 

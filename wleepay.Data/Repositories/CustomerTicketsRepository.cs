@@ -120,6 +120,7 @@ namespace wleepay.Data.Repositories
         {
             var tickets = await WPContext.CustomerTickets.Where(x => x.Id == Id)
                                                     .Include(x => x.Notes)
+                                                    .Include(x => x.IssueType)
                                                     .FirstOrDefaultAsync();
             return tickets;
         }

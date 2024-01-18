@@ -40,12 +40,12 @@ namespace wleepay.Communication.Templates
 
         public static string CustomerTicketClosedMessage(string issueType, int ticketId)
         {
-            return $"Your Customer ticket for {issueType} with ticket id #{ticketId} is closed successfully";
+            return $"Your Customer ticket for {issueType} with ticket id #{ticketId} is closed.";
         }
 
         public static string CustomerTicketCreatedMessage(string issueType, int ticketId)
         {
-            return $"Your Customer ticket for {issueType} with ticket id #{ticketId} is Created successfully";
+            return $"Your Customer ticket for {issueType} with ticket id #{ticketId} is created.";
         }
     }
 }
