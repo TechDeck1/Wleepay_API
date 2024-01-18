@@ -229,16 +229,19 @@ namespace wleepay.API.Controllers
 
                     if (tickets.CustomerContact == (int)CustomerServiceContactMethod.Email)
                     {
-                        await _emailSender.ReplyForCustomerTicket(message, userDetail.Email);
+                        await _emailSender.ReplyForCustomerTicket(request.Notes.FirstOrDefault().Note, userDetail.Email);
                     }
                     if (tickets.CustomerContact == (int)CustomerServiceContactMethod.Phone)
                     {
-                        _sMSService.sendSmsForCustomerTicket(message, userDetail.PhoneNumber);
+                        _sMSService.sendSmsForCustomerTicket(request.Notes.FirstOrDefault().Note, userDetail.PhoneNumber);
                     }
                     if (tickets.CustomerContact == (int)CustomerServiceContactMethod.Whatsapp)
                     {
-                        _whatsAppService.sendMessageForCustomerTicket(message, userDetail.PhoneNumber);
+                        _whatsAppService.sendMessageForCustomerTicket(request.Notes.FirstOrDefault().Note, userDetail.PhoneNumber);
                     }
+
+                    _sMSService.sendSmsForCustomerTicket(message, ticketToUpdated.PhoneNumber);
+
                     return Ok(new
                     {
                         status = true,
@@ -246,7 +249,6 @@ namespace wleepay.API.Controllers
                     });
                 }
 
-                _sMSService.sendSmsForCustomerTicket(message, ticketToUpdated.PhoneNumber);
                 
                 return Ok(new
                 {
