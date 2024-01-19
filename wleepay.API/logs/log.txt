@@ -2952,3 +2952,47 @@ Error Number:-2,State:0,Class:11
 2024-01-08 15:38:49 PM|10102|WARN|Microsoft.EntityFrameworkCore.Query|The query uses a row limiting operator ('Skip'/'Take') without an 'OrderBy' operator. This may lead to unpredictable results. 
 2024-01-08 15:38:49 PM|10102|WARN|Microsoft.EntityFrameworkCore.Query|The query uses a row limiting operator ('Skip'/'Take') without an 'OrderBy' operator. This may lead to unpredictable results. 
 2024-01-08 15:38:49 PM|10102|WARN|Microsoft.EntityFrameworkCore.Query|The query uses a row limiting operator ('Skip'/'Take') without an 'OrderBy' operator. This may lead to unpredictable results. 
+2024-01-19 12:15:24 PM||DEBUG|wleepay.API.Program|init main 
+2024-01-19 12:15:27 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: https://localhost:5001 
+2024-01-19 12:15:27 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: https://localhost:5001 
+2024-01-19 12:15:27 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: http://localhost:5000 
+2024-01-19 12:15:27 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: http://localhost:5000 
+2024-01-19 12:15:27 PM||INFO|Microsoft.Hosting.Lifetime|Application started. Press Ctrl+C to shut down. 
+2024-01-19 12:15:27 PM||INFO|Microsoft.Hosting.Lifetime|Application started. Press Ctrl+C to shut down. 
+2024-01-19 12:15:27 PM||INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development 
+2024-01-19 12:15:27 PM||INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development 
+2024-01-19 12:15:27 PM||INFO|Microsoft.Hosting.Lifetime|Content root path: D:\Offical\Wleepay_API\wleepay.API 
+2024-01-19 12:15:27 PM||INFO|Microsoft.Hosting.Lifetime|Content root path: D:\Offical\Wleepay_API\wleepay.API 
+2024-01-19 12:16:33 PM||DEBUG|wleepay.API.Program|init main 
+2024-01-19 12:16:34 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: https://localhost:5001 
+2024-01-19 12:16:34 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: https://localhost:5001 
+2024-01-19 12:16:34 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: http://localhost:5000 
+2024-01-19 12:16:34 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: http://localhost:5000 
+2024-01-19 12:16:34 PM||INFO|Microsoft.Hosting.Lifetime|Application started. Press Ctrl+C to shut down. 
+2024-01-19 12:16:34 PM||INFO|Microsoft.Hosting.Lifetime|Application started. Press Ctrl+C to shut down. 
+2024-01-19 12:16:34 PM||INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development 
+2024-01-19 12:16:34 PM||INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development 
+2024-01-19 12:16:34 PM||INFO|Microsoft.Hosting.Lifetime|Content root path: D:\Offical\Wleepay_API\wleepay.API 
+2024-01-19 12:16:34 PM||INFO|Microsoft.Hosting.Lifetime|Content root path: D:\Offical\Wleepay_API\wleepay.API 
+2024-01-19 12:26:02 PM||DEBUG|wleepay.API.Program|init main 
+2024-01-19 12:26:04 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: https://localhost:5001 
+2024-01-19 12:26:04 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: https://localhost:5001 
+2024-01-19 12:26:04 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: http://localhost:5000 
+2024-01-19 12:26:04 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: http://localhost:5000 
+2024-01-19 12:26:04 PM||INFO|Microsoft.Hosting.Lifetime|Application started. Press Ctrl+C to shut down. 
+2024-01-19 12:26:04 PM||INFO|Microsoft.Hosting.Lifetime|Application started. Press Ctrl+C to shut down. 
+2024-01-19 12:26:04 PM||INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development 
+2024-01-19 12:26:04 PM||INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development 
+2024-01-19 12:26:04 PM||INFO|Microsoft.Hosting.Lifetime|Content root path: D:\Offical\Wleepay_API\wleepay.API 
+2024-01-19 12:26:04 PM||INFO|Microsoft.Hosting.Lifetime|Content root path: D:\Offical\Wleepay_API\wleepay.API 
+2024-01-19 12:27:04 PM||DEBUG|wleepay.API.Program|init main 
+2024-01-19 12:27:05 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: https://localhost:5001 
+2024-01-19 12:27:05 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: https://localhost:5001 
+2024-01-19 12:27:05 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: http://localhost:5000 
+2024-01-19 12:27:05 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: http://localhost:5000 
+2024-01-19 12:27:05 PM||INFO|Microsoft.Hosting.Lifetime|Application started. Press Ctrl+C to shut down. 
+2024-01-19 12:27:05 PM||INFO|Microsoft.Hosting.Lifetime|Application started. Press Ctrl+C to shut down. 
+2024-01-19 12:27:05 PM||INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development 
+2024-01-19 12:27:05 PM||INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development 
+2024-01-19 12:27:05 PM||INFO|Microsoft.Hosting.Lifetime|Content root path: D:\Offical\Wleepay_API\wleepay.API 
+2024-01-19 12:27:05 PM||INFO|Microsoft.Hosting.Lifetime|Content root path: D:\Offical\Wleepay_API\wleepay.API 

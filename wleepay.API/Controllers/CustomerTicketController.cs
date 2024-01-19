@@ -81,6 +81,7 @@ namespace wleepay.API.Controllers
                 customerTickets.CreatedDate = DateTime.UtcNow;
                 var customerTicketsToInsert = _mapper.Map<AddCustomerTicketRequestResponse, CustomerTickets>(customerTickets);
 
+                customerTicketsToInsert.IsSeen = false;
                 var tickets = await _customerTicketsService.AddUpdateCustomerTickets(customerTicketsToInsert);
                 if (tickets != null)
                 {
@@ -108,7 +109,7 @@ namespace wleepay.API.Controllers
             }
             catch (Exception ex)
             {
-                return Ok(new
+                return BadRequest(new
                 {
                     status = false,
                     message = ex.Message.ToString(),
@@ -260,5 +261,52 @@ namespace wleepay.API.Controllers
 
             return BadRequest();
         }
+
+        [HttpPatch("ReportSeenStatus")]
+        public async Task<IActionResult> PatchReportSeenStatus(CustomerTicketSeenStatusRequest request)
+        {
+            try
+            {
+                var ticketToUpdated = await _customerTicketsService.GetCustomerTicketsById(request.CustomerTicketId);
+                if (ticketToUpdated == null)
+                {
+                    return Ok(new
+                    {
+                        status = false,
+                        message = Messages.TicketNotFound.ToDescriptionString()
+                    });
+                }
+
+                ticketToUpdated.IsSeen = request.IsSeen;
+                ticketToUpdated.UpdatedDate = DateTime.UtcNow;
+                var tickets = await _customerTicketsService.AddUpdateCustomerTickets(ticketToUpdated);
+                if (tickets != null)
+                {
+                    return Ok(new
+                    {
+                        status = true,
+                        message = "status updated!"
+                    });
+
+                }
+
+                return BadRequest(new
+                {
+                    status = false,
+                    message = "Error occurred while updating status"
+                });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new
+                {
+                    status = false,
+                    message = ex.Message
+                });
+            }
+
+        }
+
+
     }
 }

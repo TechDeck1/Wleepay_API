@@ -6,4 +6,10 @@
         public int PageSize { get; set; }
         public int PageIndex { get; set; }
     }
+
+    public class CustomerTicketSeenStatusRequest
+    {
+        public int CustomerTicketId { get; set; }
+        public bool IsSeen { get; set; }
+    }
 }
