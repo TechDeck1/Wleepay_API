@@ -438,7 +438,7 @@ namespace wleepay.Communication.Services
             var recipientEmail = "shikha0dev@gmail.com";
             // var recipientEmail = email;
 
-            string template = $"Dear Customer, \n\n {Message}";
+            string template = Message;
 
             // Sender's email address and credentials
             string senderEmail = "mvctest17@gmail.com";

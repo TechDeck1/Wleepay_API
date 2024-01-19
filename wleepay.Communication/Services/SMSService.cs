@@ -57,7 +57,7 @@ namespace wleepay.Communication.Services
                     var messageOptions = new CreateMessageOptions(
                     new PhoneNumber("+917018519190"));
                     messageOptions.From = new PhoneNumber("+18312194108");
-                    messageOptions.Body = $"Dear Customer" + " " + message;
+                    messageOptions.Body = message;
 
 
                     var messageResponse = MessageResource.Create(messageOptions);

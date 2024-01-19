@@ -84,9 +84,11 @@ namespace wleepay.API.Controllers
                 customerTicketsToInsert.IsSeen = false;
                 customerTicketsToInsert.Notes.FirstOrDefault().AddedBy= userDetail.UserDetail.FirstName+ " " + userDetail.UserDetail.LastName;
                 var tickets = await _customerTicketsService.AddUpdateCustomerTickets(customerTicketsToInsert);
+
+                var ticketDetails = await _customerTicketsService.GetCustomerTicketsById(customerTicketsToInsert.Id);
                 if (tickets != null)
                 {
-                    var message = MessagesTemplates.CustomerTicketCreatedMessage(tickets.Id);
+                    var message = MessagesTemplates.CustomerTicketCreatedMessage(ticketDetails.IssueType.Type, tickets.Id);
 
                     if (tickets.CustomerContact == (int)CustomerServiceContactMethod.Email)
                     {
@@ -167,20 +169,21 @@ namespace wleepay.API.Controllers
                     message = Messages.TicketNotFound.ToDescriptionString()
                 });
             }
+            var message = MessagesTemplates.CustomerTicketReplyMessage(userDetail.UserDetail.FirstName, request.Note);
 
             if (request.Note != null)
             {
                 if (ticket.CustomerContact == (int)CustomerServiceContactMethod.Email)
                 {
-                    await _emailSender.ReplyForCustomerTicketClosed(request.Note, userDetail.Email);
+                    await _emailSender.ReplyForCustomerTicketClosed(message, userDetail.Email);
                 }
                 if (ticket.CustomerContact == (int)CustomerServiceContactMethod.Phone)
                 {
-                    _sMSService.sendSmsForCustomerTicket(request.Note, userDetail.PhoneNumber);
+                    _sMSService.sendSmsForCustomerTicket(message, userDetail.PhoneNumber);
                 }
                 if (ticket.CustomerContact == (int)CustomerServiceContactMethod.Whatsapp)
                 {
-                    _whatsAppService.sendMessageForCustomerTicket(request.Note, userDetail.PhoneNumber);
+                    _whatsAppService.sendMessageForCustomerTicket(message, userDetail.PhoneNumber);
                 }
                 return Ok(new
                 {
@@ -224,25 +227,26 @@ namespace wleepay.API.Controllers
                 var notesToInsert = _mapper.Map<NotesResource, Notes>(request.Notes.FirstOrDefault());
                 notesToInsert.CustomerTicketId = request.CustomerTicketId;
                 var notes = await _notesService.AddUpdateNotes(notesToInsert);
-                var message = MessagesTemplates.CustomerTicketClosedMessage(ticketToUpdated.Id);
+
+                var message = MessagesTemplates.CustomerTicketReplyMessage(userDetail.UserDetail.FirstName, request.Notes.FirstOrDefault().Note);
 
                 if (notes != null)
                 {
 
                     if (tickets.CustomerContact == (int)CustomerServiceContactMethod.Email)
                     {
-                        await _emailSender.ReplyForCustomerTicketClosed(request.Notes.FirstOrDefault().Note, userDetail.Email);
+                        await _emailSender.ReplyForCustomerTicketClosed(message, userDetail.Email);
                     }
                     if (tickets.CustomerContact == (int)CustomerServiceContactMethod.Phone)
                     {
-                        _sMSService.sendSmsForCustomerTicket(request.Notes.FirstOrDefault().Note, userDetail.PhoneNumber);
+                        _sMSService.sendSmsForCustomerTicket(message, userDetail.PhoneNumber);
                     }
                     if (tickets.CustomerContact == (int)CustomerServiceContactMethod.Whatsapp)
                     {
-                        _whatsAppService.sendMessageForCustomerTicket(request.Notes.FirstOrDefault().Note, userDetail.PhoneNumber);
+                        _whatsAppService.sendMessageForCustomerTicket(message, userDetail.PhoneNumber);
                     }
 
-                    _sMSService.sendSmsForCustomerTicket(message, ticketToUpdated.PhoneNumber);
+                    //_sMSService.sendSmsForCustomerTicket(message, ticketToUpdated.PhoneNumber);
 
                     return Ok(new
                     {
