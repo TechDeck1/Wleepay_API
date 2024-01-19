@@ -41,6 +41,10 @@ namespace wleepay.Data.Configurations
 
             builder.Property(u => u.Status);
 
+            builder.Property(u => u.IsSeen)
+                .HasDefaultValue(false);
+
+
             builder
                  .HasOne(u => u.IssueType)
                  .WithMany(u => u.CustomerTickets)
