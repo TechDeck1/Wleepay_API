@@ -38,14 +38,14 @@ namespace wleepay.Communication.Templates
             return $"A payment of {amount} {currency} received from {customer}.";
         }
 
-        public static string CustomerTicketClosedMessage(string issueType, int ticketId)
+        public static string CustomerTicketClosedMessage( int ticketId)
         {
-            return $"Your Customer ticket for {issueType} with ticket id #{ticketId} is closed.";
+            return $"Your Customer ticket with ticket id #{ticketId} is closed.";
         }
 
-        public static string CustomerTicketCreatedMessage(string issueType, int ticketId)
+        public static string CustomerTicketCreatedMessage(int ticketId)
         {
-            return $"Your Customer ticket for {issueType} with ticket id #{ticketId} is created.";
+            return $"Your Customer ticket with ticket id #{ticketId} is created.";
         }
     }
 }

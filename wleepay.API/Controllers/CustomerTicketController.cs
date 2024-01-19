@@ -68,7 +68,7 @@ namespace wleepay.API.Controllers
                         message = Messages.NotFound.ToDescriptionString()
                     });
                 }
-                if (userDetail.PhoneNumber != customerTickets.PhoneNumber)
+                if (userDetail.UserDetail.PhoneNumber != customerTickets.PhoneNumber)
                 {
                     return Ok(new
                     {
@@ -85,7 +85,7 @@ namespace wleepay.API.Controllers
                 var tickets = await _customerTicketsService.AddUpdateCustomerTickets(customerTicketsToInsert);
                 if (tickets != null)
                 {
-                    var message = MessagesTemplates.CustomerTicketClosedMessage(tickets.IssueType.Type, tickets.Id);
+                    var message = MessagesTemplates.CustomerTicketCreatedMessage(tickets.Id);
 
                     if (tickets.CustomerContact == (int)CustomerServiceContactMethod.Email)
                     {
@@ -127,7 +127,7 @@ namespace wleepay.API.Controllers
             return Ok(new 
             {
                 totalCount=tickets.TotalCount,
-                customerTickets= customerTicketsToInsert
+                customerTickets= customerTicketsToInsert,
             });
 
         }
@@ -223,7 +223,7 @@ namespace wleepay.API.Controllers
                 var notesToInsert = _mapper.Map<NotesResource, Notes>(request.Notes.FirstOrDefault());
                 notesToInsert.CustomerTicketId = request.CustomerTicketId;
                 var notes = await _notesService.AddUpdateNotes(notesToInsert);
-                var message = MessagesTemplates.CustomerTicketClosedMessage(ticketToUpdated.IssueType.Type, ticketToUpdated.Id);
+                var message = MessagesTemplates.CustomerTicketClosedMessage(ticketToUpdated.Id);
 
                 if (notes != null)
                 {
