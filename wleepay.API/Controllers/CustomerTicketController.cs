@@ -172,7 +172,7 @@ namespace wleepay.API.Controllers
             {
                 if (ticket.CustomerContact == (int)CustomerServiceContactMethod.Email)
                 {
-                    await _emailSender.ReplyForCustomerTicket(request.Note, userDetail.Email);
+                    await _emailSender.ReplyForCustomerTicketClosed(request.Note, userDetail.Email);
                 }
                 if (ticket.CustomerContact == (int)CustomerServiceContactMethod.Phone)
                 {
@@ -231,7 +231,7 @@ namespace wleepay.API.Controllers
 
                     if (tickets.CustomerContact == (int)CustomerServiceContactMethod.Email)
                     {
-                        await _emailSender.ReplyForCustomerTicket(request.Notes.FirstOrDefault().Note, userDetail.Email);
+                        await _emailSender.ReplyForCustomerTicketClosed(request.Notes.FirstOrDefault().Note, userDetail.Email);
                     }
                     if (tickets.CustomerContact == (int)CustomerServiceContactMethod.Phone)
                     {
@@ -247,7 +247,7 @@ namespace wleepay.API.Controllers
                     return Ok(new
                     {
                         status = true,
-                        message = Messages.TicketUpdated.ToDescriptionString()
+                        message = Messages.TicketClosed.ToDescriptionString()
                     });
                 }
 

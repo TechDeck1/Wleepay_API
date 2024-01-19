@@ -20,6 +20,7 @@ namespace wleepay.Communication.Interface
         Task<bool> EmailForAccountDeactivatedToStaff(string email, string name, string phone);
         Task<bool> EmailForAccountCreationToSystemAdmins(string systemAdminEmails, string userEmail);
         Task<bool> ReplyForCustomerTicket(string Message, string email);
+        Task<bool> ReplyForCustomerTicketClosed(string Message, string email);
 
 
     }
