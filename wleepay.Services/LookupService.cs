@@ -41,5 +41,11 @@ namespace wleepay.Services
         {
             return await _unitOfWork.SecurityQuestions.GetAllAsync();
         }
+       
+
+        public async Task<IEnumerable<StaffRoles>> GetAllStaffRoles()
+        {
+            return await _unitOfWork.staffRoles.GetAllAsync();
+        }
     }
 }

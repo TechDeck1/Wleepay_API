@@ -246,15 +246,12 @@ namespace wleepay.API.Controllers
                         _whatsAppService.sendMessageForCustomerTicket(message, userDetail.PhoneNumber);
                     }
 
-                    //_sMSService.sendSmsForCustomerTicket(message, ticketToUpdated.PhoneNumber);
-
                     return Ok(new
                     {
                         status = true,
                         message = Messages.TicketClosed.ToDescriptionString()
                     });
                 }
-
                 
                 return Ok(new
                 {

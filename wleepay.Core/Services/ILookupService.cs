@@ -14,6 +14,8 @@ namespace wleepay.Core.Services
         Task<IEnumerable<KYCStatus>> GetAllKYCStatus();
         Task<IEnumerable<SecurityQuestions>> GetAllSecurityQuestions();
         Task<IEnumerable<IssueType>> GetAllIssueTypes();
+        Task<IEnumerable<StaffRoles>> GetAllStaffRoles();
+
 
     }
 }
