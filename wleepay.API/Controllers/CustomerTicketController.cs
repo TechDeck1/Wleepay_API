@@ -188,7 +188,7 @@ namespace wleepay.API.Controllers
                 return Ok(new
                 {
                     status = true,
-                    message = Messages.MessageSent.ToDescriptionString(),
+                    message = Messages.TicketClosed.ToDescriptionString(),
                 });
             }
 
