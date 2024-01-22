@@ -1,0 +1,31 @@
+﻿using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
+using wleepay.Core.Services;
+
+namespace wleepay.API.Controllers
+{
+  
+        [Route("api/[controller]")]
+        [ApiController]
+
+    public class StaffAndPermissionRolesController : Controller
+    {
+
+        private readonly ILookupService _lookupService;
+
+        public StaffAndPermissionRolesController(
+            ILookupService lookupService)
+        {
+
+            _lookupService = lookupService;
+        }
+
+        [HttpGet("StaffRoles")]
+        public async Task<IActionResult> GetStaffRoles()
+        {
+            var staffRoles = await _lookupService.GetAllStaffRoles();
+            return Ok(staffRoles);
+        }
+    }
+    
+}

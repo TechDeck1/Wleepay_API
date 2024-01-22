@@ -2996,3 +2996,14 @@ Error Number:-2,State:0,Class:11
 2024-01-19 12:27:05 PM||INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development 
 2024-01-19 12:27:05 PM||INFO|Microsoft.Hosting.Lifetime|Content root path: D:\Offical\Wleepay_API\wleepay.API 
 2024-01-19 12:27:05 PM||INFO|Microsoft.Hosting.Lifetime|Content root path: D:\Offical\Wleepay_API\wleepay.API 
+2024-01-22 18:37:32 PM||DEBUG|wleepay.API.Program|init main 
+2024-01-22 18:37:37 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: https://localhost:5001 
+2024-01-22 18:37:37 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: https://localhost:5001 
+2024-01-22 18:37:37 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: http://localhost:5000 
+2024-01-22 18:37:37 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: http://localhost:5000 
+2024-01-22 18:37:37 PM||INFO|Microsoft.Hosting.Lifetime|Application started. Press Ctrl+C to shut down. 
+2024-01-22 18:37:37 PM||INFO|Microsoft.Hosting.Lifetime|Application started. Press Ctrl+C to shut down. 
+2024-01-22 18:37:37 PM||INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development 
+2024-01-22 18:37:37 PM||INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development 
+2024-01-22 18:37:37 PM||INFO|Microsoft.Hosting.Lifetime|Content root path: D:\Offical\Wleepay_API\wleepay.API 
+2024-01-22 18:37:37 PM||INFO|Microsoft.Hosting.Lifetime|Content root path: D:\Offical\Wleepay_API\wleepay.API 
