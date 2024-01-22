@@ -58,10 +58,6 @@ namespace wleepay.API.Controllers
         private readonly ITokenStorageService _tokenStorageService;
         private readonly ISystemActivityLogsService _systemActivityLogsService;
 
-
-
-
-
         public AccountController(UserManager<ApplicationUser> userManager,
             RoleManager<ApplicationRole> roleManager,
             SignInManager<ApplicationUser> signInManager,
