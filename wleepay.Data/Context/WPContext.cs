@@ -28,6 +28,10 @@ namespace wleepay.Data.Context
         public DbSet<IssueType> IssueType { get; set; }
         public DbSet<CustomerTickets> CustomerTickets { get; set; }
         public DbSet<Notes> Notes { get; set; }
+        public DbSet<StaffRoles> StaffRoles { get; set; }
+        public DbSet<StaffPermissions> StaffPermissions { get; set; }
+
+
 
 
 
@@ -62,7 +66,8 @@ namespace wleepay.Data.Context
             builder.ApplyConfiguration(new IssueTypeConfiguration());
             builder.ApplyConfiguration(new CustomerTicketsConfiguration());
             builder.ApplyConfiguration(new NotesConfiguration());
-
+            builder.ApplyConfiguration(new StaffRolesConfiguration());
+            builder.ApplyConfiguration(new StaffPermissionConfiguration());
 
 
         }
