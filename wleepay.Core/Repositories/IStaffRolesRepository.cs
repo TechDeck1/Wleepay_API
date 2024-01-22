@@ -7,5 +7,6 @@ namespace wleepay.Core.Repositories
 {
     public interface IStaffRolesRepository : IRepository<StaffRoles>
     {
+
     }
 }

@@ -27,7 +27,9 @@ namespace wleepay.Core
         IIssueTypeRepository IssueType { get; }
         ICustomerTicketsRepository CustomerTickets { get; }
         INotesRepository Notes { get; }
-        IStaffRolesRepository staffRoles { get; }
+        IStaffRolesRepository StaffRoles { get; }
+        IStaffPermissionsRepository StaffPermissions { get; }
+
 
         Task<int> CommitAsync();
     }

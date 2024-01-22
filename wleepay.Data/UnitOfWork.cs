@@ -32,7 +32,7 @@ namespace wleepay.Data
         private ICustomerTicketsRepository _customerTicketsRepository;
         private INotesRepository _notesRepository;
         private IStaffRolesRepository _staffRolesRepository;
-
+        private IStaffPermissionsRepository _staffPermissionsRepository;
 
 
         public UnitOfWork(WPContext context) {
@@ -59,7 +59,8 @@ namespace wleepay.Data
         public IIssueTypeRepository IssueType => _issueTypeRepository = _issueTypeRepository ?? new IssueTypeRepository(_context);
         public ICustomerTicketsRepository CustomerTickets => _customerTicketsRepository = _customerTicketsRepository ?? new CustomerTicketsRepository(_context);
         public INotesRepository Notes => _notesRepository = _notesRepository ?? new NotesRepository(_context);
-        public IStaffRolesRepository staffRoles => _staffRolesRepository = _staffRolesRepository ?? new StaffRoleRepository(_context);
+        public IStaffRolesRepository StaffRoles => _staffRolesRepository = _staffRolesRepository ?? new StaffRoleRepository(_context);
+        public IStaffPermissionsRepository StaffPermissions => _staffPermissionsRepository = _staffPermissionsRepository ?? new StaffPermissionsRepository(_context);
 
         public async Task<int> CommitAsync()
         {
