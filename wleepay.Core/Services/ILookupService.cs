@@ -15,6 +15,8 @@ namespace wleepay.Core.Services
         Task<IEnumerable<SecurityQuestions>> GetAllSecurityQuestions();
         Task<IEnumerable<IssueType>> GetAllIssueTypes();
         Task<IEnumerable<StaffRoles>> GetAllStaffRoles();
+        Task<IEnumerable<StaffPermissions>> GetAllStaffPermissions();
+
 
 
     }

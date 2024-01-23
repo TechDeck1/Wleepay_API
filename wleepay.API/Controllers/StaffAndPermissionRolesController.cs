@@ -26,6 +26,13 @@ namespace wleepay.API.Controllers
             var staffRoles = await _lookupService.GetAllStaffRoles();
             return Ok(staffRoles);
         }
+
+        [HttpGet("StaffPermissions")]
+        public async Task<IActionResult> GetStaffPermissions()
+        {
+            var staffRoles = await _lookupService.GetAllStaffPermissions();
+            return Ok(staffRoles);
+        }
     }
     
 }
