@@ -45,7 +45,7 @@ namespace wleepay.Services
 
         public async Task<IEnumerable<StaffRoles>> GetAllStaffRoles()
         {
-            return await _unitOfWork.staffRoles.GetAllAsync();
+            return await _unitOfWork.StaffRoles.GetAllAsync();
         }
     }
 }
