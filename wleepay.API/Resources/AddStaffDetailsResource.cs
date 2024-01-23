@@ -8,7 +8,6 @@ namespace wleepay.API.Resources
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string Gender { get; set; }
-        public string Pin { get; set; }
         public string PhoneNumber { get; set; }
         public string EmailId { get; set; }
         public DateTime? DOB { get; set; }
@@ -22,11 +21,11 @@ namespace wleepay.API.Resources
         public int? KYCLevel { get; set; }
         public string KYCDocumentImage { get; set; }
         public int SecurityQuestionId { get; set; }
+        public int StaffRoleId { get; set; }
         public string SecurityAnswerText { get; set; }
-        public bool RememberMe { get; set; } = false; // Default value is set to false
+        //public bool RememberMe { get; set; } = false; // Default value is set to false
         public Role? Role { get; set; }
         public string CreatedBy { get; set; }
         public DateTime HireDate { get; set; }
-        public AddressResource? Address { get; set; }
     }
 }

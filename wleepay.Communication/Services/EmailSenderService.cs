@@ -22,7 +22,7 @@ namespace wleepay.Communication.Services
         {
             
                 var subject = "Failed Login attempt";
-                var recipientEmail = "shikha0dev@gmail.com";
+                var recipientEmail = "ariel.ranjot@gmail.com";
                 // var recipientEmail = email;
 
                 EmailLockOutTemplateForSystemAdmin template = new EmailLockOutTemplateForSystemAdmin
@@ -60,7 +60,7 @@ namespace wleepay.Communication.Services
         {
 
             var subject = "Failed Login attempt";
-            var recipientEmail = "shikha0dev@gmail.com";
+            var recipientEmail = "ariel.ranjot@gmail.com";
             // var recipientEmail = email;
 
             EmailLockOutTemplateForStaff template = new EmailLockOutTemplateForStaff
@@ -97,7 +97,7 @@ namespace wleepay.Communication.Services
         public async Task<bool> SendForgotPasswordEmailLink(string email, string uri, string username)
         {
             var subject = "Reset password token ";
-            var recipientEmail = "shikha0dev@gmail.com";
+            var recipientEmail = "ariel.ranjot@gmail.com";
 
             string resetPasswordLink = uri;
 
@@ -127,7 +127,7 @@ namespace wleepay.Communication.Services
         {
 
             var subject = "Alert: Wleepay portal password change notice (Do not reply)";
-            var recipientEmail = "shikha0dev@gmail.com";
+            var recipientEmail = "ariel.ranjot@gmail.com";
             // var recipientEmail = email;
 
             PasswordChangeTemplateForSystemAdmin template = new PasswordChangeTemplateForSystemAdmin
@@ -165,7 +165,7 @@ namespace wleepay.Communication.Services
         {
 
             var subject = "Alert: Wleepay portal password change notice (Do not reply)";
-            var recipientEmail = "shikha0dev@gmail.com";
+            var recipientEmail = "ariel.ranjot@gmail.com";
             // var recipientEmail = email;
 
             PasswordChangeTemplateForStaff template = new PasswordChangeTemplateForStaff
@@ -203,7 +203,7 @@ namespace wleepay.Communication.Services
         {
 
             var subject = "Complete Login process";
-            var recipientEmail = "shikha0dev@gmail.com";
+            var recipientEmail = "ariel.ranjot@gmail.com";
             // var recipientEmail = email;
 
             string resetPasswordLink = uri;
@@ -235,7 +235,7 @@ namespace wleepay.Communication.Services
         public async Task<bool> EmailForAccountActivatedToSystemAdmin(string email, string name, string phone)
         {
             var subject = "Wleepay portal account setup/activation confirmation notice (Do not reply)";
-            var recipientEmail = "shikha0dev@gmail.com";
+            var recipientEmail = "ariel.ranjot@gmail.com";
             // var recipientEmail = email;
 
             AccountActivatedTemplateForSystemAdmin template = new AccountActivatedTemplateForSystemAdmin
@@ -270,7 +270,7 @@ namespace wleepay.Communication.Services
         public async Task<bool> EmailForAccountActivatedToStaff(string email, string name, string phone)
         {
             var subject = " Alert: Wleepay portal account setup/activation notice (Do not reply)";
-            var recipientEmail = "shikha0dev@gmail.com";
+            var recipientEmail = "ariel.ranjot@gmail.com";
             // var recipientEmail = email;
 
             AccountActivatedTemplateForStaff template = new AccountActivatedTemplateForStaff
@@ -305,7 +305,7 @@ namespace wleepay.Communication.Services
         public async Task<bool> EmailForAccountDeactivatedToSystemAdmin(string email, string name, string phone )
         {
             var subject = " Alert: Wleepay portal account DeActivation notice (Do not reply)";
-            var recipientEmail = "shikha0dev@gmail.com";
+            var recipientEmail = "ariel.ranjot@gmail.com";
             // var recipientEmail = email;
 
             AccountDeactivatedTemplateForSystemAdmin template = new AccountDeactivatedTemplateForSystemAdmin
@@ -340,7 +340,7 @@ namespace wleepay.Communication.Services
         public async Task<bool> EmailForAccountDeactivatedToStaff(string email, string name, string phone)
         {
             var subject = " Alert: Wleepay portal account DeActivation notice (Do not reply)";
-            var recipientEmail = "shikha0dev@gmail.com";
+            var recipientEmail = "ariel.ranjot@gmail.com";
             // var recipientEmail = email;
 
             AccountDeactivatedTemplateForStaff template = new AccountDeactivatedTemplateForStaff
@@ -373,7 +373,7 @@ namespace wleepay.Communication.Services
         public async Task<bool> EmailForAccountCreationToSystemAdmins(string emails, string userEmail)
         {
             var subject = "A New Account Created";
-            var recipientEmail = "shikha0dev@gmail.com";
+            var recipientEmail = "ariel.ranjot@gmail.com";
             // var recipientEmail = email;
 
             var body = $"Dear Admin,\n\n Account is succesfully created for {userEmail}.";
@@ -408,7 +408,7 @@ namespace wleepay.Communication.Services
         public async Task<bool> ReplyForCustomerTicket(string Message, string email)
         {
             var subject = "Reply to customer For ticket generated";
-            var recipientEmail = "shikha0dev@gmail.com";
+            var recipientEmail = "ariel.ranjot@gmail.com";
             // var recipientEmail = email;
 
             string template = Message;
@@ -435,7 +435,7 @@ namespace wleepay.Communication.Services
         public async Task<bool> ReplyForCustomerTicketClosed(string Message, string email)
         {
             var subject = "Reply to customer For ticket closed";
-            var recipientEmail = "shikha0dev@gmail.com";
+            var recipientEmail = "ariel.ranjot@gmail.com";
             // var recipientEmail = email;
 
             string template = Message;

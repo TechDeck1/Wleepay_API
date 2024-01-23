@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using wleepay.Core.Models;
 using wleepay.Core.Repositories;
 
 namespace wleepay.Core
@@ -29,6 +30,7 @@ namespace wleepay.Core
         INotesRepository Notes { get; }
         IStaffRolesRepository StaffRoles { get; }
         IStaffPermissionsRepository StaffPermissions { get; }
+        IUsersStaffRoleRepository UsersStaffRole { get; }
 
 
         Task<int> CommitAsync();

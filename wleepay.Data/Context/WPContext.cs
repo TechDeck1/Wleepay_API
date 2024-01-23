@@ -30,6 +30,8 @@ namespace wleepay.Data.Context
         public DbSet<Notes> Notes { get; set; }
         public DbSet<StaffRoles> StaffRoles { get; set; }
         public DbSet<StaffPermissions> StaffPermissions { get; set; }
+        public DbSet<UsersStaffRole> UsersStaffRole { get; set; }
+
 
 
 
@@ -68,6 +70,8 @@ namespace wleepay.Data.Context
             builder.ApplyConfiguration(new NotesConfiguration());
             builder.ApplyConfiguration(new StaffRolesConfiguration());
             builder.ApplyConfiguration(new StaffPermissionConfiguration());
+            builder.ApplyConfiguration(new UserStaffRoleConfiguration());
+
 
 
         }

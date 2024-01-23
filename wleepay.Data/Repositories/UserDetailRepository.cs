@@ -65,6 +65,8 @@ namespace wleepay.Data.Repositories
                 .Include(s => s.Address)
                 .Include(s => s.Wallets)
                     .ThenInclude(s => s.Currency)
+                .Include(s=> s.UsersStaffRole)
+                    .ThenInclude(s=>s.StaffRoles)
                 .OrderByDescending(w => w.UserDetail.CreatedDate)
                 .Where(s=>s.UserRoles.FirstOrDefault().Role.Name == role.ToString())
                 .Skip(skipCount)

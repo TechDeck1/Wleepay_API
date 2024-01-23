@@ -14,6 +14,8 @@ namespace wleepay.API.Resources
         public IEnumerable<WalletResource> Wallets { get; set; }
         public AddressResource Address { get; set; }
         public ApplicationRole UserRoles { get; set; }
+        public IEnumerable<UsersStaffRoleResource> UsersStaffRole { get; set; }
+
 
     }
 }

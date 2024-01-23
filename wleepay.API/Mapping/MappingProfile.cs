@@ -73,6 +73,8 @@ namespace wleepay.API.Mapping
 
             CreateMap<Notes, NotesResource>().ReverseMap();
             CreateMap<IssueType, IssueTypeResource>().ReverseMap();
+            CreateMap<UsersStaffRole, UsersStaffRoleResource>().ReverseMap();
+            CreateMap<StaffRoles, StaffRoleResource>().ReverseMap();
 
 
 

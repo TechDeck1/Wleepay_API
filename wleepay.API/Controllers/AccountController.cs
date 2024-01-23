@@ -57,6 +57,7 @@ namespace wleepay.API.Controllers
         private readonly IEmailSender _emailSender;
         private readonly ITokenStorageService _tokenStorageService;
         private readonly ISystemActivityLogsService _systemActivityLogsService;
+        private readonly IUsersStaffRoleService _usersStaffRoleService;
 
 
 
@@ -79,7 +80,8 @@ namespace wleepay.API.Controllers
             IHostingEnvironment hostingEnvironment,
             IEmailSender emailSender,
             ITokenStorageService tokenStorageService,
-            ISystemActivityLogsService systemActivityLogsService)
+            ISystemActivityLogsService systemActivityLogsService,
+            IUsersStaffRoleService usersStaffRoleService)
         {
             _userManager = userManager;
             _roleManager = roleManager;
@@ -99,6 +101,7 @@ namespace wleepay.API.Controllers
             _emailSender = emailSender;
             _tokenStorageService = tokenStorageService;
             _systemActivityLogsService = systemActivityLogsService;
+            _usersStaffRoleService = usersStaffRoleService;
         }
 
         [HttpPost("Registration")]
@@ -329,23 +332,11 @@ namespace wleepay.API.Controllers
                             await _kycDocumentsService.AddOrUpdateKYCDocument(kycDetailsToAdd);
                         }
 
-                        //create wallet for register user by role
-                        if (roleEnumStringValue == Core.Enums.Role.Member)
-                        {
-                            await _walletService.CreateCustomerWallet(newUser.Id);
-                        }
-                        else if (roleEnumStringValue == Core.Enums.Role.Agent)
-                        {
-                            await _walletService.CreateAgentWallet(newUser.Id);
-                        }
-
-                        //add user address
-                        if (userDetail.Address != null)
-                        {
-                            var addressToInsert = _mapper.Map<AddressResource, Address>(userDetail.Address);
-                            addressToInsert.UserId = updatedDetails.UserId;
-                            await _addressService.AddOrUpdateAddress(addressToInsert);
-                        }
+                        UsersStaffRole usersStaffRole = new UsersStaffRole();
+                        usersStaffRole.UserId = newUser.Id;
+                        usersStaffRole.CreatedDate= DateTime.Now;
+                        usersStaffRole.StaffRoleId = userDetail.StaffRoleId;
+                         await _usersStaffRoleService.AddUserStaffRole(usersStaffRole);
 
                         //generate jwt token
                         var token = GenerateJSONWebToken(userDetailsToInsert);

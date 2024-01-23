@@ -13,6 +13,7 @@ namespace wleepay.Core.Models
             KYCdocuments = new Collection<KYCdocuments>();
             Wallets = new Collection<Wallet>();
             SmileIdentityJobs = new Collection<SmileIdentityJob>();
+            UsersStaffRole=new Collection<UsersStaffRole>();
         }
 
         public IList<ApplicationUserRole> UserRoles { get; set; }
@@ -21,6 +22,8 @@ namespace wleepay.Core.Models
         public virtual ICollection<KYCdocuments> KYCdocuments { get; set; }
         public virtual ICollection<Wallet> Wallets { get; set; }
         public virtual ICollection<SmileIdentityJob> SmileIdentityJobs { get; set; }
+        public virtual ICollection<UsersStaffRole> UsersStaffRole { get; set; }
+
 
     }
 }

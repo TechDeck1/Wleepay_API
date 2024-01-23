@@ -157,6 +157,8 @@ namespace wleepay.API
             services.AddTransient<ICustomerTicketsService, CustomerTicketsService>();
             services.AddTransient<INotesService, NotesService>();
             services.AddScoped<IWhatsAppService, WhatsAppService>();
+            services.AddTransient<IUsersStaffRoleService, UsersStaffRoleService>();
+
 
 
 

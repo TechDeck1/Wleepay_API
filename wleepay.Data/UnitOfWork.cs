@@ -33,6 +33,8 @@ namespace wleepay.Data
         private INotesRepository _notesRepository;
         private IStaffRolesRepository _staffRolesRepository;
         private IStaffPermissionsRepository _staffPermissionsRepository;
+        private IUsersStaffRoleRepository _usersStaffRoleRepository;
+
 
 
         public UnitOfWork(WPContext context) {
@@ -61,6 +63,7 @@ namespace wleepay.Data
         public INotesRepository Notes => _notesRepository = _notesRepository ?? new NotesRepository(_context);
         public IStaffRolesRepository StaffRoles => _staffRolesRepository = _staffRolesRepository ?? new StaffRoleRepository(_context);
         public IStaffPermissionsRepository StaffPermissions => _staffPermissionsRepository = _staffPermissionsRepository ?? new StaffPermissionsRepository(_context);
+        public IUsersStaffRoleRepository UsersStaffRole => _usersStaffRoleRepository = _usersStaffRoleRepository ?? new UsersStaffRoleRepository(_context);
 
         public async Task<int> CommitAsync()
         {
