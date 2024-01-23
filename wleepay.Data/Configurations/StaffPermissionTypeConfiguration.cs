@@ -7,12 +7,12 @@ using wleepay.Core.Models;
 
 namespace wleepay.Data.Configurations
 {
-    public class StaffPermissionConfiguration : IEntityTypeConfiguration<StaffPermissions>
+    public class StaffPermissionTypeConfiguration : IEntityTypeConfiguration<StaffPermissionType>
     {
-        public void Configure(EntityTypeBuilder<StaffPermissions> builder)
+        public void Configure(EntityTypeBuilder<StaffPermissionType> builder)
         {
             builder
-               .ToTable("StaffPermissions");
+               .ToTable("StaffPermissionType");
 
             builder
                 .HasKey(u => u.Id);
@@ -25,7 +25,7 @@ namespace wleepay.Data.Configurations
             builder.Property(u => u.Name);
 
 
-            builder.HasData(new StaffPermissions
+            builder.HasData(new StaffPermissionType
             {
                 Id = 1,
                 Name = "Dashboard",
@@ -33,7 +33,7 @@ namespace wleepay.Data.Configurations
 
             });
 
-            builder.HasData(new StaffPermissions
+            builder.HasData(new StaffPermissionType
             {
                 Id = 2,
                 Name = "SystemWallet",
@@ -41,7 +41,7 @@ namespace wleepay.Data.Configurations
 
             });
 
-            builder.HasData(new StaffPermissions
+            builder.HasData(new StaffPermissionType
             {
                 Id = 3,
                 Name = "AgentManagement",
@@ -49,7 +49,7 @@ namespace wleepay.Data.Configurations
 
             });
 
-            builder.HasData(new StaffPermissions
+            builder.HasData(new StaffPermissionType
             {
                 Id = 4,
                 Name = "SubscriberManagement",
@@ -57,7 +57,7 @@ namespace wleepay.Data.Configurations
 
             });
 
-            builder.HasData(new StaffPermissions
+            builder.HasData(new StaffPermissionType
             {
                 Id = 5,
                 Name = "CustomerService",
@@ -65,7 +65,7 @@ namespace wleepay.Data.Configurations
 
             });
 
-            builder.HasData(new StaffPermissions
+            builder.HasData(new StaffPermissionType
             {
                 Id = 6,
                 Name = "Reports",
@@ -73,7 +73,7 @@ namespace wleepay.Data.Configurations
 
             });
 
-            builder.HasData(new StaffPermissions
+            builder.HasData(new StaffPermissionType
             {
                 Id = 7,
                 Name = "Compliance&RiskManagement",
@@ -81,7 +81,7 @@ namespace wleepay.Data.Configurations
 
             });
 
-            builder.HasData(new StaffPermissions
+            builder.HasData(new StaffPermissionType
             {
                 Id = 8,
                 Name = "SystemAdmin",

@@ -29,7 +29,7 @@ namespace wleepay.Core
         ICustomerTicketsRepository CustomerTickets { get; }
         INotesRepository Notes { get; }
         IStaffRolesRepository StaffRoles { get; }
-        IStaffPermissionsRepository StaffPermissions { get; }
+        IStaffPermissionTypeRepository StaffPermissionType { get; }
         IUsersStaffRoleRepository UsersStaffRole { get; }
 
 

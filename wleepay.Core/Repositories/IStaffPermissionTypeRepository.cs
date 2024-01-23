@@ -5,7 +5,7 @@ using wleepay.Core.Models;
 
 namespace wleepay.Core.Repositories
 {
-    public interface IStaffPermissionsRepository : IRepository<StaffPermissions>
+    public interface IStaffPermissionTypeRepository : IRepository<StaffPermissionType>
     {
 
     }
