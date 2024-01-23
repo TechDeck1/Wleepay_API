@@ -7,8 +7,8 @@ using wleepay.Data.Context;
 
 namespace wleepay.Data.Repositories
 {
-    public class StaffPermissionsRepository: Repository<StaffPermissionType>, IStaffPermissionTypeRepository
+    public class StaffPermissionRepository : Repository<StaffPermissions>, IStaffPermissionsRepository
     {
-        public StaffPermissionsRepository(WPContext context) :base(context){ }
+        public StaffPermissionRepository(WPContext context) : base(context) { }
     }
 }

@@ -27,5 +27,6 @@ namespace wleepay.API.Resources
         public Role? Role { get; set; }
         public string CreatedBy { get; set; }
         public DateTime HireDate { get; set; }
+        public int[] PermissionTypes { get; set; }
     }
 }

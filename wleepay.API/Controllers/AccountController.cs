@@ -58,10 +58,7 @@ namespace wleepay.API.Controllers
         private readonly ITokenStorageService _tokenStorageService;
         private readonly ISystemActivityLogsService _systemActivityLogsService;
         private readonly IUsersStaffRoleService _usersStaffRoleService;
-
-
-
-
+        private readonly IStaffPermissionService _staffPermissionService;
 
         public AccountController(UserManager<ApplicationUser> userManager,
             RoleManager<ApplicationRole> roleManager,
@@ -81,7 +78,8 @@ namespace wleepay.API.Controllers
             IEmailSender emailSender,
             ITokenStorageService tokenStorageService,
             ISystemActivityLogsService systemActivityLogsService,
-            IUsersStaffRoleService usersStaffRoleService)
+            IUsersStaffRoleService usersStaffRoleService,
+            IStaffPermissionService staffPermissionService)
         {
             _userManager = userManager;
             _roleManager = roleManager;
@@ -102,6 +100,7 @@ namespace wleepay.API.Controllers
             _tokenStorageService = tokenStorageService;
             _systemActivityLogsService = systemActivityLogsService;
             _usersStaffRoleService = usersStaffRoleService;
+            _staffPermissionService = staffPermissionService;
         }
 
         [HttpPost("Registration")]
@@ -337,6 +336,15 @@ namespace wleepay.API.Controllers
                         usersStaffRole.CreatedDate= DateTime.Now;
                         usersStaffRole.StaffRoleId = userDetail.StaffRoleId;
                          await _usersStaffRoleService.AddUserStaffRole(usersStaffRole);
+
+                        foreach (var permission in userDetail.PermissionTypes)
+                        {
+                            StaffPermissions staffPermissions = new StaffPermissions();
+                            staffPermissions.ApplicationUserId = newUser.Id;
+                            staffPermissions.CreatedDate = DateTime.Now;
+                            staffPermissions.PermissionId = permission;
+                            await _staffPermissionService.AddStaffPermissions(staffPermissions);
+                        }
 
                         //generate jwt token
                         var token = GenerateJSONWebToken(userDetailsToInsert);

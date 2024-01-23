@@ -32,8 +32,9 @@ namespace wleepay.Data
         private ICustomerTicketsRepository _customerTicketsRepository;
         private INotesRepository _notesRepository;
         private IStaffRolesRepository _staffRolesRepository;
-        private IStaffPermissionTypeRepository _staffPermissionsRepository;
+        private IStaffPermissionTypeRepository _staffPermissionsTypeRepository;
         private IUsersStaffRoleRepository _usersStaffRoleRepository;
+        private IStaffPermissionsRepository _staffPermissionsRepository;
 
 
 
@@ -62,8 +63,9 @@ namespace wleepay.Data
         public ICustomerTicketsRepository CustomerTickets => _customerTicketsRepository = _customerTicketsRepository ?? new CustomerTicketsRepository(_context);
         public INotesRepository Notes => _notesRepository = _notesRepository ?? new NotesRepository(_context);
         public IStaffRolesRepository StaffRoles => _staffRolesRepository = _staffRolesRepository ?? new StaffRoleRepository(_context);
-        public IStaffPermissionTypeRepository StaffPermissionType => _staffPermissionsRepository = _staffPermissionsRepository ?? new StaffPermissionsRepository(_context);
+        public IStaffPermissionTypeRepository StaffPermissionType => _staffPermissionsTypeRepository = _staffPermissionsTypeRepository ?? new StaffPermissionTypeRepository(_context);
         public IUsersStaffRoleRepository UsersStaffRole => _usersStaffRoleRepository = _usersStaffRoleRepository ?? new UsersStaffRoleRepository(_context);
+        public IStaffPermissionsRepository StaffPermissions => _staffPermissionsRepository = _staffPermissionsRepository ?? new StaffPermissionRepository(_context);
 
         public async Task<int> CommitAsync()
         {
