@@ -39,11 +39,19 @@ namespace wleepay.Data.Configurations
             builder.HasData(new ApplicationRole
             {
                 Id = "F58A3546-E959-4B1D-A40C-518EAF9D9788",
-                Name = "staff",
+                Name = "Staff",
                 NormalizedName = "STAFF",
                 ConcurrencyStamp = "71EACF2C-9A1F-4602-9D47-6DE367F4F0EF"
             });
-         
+
+            builder.HasData(new ApplicationRole
+            {
+                Id = "fbf8256c-0824-432b-9543-95b61d993c3c",
+                Name = "SystemAdmin",
+                NormalizedName = "SYSTEMADMIN",
+                ConcurrencyStamp = "4dcf6d38-0024-4491-8d17-3f968d22677a"
+            });
+
         }
     }
 }

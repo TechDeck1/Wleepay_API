@@ -7,6 +7,7 @@ namespace wleepay.Core.Enums
         SuperAdmin = 0,
         Agent = 1,
         Member = 2,
-        Staff= 3,
+        Staff = 3,
+        SystemAdmin = 4,
     }
 }
