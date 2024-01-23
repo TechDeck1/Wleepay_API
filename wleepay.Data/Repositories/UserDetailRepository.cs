@@ -56,6 +56,7 @@ namespace wleepay.Data.Repositories
             int takeCount = pageSize;
             int skipCount = pageIndex * pageSize;
             var result= await WPContext.Users
+                .Where(s => s.UserRoles.FirstOrDefault().Role.Name == role.ToString())
                 .Include(s => s.UserDetail)
                     .ThenInclude(s => s.KYCLevelDetail)
                 .Include(s => s.UserDetail)
@@ -67,13 +68,11 @@ namespace wleepay.Data.Repositories
                     .ThenInclude(s => s.Currency)
                 .Include(s=> s.UsersStaffRole)
                     .ThenInclude(s=>s.StaffRoles)
+                .Include(s => s.StaffPermissions)
+                    .ThenInclude(S=>S.PermissionType)
                 .OrderByDescending(w => w.UserDetail.CreatedDate)
-                .Where(s=>s.UserRoles.FirstOrDefault().Role.Name == role.ToString())
                 .Skip(skipCount)
                 .Take(takeCount)
-                //.Include(s => s.UserDetail)
-                //    .ThenInclude(s => s.County)
-                
                 .ToListAsync();
 
             var totalCount = await WPContext.Users.Where(s => s.UserRoles.FirstOrDefault().Role.Name == role.ToString()).CountAsync();
