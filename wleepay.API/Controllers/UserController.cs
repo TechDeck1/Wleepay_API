@@ -77,7 +77,7 @@ namespace wleepay.API.Controllers
                     userDetail.UserDetail.KYCDocumentImage = System.Convert.ToBase64String((System.IO.File.ReadAllBytes(userDetail.UserDetail.KYCDocumentImage)));
                 }
 
-                var userResource = _mapper.Map<ApplicationUser, ApplicationUserResource>(userDetail);
+            var userResource = _mapper.Map<ApplicationUser, ApplicationUserResource>(userDetail);
             return Ok(userResource);
             }
             catch (Exception e)

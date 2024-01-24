@@ -93,7 +93,11 @@ namespace wleepay.Data.Repositories
                 .Include(s => s.UserDetail)
                     .ThenInclude(s => s.KYCStatus)
                 .Include(s => s.UserDetail)
-                    .ThenInclude(s => s.County).AsQueryable();
+                    .ThenInclude(s => s.County)
+                .Include(s => s.UsersStaffRole)
+                    .ThenInclude(s => s.StaffRoles)
+                .Include(s => s.StaffPermissions)
+                    .ThenInclude(S => S.PermissionType).AsQueryable();
 
             if (fetchWallet)
             {
