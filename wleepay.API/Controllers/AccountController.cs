@@ -488,13 +488,13 @@ namespace wleepay.API.Controllers
 
                         return Ok(new
                         {
-                            success = true,
-                            userId = userDetailsToInsert.UserId,
-                            firstName = updatedDetails.FirstName,
-                            lastName = updatedDetails.LastName,
+                            Success = true,
+                            UserId = userDetailsToInsert.UserId,
+                            FirstName = updatedDetails.FirstName,
+                            LastName = updatedDetails.LastName,
                             ProfilePic = updatedDetails.Image,
-                            phoneNumber = updatedDetails.PhoneNumber,
-                            accountNumber = updatedDetails.AccountNumber
+                            PhoneNumber = updatedDetails.PhoneNumber,
+                            AccountNumber = updatedDetails.AccountNumber
                         });
                     }
                     else
@@ -992,16 +992,16 @@ namespace wleepay.API.Controllers
                     var updateDatabase = await _verificationService.AddVerification(verification);
                     return Ok(new
                     {
-                        success = true,
-                        message = Messages.OTPSent.ToDescriptionString()
+                        Success = true,
+                        Message = Messages.OTPSent.ToDescriptionString()
 
 
                     });
                 }
                 return BadRequest(new 
                 {
-                    success = false,
-                    message = code
+                    Success = false,
+                    Message = code
                 });
 
             }
@@ -1009,8 +1009,8 @@ namespace wleepay.API.Controllers
             {
                 return BadRequest(new
                 {
-                    success = false,
-                    message = ex.Message
+                    Success = false,
+                    Message = ex.Message
                 });
             }
 
@@ -1041,9 +1041,9 @@ namespace wleepay.API.Controllers
                     {
                         return Ok(new
                         {
-                            success = true,
-                            message = Messages.VerificationSuccessfull.ToDescriptionString(),
-                            isExpired = false,
+                            Success = true,
+                            Message = Messages.VerificationSuccessfull.ToDescriptionString(),
+                            IsExpired = false,
 
                         });
                     }
@@ -1051,9 +1051,9 @@ namespace wleepay.API.Controllers
                     {
                         return Ok(new
                         {
-                            success = true,
-                            message = Messages.WrongOtp.ToDescriptionString(),
-                            isExpired = false,
+                            Success = true,
+                            Message = Messages.WrongOtp.ToDescriptionString(),
+                            IsExpired = false,
 
                         });
                     }
@@ -1062,8 +1062,8 @@ namespace wleepay.API.Controllers
                 {
                     return Ok(new
                     {
-                        success = false,
-                        message = Messages.OtpExpired.ToDescriptionString(),
+                        Success = false,
+                        Message = Messages.OtpExpired.ToDescriptionString(),
                     });
 
                 }
@@ -1073,7 +1073,7 @@ namespace wleepay.API.Controllers
             {
                 return BadRequest(new
                 {
-                    message = ex.Message
+                    Message = ex.Message
                 });
             }
 
