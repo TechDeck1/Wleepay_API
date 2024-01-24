@@ -32,11 +32,7 @@ namespace wleepay.Data.Context
         public DbSet<StaffPermissionType> StaffPermissionType { get; set; }
         public DbSet<UsersStaffRole> UsersStaffRole { get; set; }
         public DbSet<StaffPermissions> StaffPermissions { get; set; }
-
-
-
-
-
+        public DbSet<Verification> Verification { get; set; }
 
 
         public WPContext(DbContextOptions<WPContext> options) : base(options)
@@ -73,7 +69,7 @@ namespace wleepay.Data.Context
             builder.ApplyConfiguration(new StaffPermissionTypeConfiguration());
             builder.ApplyConfiguration(new UserStaffRoleConfiguration());
             builder.ApplyConfiguration(new StaffPermissionsConfiguration());
-
+            builder.ApplyConfiguration(new VerificationConfiguration());
 
 
         }
