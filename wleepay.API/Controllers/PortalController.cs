@@ -305,9 +305,9 @@ namespace wleepay.API.Controllers
                                 Role = userRole?[0]
 
                             }),
-                            isExpired = false,
-                            success= true,
-                            message=Messages.VerificationSuccessfull.ToDescriptionString()
+                            IsExpired = false,
+                            Success= true,
+                            Message=Messages.VerificationSuccessfull.ToDescriptionString()
                         });
                     }
                     else
@@ -315,9 +315,9 @@ namespace wleepay.API.Controllers
                         return Ok(new
                         {
                             data,
-                            isExpired = false,
-                            success = true,
-                            message =Messages.WrongOtp.ToDescriptionString(),
+                            IsExpired = false,
+                            Success = true,
+                            Message =Messages.WrongOtp.ToDescriptionString(),
                         });
                     }
                 }
@@ -326,9 +326,9 @@ namespace wleepay.API.Controllers
                     return Ok(new 
                     {
                         data,
-                        isExpired = true,
-                        success=false,
-                        message = Messages.OtpExpired.ToDescriptionString(),
+                        IsExpired = true,
+                        Success=false,
+                        Message = Messages.OtpExpired.ToDescriptionString(),
                     });
 
                 }
