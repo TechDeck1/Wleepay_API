@@ -33,6 +33,7 @@ using wleepay.Core.Enums;
 using System.Security.Cryptography;
 using wleepay.Communication.Services;
 using wleepay.API.Helpers;
+using DevExpress.XtraEditors.Filtering;
 
 namespace wleepay.API.Controllers
 {
@@ -61,6 +62,8 @@ namespace wleepay.API.Controllers
         private readonly ISystemActivityLogsService _systemActivityLogsService;
         private readonly IUsersStaffRoleService _usersStaffRoleService;
         private readonly IStaffPermissionService _staffPermissionService;
+        private readonly IVerificationService _verificationService;
+
 
 
         public AccountController(UserManager<ApplicationUser> userManager,
@@ -82,7 +85,8 @@ namespace wleepay.API.Controllers
             ITokenStorageService tokenStorageService,
             ISystemActivityLogsService systemActivityLogsService,
             IUsersStaffRoleService usersStaffRoleService,
-            IStaffPermissionService staffPermissionService)
+            IStaffPermissionService staffPermissionService,
+            IVerificationService verificationService)
         {
             _userManager = userManager;
             _roleManager = roleManager;
@@ -104,6 +108,7 @@ namespace wleepay.API.Controllers
             _systemActivityLogsService = systemActivityLogsService;
             _usersStaffRoleService = usersStaffRoleService;
             _staffPermissionService = staffPermissionService;
+            _verificationService = verificationService;
         }
 
         [HttpPost("Registration")]
@@ -355,7 +360,7 @@ namespace wleepay.API.Controllers
                         LinkForLoginSetupResource linkForLoginSetup = new LinkForLoginSetupResource();
                         linkForLoginSetup.Email = userDetail.EmailId;
                         linkForLoginSetup.PhoneNumber = userDetail.PhoneNumber;
-                        linkForLoginSetup.ClientURI = baseUrl;
+                        linkForLoginSetup.ClientURI = baseUrl+ "/account-setup";
                         var result = await GenerateLinkForLoginSetup(linkForLoginSetup);
                         
                         //send registration sucess message on mobile number
@@ -469,38 +474,27 @@ namespace wleepay.API.Controllers
                             await _kycDocumentsService.AddOrUpdateKYCDocument(kycDetailsToAdd);
                         }
 
-                        //get user details
-                        string verificationCode = Common.GenerateVerificationCode(4); // Generate a 4-digit verification code
-                        string message = "Your one time code is " + verificationCode;
-                        var code = _smsService.sendMessage(message, userDetailsToInsert.PhoneNumber);// service for send otp
-
-                        if (code != null && code != " ")
-                        {
-                            //update database
-                            var updateDatabase = await _userDetailsService.UpdateUserVerificationCode(userDetailsToInsert.UserId, verificationCode);
-                        }
-
                         //generate jwt token
-                        //var token = GenerateJSONWebToken(userDetailsToInsert);
+                        var token = GenerateJSONWebToken(userDetailsToInsert);
 
-                        //CompleteSignUpResourceModel completeSignUpResourceModel = new CompleteSignUpResourceModel();
-                        //completeSignUpResourceModel.Email = userDetail.EmailId;
-                        //completeSignUpResourceModel.PhoneNumber = userDetail.PhoneNumber;
-                        //completeSignUpResourceModel.ClientURI = baseUrl;
-                        //var result = await GenerateLinkForLoginSetup(completeSignUpResourceModel);
+                        CompleteSignUpResourceModel completeSignUpResourceModel = new CompleteSignUpResourceModel();
+                        completeSignUpResourceModel.Email = userDetail.EmailId;
+                        completeSignUpResourceModel.PhoneNumber = userDetail.PhoneNumber;
+                        completeSignUpResourceModel.ClientURI = baseUrl+ "/account-setup";
+                        var result = await GenerateLinkForComleteSignUp(completeSignUpResourceModel);
 
-                        ////send registration sucess message on mobile number
-                        //_smsService.sendMessage(MessagesTemplates.RegistrationSuccessMessage(updatedDetails.AccountNumber, updatedDetails?.KYCLevelDetail?.Name), updatedDetails.PhoneNumber);
+                        //send registration sucess message on mobile number
+                        _smsService.sendMessage(MessagesTemplates.RegistrationSuccessMessage(updatedDetails.AccountNumber, updatedDetails?.KYCLevelDetail?.Name), updatedDetails.PhoneNumber);
 
                         return Ok(new
                         {
                             success = true,
                             userId = userDetailsToInsert.UserId,
-                            //firstName = updatedDetails.FirstName,
-                            //lastName = updatedDetails.LastName,
-                            //ProfilePic = updatedDetails.Image,
-                            //phoneNumber = updatedDetails.PhoneNumber,
-                            //accountNumber = updatedDetails.AccountNumber
+                            firstName = updatedDetails.FirstName,
+                            lastName = updatedDetails.LastName,
+                            ProfilePic = updatedDetails.Image,
+                            phoneNumber = updatedDetails.PhoneNumber,
+                            accountNumber = updatedDetails.AccountNumber
                         });
                     }
                     else
@@ -987,22 +981,37 @@ namespace wleepay.API.Controllers
                 string message = "Your one time code is " + verificationCode;
                 var code = _smsService.sendMessage(message, model.Phone);// service for send otp
 
-                if (code != null && code != " ")
+                if (!string.IsNullOrEmpty(code))
                 {
+                    Verification verification = new Verification();
+                    verification.PhoneNumber = model.Phone;
+                    verification.VerificationCode = verificationCode;
+                    verification.VerificationExpiry = DateTime.UtcNow;
+                    
                     //update database
-                    var updateDatabase = await _userDetailsService.UpdateUserVerificationCode(model.UserId, verificationCode);
+                    var updateDatabase = await _verificationService.AddVerification(verification);
                     return Ok(new
                     {
-                        Success = true
+                        success = true,
+                        message = Messages.OTPSent.ToDescriptionString()
+
 
                     });
                 }
-                return BadRequest();
+                return BadRequest(new 
+                {
+                    success = false,
+                    message = code
+                });
 
             }
             catch (Exception ex)
             {
-                throw ex;
+                return BadRequest(new
+                {
+                    success = false,
+                    message = ex.Message
+                });
             }
 
 
@@ -1013,11 +1022,11 @@ namespace wleepay.API.Controllers
         {
             try
             {
-                //get user details
-                var userDetails = await _userDetailsService.GetUserDetailsById(model.UserId);
+                //get verification details
+                var verificationDetails = await _verificationService.GetVerificationByPhone(model.PhoneNumber);
 
                 //logic for getting time difference from expiry date and current date
-                var expiryDate = userDetails.VerificationExpiry;
+                var expiryDate = verificationDetails.VerificationExpiry;
                 DateTime currentDate = DateTime.UtcNow; // Use UtcNow to compare in UTC
 
                 TimeSpan difference = (TimeSpan)(currentDate - expiryDate);
@@ -1028,28 +1037,24 @@ namespace wleepay.API.Controllers
 
                 if (!isExpired)
                 {
-                    if (userDetails.VerificationCode == model.Code)
+                    if (verificationDetails.VerificationCode == model.Code)
                     {
-                        var token = GenerateJSONWebToken(userDetails);
-
-                        var ipAddress = HttpContext.Connection.RemoteIpAddress.ToString();
-                        _logger.LogInformation($"Action: {ControllerContext.ActionDescriptor.ActionName}, User: {userDetails.UserId}, Timestamp: {DateTime.UtcNow}, IP: {ipAddress}");
-
                         return Ok(new
                         {
-                            userId = userDetails.UserId,
-                            isExpired = false,
                             success = true,
-                            message = Messages.VerificationSuccessfull.ToDescriptionString()
+                            message = Messages.VerificationSuccessfull.ToDescriptionString(),
+                            isExpired = false,
+
                         });
                     }
                     else
                     {
                         return Ok(new
                         {
-                            isExpired = false,
                             success = true,
                             message = Messages.WrongOtp.ToDescriptionString(),
+                            isExpired = false,
+
                         });
                     }
                 }
@@ -1057,7 +1062,6 @@ namespace wleepay.API.Controllers
                 {
                     return Ok(new
                     {
-                        isExpired = true,
                         success = false,
                         message = Messages.OtpExpired.ToDescriptionString(),
                     });

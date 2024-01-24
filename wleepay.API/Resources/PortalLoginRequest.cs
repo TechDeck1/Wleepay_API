@@ -43,7 +43,6 @@ namespace wleepay.API.Resources
     public class SystemAdminVerificationModel
     {
         public string Code { get; set; }
-        public string UserId { get; set; }
         public string PhoneNumber { get; set; }
 
     }
@@ -51,7 +50,6 @@ namespace wleepay.API.Resources
     public class SendOTPForSystemAdmin
     {
         public string Phone { get; set; }
-        public string UserId { get; set; }
 
     }
 

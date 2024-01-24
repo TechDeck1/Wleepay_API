@@ -9,5 +9,6 @@ namespace wleepay.Core.Repositories
     public interface IVerificationRepository : IRepository<Verification>
     {
         Task<Verification> AddVerification(Verification verification);
+        Task<Verification> GetVerificationByPhone(string phoneNumber);
     }
 }
