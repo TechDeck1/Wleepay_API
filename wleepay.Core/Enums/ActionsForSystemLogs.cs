@@ -13,7 +13,8 @@ namespace wleepay.Core.Enums
         [Description("ForgotPassword")] ForgotPassword,
         [Description("Deactivate")] Deactivate,
         [Description("Activate")] Activate,
-        [Description("CompleteLogin")] CompleteLoginProcess
+        [Description("CompleteLogin")] CompleteLoginProcess,
+        [Description("CompleteSignUp")] CompleteSignUpProcess
 
 
     }

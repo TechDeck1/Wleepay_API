@@ -46,5 +46,13 @@ namespace wleepay.API.Resources
         public string? ClientURI { get; set; }
     }
 
+    public class SetPinResources
+    {
+        public string? Pin { get; set; }
+        public string? ConfirmPin { get; set; }
+        public string? Email { get; set; }
+
+    }
+
 
 }

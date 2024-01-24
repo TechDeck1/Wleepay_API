@@ -291,9 +291,6 @@ namespace wleepay.API.Controllers
                     var roleEnumStringValue = userDetail.Role.HasValue ? ((Core.Enums.Role)userDetail.Role) : ((Core.Enums.Role)Core.Enums.Role.Member);
                     await _userManager.AddToRoleAsync(newUser, roleEnumStringValue.ToString());
                    
-                    //sign in user with identity
-                    //var result = await _signInManager.PasswordSignInAsync(newUser, "Admin@123456", false, true);
-
                     //insert data in userdetails
                     var userDetailsToInsert = _mapper.Map<AddStaffDetailsResource, UserDetail>(userDetail);
                     userDetailsToInsert.UserId = newUser.Id;
@@ -307,14 +304,13 @@ namespace wleepay.API.Controllers
                         //var profileURL = await _storageService.UploadImageWithURL(userDetailsToInsert.Image, "user-profile-picture", newUser.Id);
                         //var profileURL = userDetailsToInsert.Image + "";
                         var profileURL = _storageService.UploadUserProfileImage(userDetailsToInsert.Image, newUser.Id);
-
                         userDetailsToInsert.Image = profileURL;
                     }
 
                     if (!string.IsNullOrEmpty(userDetailsToInsert.KYCDocumentImage))
                     {
                         var documentURL = _storageService.UploadKYCDocument(userDetailsToInsert.KYCDocumentImage, newUser.Id);
-                        //var profileURL = userDetailsToInsert.Image + "";
+                        
                         userDetailsToInsert.KYCDocumentImage = documentURL.ToString();
                         if (userDetailsToInsert.KYCLevel == Core.Enums.KYCLevel.L1.GetHashCode())
                         {
@@ -1078,7 +1074,79 @@ namespace wleepay.API.Controllers
             }
 
         }
-      
+
+        [HttpPost("SetPin")]
+        public async Task<IActionResult> SetPin([FromBody] SetPinResources setupLogin)
+        {
+            var secretKey = _configuration.GetSection("SecretKeyForEncryptAndDecrypt").Value; //secret key
+            string decryptedEmail = Common.Decrypt(setupLogin.Email, secretKey); // helper function for decryption
+
+            var user = await _userManager.FindByEmailAsync(decryptedEmail);
+
+            //functionality for adding logs to the db
+            SystemActivityLog systemActivityLog = new SystemActivityLog();
+            systemActivityLog.UserId = user.Id;
+            systemActivityLog.Email = decryptedEmail;
+            systemActivityLog.IpAddress = GetClientIpAddress();
+            systemActivityLog.Action = ActionsForSystemLogs.CompleteSignUpProcess.ToDescriptionString();
+
+            if (user == null) //check if user is null
+            {
+                systemActivityLog.Description = GenericMessagesForSystemLogs.NotExists.ToDescriptionString();
+                await _systemActivityLogsService.AddSystemLogs(systemActivityLog);
+                return Ok(new
+                {
+                    Success = false,
+                    Message = Messages.NotFound.ToDescriptionString(),
+                });
+            }
+
+            var userDetails = await _userDetailsService.GetUserDetailsById(user.Id);
+            if (userDetails != null)
+            {
+                if (user.Email == decryptedEmail)
+                {
+                    //setup new password
+                    var addPasswordResult = await _userManager.AddPasswordAsync(user, setupLogin.ConfirmPin);
+
+                    if (addPasswordResult.Succeeded)
+                    {
+                        userDetails.Status = (int)Status.Active;
+                        //add user details
+                        await _userDetailsService.AddOrUpdateUserDetails(userDetails);
+                       
+                        systemActivityLog.Description = GenericMessagesForSystemLogs.CompleteLoginProcess.ToDescriptionString();
+                        var addLogs = await _systemActivityLogsService.AddSystemLogs(systemActivityLog);
+                      
+                        //return response
+                        return Ok(new
+                        {
+                            Success = true,
+                            Message = Messages.PasswordGenerated.ToDescriptionString()
+
+                        });
+                    }
+                }
+                else
+                {
+                    systemActivityLog.Description = GenericMessagesForSystemLogs.Failed.ToDescriptionString();
+                    var addLogs = await _systemActivityLogsService.AddSystemLogs(systemActivityLog);
+                    return Ok(new
+                    {
+                        Success = false,
+                        Message = Messages.EmailNotValid.ToDescriptionString()
+
+                    });
+
+                }
+            }
+            return Ok(new
+            {
+                Success = false,
+                Message = Messages.InvalidRequest.ToDescriptionString()
+            });
+        }
+
         #region helper methods
         private string GenerateJSONWebToken(UserDetail userInfo)
         {

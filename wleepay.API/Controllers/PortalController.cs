@@ -146,29 +146,32 @@ namespace wleepay.API.Controllers
 
                 systemActivityLog.Description = GenericMessagesForSystemLogs.SuccessfullyLoggedIn.ToDescriptionString();
                 
-                var addLogs= await _systemActivityLogsService.AddSystemLogs(systemActivityLog);
+                await _systemActivityLogsService.AddSystemLogs(systemActivityLog);
 
-                if (userRole[0] == "SuperAdmin")
+                if (userRole[0] == "Staff")
                 {
-                    if (!userDetails.IsLoggedIn)
-                        updatedUser = await _userDetailsService.UpdateUserLoggedInStatus(userDetails.UserId, true);
-
                     return Ok(new
                     {
                         UserId = user.Id,
                         Success = true,
-                        Token = token,
-                        IsLoggedInVerified = updatedUser != null ? updatedUser.IsLoggedIn : userDetails.IsLoggedIn,
                         Role = userRole?[0],
                     });
+
                 }
+
+                if (!userDetails.IsLoggedIn)
+                    updatedUser = await _userDetailsService.UpdateUserLoggedInStatus(userDetails.UserId, true);
 
                 return Ok(new
                 {
                     UserId = user.Id,
                     Success = true,
+                    Token = token,
+                    IsLoggedInVerified = updatedUser != null ? updatedUser.IsLoggedIn : userDetails.IsLoggedIn,
                     Role = userRole?[0],
                 });
+               
+
 
             }
 
