@@ -31,6 +31,8 @@ using Twilio.TwiML.Messaging;
 using System.Web;
 using wleepay.Core.Enums;
 using System.Security.Cryptography;
+using wleepay.Communication.Services;
+using wleepay.API.Helpers;
 
 namespace wleepay.API.Controllers
 {
@@ -59,6 +61,7 @@ namespace wleepay.API.Controllers
         private readonly ISystemActivityLogsService _systemActivityLogsService;
         private readonly IUsersStaffRoleService _usersStaffRoleService;
         private readonly IStaffPermissionService _staffPermissionService;
+
 
         public AccountController(UserManager<ApplicationUser> userManager,
             RoleManager<ApplicationRole> roleManager,
@@ -382,6 +385,137 @@ namespace wleepay.API.Controllers
             }
         }
 
+        [HttpPost("RegisterSystemAdmin")]
+        public async Task<IActionResult> RegisterSystemAdmin([FromBody] AddSystemAdminResource userDetail)
+        {
+            try
+            {
+                var baseUrl = _configuration.GetSection("BaseUrl").Value;
+                var validator = new AddSystemAdminDetailsValidator();
+                var validationResult = await validator.ValidateAsync(userDetail);
+
+                if (!validationResult.IsValid)
+                    return BadRequest(validationResult.Errors);
+
+                //check for super admin
+                if (userDetail.Role == 0)
+                    return BadRequest(Messages.IsSuperAdmin.ToDescriptionString());
+
+                //check if user exists with email
+                ApplicationUser applicationUser = new ApplicationUser();
+                if (!string.IsNullOrEmpty(userDetail.EmailId))
+                    applicationUser = await _userManager.FindByEmailAsync(userDetail.EmailId);
+
+                if (applicationUser != null && !string.IsNullOrEmpty(applicationUser.Id))
+                    return BadRequest(Messages.EmailAlreadyUsed.ToDescriptionString());
+
+                //check if phone number already exists
+                var userExistWithPhone = await _userDetailsService.IsPhoneAlreadyRegistered(userDetail.PhoneNumber);
+                if (userExistWithPhone == true)
+                    return BadRequest(Messages.PhoneAlreadyUsed.ToDescriptionString());
+
+                //create new user with identity
+                var newUser = new ApplicationUser() { UserName = userDetail.PhoneNumber, Id = Guid.NewGuid().ToString() };
+                if (!string.IsNullOrEmpty(userDetail.EmailId))
+                    newUser.Email = userDetail.EmailId;
+
+                var isUserCreated = await _userManager.CreateAsync(newUser);
+
+                if (isUserCreated.Succeeded)
+                {
+                    //assign role to user
+                    var roleEnumStringValue = userDetail.Role.HasValue ? ((Core.Enums.Role)userDetail.Role) : ((Core.Enums.Role)Core.Enums.Role.Member);
+                    await _userManager.AddToRoleAsync(newUser, roleEnumStringValue.ToString());
+
+                    //insert data in userdetails
+                    var userDetailsToInsert = _mapper.Map<AddSystemAdminResource, UserDetail>(userDetail);
+                    userDetailsToInsert.UserId = newUser.Id;
+
+                    //generate account number for user
+                    userDetailsToInsert.AccountNumber = await GenerateUniqueAccountNumber();
+
+                    //save smile identity image to blob for user profile
+                    if (!string.IsNullOrEmpty(userDetailsToInsert.Image))
+                    {
+                        var profileURL = _storageService.UploadUserProfileImage(userDetailsToInsert.Image, newUser.Id);
+                        userDetailsToInsert.Image = profileURL;
+                    }
+
+                    if (!string.IsNullOrEmpty(userDetailsToInsert.KYCDocumentImage))
+                    {
+                        var documentURL = _storageService.UploadKYCDocument(userDetailsToInsert.KYCDocumentImage, newUser.Id);
+                        userDetailsToInsert.KYCDocumentImage = documentURL.ToString();
+                      
+                        if (userDetailsToInsert.KYCLevel == Core.Enums.KYCLevel.L1.GetHashCode())
+                        {
+                            //update kyc level from l1 to l2 for new document upload
+                            userDetailsToInsert.KYCLevel = Core.Enums.KYCLevel.L2.GetHashCode();
+                        }
+                    }
+
+                    //save data
+                    var updatedDetails = await _userDetailsService.AddOrUpdateUserDetails(userDetailsToInsert);
+                   
+                    if (updatedDetails.UserId != null)
+                    {
+                        //kyc document is optional in registration
+                        if (userDetail.DocumentTypeId.HasValue)
+                        {
+                            //insert data in kyc document
+                            var kycDetailsToAdd = _mapper.Map<AddSystemAdminResource, KYCdocuments>(userDetail);
+                            kycDetailsToAdd.UserId = newUser.Id;
+                            kycDetailsToAdd.CreatedDate = DateTime.Now;
+                            kycDetailsToAdd.UpdatedDate = DateTime.Now;
+                            await _kycDocumentsService.AddOrUpdateKYCDocument(kycDetailsToAdd);
+                        }
+
+                        //get user details
+                        string verificationCode = Common.GenerateVerificationCode(4); // Generate a 4-digit verification code
+                        string message = "Your one time code is " + verificationCode;
+                        var code = _smsService.sendMessage(message, userDetailsToInsert.PhoneNumber);// service for send otp
+
+                        if (code != null && code != " ")
+                        {
+                            //update database
+                            var updateDatabase = await _userDetailsService.UpdateUserVerificationCode(userDetailsToInsert.UserId, verificationCode);
+                        }
+
+                        //generate jwt token
+                        //var token = GenerateJSONWebToken(userDetailsToInsert);
+
+                        //CompleteSignUpResourceModel completeSignUpResourceModel = new CompleteSignUpResourceModel();
+                        //completeSignUpResourceModel.Email = userDetail.EmailId;
+                        //completeSignUpResourceModel.PhoneNumber = userDetail.PhoneNumber;
+                        //completeSignUpResourceModel.ClientURI = baseUrl;
+                        //var result = await GenerateLinkForLoginSetup(completeSignUpResourceModel);
+
+                        ////send registration sucess message on mobile number
+                        //_smsService.sendMessage(MessagesTemplates.RegistrationSuccessMessage(updatedDetails.AccountNumber, updatedDetails?.KYCLevelDetail?.Name), updatedDetails.PhoneNumber);
+
+                        return Ok(new
+                        {
+                            success = true,
+                            userId = userDetailsToInsert.UserId,
+                            //firstName = updatedDetails.FirstName,
+                            //lastName = updatedDetails.LastName,
+                            //ProfilePic = updatedDetails.Image,
+                            //phoneNumber = updatedDetails.PhoneNumber,
+                            //accountNumber = updatedDetails.AccountNumber
+                        });
+                    }
+                    else
+                        return BadRequest(Messages.BadRequest.ToDescriptionString());
+                }
+                else
+                    return BadRequest(isUserCreated.Errors.FirstOrDefault().Description);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.ToString());
+                throw ex.InnerException;
+            }
+        }
+
         [HttpPost("Login")]
         public async Task<IActionResult> Login([FromBody] LoginRequest loginRequest)
         {
@@ -586,7 +720,7 @@ namespace wleepay.API.Controllers
                     //generated the token
                     var token = await _userManager.GeneratePasswordResetTokenAsync(user);
                     var secretKey = _configuration.GetSection("SecretKeyForEncryptAndDecrypt").Value; //secret key
-                    string encryptedEmail = Encrypt(forgotPasswordDto.Email, secretKey);
+                    string encryptedEmail = Common.Encrypt(forgotPasswordDto.Email, secretKey);
                     var EncodedEncryptedEmail = HttpUtility.UrlEncode(encryptedEmail);
                     var encodedToken = HttpUtility.UrlEncode(token);
 
@@ -632,7 +766,7 @@ namespace wleepay.API.Controllers
                 return BadRequest();
 
             var secretKey = _configuration.GetSection("SecretKeyForEncryptAndDecrypt").Value; //secret key
-            string decryptedEmail = Decrypt(resetPasswordDto.Email, secretKey); // helper function for decryption
+            string decryptedEmail = Common.Decrypt(resetPasswordDto.Email, secretKey); // helper function for decryption
 
             //get user by email
             var user = await _userManager.FindByEmailAsync(decryptedEmail);
@@ -686,7 +820,7 @@ namespace wleepay.API.Controllers
         public async Task<IActionResult> SetupLoginPassword([FromBody] SetupLoginResources setupLogin)
         {
             var secretKey = _configuration.GetSection("SecretKeyForEncryptAndDecrypt").Value; //secret key
-            string decryptedEmail = Decrypt(setupLogin.Email, secretKey); // helper function for decryption
+            string decryptedEmail = Common.Decrypt(setupLogin.Email, secretKey); // helper function for decryption
 
             var user = await _userManager.FindByEmailAsync(decryptedEmail);
             
@@ -764,7 +898,7 @@ namespace wleepay.API.Controllers
         public async Task<IActionResult> CheckIfAccountAlreadySetup(AccountExistVerificationResource resource)
         {
             var secretKey = _configuration.GetSection("SecretKeyForEncryptAndDecrypt").Value; //secret key for decryption
-            string decryptedEmail = Decrypt(resource.Email, secretKey);
+            string decryptedEmail = Common.Decrypt(resource.Email, secretKey);
             var user = await _userManager.FindByEmailAsync(decryptedEmail); //Get user details by email
             if (user == null)
             {
@@ -802,7 +936,7 @@ namespace wleepay.API.Controllers
                 return BadRequest();
 
             var secretKey = _configuration.GetSection("SecretKeyForEncryptAndDecrypt").Value; //secret key
-            string decryptedEmail = Decrypt(resource.Email, secretKey); // helper function for decryption
+            string decryptedEmail = Common.Decrypt(resource.Email, secretKey); // helper function for decryption
 
             //get user by email
             var user = await _userManager.FindByEmailAsync(decryptedEmail);
@@ -843,6 +977,104 @@ namespace wleepay.API.Controllers
 
         }
 
+        [HttpPost("SendOtpForSystemAdmin")]
+        public async Task<IActionResult> SendOtpForSystemAdmin([FromBody] SendOTPForSystemAdmin model)
+        {
+            try
+            {
+                //get user details
+                string verificationCode = Common.GenerateVerificationCode(4); // Generate a 4-digit verification code
+                string message = "Your one time code is " + verificationCode;
+                var code = _smsService.sendMessage(message, model.Phone);// service for send otp
+
+                if (code != null && code != " ")
+                {
+                    //update database
+                    var updateDatabase = await _userDetailsService.UpdateUserVerificationCode(model.UserId, verificationCode);
+                    return Ok(new
+                    {
+                        Success = true
+
+                    });
+                }
+                return BadRequest();
+
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+
+        }
+
+        [HttpPost("VerifyPhoneForSystemAdmin")]
+        public async Task<IActionResult> VerifyPhoneForSystemAdmin([FromBody] SystemAdminVerificationModel model)
+        {
+            try
+            {
+                //get user details
+                var userDetails = await _userDetailsService.GetUserDetailsById(model.UserId);
+
+                //logic for getting time difference from expiry date and current date
+                var expiryDate = userDetails.VerificationExpiry;
+                DateTime currentDate = DateTime.UtcNow; // Use UtcNow to compare in UTC
+
+                TimeSpan difference = (TimeSpan)(currentDate - expiryDate);
+                int minutesDifference = (int)difference.TotalMinutes;
+
+                // Check if the given date is expired (more than 2 minutes ago)
+                bool isExpired = minutesDifference >= 2;
+
+                if (!isExpired)
+                {
+                    if (userDetails.VerificationCode == model.Code)
+                    {
+                        var token = GenerateJSONWebToken(userDetails);
+
+                        var ipAddress = HttpContext.Connection.RemoteIpAddress.ToString();
+                        _logger.LogInformation($"Action: {ControllerContext.ActionDescriptor.ActionName}, User: {userDetails.UserId}, Timestamp: {DateTime.UtcNow}, IP: {ipAddress}");
+
+                        return Ok(new
+                        {
+                            userId = userDetails.UserId,
+                            isExpired = false,
+                            success = true,
+                            message = Messages.VerificationSuccessfull.ToDescriptionString()
+                        });
+                    }
+                    else
+                    {
+                        return Ok(new
+                        {
+                            isExpired = false,
+                            success = true,
+                            message = Messages.WrongOtp.ToDescriptionString(),
+                        });
+                    }
+                }
+                else
+                {
+                    return Ok(new
+                    {
+                        isExpired = true,
+                        success = false,
+                        message = Messages.OtpExpired.ToDescriptionString(),
+                    });
+
+                }
+
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new
+                {
+                    message = ex.Message
+                });
+            }
+
+        }
+      
         #region helper methods
         private string GenerateJSONWebToken(UserDetail userInfo)
         {
@@ -913,7 +1145,7 @@ namespace wleepay.API.Controllers
                     // Your secret key for encryption (16, 24, or 32 bytes for AES)
                     string secretKey = "1234567890123456";
                     // Encrypt the text
-                    string encryptedText = Encrypt(linkForLoginSetup.Email, secretKey);
+                    string encryptedText = Common.Encrypt(linkForLoginSetup.Email, secretKey);
                     var token = HttpUtility.UrlEncode(encryptedText);
                     string callbackUrl = $"{linkForLoginSetup.ClientURI}?email={(token)}";
                     var username = userDetails.FirstName + " " + userDetails.LastName;
@@ -936,58 +1168,34 @@ namespace wleepay.API.Controllers
             return "Unknown";
         }
 
-        public static string Encrypt(string text, string key)
+        private async Task<bool> GenerateLinkForComleteSignUp(CompleteSignUpResourceModel completeSignUpResourceModel)
         {
-            using (Aes aesAlg = Aes.Create())
+            var user = await _userManager.FindByEmailAsync(completeSignUpResourceModel.Email);
+            if (user == null)
+                return false;
+
+            var userDetails = await _userDetailsService.GetUserDetailsById(user.Id);
+            if (userDetails != null)
             {
-                aesAlg.Key = Encoding.UTF8.GetBytes(key);
-                aesAlg.IV = new byte[16]; // For AES, IV is always 16 bytes
-
-                // Create an encryptor to perform the stream transform
-                ICryptoTransform encryptor = aesAlg.CreateEncryptor(aesAlg.Key, aesAlg.IV);
-
-                // Create the streams used for encryption
-                using (MemoryStream msEncrypt = new MemoryStream())
+                if (userDetails.PhoneNumber == completeSignUpResourceModel.PhoneNumber && user.Email == completeSignUpResourceModel.Email)
                 {
-                    using (CryptoStream csEncrypt = new CryptoStream(msEncrypt, encryptor, CryptoStreamMode.Write))
-                    {
-                        using (StreamWriter swEncrypt = new StreamWriter(csEncrypt))
-                        {
-                            // Write all data to the stream
-                            swEncrypt.Write(text);
-                        }
-                    }
+                    // Your secret key for encryption (16, 24, or 32 bytes for AES)
+                    string secretKey = "1234567890123456";
+                    // Encrypt the text
+                    string encryptedText = Common.Encrypt(completeSignUpResourceModel.Email, secretKey);
+                    var token = HttpUtility.UrlEncode(encryptedText);
+                    string callbackUrl = $"{completeSignUpResourceModel.ClientURI}?email={(token)}";
+                    var username = userDetails.FirstName + " " + userDetails.LastName;
+                    await _emailSender.SendEmailToSystemAdminToCompleteSignUp(completeSignUpResourceModel.Email, callbackUrl, username);
 
-                    // Return the encrypted bytes from the memory stream
-                    return Convert.ToBase64String(msEncrypt.ToArray());
+                    return true;
+
                 }
+
             }
+            return false;
         }
 
-        public static string Decrypt(string cipherText, string key)
-        {
-            using (Aes aesAlg = Aes.Create())
-            {
-                aesAlg.Key = Encoding.UTF8.GetBytes(key);
-                aesAlg.IV = new byte[16]; // For AES, IV is always 16 bytes
-
-                // Create a decryptor to perform the stream transform
-                ICryptoTransform decryptor = aesAlg.CreateDecryptor(aesAlg.Key, aesAlg.IV);
-
-                // Create the streams used for decryption
-                using (MemoryStream msDecrypt = new MemoryStream(Convert.FromBase64String(cipherText)))
-                {
-                    using (CryptoStream csDecrypt = new CryptoStream(msDecrypt, decryptor, CryptoStreamMode.Read))
-                    {
-                        using (StreamReader srDecrypt = new StreamReader(csDecrypt))
-                        {
-                            // Read the decrypted bytes from the decrypting stream
-                            return srDecrypt.ReadToEnd();
-                        }
-                    }
-                }
-            }
-        }
         #endregion
     }
 }

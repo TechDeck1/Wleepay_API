@@ -39,5 +39,12 @@ namespace wleepay.API.Resources
         public string? Email { get; set; }
     }
 
+    public class CompleteSignUpResourceModel
+    {
+        public string? Email { get; set; }
+        public string PhoneNumber { get; set; }
+        public string? ClientURI { get; set; }
+    }
+
 
 }

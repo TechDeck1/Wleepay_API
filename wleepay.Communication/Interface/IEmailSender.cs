@@ -21,6 +21,8 @@ namespace wleepay.Communication.Interface
         Task<bool> EmailForAccountCreationToSystemAdmins(string systemAdminEmails, string userEmail);
         Task<bool> ReplyForCustomerTicket(string Message, string email);
         Task<bool> ReplyForCustomerTicketClosed(string Message, string email);
+        Task<bool> SendEmailToSystemAdminToCompleteSignUp(string email, string uri, string username);
+
 
 
     }
