@@ -28,6 +28,7 @@ using wleepay.Communication.Interface;
 using DevExpress.Data.Filtering.Helpers;
 using wleepay.Core.Enums;
 using Microsoft.SqlServer.Management.Smo;
+using wleepay.API.Helpers;
 
 namespace wleepay.API.Controllers
 {
@@ -140,10 +141,6 @@ namespace wleepay.API.Controllers
                 //updated user
                 UserDetail updatedUser = null;
 
-                //set logged in status to true if first log in
-                //_logger.LogInformation("Login attempt for email {Email} from IP {IPAddress} at {Timestamp}", loginRequest.Email, GetClientIpAddress(), DateTime.UtcNow);
-
-
                 systemActivityLog.Description = GenericMessagesForSystemLogs.SuccessfullyLoggedIn.ToDescriptionString();
                 
                 await _systemActivityLogsService.AddSystemLogs(systemActivityLog);
@@ -156,7 +153,6 @@ namespace wleepay.API.Controllers
                         Success = true,
                         Role = userRole?[0],
                     });
-
                 }
 
                 if (!userDetails.IsLoggedIn)
@@ -170,8 +166,6 @@ namespace wleepay.API.Controllers
                     IsLoggedInVerified = updatedUser != null ? updatedUser.IsLoggedIn : userDetails.IsLoggedIn,
                     Role = userRole?[0],
                 });
-               
-
 
             }
 
@@ -232,10 +226,10 @@ namespace wleepay.API.Controllers
             {
                 //get user details
                 var userDetails = await _userDetailsService.GetUserDetailsById(model.UserId);
-                string verificationCode = GenerateVerificationCode(4); // Generate a 4-digit verification code
+                string verificationCode = Common.GenerateVerificationCode(4); // Generate a 4-digit verification code
                 string message = "Your one time code is " + verificationCode;
                 var code = _SMSService.sendMessage(message, userDetails.PhoneNumber);// service for send otp
-                var PhoneNumber = MaskPhoneNumber(userDetails.PhoneNumber);
+                var PhoneNumber = Common.MaskPhoneNumber(userDetails.PhoneNumber);
 
                 if (code != null && code != " ")
                 {
@@ -419,41 +413,6 @@ namespace wleepay.API.Controllers
                 signingCredentials: new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256)
                 );
             return new JwtSecurityTokenHandler().WriteToken(token);
-        }
-
-        private string GenerateVerificationCode(int length)
-        {
-            const string validChars = "0123456789"; // Characters to use in the verification code
-            StringBuilder verificationCode = new StringBuilder();
-            Random random = new Random();
-
-            for (int i = 0; i < length; i++)
-            {
-                int randomIndex = random.Next(0, validChars.Length);
-                verificationCode.Append(validChars[randomIndex]);
-            }
-
-            return verificationCode.ToString();
-        }
-
-        private string MaskPhoneNumber(string PhoneNumber)
-        {
-            // Check if the Phone number is at least 4 digits long
-            if (PhoneNumber.Length >= 4)
-            {
-                // Get the last 2 digits of the Phone number
-                string lastTwoDigits = PhoneNumber.Substring(PhoneNumber.Length - 2);
-
-                // Mask the rest of the Phone number with asterisks (*)
-                string maskedPhoneNumber = new string('*', PhoneNumber.Length - 2) + lastTwoDigits;
-
-                return maskedPhoneNumber;
-            }
-            else
-            {
-                // If the Phone number is less than 4 digits, return it as it is (no masking)
-                return PhoneNumber;
-            }
         }
 
         private string GetClientIpAddress()

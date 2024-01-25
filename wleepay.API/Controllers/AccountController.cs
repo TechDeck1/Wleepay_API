@@ -1112,6 +1112,7 @@ namespace wleepay.API.Controllers
                     if (addPasswordResult.Succeeded)
                     {
                         userDetails.Status = (int)Status.Active;
+                        
                         //add user details
                         await _userDetailsService.AddOrUpdateUserDetails(userDetails);
                        
@@ -1137,7 +1138,6 @@ namespace wleepay.API.Controllers
                         Message = Messages.EmailNotValid.ToDescriptionString()
 
                     });
-
                 }
             }
             return Ok(new

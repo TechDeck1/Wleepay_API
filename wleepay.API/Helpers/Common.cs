@@ -75,5 +75,25 @@ namespace wleepay.API.Helpers
             return verificationCode.ToString();
         }
 
+        public static string MaskPhoneNumber(string PhoneNumber)
+        {
+            // Check if the Phone number is at least 4 digits long
+            if (PhoneNumber.Length >= 4)
+            {
+                // Get the last 2 digits of the Phone number
+                string lastTwoDigits = PhoneNumber.Substring(PhoneNumber.Length - 2);
+
+                // Mask the rest of the Phone number with asterisks (*)
+                string maskedPhoneNumber = new string('*', PhoneNumber.Length - 2) + lastTwoDigits;
+
+                return maskedPhoneNumber;
+            }
+            else
+            {
+                // If the Phone number is less than 4 digits, return it as it is (no masking)
+                return PhoneNumber;
+            }
+        }
+
     }
 }
