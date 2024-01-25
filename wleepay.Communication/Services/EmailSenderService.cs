@@ -29,45 +29,53 @@ namespace wleepay.Communication.Services
         {
             _configuration = configuration;
             string sendGridApiKey = configuration.GetSection("SendGrid:WleePaySendGridApiKey").Value.ToString();
-            //string authToken = configuration.GetSection("Twillio:Token").Value.ToString();
-            //_fromNumber = configuration.GetSection("Twillio:FromNumber").Value.ToString();
-            //TwilioClient.Init(accountSid, authToken);
         }
+
         public async Task<bool> SendEmailAsyncForLockAccountToSystemAdmin(string email, string name, string phone)
         {
             
-                var subject = "Failed Login attempt";
-                var recipientEmail = "ariel.ranjot@gmail.com";
-                // var recipientEmail = email;
+            var subject = "Failed Login attempt";
+            var recipientEmail = "ariel.ranjot@gmail.com";
+            // var recipientEmail = email;
 
-                EmailLockOutTemplateForSystemAdmin template = new EmailLockOutTemplateForSystemAdmin
-                {
-                    StaffEmail = email,
-                    StaffFirstName = name,
-                    StaffPhoneNumber = phone
-                };
+            EmailLockOutTemplateForSystemAdmin template = new EmailLockOutTemplateForSystemAdmin
+            {
+                StaffEmail = email,
+                StaffFirstName = name,
+                StaffPhoneNumber = phone
+            };
 
-                string emailHtml = template.GenerateHtml();
+            string htmlTemplate = template.GenerateHtml();
 
-                // Sender's email address and credentials
-                string senderEmail = "mvctest17@gmail.com";
-                string senderPassword = "bqhyobxynxwbkteo"; // Use app-specific passwords or secure storage for passwords
+            // Sender's email address and credentials
+            string senderEmail = "ranjotk@arielsoftwares.com";
 
-                // Create SMTP client
-                SmtpClient smtpClient = new SmtpClient("smtp.gmail.com"); // Use your SMTP server
+            var apiKey = _configuration.GetSection("SendGrid:WleePaySendGridApiKey").Value.ToString();
+            var client = new SendGridClient(apiKey);
+            var msg = new SendGridMessage()
+            {
+                From = new EmailAddress(senderEmail, "lionel"),
+                Subject = subject,
+                PlainTextContent = "Dear..",
+                HtmlContent = htmlTemplate
 
-                // Port and SSL configuration
-                smtpClient.Port = 587; // Port for SMTP (e.g., 587 for Gmail)
-                smtpClient.EnableSsl = true;
-                smtpClient.UseDefaultCredentials = false;
-                smtpClient.Credentials = new NetworkCredential(senderEmail, senderPassword);
+            };
+            msg.AddTo(new EmailAddress(recipientEmail, "shikha"));
+            var response = await client.SendEmailAsync(msg);
+            Console.WriteLine(response.Body.ToString(), response.StatusCode);
 
-                MailMessage mailMessage = new MailMessage(senderEmail, recipientEmail, subject, emailHtml);
-
-                smtpClient.Send(mailMessage);
-
+            // A success status code means SendGrid received the email request and will process it.
+            // If email is not received, use this URL to debug: https://app.sendgrid.com/email_activity 
+            if (response.IsSuccessStatusCode)
+            {
+                Console.WriteLine(response.IsSuccessStatusCode ? "Email queued successfully!" : "Something went wrong!");
                 return true;
+            }
+            else
+            {
+                return false;
 
+            }
             
         }
 
@@ -85,26 +93,37 @@ namespace wleepay.Communication.Services
                 StaffPhoneNumber = phone
             };
 
-            string emailHtml = template.GenerateHtml();
+            string htmlTemplate = template.GenerateHtml();
 
             // Sender's email address and credentials
-            string senderEmail = "mvctest17@gmail.com";
-            string senderPassword = "bqhyobxynxwbkteo"; // Use app-specific passwords or secure storage for passwords
+            string senderEmail = "ranjotk@arielsoftwares.com";
 
-            // Create SMTP client
-            SmtpClient smtpClient = new SmtpClient("smtp.gmail.com"); // Use your SMTP server
+            var apiKey = _configuration.GetSection("SendGrid:WleePaySendGridApiKey").Value.ToString();
+            var client = new SendGridClient(apiKey);
+            var msg = new SendGridMessage()
+            {
+                From = new EmailAddress(senderEmail, "lionel"),
+                Subject = subject,
+                PlainTextContent = "Dear..",
+                HtmlContent = htmlTemplate
 
-            // Port and SSL configuration
-            smtpClient.Port = 587; // Port for SMTP (e.g., 587 for Gmail)
-            smtpClient.EnableSsl = true;
-            smtpClient.UseDefaultCredentials = false;
-            smtpClient.Credentials = new NetworkCredential(senderEmail, senderPassword);
+            };
+            msg.AddTo(new EmailAddress(recipientEmail, "shikha"));
+            var response = await client.SendEmailAsync(msg);
+            Console.WriteLine(response.Body.ToString(), response.StatusCode);
 
-            MailMessage mailMessage = new MailMessage(senderEmail, recipientEmail, subject, emailHtml);
+            // A success status code means SendGrid received the email request and will process it.
+            // If email is not received, use this URL to debug: https://app.sendgrid.com/email_activity 
+            if (response.IsSuccessStatusCode)
+            {
+                Console.WriteLine(response.IsSuccessStatusCode ? "Email queued successfully!" : "Something went wrong!");
+                return true;
+            }
+            else
+            {
+                return false;
 
-            smtpClient.Send(mailMessage);
-
-            return true;
+            }
 
 
         }
@@ -116,26 +135,37 @@ namespace wleepay.Communication.Services
 
             string resetPasswordLink = uri;
 
-            var body = $"Dear {username},\n\nPlease click the following link to reset your password:\n {resetPasswordLink}";
+            var htmlTemplate = $"Dear {username},\n\nPlease click the following link to reset your password:\n {resetPasswordLink}";
 
             // Sender's email address and credentials
-            string senderEmail = "mvctest17@gmail.com";
-            string senderPassword = "bqhyobxynxwbkteo"; // Use app-specific passwords or secure storage for passwords
+            string senderEmail = "ranjotk@arielsoftwares.com";
 
-            // Create SMTP client
-            SmtpClient smtpClient = new SmtpClient("smtp.gmail.com"); // Use your SMTP server
+            var apiKey = _configuration.GetSection("SendGrid:WleePaySendGridApiKey").Value.ToString();
+            var client = new SendGridClient(apiKey);
+            var msg = new SendGridMessage()
+            {
+                From = new EmailAddress(senderEmail, "lionel"),
+                Subject = subject,
+                PlainTextContent = "Dear..",
+                HtmlContent = htmlTemplate
 
-            // Port and SSL configuration
-            smtpClient.Port = 587; // Port for SMTP (e.g., 587 for Gmail)
-            smtpClient.EnableSsl = true;
-            smtpClient.UseDefaultCredentials = false;
-            smtpClient.Credentials = new NetworkCredential(senderEmail, senderPassword);
+            };
+            msg.AddTo(new EmailAddress(recipientEmail, "shikha"));
+            var response = await client.SendEmailAsync(msg);
+            Console.WriteLine(response.Body.ToString(), response.StatusCode);
 
-            MailMessage mailMessage = new MailMessage(senderEmail, recipientEmail, subject, body);
+            // A success status code means SendGrid received the email request and will process it.
+            // If email is not received, use this URL to debug: https://app.sendgrid.com/email_activity 
+            if (response.IsSuccessStatusCode)
+            {
+                Console.WriteLine(response.IsSuccessStatusCode ? "Email queued successfully!" : "Something went wrong!");
+                return true;
+            }
+            else
+            {
+                return false;
 
-            smtpClient.Send(mailMessage);
-
-            return true;
+            }
         }
 
         public async Task<bool> SendPasswordChangeEmailToSystemAdminstrator(string email, string name , string phone)
@@ -152,26 +182,37 @@ namespace wleepay.Communication.Services
                 StaffPhoneNumber = phone
             };
 
-            string emailHtml = template.GenerateHtml();
+            string htmlTemplate = template.GenerateHtml();
 
             // Sender's email address and credentials
-            string senderEmail = "mvctest17@gmail.com";
-            string senderPassword = "bqhyobxynxwbkteo"; // Use app-specific passwords or secure storage for passwords
+            string senderEmail = "ranjotk@arielsoftwares.com";
 
-            // Create SMTP client
-            SmtpClient smtpClient = new SmtpClient("smtp.gmail.com"); // Use your SMTP server
+            var apiKey = _configuration.GetSection("SendGrid:WleePaySendGridApiKey").Value.ToString();
+            var client = new SendGridClient(apiKey);
+            var msg = new SendGridMessage()
+            {
+                From = new EmailAddress(senderEmail, "lionel"),
+                Subject = subject,
+                PlainTextContent = "Dear..",
+                HtmlContent = htmlTemplate
 
-            // Port and SSL configuration
-            smtpClient.Port = 587; // Port for SMTP (e.g., 587 for Gmail)
-            smtpClient.EnableSsl = true;
-            smtpClient.UseDefaultCredentials = false;
-            smtpClient.Credentials = new NetworkCredential(senderEmail, senderPassword);
+            };
+            msg.AddTo(new EmailAddress(recipientEmail, "shikha"));
+            var response = await client.SendEmailAsync(msg);
+            Console.WriteLine(response.Body.ToString(), response.StatusCode);
 
-            MailMessage mailMessage = new MailMessage(senderEmail, recipientEmail, subject, emailHtml);
+            // A success status code means SendGrid received the email request and will process it.
+            // If email is not received, use this URL to debug: https://app.sendgrid.com/email_activity 
+            if (response.IsSuccessStatusCode)
+            {
+                Console.WriteLine(response.IsSuccessStatusCode ? "Email queued successfully!" : "Something went wrong!");
+                return true;
+            }
+            else
+            {
+                return false;
 
-            smtpClient.Send(mailMessage);
-
-            return true;
+            }
 
 
         }
@@ -190,26 +231,37 @@ namespace wleepay.Communication.Services
                 StaffPhoneNumber = phone
             };
 
-            string emailHtml = template.GenerateHtml();
+            string htmlTemplate = template.GenerateHtml();
 
             // Sender's email address and credentials
-            string senderEmail = "mvctest17@gmail.com";
-            string senderPassword = "bqhyobxynxwbkteo"; // Use app-specific passwords or secure storage for passwords
+            string senderEmail = "ranjotk@arielsoftwares.com";
 
-            // Create SMTP client
-            SmtpClient smtpClient = new SmtpClient("smtp.gmail.com"); // Use your SMTP server
+            var apiKey = _configuration.GetSection("SendGrid:WleePaySendGridApiKey").Value.ToString();
+            var client = new SendGridClient(apiKey);
+            var msg = new SendGridMessage()
+            {
+                From = new EmailAddress(senderEmail, "lionel"),
+                Subject = subject,
+                PlainTextContent = "Dear..",
+                HtmlContent = htmlTemplate
 
-            // Port and SSL configuration
-            smtpClient.Port = 587; // Port for SMTP (e.g., 587 for Gmail)
-            smtpClient.EnableSsl = true;
-            smtpClient.UseDefaultCredentials = false;
-            smtpClient.Credentials = new NetworkCredential(senderEmail, senderPassword);
+            };
+            msg.AddTo(new EmailAddress(recipientEmail, "shikha"));
+            var response = await client.SendEmailAsync(msg);
+            Console.WriteLine(response.Body.ToString(), response.StatusCode);
 
-            MailMessage mailMessage = new MailMessage(senderEmail, recipientEmail, subject, emailHtml);
+            // A success status code means SendGrid received the email request and will process it.
+            // If email is not received, use this URL to debug: https://app.sendgrid.com/email_activity 
+            if (response.IsSuccessStatusCode)
+            {
+                Console.WriteLine(response.IsSuccessStatusCode ? "Email queued successfully!" : "Something went wrong!");
+                return true;
+            }
+            else
+            {
+                return false;
 
-            smtpClient.Send(mailMessage);
-
-            return true;
+            }
 
 
         }
@@ -223,26 +275,37 @@ namespace wleepay.Communication.Services
 
             string resetPasswordLink = uri;
 
-            var body = $"Dear {username},\n\nPlease click the following link to complete your login process:\n {resetPasswordLink}";
+            var htmlTemplate = $"Dear {username},\n\nPlease click the following link to complete your login process:\n {resetPasswordLink}";
 
             // Sender's email address and credentials
-            string senderEmail = "mvctest17@gmail.com";
-            string senderPassword = "bqhyobxynxwbkteo"; // Use app-specific passwords or secure storage for passwords
+            string senderEmail = "ranjotk@arielsoftwares.com";
 
-            // Create SMTP client
-            SmtpClient smtpClient = new SmtpClient("smtp.gmail.com"); // Use your SMTP server
+            var apiKey = _configuration.GetSection("SendGrid:WleePaySendGridApiKey").Value.ToString();
+            var client = new SendGridClient(apiKey);
+            var msg = new SendGridMessage()
+            {
+                From = new EmailAddress(senderEmail, "lionel"),
+                Subject = subject,
+                PlainTextContent = "Dear..",
+                HtmlContent = htmlTemplate
 
-            // Port and SSL configuration
-            smtpClient.Port = 587; // Port for SMTP (e.g., 587 for Gmail)
-            smtpClient.EnableSsl = true;
-            smtpClient.UseDefaultCredentials = false;
-            smtpClient.Credentials = new NetworkCredential(senderEmail, senderPassword);
+            };
+            msg.AddTo(new EmailAddress(recipientEmail, "shikha"));
+            var response = await client.SendEmailAsync(msg);
+            Console.WriteLine(response.Body.ToString(), response.StatusCode);
 
-            MailMessage mailMessage = new MailMessage(senderEmail, recipientEmail, subject, body);
+            // A success status code means SendGrid received the email request and will process it.
+            // If email is not received, use this URL to debug: https://app.sendgrid.com/email_activity 
+            if (response.IsSuccessStatusCode)
+            {
+                Console.WriteLine(response.IsSuccessStatusCode ? "Email queued successfully!" : "Something went wrong!");
+                return true;
+            }
+            else
+            {
+                return false;
 
-            smtpClient.Send(mailMessage);
-
-            return true;
+            }
 
 
         }
@@ -260,26 +323,37 @@ namespace wleepay.Communication.Services
                 StaffPhoneNumber = phone
             };
 
-            string emailHtml = template.GenerateHtml();
+            string htmlTemplate = template.GenerateHtml();
 
             // Sender's email address and credentials
-            string senderEmail = "mvctest17@gmail.com";
-            string senderPassword = "bqhyobxynxwbkteo"; // Use app-specific passwords or secure storage for passwords
+            string senderEmail = "ranjotk@arielsoftwares.com";
 
-            // Create SMTP client
-            SmtpClient smtpClient = new SmtpClient("smtp.gmail.com"); // Use your SMTP server
+            var apiKey = _configuration.GetSection("SendGrid:WleePaySendGridApiKey").Value.ToString();
+            var client = new SendGridClient(apiKey);
+            var msg = new SendGridMessage()
+            {
+                From = new EmailAddress(senderEmail, "lionel"),
+                Subject = subject,
+                PlainTextContent = "Dear..",
+                HtmlContent = htmlTemplate
 
-            // Port and SSL configuration
-            smtpClient.Port = 587; // Port for SMTP (e.g., 587 for Gmail)
-            smtpClient.EnableSsl = true;
-            smtpClient.UseDefaultCredentials = false;
-            smtpClient.Credentials = new NetworkCredential(senderEmail, senderPassword);
+            };
+            msg.AddTo(new EmailAddress(recipientEmail, "shikha"));
+            var response = await client.SendEmailAsync(msg);
+            Console.WriteLine(response.Body.ToString(), response.StatusCode);
 
-            MailMessage mailMessage = new MailMessage(senderEmail, recipientEmail, subject, emailHtml);
+            // A success status code means SendGrid received the email request and will process it.
+            // If email is not received, use this URL to debug: https://app.sendgrid.com/email_activity 
+            if (response.IsSuccessStatusCode)
+            {
+                Console.WriteLine(response.IsSuccessStatusCode ? "Email queued successfully!" : "Something went wrong!");
+                return true;
+            }
+            else
+            {
+                return false;
 
-            smtpClient.Send(mailMessage);
-
-            return true;
+            }
         }
 
         public async Task<bool> EmailForAccountActivatedToStaff(string email, string name, string phone)
@@ -295,26 +369,37 @@ namespace wleepay.Communication.Services
                 StaffPhoneNumber = phone
             };
 
-            string emailHtml = template.GenerateHtml();
+            string htmlTemplate = template.GenerateHtml();
 
             // Sender's email address and credentials
-            string senderEmail = "mvctest17@gmail.com";
-            string senderPassword = "bqhyobxynxwbkteo"; // Use app-specific passwords or secure storage for passwords
+            string senderEmail = "ranjotk@arielsoftwares.com";
 
-            // Create SMTP client
-            SmtpClient smtpClient = new SmtpClient("smtp.gmail.com"); // Use your SMTP server
+            var apiKey = _configuration.GetSection("SendGrid:WleePaySendGridApiKey").Value.ToString();
+            var client = new SendGridClient(apiKey);
+            var msg = new SendGridMessage()
+            {
+                From = new EmailAddress(senderEmail, "lionel"),
+                Subject = subject,
+                PlainTextContent = "Dear..",
+                HtmlContent = htmlTemplate
 
-            // Port and SSL configuration
-            smtpClient.Port = 587; // Port for SMTP (e.g., 587 for Gmail)
-            smtpClient.EnableSsl = true;
-            smtpClient.UseDefaultCredentials = false;
-            smtpClient.Credentials = new NetworkCredential(senderEmail, senderPassword);
+            };
+            msg.AddTo(new EmailAddress(recipientEmail, "shikha"));
+            var response = await client.SendEmailAsync(msg);
+            Console.WriteLine(response.Body.ToString(), response.StatusCode);
 
-            MailMessage mailMessage = new MailMessage(senderEmail, recipientEmail, subject, emailHtml);
+            // A success status code means SendGrid received the email request and will process it.
+            // If email is not received, use this URL to debug: https://app.sendgrid.com/email_activity 
+            if (response.IsSuccessStatusCode)
+            {
+                Console.WriteLine(response.IsSuccessStatusCode ? "Email queued successfully!" : "Something went wrong!");
+                return true;
+            }
+            else
+            {
+                return false;
 
-            smtpClient.Send(mailMessage);
-
-            return true;
+            }
         }
 
         public async Task<bool> EmailForAccountDeactivatedToSystemAdmin(string email, string name, string phone )
@@ -330,26 +415,37 @@ namespace wleepay.Communication.Services
                 StaffPhoneNumber = phone
             };
 
-            string emailHtml = template.GenerateHtml();
+            string htmlTemplate = template.GenerateHtml();
 
             // Sender's email address and credentials
-            string senderEmail = "mvctest17@gmail.com";
-            string senderPassword = "bqhyobxynxwbkteo"; // Use app-specific passwords or secure storage for passwords
+            string senderEmail = "ranjotk@arielsoftwares.com";
 
-            // Create SMTP client
-            SmtpClient smtpClient = new SmtpClient("smtp.gmail.com"); // Use your SMTP server
+            var apiKey = _configuration.GetSection("SendGrid:WleePaySendGridApiKey").Value.ToString();
+            var client = new SendGridClient(apiKey);
+            var msg = new SendGridMessage()
+            {
+                From = new EmailAddress(senderEmail, "lionel"),
+                Subject = subject,
+                PlainTextContent = "Dear..",
+                HtmlContent = htmlTemplate
 
-            // Port and SSL configuration
-            smtpClient.Port = 587; // Port for SMTP (e.g., 587 for Gmail)
-            smtpClient.EnableSsl = true;
-            smtpClient.UseDefaultCredentials = false;
-            smtpClient.Credentials = new NetworkCredential(senderEmail, senderPassword);
+            };
+            msg.AddTo(new EmailAddress(recipientEmail, "shikha"));
+            var response = await client.SendEmailAsync(msg);
+            Console.WriteLine(response.Body.ToString(), response.StatusCode);
 
-            MailMessage mailMessage = new MailMessage(senderEmail, recipientEmail, subject, emailHtml);
+            // A success status code means SendGrid received the email request and will process it.
+            // If email is not received, use this URL to debug: https://app.sendgrid.com/email_activity 
+            if (response.IsSuccessStatusCode)
+            {
+                Console.WriteLine(response.IsSuccessStatusCode ? "Email queued successfully!" : "Something went wrong!");
+                return true;
+            }
+            else
+            {
+                return false;
 
-            smtpClient.Send(mailMessage);
-
-            return true;
+            }
         }
 
         public async Task<bool> EmailForAccountDeactivatedToStaff(string email, string name, string phone)
@@ -365,24 +461,37 @@ namespace wleepay.Communication.Services
                 StaffPhoneNumber = phone
             };
 
-            string emailHtml = template.GenerateHtml();
+            string htmlTemplate = template.GenerateHtml();
 
             // Sender's email address and credentials
-            string senderEmail = "mvctest17@gmail.com";
-            string senderPassword = "bqhyobxynxwbkteo"; // Use app-specific passwords or secure storage for passwords
+            string senderEmail = "ranjotk@arielsoftwares.com";
 
-            // Create SMTP client
-            SmtpClient smtpClient = new SmtpClient("smtp.gmail.com"); // Use your SMTP server
+            var apiKey = _configuration.GetSection("SendGrid:WleePaySendGridApiKey").Value.ToString();
+            var client = new SendGridClient(apiKey);
+            var msg = new SendGridMessage()
+            {
+                From = new EmailAddress(senderEmail, "lionel"),
+                Subject = subject,
+                PlainTextContent = "Dear..",
+                HtmlContent = htmlTemplate
 
-            // Port and SSL configuration
-            smtpClient.Port = 587; // Port for SMTP (e.g., 587 for Gmail)
-            smtpClient.EnableSsl = true;
-            smtpClient.UseDefaultCredentials = false;
-            smtpClient.Credentials = new NetworkCredential(senderEmail, senderPassword);
+            };
+            msg.AddTo(new EmailAddress(recipientEmail, "shikha"));
+            var response = await client.SendEmailAsync(msg);
+            Console.WriteLine(response.Body.ToString(), response.StatusCode);
 
-            MailMessage mailMessage = new MailMessage(senderEmail, recipientEmail, subject, emailHtml);
-            smtpClient.Send(mailMessage);
-            return true;
+            // A success status code means SendGrid received the email request and will process it.
+            // If email is not received, use this URL to debug: https://app.sendgrid.com/email_activity 
+            if (response.IsSuccessStatusCode)
+            {
+                Console.WriteLine(response.IsSuccessStatusCode ? "Email queued successfully!" : "Something went wrong!");
+                return true;
+            }
+            else
+            {
+                return false;
+
+            }
         }
 
         public async Task<bool> EmailForAccountCreationToSystemAdmins(string emails, string userEmail)
@@ -429,9 +538,9 @@ namespace wleepay.Communication.Services
             }
         }
 
-        public async Task<bool> ReplyForCustomerTicket(string Message, string email)
+        public async Task<bool> ReplyForCustomerTicket(string Message, string email, string subject)
         {
-            var subject = "Ticket Created";
+            var emailSubject = subject;
             var recipientEmail = "ariel.ranjot@gmail.com";
 
             string htmlTemplate = Message;

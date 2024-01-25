@@ -89,10 +89,10 @@ namespace wleepay.API.Controllers
                 if (tickets != null)
                 {
                     var message = MessagesTemplates.CustomerTicketCreatedMessage(ticketDetails.IssueType.Type, tickets.Id);
-
+                    var subject = Messages.TicketCreated.ToDescriptionString();
                     if (tickets.CustomerContact == (int)CustomerServiceContactMethod.Email)
                     {
-                        await _emailSender.ReplyForCustomerTicket(message, userDetail.Email);
+                        await _emailSender.ReplyForCustomerTicket(message, userDetail.Email, subject);
                     }
                     if (tickets.CustomerContact == (int)CustomerServiceContactMethod.Phone)
                     {
@@ -170,12 +170,13 @@ namespace wleepay.API.Controllers
                 });
             }
             var message = MessagesTemplates.CustomerTicketReplyMessage(userDetail.UserDetail.FirstName, request.Note);
+            var subject = Messages.SubjectForTicketUpdated.ToDescriptionString();
 
             if (request.Note != null)
             {
                 if (ticket.CustomerContact == (int)CustomerServiceContactMethod.Email)
                 {
-                    await _emailSender.ReplyForCustomerTicketClosed(message, userDetail.Email);
+                    await _emailSender.ReplyForCustomerTicket(message, userDetail.Email, subject);
                 }
                 if (ticket.CustomerContact == (int)CustomerServiceContactMethod.Phone)
                 {
@@ -229,13 +230,14 @@ namespace wleepay.API.Controllers
                 var notes = await _notesService.AddUpdateNotes(notesToInsert);
 
                 var message = MessagesTemplates.CustomerTicketReplyMessage(userDetail.UserDetail.FirstName, request.Notes.FirstOrDefault().Note);
+                var subject = Messages.SubjectForTicketClosed.ToDescriptionString();
 
                 if (notes != null)
                 {
 
                     if (tickets.CustomerContact == (int)CustomerServiceContactMethod.Email)
                     {
-                        await _emailSender.ReplyForCustomerTicketClosed(message, userDetail.Email);
+                        await _emailSender.ReplyForCustomerTicket(message, userDetail.Email, subject);
                     }
                     if (tickets.CustomerContact == (int)CustomerServiceContactMethod.Phone)
                     {

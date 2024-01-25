@@ -36,8 +36,14 @@ namespace wleepay.Core.Enums
         [Description("No Ticket found.")] TicketNotFound,
         [Description("Message is sent!")] MessageSent,
         [Description("Ticket has been closed.")] TicketClosed,
+        [Description("Ticket Created.")] TicketCreated,
         [Description("Ticket has been updated.")] TicketUpdated,
         [Description("OTP is sent successfully")] OTPSent,
+        [Description("Ticket Closed.")] SubjectForTicketClosed,
+        [Description("Reply for Ticket.")] SubjectForTicketUpdated,
+
+
+
 
 
 
