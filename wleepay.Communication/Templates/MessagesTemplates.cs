@@ -51,7 +51,35 @@ namespace wleepay.Communication.Templates
 
         public static string CustomerTicketReplyMessage(string Username, string message)
         {
-            return $" Dear {Username}, \n\n Reply from system administrator:{message}\n\n Your support ticket has been closed.";
+            //return $" Dear {Username}, \n\n Reply from system administrator:{message}\n\n Your support ticket has been closed.";
+            return $@"
+                    <html>
+                    <head>
+                        <style>
+                           body {{
+                            font-family: 'Arial', sans-serif;
+                            margin: 0; /* Remove default body margin */
+                            padding: 0; /* Remove default body padding */
+                        }}
+                        .container {{
+                            max-width: 600px;
+                            margin: 0 0;
+                        }}
+                        p {{
+                            margin-top: 0; /* Remove top margin for paragraphs */
+                            margin-bottom: 1em; /* Add a bottom margin for paragraphs for spacing */
+                        }}
+                        </style>
+                    </head>
+                    <body>
+                        <div class='container'>
+                            <p>Dear {Username},</p>
+                            <p>Reply from system administrator: {message}</p>
+                            <p><b>Your support ticket has been closed.<b></p>
+                        </div>
+                    </body>
+                    </html>
+                ";
 
         }
     }
