@@ -1217,7 +1217,8 @@ namespace wleepay.API.Controllers
                 if (userDetails.PhoneNumber == linkForLoginSetup.PhoneNumber && user.Email == linkForLoginSetup.Email)
                 {
                     // Your secret key for encryption (16, 24, or 32 bytes for AES)
-                    string secretKey = "1234567890123456";
+                    var secretKey = _configuration.GetSection("SecretKeyForEncryptAndDecrypt").Value; //secret key
+
                     // Encrypt the text
                     string encryptedText = Common.Encrypt(linkForLoginSetup.Email, secretKey);
                     var token = HttpUtility.UrlEncode(encryptedText);
@@ -1254,7 +1255,7 @@ namespace wleepay.API.Controllers
                 if (userDetails.PhoneNumber == completeSignUpResourceModel.PhoneNumber && user.Email == completeSignUpResourceModel.Email)
                 {
                     // Your secret key for encryption (16, 24, or 32 bytes for AES)
-                    string secretKey = "1234567890123456";
+                    var secretKey = _configuration.GetSection("SecretKeyForEncryptAndDecrypt").Value; //secret key
                     // Encrypt the text
                     string encryptedText = Common.Encrypt(completeSignUpResourceModel.Email, secretKey);
                     var token = HttpUtility.UrlEncode(encryptedText);

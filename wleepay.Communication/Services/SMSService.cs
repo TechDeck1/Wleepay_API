@@ -40,7 +40,6 @@ namespace wleepay.Communication.Services
 
 
                 var messageResponse = MessageResource.Create(messageOptions);
-                Console.WriteLine(messageResponse.Body);
                 var result = messageResponse.Status.ToString();
                 return result;
             }
@@ -50,48 +49,49 @@ namespace wleepay.Communication.Services
             }
         }
 
-        public string sendSmsForCustomerTicket(string message, string phoneNumber)
-        {
-            try
-            {
-                    var messageOptions = new CreateMessageOptions(
-                    new PhoneNumber("+917018519190"));
-                    messageOptions.From = new PhoneNumber("+18312194108");
-                    messageOptions.Body = message;
+        #region CommentedCode
+        //public string sendSmsForCustomerTicket(string message, string phoneNumber)
+        //{
+        //    try
+        //    {
+        //        var messageOptions = new CreateMessageOptions(
+        //        new PhoneNumber("+917018519190"));
+        //        messageOptions.From = new PhoneNumber("+18312194108");
+        //        messageOptions.Body = message;
 
 
-                    var messageResponse = MessageResource.Create(messageOptions);
-                    Console.WriteLine(messageResponse.Body);
-                    var result = messageResponse.Status.ToString();
-                    return result;
-            }
-            catch (Exception ex)
-            {
+        //        var messageResponse = MessageResource.Create(messageOptions);
+        //        var result = messageResponse.Status.ToString();
+        //        return result;
+        //    }
+        //    catch (Exception ex)
+        //    {
 
-                return ex.Message.ToString();
-            }
-        }
+        //        return ex.Message.ToString();
+        //    }
+        //}
 
-        public string sendSmsForAccountDeactivation(string message, string phoneNumber)
-        {
-            try
-            {
-                var messageOptions = new CreateMessageOptions(
-                new PhoneNumber("+917018519190"));
-                messageOptions.From = new PhoneNumber("+18312194108");
-                messageOptions.Body = message;
+        //public string sendSmsForAccountDeactivation(string message, string phoneNumber)
+        //{
+        //    try
+        //    {
+        //        var messageOptions = new CreateMessageOptions(
+        //        new PhoneNumber("+917018519190"));
+        //        messageOptions.From = new PhoneNumber("+18312194108");
+        //        messageOptions.Body = message;
 
 
-                var messageResponse = MessageResource.Create(messageOptions);
-                Console.WriteLine(messageResponse.Body);
-                var result = messageResponse.Status.ToString();
-                return result;
-            }
-            catch (Exception ex)
-            {
+        //        var messageResponse = MessageResource.Create(messageOptions);
+        //        var result = messageResponse.Status.ToString();
+        //        return result;
+        //    }
+        //    catch (Exception ex)
+        //    {
 
-                return ex.Message.ToString();
-            }
-        }
+        //        return ex.Message.ToString();
+        //    }
+
+        #endregion
     }
 }
+

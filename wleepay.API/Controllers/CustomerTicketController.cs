@@ -96,7 +96,7 @@ namespace wleepay.API.Controllers
                     }
                     if (tickets.CustomerContact == (int)CustomerServiceContactMethod.Phone)
                     {
-                        _sMSService.sendSmsForCustomerTicket(message, customerTickets.PhoneNumber);
+                        _sMSService.sendMessage(message, customerTickets.PhoneNumber);
                     }
                     if (tickets.CustomerContact == (int)CustomerServiceContactMethod.Whatsapp)
                     {
@@ -180,7 +180,7 @@ namespace wleepay.API.Controllers
                 }
                 if (ticket.CustomerContact == (int)CustomerServiceContactMethod.Phone)
                 {
-                    _sMSService.sendSmsForCustomerTicket(message, userDetail.PhoneNumber);
+                    _sMSService.sendMessage(message, userDetail.PhoneNumber);
                 }
                 if (ticket.CustomerContact == (int)CustomerServiceContactMethod.Whatsapp)
                 {
@@ -241,7 +241,7 @@ namespace wleepay.API.Controllers
                     }
                     if (tickets.CustomerContact == (int)CustomerServiceContactMethod.Phone)
                     {
-                        _sMSService.sendSmsForCustomerTicket(message, userDetail.PhoneNumber);
+                        _sMSService.sendMessage(message, userDetail.PhoneNumber);
                     }
                     if (tickets.CustomerContact == (int)CustomerServiceContactMethod.Whatsapp)
                     {
