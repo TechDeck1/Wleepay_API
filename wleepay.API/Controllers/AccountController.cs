@@ -478,7 +478,7 @@ namespace wleepay.API.Controllers
                         CompleteSignUpResourceModel completeSignUpResourceModel = new CompleteSignUpResourceModel();
                         completeSignUpResourceModel.Email = userDetail.EmailId;
                         completeSignUpResourceModel.PhoneNumber = userDetail.PhoneNumber;
-                        completeSignUpResourceModel.ClientURI = baseUrl+ "/account-setup";
+                        completeSignUpResourceModel.ClientURI = baseUrl+ "/system-admin-account-setup";
                         var result = await GenerateLinkForComleteSignUp(completeSignUpResourceModel);
 
                         //send registration sucess message on mobile number

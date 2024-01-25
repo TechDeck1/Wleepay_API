@@ -651,3 +651,5 @@ D:\Offical\Wleepay_API\wleepay.API\obj\Release\net5.0\wleepay.API.pdb
 D:\Offical\Wleepay_API\wleepay.API\obj\Release\net5.0\wleepay.API.genruntimeconfig.cache
 D:\Offical\Wleepay_API\wleepay.API\obj\Release\net5.0\ref\wleepay.API.dll
 D:\Offical\Wleepay_API\wleepay.API\obj\Release\net5.0\wleepay.API.MvcApplicationPartsAssemblyInfo.cs
+D:\Offical\Wleepay_API\wleepay.API\bin\Release\net5.0\SendGrid.dll
+D:\Offical\Wleepay_API\wleepay.API\bin\Release\net5.0\StarkbankEcdsa.dll
