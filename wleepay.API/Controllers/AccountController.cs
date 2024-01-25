@@ -1049,7 +1049,7 @@ namespace wleepay.API.Controllers
                     {
                         return Ok(new
                         {
-                            Success = true,
+                            Success = false,
                             Message = Messages.WrongOtp.ToDescriptionString(),
                             IsExpired = false,
 
@@ -1061,6 +1061,7 @@ namespace wleepay.API.Controllers
                     return Ok(new
                     {
                         Success = false,
+                        IsExpired = true,
                         Message = Messages.OtpExpired.ToDescriptionString(),
                     });
 
