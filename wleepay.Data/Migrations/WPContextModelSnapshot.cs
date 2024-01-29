@@ -290,15 +290,15 @@ namespace wleepay.Data.Migrations
                         {
                             Id = "07ac193d-26e7-4039-9440-fbb53988b878",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "f0c56e5c-c7c0-439e-8394-d9b40ec49dcd",
+                            ConcurrencyStamp = "c9fe633d-3200-49ac-8435-612342d29086",
                             Email = "admin@wlee.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@WLEE.COM",
                             NormalizedUserName = "ADMIN@WLEE.COM",
-                            PasswordHash = "AQAAAAEAACcQAAAAECC5ffF8n9lPDiGdpS26u5iHvkYGXUwKQaB1ztx3v7EGqzR3ZipVXSo1Tc9n56qpsg==",
+                            PasswordHash = "AQAAAAEAACcQAAAAELCoi74fBuJiQ8Xxpjb6iHk3Y0QhD7QacpmC0Q31F8dHZP0sSHTHdbx8kwbkJrcQiQ==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "284d456a-1d61-40ab-9419-11411438e71e",
+                            SecurityStamp = "6fd52dd3-daf9-48dc-8f8b-aafd308ad0d7",
                             TwoFactorEnabled = false,
                             UserName = "admin@wlee.com"
                         });
@@ -825,7 +825,7 @@ namespace wleepay.Data.Migrations
                     b.Property<DateTime>("CreatedDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2024, 1, 24, 16, 17, 55, 725, DateTimeKind.Local).AddTicks(3814));
+                        .HasDefaultValue(new DateTime(2024, 1, 29, 16, 40, 34, 259, DateTimeKind.Local).AddTicks(675));
 
                     b.Property<string>("DocumentImage")
                         .HasColumnType("nvarchar(max)");
@@ -844,7 +844,7 @@ namespace wleepay.Data.Migrations
                     b.Property<DateTime>("UpdatedDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2024, 1, 24, 16, 17, 55, 727, DateTimeKind.Local).AddTicks(3566));
+                        .HasDefaultValue(new DateTime(2024, 1, 29, 16, 40, 34, 260, DateTimeKind.Local).AddTicks(8129));
 
                     b.Property<string>("UserId")
                         .IsRequired()
@@ -982,22 +982,22 @@ namespace wleepay.Data.Migrations
                         new
                         {
                             Id = 2,
-                            Name = "SystemWallet"
+                            Name = "System Wallet"
                         },
                         new
                         {
                             Id = 3,
-                            Name = "AgentManagement"
+                            Name = "Agent Management"
                         },
                         new
                         {
                             Id = 4,
-                            Name = "SubscriberManagement"
+                            Name = "Subscriber Management"
                         },
                         new
                         {
                             Id = 5,
-                            Name = "CustomerService"
+                            Name = "Customer Service"
                         },
                         new
                         {
@@ -1007,12 +1007,12 @@ namespace wleepay.Data.Migrations
                         new
                         {
                             Id = 7,
-                            Name = "Compliance&RiskManagement"
+                            Name = "Compliance & Risk Management"
                         },
                         new
                         {
                             Id = 8,
-                            Name = "SystemAdmin"
+                            Name = "System Admin"
                         });
                 });
 
@@ -1077,7 +1077,7 @@ namespace wleepay.Data.Migrations
                         new
                         {
                             Id = 3,
-                            Name = "CustomerService"
+                            Name = "Customer Service"
                         },
                         new
                         {
@@ -1087,7 +1087,7 @@ namespace wleepay.Data.Migrations
                         new
                         {
                             Id = 5,
-                            Name = "SystemWallet"
+                            Name = "System Wallet"
                         },
                         new
                         {
@@ -1097,7 +1097,7 @@ namespace wleepay.Data.Migrations
                         new
                         {
                             Id = 7,
-                            Name = "SystemAdmin"
+                            Name = "System Admin"
                         });
                 });
 
@@ -1173,7 +1173,7 @@ namespace wleepay.Data.Migrations
                     b.Property<DateTime>("CreatedDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2024, 1, 24, 16, 17, 55, 763, DateTimeKind.Local).AddTicks(592));
+                        .HasDefaultValue(new DateTime(2024, 1, 29, 16, 40, 34, 281, DateTimeKind.Local).AddTicks(8066));
 
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
@@ -1498,7 +1498,7 @@ namespace wleepay.Data.Migrations
                             Id = 1,
                             AccountNumber = "50285368",
                             CountyId = 2,
-                            CreatedDate = new DateTime(2024, 1, 24, 16, 17, 55, 756, DateTimeKind.Local).AddTicks(7370),
+                            CreatedDate = new DateTime(2024, 1, 29, 16, 40, 34, 276, DateTimeKind.Local).AddTicks(8348),
                             DOB = new DateTime(1985, 9, 20, 5, 1, 50, 563, DateTimeKind.Unspecified),
                             FirstName = "Admin",
                             Gender = "Male",
@@ -1509,7 +1509,7 @@ namespace wleepay.Data.Migrations
                             PhoneNumber = "+919845654543",
                             SecurityQuestionId = 0,
                             Status = 0,
-                            UpdatedDate = new DateTime(2024, 1, 24, 16, 17, 55, 756, DateTimeKind.Local).AddTicks(7591),
+                            UpdatedDate = new DateTime(2024, 1, 29, 16, 40, 34, 276, DateTimeKind.Local).AddTicks(8533),
                             UserId = "07ac193d-26e7-4039-9440-fbb53988b878"
                         });
                 });
@@ -1588,7 +1588,7 @@ namespace wleepay.Data.Migrations
                     b.Property<DateTime>("CreatedDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2024, 1, 24, 16, 17, 55, 772, DateTimeKind.Local).AddTicks(241));
+                        .HasDefaultValue(new DateTime(2024, 1, 29, 16, 40, 34, 287, DateTimeKind.Local).AddTicks(3584));
 
                     b.Property<int>("CurrencyId")
                         .HasColumnType("int");
@@ -1599,7 +1599,7 @@ namespace wleepay.Data.Migrations
                     b.Property<DateTime>("UpdatedDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2024, 1, 24, 16, 17, 55, 772, DateTimeKind.Local).AddTicks(658));
+                        .HasDefaultValue(new DateTime(2024, 1, 29, 16, 40, 34, 287, DateTimeKind.Local).AddTicks(3982));
 
                     b.Property<string>("UserId")
                         .IsRequired()
@@ -1620,60 +1620,60 @@ namespace wleepay.Data.Migrations
                         {
                             Id = 1L,
                             Balance = 0.0,
-                            CreatedDate = new DateTime(2024, 1, 24, 16, 17, 55, 772, DateTimeKind.Local).AddTicks(9526),
+                            CreatedDate = new DateTime(2024, 1, 29, 16, 40, 34, 288, DateTimeKind.Local).AddTicks(4378),
                             CurrencyId = 1,
                             Type = 1,
-                            UpdatedDate = new DateTime(2024, 1, 24, 16, 17, 55, 772, DateTimeKind.Local).AddTicks(9708),
+                            UpdatedDate = new DateTime(2024, 1, 29, 16, 40, 34, 288, DateTimeKind.Local).AddTicks(4838),
                             UserId = "07ac193d-26e7-4039-9440-fbb53988b878"
                         },
                         new
                         {
                             Id = 2L,
                             Balance = 0.0,
-                            CreatedDate = new DateTime(2024, 1, 24, 16, 17, 55, 772, DateTimeKind.Local).AddTicks(9969),
+                            CreatedDate = new DateTime(2024, 1, 29, 16, 40, 34, 288, DateTimeKind.Local).AddTicks(5287),
                             CurrencyId = 2,
                             Type = 1,
-                            UpdatedDate = new DateTime(2024, 1, 24, 16, 17, 55, 772, DateTimeKind.Local).AddTicks(9973),
+                            UpdatedDate = new DateTime(2024, 1, 29, 16, 40, 34, 288, DateTimeKind.Local).AddTicks(5292),
                             UserId = "07ac193d-26e7-4039-9440-fbb53988b878"
                         },
                         new
                         {
                             Id = 3L,
                             Balance = 0.0,
-                            CreatedDate = new DateTime(2024, 1, 24, 16, 17, 55, 772, DateTimeKind.Local).AddTicks(9978),
+                            CreatedDate = new DateTime(2024, 1, 29, 16, 40, 34, 288, DateTimeKind.Local).AddTicks(5307),
                             CurrencyId = 1,
                             Type = 2,
-                            UpdatedDate = new DateTime(2024, 1, 24, 16, 17, 55, 772, DateTimeKind.Local).AddTicks(9979),
+                            UpdatedDate = new DateTime(2024, 1, 29, 16, 40, 34, 288, DateTimeKind.Local).AddTicks(5310),
                             UserId = "07ac193d-26e7-4039-9440-fbb53988b878"
                         },
                         new
                         {
                             Id = 4L,
                             Balance = 0.0,
-                            CreatedDate = new DateTime(2024, 1, 24, 16, 17, 55, 772, DateTimeKind.Local).AddTicks(9983),
+                            CreatedDate = new DateTime(2024, 1, 29, 16, 40, 34, 288, DateTimeKind.Local).AddTicks(5318),
                             CurrencyId = 2,
                             Type = 2,
-                            UpdatedDate = new DateTime(2024, 1, 24, 16, 17, 55, 772, DateTimeKind.Local).AddTicks(9984),
+                            UpdatedDate = new DateTime(2024, 1, 29, 16, 40, 34, 288, DateTimeKind.Local).AddTicks(5320),
                             UserId = "07ac193d-26e7-4039-9440-fbb53988b878"
                         },
                         new
                         {
                             Id = 5L,
                             Balance = 0.0,
-                            CreatedDate = new DateTime(2024, 1, 24, 16, 17, 55, 772, DateTimeKind.Local).AddTicks(9988),
+                            CreatedDate = new DateTime(2024, 1, 29, 16, 40, 34, 288, DateTimeKind.Local).AddTicks(5324),
                             CurrencyId = 1,
                             Type = 4,
-                            UpdatedDate = new DateTime(2024, 1, 24, 16, 17, 55, 772, DateTimeKind.Local).AddTicks(9989),
+                            UpdatedDate = new DateTime(2024, 1, 29, 16, 40, 34, 288, DateTimeKind.Local).AddTicks(5325),
                             UserId = "07ac193d-26e7-4039-9440-fbb53988b878"
                         },
                         new
                         {
                             Id = 6L,
                             Balance = 0.0,
-                            CreatedDate = new DateTime(2024, 1, 24, 16, 17, 55, 773, DateTimeKind.Local).AddTicks(35),
+                            CreatedDate = new DateTime(2024, 1, 29, 16, 40, 34, 288, DateTimeKind.Local).AddTicks(5438),
                             CurrencyId = 2,
                             Type = 4,
-                            UpdatedDate = new DateTime(2024, 1, 24, 16, 17, 55, 773, DateTimeKind.Local).AddTicks(36),
+                            UpdatedDate = new DateTime(2024, 1, 29, 16, 40, 34, 288, DateTimeKind.Local).AddTicks(5442),
                             UserId = "07ac193d-26e7-4039-9440-fbb53988b878"
                         });
                 });

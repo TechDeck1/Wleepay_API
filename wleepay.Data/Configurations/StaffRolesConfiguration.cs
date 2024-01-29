@@ -44,7 +44,7 @@ namespace wleepay.Data.Configurations
             builder.HasData(new StaffRoles
             {
                 Id = 3,
-                Name = "CustomerService",
+                Name = "Customer Service",
                
 
             });
@@ -60,7 +60,7 @@ namespace wleepay.Data.Configurations
             builder.HasData(new StaffRoles
             {
                 Id = 5,
-                Name = "SystemWallet",
+                Name = "System Wallet",
               
 
             });
@@ -76,7 +76,7 @@ namespace wleepay.Data.Configurations
             builder.HasData(new StaffRoles
             {
                 Id = 7,
-                Name = "SystemAdmin",
+                Name = "System Admin",
                
 
             });
