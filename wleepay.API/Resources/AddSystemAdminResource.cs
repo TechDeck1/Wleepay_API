@@ -20,6 +20,7 @@ namespace wleepay.API.Resources
         public string KYCDocumentImage { get; set; }
         public Role? Role { get; set; }
         public string CreatedBy { get; set; }
+        public string Otp { get; set; }
 
     }
 }

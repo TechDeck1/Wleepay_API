@@ -417,89 +417,100 @@ namespace wleepay.API.Controllers
                 if (userExistWithPhone == true)
                     return BadRequest(Messages.PhoneAlreadyUsed.ToDescriptionString());
 
-                //create new user with identity
-                var newUser = new ApplicationUser() { UserName = userDetail.PhoneNumber, Id = Guid.NewGuid().ToString() };
-                if (!string.IsNullOrEmpty(userDetail.EmailId))
-                    newUser.Email = userDetail.EmailId;
+                var verificationDetails = await _verificationService.GetVerificationByPhone(userDetail.PhoneNumber);
 
-                var isUserCreated = await _userManager.CreateAsync(newUser);
-
-                if (isUserCreated.Succeeded)
+                if (userDetail.PhoneNumber == verificationDetails.PhoneNumber && userDetail.Otp == verificationDetails.VerificationCode)
                 {
-                    //assign role to user
-                    var roleEnumStringValue = userDetail.Role.HasValue ? ((Core.Enums.Role)userDetail.Role) : ((Core.Enums.Role)Core.Enums.Role.Member);
-                    await _userManager.AddToRoleAsync(newUser, roleEnumStringValue.ToString());
+                    //create new user with identity
+                    var newUser = new ApplicationUser() { UserName = userDetail.PhoneNumber, Id = Guid.NewGuid().ToString() };
+                    if (!string.IsNullOrEmpty(userDetail.EmailId))
+                        newUser.Email = userDetail.EmailId;
 
-                    //insert data in userdetails
-                    var userDetailsToInsert = _mapper.Map<AddSystemAdminResource, UserDetail>(userDetail);
-                    userDetailsToInsert.UserId = newUser.Id;
+                    var isUserCreated = await _userManager.CreateAsync(newUser);
 
-                    //generate account number for user
-                    userDetailsToInsert.AccountNumber = await GenerateUniqueAccountNumber();
-
-                    //save smile identity image to blob for user profile
-                    if (!string.IsNullOrEmpty(userDetailsToInsert.Image))
+                    if (isUserCreated.Succeeded)
                     {
-                        var profileURL = _storageService.UploadUserProfileImage(userDetailsToInsert.Image, newUser.Id);
-                        userDetailsToInsert.Image = profileURL;
-                    }
+                        //assign role to user
+                        var roleEnumStringValue = userDetail.Role.HasValue ? ((Core.Enums.Role)userDetail.Role) : ((Core.Enums.Role)Core.Enums.Role.Member);
+                        await _userManager.AddToRoleAsync(newUser, roleEnumStringValue.ToString());
 
-                    if (!string.IsNullOrEmpty(userDetailsToInsert.KYCDocumentImage))
-                    {
-                        var documentURL = _storageService.UploadKYCDocument(userDetailsToInsert.KYCDocumentImage, newUser.Id);
-                        userDetailsToInsert.KYCDocumentImage = documentURL.ToString();
-                      
-                        if (userDetailsToInsert.KYCLevel == Core.Enums.KYCLevel.L1.GetHashCode())
+                        //insert data in userdetails
+                        var userDetailsToInsert = _mapper.Map<AddSystemAdminResource, UserDetail>(userDetail);
+                        userDetailsToInsert.UserId = newUser.Id;
+
+                        //generate account number for user
+                        userDetailsToInsert.AccountNumber = await GenerateUniqueAccountNumber();
+
+                        //save smile identity image to blob for user profile
+                        if (!string.IsNullOrEmpty(userDetailsToInsert.Image))
                         {
-                            //update kyc level from l1 to l2 for new document upload
-                            userDetailsToInsert.KYCLevel = Core.Enums.KYCLevel.L2.GetHashCode();
-                        }
-                    }
-
-                    //save data
-                    var updatedDetails = await _userDetailsService.AddOrUpdateUserDetails(userDetailsToInsert);
-                   
-                    if (updatedDetails.UserId != null)
-                    {
-                        //kyc document is optional in registration
-                        if (userDetail.DocumentTypeId.HasValue)
-                        {
-                            //insert data in kyc document
-                            var kycDetailsToAdd = _mapper.Map<AddSystemAdminResource, KYCdocuments>(userDetail);
-                            kycDetailsToAdd.UserId = newUser.Id;
-                            kycDetailsToAdd.CreatedDate = DateTime.Now;
-                            kycDetailsToAdd.UpdatedDate = DateTime.Now;
-                            await _kycDocumentsService.AddOrUpdateKYCDocument(kycDetailsToAdd);
+                            var profileURL = _storageService.UploadUserProfileImage(userDetailsToInsert.Image, newUser.Id);
+                            userDetailsToInsert.Image = profileURL;
                         }
 
-                        //generate jwt token
-                        var token = GenerateJSONWebToken(userDetailsToInsert);
-
-                        CompleteSignUpResourceModel completeSignUpResourceModel = new CompleteSignUpResourceModel();
-                        completeSignUpResourceModel.Email = userDetail.EmailId;
-                        completeSignUpResourceModel.PhoneNumber = userDetail.PhoneNumber;
-                        completeSignUpResourceModel.ClientURI = baseUrl+ "/system-admin-account-setup";
-                        var result = await GenerateLinkForComleteSignUp(completeSignUpResourceModel);
-
-                        //send registration sucess message on mobile number
-                        _smsService.sendMessage(MessagesTemplates.RegistrationSuccessMessage(updatedDetails.AccountNumber, updatedDetails?.KYCLevelDetail?.Name), updatedDetails.PhoneNumber);
-
-                        return Ok(new
+                        if (!string.IsNullOrEmpty(userDetailsToInsert.KYCDocumentImage))
                         {
-                            Success = true,
-                            UserId = userDetailsToInsert.UserId,
-                            FirstName = updatedDetails.FirstName,
-                            LastName = updatedDetails.LastName,
-                            ProfilePic = updatedDetails.Image,
-                            PhoneNumber = updatedDetails.PhoneNumber,
-                            AccountNumber = updatedDetails.AccountNumber
-                        });
+                            var documentURL = _storageService.UploadKYCDocument(userDetailsToInsert.KYCDocumentImage, newUser.Id);
+                            userDetailsToInsert.KYCDocumentImage = documentURL.ToString();
+
+                            if (userDetailsToInsert.KYCLevel == Core.Enums.KYCLevel.L1.GetHashCode())
+                            {
+                                //update kyc level from l1 to l2 for new document upload
+                                userDetailsToInsert.KYCLevel = Core.Enums.KYCLevel.L2.GetHashCode();
+                            }
+                        }
+
+                        //save data
+                        var updatedDetails = await _userDetailsService.AddOrUpdateUserDetails(userDetailsToInsert);
+
+                        if (updatedDetails.UserId != null)
+                        {
+                            //kyc document is optional in registration
+                            if (userDetail.DocumentTypeId.HasValue)
+                            {
+                                //insert data in kyc document
+                                var kycDetailsToAdd = _mapper.Map<AddSystemAdminResource, KYCdocuments>(userDetail);
+                                kycDetailsToAdd.UserId = newUser.Id;
+                                kycDetailsToAdd.CreatedDate = DateTime.Now;
+                                kycDetailsToAdd.UpdatedDate = DateTime.Now;
+                                await _kycDocumentsService.AddOrUpdateKYCDocument(kycDetailsToAdd);
+                            }
+
+                            //generate jwt token
+                            var token = GenerateJSONWebToken(userDetailsToInsert);
+
+                            CompleteSignUpResourceModel completeSignUpResourceModel = new CompleteSignUpResourceModel();
+                            completeSignUpResourceModel.Email = userDetail.EmailId;
+                            completeSignUpResourceModel.PhoneNumber = userDetail.PhoneNumber;
+                            completeSignUpResourceModel.ClientURI = baseUrl + "/system-admin-account-setup";
+                            var result = await GenerateLinkForComleteSignUp(completeSignUpResourceModel);
+
+                            //send registration sucess message on mobile number
+                            _smsService.sendMessage(MessagesTemplates.RegistrationSuccessMessage(updatedDetails.AccountNumber, updatedDetails?.KYCLevelDetail?.Name), updatedDetails.PhoneNumber);
+
+                            return Ok(new
+                            {
+                                Success = true,
+                                UserId = userDetailsToInsert.UserId,
+                                FirstName = updatedDetails.FirstName,
+                                LastName = updatedDetails.LastName,
+                                ProfilePic = updatedDetails.Image,
+                                PhoneNumber = updatedDetails.PhoneNumber,
+                                AccountNumber = updatedDetails.AccountNumber
+                            });
+                        }
+                        else
+                            return BadRequest(Messages.BadRequest.ToDescriptionString());
                     }
                     else
-                        return BadRequest(Messages.BadRequest.ToDescriptionString());
+                        return BadRequest(isUserCreated.Errors.FirstOrDefault().Description);
                 }
-                else
-                    return BadRequest(isUserCreated.Errors.FirstOrDefault().Description);
+                return BadRequest(new 
+                { 
+                    Success=false,
+                    Message="Phone is not verified please verify your phone number."
+                });
+
             }
             catch (Exception ex)
             {
@@ -900,7 +911,6 @@ namespace wleepay.API.Controllers
                     Message = Messages.NotFound.ToDescriptionString(),
                 });
             }
-            var userDetails = await _userDetailsService.GetUserDetailsById(user.Id);
 
             var isPasswordGenerated = await _userManager.HasPasswordAsync(user);
 
