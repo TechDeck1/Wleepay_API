@@ -21,6 +21,8 @@ namespace wleepay.API.Resources
         public Role? Role { get; set; }
         public string CreatedBy { get; set; }
         public string Otp { get; set; }
+        public string City { get; set; }
+        public string District { get; set; }
 
     }
 }
