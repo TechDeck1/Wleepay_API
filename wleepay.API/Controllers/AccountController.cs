@@ -901,14 +901,17 @@ namespace wleepay.API.Controllers
                 });
             }
             var userDetails = await _userDetailsService.GetUserDetailsById(user.Id);
-            //check if security answer exists or not and return response
-            if (userDetails.SecurityAnswerText == null) 
+
+            var isPasswordGenerated = await _userManager.HasPasswordAsync(user);
+
+            if (!isPasswordGenerated)
             {
                 return Ok(new
                 {
                     Success = true,
                     Message = Messages.AccountNotAlreadySetup.ToDescriptionString(),
                 });
+                
             }
             else
             {
@@ -917,6 +920,7 @@ namespace wleepay.API.Controllers
                     Success = false,
                     Message = Messages.AccountAlreadySetup.ToDescriptionString(),
                 });
+
             }
 
         }

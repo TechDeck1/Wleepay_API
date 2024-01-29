@@ -3154,3 +3154,25 @@ Error Number:-2,State:0,Class:11
 2024-01-25 17:03:43 PM||INFO|wleepay.API.Controllers.PortalController|Action: VerifyCode, User: 78ca298f-c99c-4c96-9d80-d465fa5bd347, Timestamp: 1/25/2024 11:33:43 AM, IP: ::1 
 2024-01-25 17:03:44 PM|20504|WARN|Microsoft.EntityFrameworkCore.Query|Compiling a query which loads related collections for more than one collection navigation either via 'Include' or through projection but no 'QuerySplittingBehavior' has been configured. By default Entity Framework will use 'QuerySplittingBehavior.SingleQuery' which can potentially result in slow query performance. See https://go.microsoft.com/fwlink/?linkid=2134277 for more information. To identify the query that's triggering this warning call 'ConfigureWarnings(w => w.Throw(RelationalEventId.MultipleCollectionIncludeWarning))' 
 2024-01-25 17:03:44 PM|20504|WARN|Microsoft.EntityFrameworkCore.Query|Compiling a query which loads related collections for more than one collection navigation either via 'Include' or through projection but no 'QuerySplittingBehavior' has been configured. By default Entity Framework will use 'QuerySplittingBehavior.SingleQuery' which can potentially result in slow query performance. See https://go.microsoft.com/fwlink/?linkid=2134277 for more information. To identify the query that's triggering this warning call 'ConfigureWarnings(w => w.Throw(RelationalEventId.MultipleCollectionIncludeWarning))' 
+2024-01-29 13:15:53 PM||DEBUG|wleepay.API.Program|init main 
+2024-01-29 13:15:57 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: https://localhost:5001 
+2024-01-29 13:15:57 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: https://localhost:5001 
+2024-01-29 13:15:57 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: http://localhost:5000 
+2024-01-29 13:15:57 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: http://localhost:5000 
+2024-01-29 13:15:57 PM||INFO|Microsoft.Hosting.Lifetime|Application started. Press Ctrl+C to shut down. 
+2024-01-29 13:15:57 PM||INFO|Microsoft.Hosting.Lifetime|Application started. Press Ctrl+C to shut down. 
+2024-01-29 13:15:57 PM||INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development 
+2024-01-29 13:15:57 PM||INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development 
+2024-01-29 13:15:57 PM||INFO|Microsoft.Hosting.Lifetime|Content root path: D:\Offical\Wleepay_API\wleepay.API 
+2024-01-29 13:15:57 PM||INFO|Microsoft.Hosting.Lifetime|Content root path: D:\Offical\Wleepay_API\wleepay.API 
+2024-01-29 13:20:53 PM||DEBUG|wleepay.API.Program|init main 
+2024-01-29 13:20:57 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: https://localhost:5001 
+2024-01-29 13:20:57 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: https://localhost:5001 
+2024-01-29 13:20:57 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: http://localhost:5000 
+2024-01-29 13:20:57 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: http://localhost:5000 
+2024-01-29 13:20:57 PM||INFO|Microsoft.Hosting.Lifetime|Application started. Press Ctrl+C to shut down. 
+2024-01-29 13:20:57 PM||INFO|Microsoft.Hosting.Lifetime|Application started. Press Ctrl+C to shut down. 
+2024-01-29 13:20:57 PM||INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development 
+2024-01-29 13:20:57 PM||INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development 
+2024-01-29 13:20:57 PM||INFO|Microsoft.Hosting.Lifetime|Content root path: D:\Offical\Wleepay_API\wleepay.API 
+2024-01-29 13:20:57 PM||INFO|Microsoft.Hosting.Lifetime|Content root path: D:\Offical\Wleepay_API\wleepay.API 
