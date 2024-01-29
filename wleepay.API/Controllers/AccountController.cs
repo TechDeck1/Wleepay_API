@@ -65,9 +65,6 @@ namespace wleepay.API.Controllers
         private readonly IVerificationService _verificationService;
 
 
-
-
-
         public AccountController(UserManager<ApplicationUser> userManager,
             RoleManager<ApplicationRole> roleManager,
             SignInManager<ApplicationUser> signInManager,
@@ -476,6 +473,16 @@ namespace wleepay.API.Controllers
                                 await _kycDocumentsService.AddOrUpdateKYCDocument(kycDetailsToAdd);
                             }
 
+                            //add user address
+                            if (userDetail.City != null)
+                            {
+                                Address address = new  Address();
+                                address.UserId = updatedDetails.UserId;
+                                address.City = userDetail.City;
+                                address.District = userDetail.District;
+                                await _addressService.AddOrUpdateAddress(address);
+                            }
+
                             //generate jwt token
                             var token = GenerateJSONWebToken(userDetailsToInsert);
 
@@ -507,8 +514,8 @@ namespace wleepay.API.Controllers
                 }
                 return BadRequest(new 
                 { 
-                    Success=false,
-                    Message="Phone is not verified please verify your phone number."
+                    Success = false,
+                    Message = "Phone is not verified please verify your phone number."
                 });
 
             }
