@@ -177,5 +177,10 @@ namespace wleepay.Services
         {
             return await _unitOfWork.UserDetail.VerifyUserAccountByPhone(phone);
         }
+
+        public async Task<ApplicationUser> GetStaffPermissionsById(string userId)
+        {
+            return await _unitOfWork.UserDetail.GetStaffPermissionsById(userId);
+        }
     }
 }

@@ -280,6 +280,15 @@ namespace wleepay.Data.Repositories
             return transactionAndUserResponse;
         }
 
-
+        public async Task<ApplicationUser> GetStaffPermissionsById(string userId)
+        {
+            var userDetails = await WPContext.Users.Where(user => user.Id == userId)
+                            .Include(s => s.UserDetail)
+                            .Include(s => s.StaffPermissions)
+                            .ThenInclude(S => S.PermissionType)
+                            .FirstOrDefaultAsync();
+            
+            return userDetails;
+        }
     }
 }

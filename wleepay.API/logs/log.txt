@@ -3187,3 +3187,36 @@ Error Number:-2,State:0,Class:11
 2024-01-29 13:35:00 PM||INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development 
 2024-01-29 13:35:00 PM||INFO|Microsoft.Hosting.Lifetime|Content root path: D:\Offical\Wleepay_API\wleepay.API 
 2024-01-29 13:35:00 PM||INFO|Microsoft.Hosting.Lifetime|Content root path: D:\Offical\Wleepay_API\wleepay.API 
+2024-01-30 16:32:21 PM||DEBUG|wleepay.API.Program|init main 
+2024-01-30 16:32:28 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: https://localhost:5001 
+2024-01-30 16:32:28 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: https://localhost:5001 
+2024-01-30 16:32:28 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: http://localhost:5000 
+2024-01-30 16:32:28 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: http://localhost:5000 
+2024-01-30 16:32:28 PM||INFO|Microsoft.Hosting.Lifetime|Application started. Press Ctrl+C to shut down. 
+2024-01-30 16:32:28 PM||INFO|Microsoft.Hosting.Lifetime|Application started. Press Ctrl+C to shut down. 
+2024-01-30 16:32:28 PM||INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development 
+2024-01-30 16:32:28 PM||INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development 
+2024-01-30 16:32:28 PM||INFO|Microsoft.Hosting.Lifetime|Content root path: D:\Offical\Wleepay_API\wleepay.API 
+2024-01-30 16:32:28 PM||INFO|Microsoft.Hosting.Lifetime|Content root path: D:\Offical\Wleepay_API\wleepay.API 
+2024-01-30 16:38:48 PM||DEBUG|wleepay.API.Program|init main 
+2024-01-30 16:38:50 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: https://localhost:5001 
+2024-01-30 16:38:50 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: https://localhost:5001 
+2024-01-30 16:38:50 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: http://localhost:5000 
+2024-01-30 16:38:50 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: http://localhost:5000 
+2024-01-30 16:38:50 PM||INFO|Microsoft.Hosting.Lifetime|Application started. Press Ctrl+C to shut down. 
+2024-01-30 16:38:50 PM||INFO|Microsoft.Hosting.Lifetime|Application started. Press Ctrl+C to shut down. 
+2024-01-30 16:38:50 PM||INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development 
+2024-01-30 16:38:50 PM||INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development 
+2024-01-30 16:38:50 PM||INFO|Microsoft.Hosting.Lifetime|Content root path: D:\Offical\Wleepay_API\wleepay.API 
+2024-01-30 16:38:50 PM||INFO|Microsoft.Hosting.Lifetime|Content root path: D:\Offical\Wleepay_API\wleepay.API 
+2024-01-30 16:40:17 PM||DEBUG|wleepay.API.Program|init main 
+2024-01-30 16:40:20 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: https://localhost:5001 
+2024-01-30 16:40:20 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: https://localhost:5001 
+2024-01-30 16:40:20 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: http://localhost:5000 
+2024-01-30 16:40:20 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: http://localhost:5000 
+2024-01-30 16:40:20 PM||INFO|Microsoft.Hosting.Lifetime|Application started. Press Ctrl+C to shut down. 
+2024-01-30 16:40:20 PM||INFO|Microsoft.Hosting.Lifetime|Application started. Press Ctrl+C to shut down. 
+2024-01-30 16:40:20 PM||INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development 
+2024-01-30 16:40:20 PM||INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development 
+2024-01-30 16:40:20 PM||INFO|Microsoft.Hosting.Lifetime|Content root path: D:\Offical\Wleepay_API\wleepay.API 
+2024-01-30 16:40:20 PM||INFO|Microsoft.Hosting.Lifetime|Content root path: D:\Offical\Wleepay_API\wleepay.API 

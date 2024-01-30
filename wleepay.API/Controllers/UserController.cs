@@ -413,6 +413,23 @@ namespace wleepay.API.Controllers
 
         }
 
+        [HttpGet("{userId}/StaffPermissions")]
+        public async Task<IActionResult> GetStaffPermissionsById(string userId)
+        {
+            try
+            {
+                var userDetail = await _userDetailsService.GetStaffPermissionsById(userId);
+
+                var userResource = _mapper.Map<ApplicationUser, StaffPermissionsResponseResource>(userDetail);
+                return Ok(userResource);
+            }
+            catch (Exception e)
+            {
+
+                throw e;
+            }
+        }
+
         #region helper methods
         private async Task<string> uploadDocument(IFormFile file, string userId, string containerName = "kyc-document")
         {
