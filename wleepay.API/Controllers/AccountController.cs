@@ -34,6 +34,8 @@ using System.Security.Cryptography;
 using wleepay.Communication.Services;
 using wleepay.API.Helpers;
 using DevExpress.XtraEditors.Filtering;
+using NLog.Targets;
+using System.Text.Json;
 
 namespace wleepay.API.Controllers
 {
@@ -338,16 +340,33 @@ namespace wleepay.API.Controllers
                         usersStaffRole.UserId = newUser.Id;
                         usersStaffRole.CreatedDate= DateTime.Now;
                         usersStaffRole.StaffRoleId = userDetail.StaffRoleId;
-                         await _usersStaffRoleService.AddUserStaffRole(usersStaffRole);
+                        await _usersStaffRoleService.AddUserStaffRole(usersStaffRole);
+
+                        // Initialize an empty list to store enum values as strings
+                        List<string> perType = new List<string>();
+
+                        StaffPermissions staffPermissions = new StaffPermissions();
 
                         foreach (var permission in userDetail.PermissionTypes)
                         {
-                            StaffPermissions staffPermissions = new StaffPermissions();
-                            staffPermissions.ApplicationUserId = newUser.Id;
-                            staffPermissions.CreatedDate = DateTime.Now;
-                            staffPermissions.PermissionId = permission;
-                            await _staffPermissionService.AddStaffPermissions(staffPermissions);
+                            // Convert the integer to the corresponding enum value
+                            PermissionTypes enumPermission = (PermissionTypes)permission;
+
+                            // Append the enum value as string to the list
+                            perType.Add(enumPermission.ToString());
                         }
+
+                        // Convert the list to an array if necessary
+                        string[] perTypeArray = perType.ToArray();
+
+                        var permissionTypes = JsonSerializer.Serialize(perTypeArray);
+                       
+                        staffPermissions.ApplicationUserId = newUser.Id;
+                        staffPermissions.CreatedDate = DateTime.Now;
+                        staffPermissions.PermissionId = 1;
+                        staffPermissions.Permissions = permissionTypes;
+                        await _staffPermissionService.AddStaffPermissions(staffPermissions);
+                        
 
                         //generate jwt token
                         var token = GenerateJSONWebToken(userDetailsToInsert);

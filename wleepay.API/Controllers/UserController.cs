@@ -7,9 +7,12 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
+using wleepay.API.Helpers;
 using wleepay.API.Resources;
 using wleepay.API.Validators;
 using wleepay.Core.DTO.Response;
@@ -413,15 +416,32 @@ namespace wleepay.API.Controllers
 
         }
 
-        [HttpGet("{userId}/StaffPermissions")]
+        [HttpGet("{userId}/staffSession")]
         public async Task<IActionResult> GetStaffPermissionsById(string userId)
         {
             try
             {
                 var userDetail = await _userDetailsService.GetStaffPermissionsById(userId);
+                string[] deserializedNumbers = JsonSerializer.Deserialize<string[]>(userDetail.StaffPermissions.FirstOrDefault().Permissions);
+
+                //Console.WriteLine("Deserialized numbers:");
+                //foreach (var num in deserializedNumbers)
+                //{
+                //    Console.WriteLine(num);
+                //}
+
+                string jsonString = JsonSerializer.Serialize(deserializedNumbers);
 
                 var userResource = _mapper.Map<ApplicationUser, StaffPermissionsResponseResource>(userDetail);
-                return Ok(userResource);
+
+                var secretKey = "1234567890123456";
+
+                //userResource.StaffPermissions.FirstOrDefault().Permissions = deserializedNumbers;
+                return Ok(new
+                {
+                    userResource,
+                    permissions = Common.Encrypt(jsonString, secretKey)
+                });
             }
             catch (Exception e)
             {

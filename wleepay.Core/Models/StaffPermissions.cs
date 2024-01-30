@@ -10,6 +10,7 @@ namespace wleepay.Core.Models
         public int Id { get; set; }
         public string ApplicationUserId { get; set; }
         public int PermissionId { get; set; }
+        public string Permissions { get; set; }
         public DateTime CreatedDate { get; set; }
         public DateTime UpdatedDate { get; set; }
         public virtual StaffPermissionType PermissionType { get; set; }
