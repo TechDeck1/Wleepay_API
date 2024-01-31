@@ -31,7 +31,6 @@ namespace wleepay.Core
         IStaffRolesRepository StaffRoles { get; }
         IStaffPermissionTypeRepository StaffPermissionType { get; }
         IUsersStaffRoleRepository UsersStaffRole { get; }
-        IStaffPermissionsRepository StaffPermissions { get; }
         IVerificationRepository Verification { get; }
 
 

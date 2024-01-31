@@ -14,7 +14,6 @@ namespace wleepay.Core.Models
             Wallets = new Collection<Wallet>();
             SmileIdentityJobs = new Collection<SmileIdentityJob>();
             UsersStaffRole=new Collection<UsersStaffRole>();
-            StaffPermissions = new Collection<StaffPermissions>();
 
         }
 
@@ -25,7 +24,6 @@ namespace wleepay.Core.Models
         public virtual ICollection<Wallet> Wallets { get; set; }
         public virtual ICollection<SmileIdentityJob> SmileIdentityJobs { get; set; }
         public virtual ICollection<UsersStaffRole> UsersStaffRole { get; set; }
-        public virtual ICollection<StaffPermissions> StaffPermissions { get; set; }
 
 
     }

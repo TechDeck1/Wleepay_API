@@ -3670,3 +3670,14 @@ wleepay.Core.Models.StaffPermissions -> System.Int32
 2024-01-31 12:24:32 PM||INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development 
 2024-01-31 12:24:32 PM||INFO|Microsoft.Hosting.Lifetime|Content root path: D:\Offical\Wleepay_API\wleepay.API 
 2024-01-31 12:24:32 PM||INFO|Microsoft.Hosting.Lifetime|Content root path: D:\Offical\Wleepay_API\wleepay.API 
+2024-01-31 12:50:45 PM||DEBUG|wleepay.API.Program|init main 
+2024-01-31 12:50:49 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: https://localhost:5001 
+2024-01-31 12:50:49 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: https://localhost:5001 
+2024-01-31 12:50:49 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: http://localhost:5000 
+2024-01-31 12:50:49 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: http://localhost:5000 
+2024-01-31 12:50:49 PM||INFO|Microsoft.Hosting.Lifetime|Application started. Press Ctrl+C to shut down. 
+2024-01-31 12:50:49 PM||INFO|Microsoft.Hosting.Lifetime|Application started. Press Ctrl+C to shut down. 
+2024-01-31 12:50:49 PM||INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development 
+2024-01-31 12:50:49 PM||INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development 
+2024-01-31 12:50:49 PM||INFO|Microsoft.Hosting.Lifetime|Content root path: D:\Offical\Wleepay_API\wleepay.API 
+2024-01-31 12:50:49 PM||INFO|Microsoft.Hosting.Lifetime|Content root path: D:\Offical\Wleepay_API\wleepay.API 

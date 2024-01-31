@@ -63,7 +63,6 @@ namespace wleepay.API.Controllers
         private readonly ITokenStorageService _tokenStorageService;
         private readonly ISystemActivityLogsService _systemActivityLogsService;
         private readonly IUsersStaffRoleService _usersStaffRoleService;
-        private readonly IStaffPermissionService _staffPermissionService;
         private readonly IVerificationService _verificationService;
 
 
@@ -86,7 +85,6 @@ namespace wleepay.API.Controllers
             ITokenStorageService tokenStorageService,
             ISystemActivityLogsService systemActivityLogsService,
             IUsersStaffRoleService usersStaffRoleService,
-            IStaffPermissionService staffPermissionService,
             IVerificationService verificationService)
         {
             _userManager = userManager;
@@ -108,7 +106,6 @@ namespace wleepay.API.Controllers
             _tokenStorageService = tokenStorageService;
             _systemActivityLogsService = systemActivityLogsService;
             _usersStaffRoleService = usersStaffRoleService;
-            _staffPermissionService = staffPermissionService;
             _verificationService = verificationService;
         }
 

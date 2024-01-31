@@ -34,7 +34,6 @@ namespace wleepay.Data
         private IStaffRolesRepository _staffRolesRepository;
         private IStaffPermissionTypeRepository _staffPermissionsTypeRepository;
         private IUsersStaffRoleRepository _usersStaffRoleRepository;
-        private IStaffPermissionsRepository _staffPermissionsRepository;
         private IVerificationRepository _verificationRepository;
 
 
@@ -66,7 +65,6 @@ namespace wleepay.Data
         public IStaffRolesRepository StaffRoles => _staffRolesRepository = _staffRolesRepository ?? new StaffRoleRepository(_context);
         public IStaffPermissionTypeRepository StaffPermissionType => _staffPermissionsTypeRepository = _staffPermissionsTypeRepository ?? new StaffPermissionTypeRepository(_context);
         public IUsersStaffRoleRepository UsersStaffRole => _usersStaffRoleRepository = _usersStaffRoleRepository ?? new UsersStaffRoleRepository(_context);
-        public IStaffPermissionsRepository StaffPermissions => _staffPermissionsRepository = _staffPermissionsRepository ?? new StaffPermissionRepository(_context);
         public IVerificationRepository Verification => _verificationRepository = _verificationRepository ?? new VerificationRepository(_context);
 
         public async Task<int> CommitAsync()
