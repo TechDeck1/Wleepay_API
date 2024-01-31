@@ -68,8 +68,6 @@ namespace wleepay.Data.Repositories
                     .ThenInclude(s => s.Currency)
                 .Include(s=> s.UsersStaffRole)
                     .ThenInclude(s=>s.StaffRoles)
-                .Include(s => s.StaffPermissions)
-                    .ThenInclude(S=>S.PermissionType)
                 .OrderByDescending(w => w.UserDetail.CreatedDate)
                 .Skip(skipCount)
                 .Take(takeCount)
@@ -96,8 +94,7 @@ namespace wleepay.Data.Repositories
                     .ThenInclude(s => s.County)
                 .Include(s => s.UsersStaffRole)
                     .ThenInclude(s => s.StaffRoles)
-                .Include(s => s.StaffPermissions)
-                    .ThenInclude(S => S.PermissionType).AsQueryable();
+                .AsQueryable();
 
             if (fetchWallet)
             {
@@ -284,8 +281,6 @@ namespace wleepay.Data.Repositories
         {
             var userDetails = await WPContext.Users.Where(user => user.Id == userId)
                             .Include(s => s.UserDetail)
-                            .Include(s => s.StaffPermissions)
-                            .ThenInclude(S => S.PermissionType)
                             .FirstOrDefaultAsync();
             
             return userDetails;

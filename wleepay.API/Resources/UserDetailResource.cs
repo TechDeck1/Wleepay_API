@@ -29,7 +29,7 @@ namespace wleepay.API.Resources
         public DateTime HireDate { get; set; }
         public int SecurityQuestionId { get; set; }
         public string SecurityAnswerText { get; set; }
-
+        //public string Permissions { get; set; }
         public virtual KYCStatus KYCStatus { get; set; }
         public virtual KYCLevel KYCLevelDetail { get; set; }
         public virtual County County { get; set; }

@@ -320,6 +320,29 @@ namespace wleepay.API.Controllers
                         }
                     }
 
+                    if (userDetail.PermissionTypes != null)
+                    {
+
+                        // Initialize an empty list to store enum values as strings
+                        List<string> perType = new List<string>();
+
+                        foreach (var permission in userDetail.PermissionTypes)
+                        {
+                            // Convert the integer to the corresponding enum value
+                            PermissionTypes enumPermission = (PermissionTypes)permission;
+
+                            // Append the enum value as string to the list
+                            perType.Add(enumPermission.ToString());
+                        }
+
+                        // Convert the list to an array if necessary
+                        string[] perTypeArray = perType.ToArray();
+
+                        var permissionTypes = JsonSerializer.Serialize(perTypeArray);
+
+                        userDetailsToInsert.Permissions = permissionTypes;
+                    }
+                    
                     //save data
                     var updatedDetails = await _userDetailsService.AddOrUpdateUserDetails(userDetailsToInsert);
                     if (updatedDetails.UserId != null)
@@ -341,32 +364,6 @@ namespace wleepay.API.Controllers
                         usersStaffRole.CreatedDate= DateTime.Now;
                         usersStaffRole.StaffRoleId = userDetail.StaffRoleId;
                         await _usersStaffRoleService.AddUserStaffRole(usersStaffRole);
-
-                        // Initialize an empty list to store enum values as strings
-                        List<string> perType = new List<string>();
-
-                        StaffPermissions staffPermissions = new StaffPermissions();
-
-                        foreach (var permission in userDetail.PermissionTypes)
-                        {
-                            // Convert the integer to the corresponding enum value
-                            PermissionTypes enumPermission = (PermissionTypes)permission;
-
-                            // Append the enum value as string to the list
-                            perType.Add(enumPermission.ToString());
-                        }
-
-                        // Convert the list to an array if necessary
-                        string[] perTypeArray = perType.ToArray();
-
-                        var permissionTypes = JsonSerializer.Serialize(perTypeArray);
-                       
-                        staffPermissions.ApplicationUserId = newUser.Id;
-                        staffPermissions.CreatedDate = DateTime.Now;
-                        staffPermissions.PermissionId = 1;
-                        staffPermissions.Permissions = permissionTypes;
-                        await _staffPermissionService.AddStaffPermissions(staffPermissions);
-                        
 
                         //generate jwt token
                         var token = GenerateJSONWebToken(userDetailsToInsert);

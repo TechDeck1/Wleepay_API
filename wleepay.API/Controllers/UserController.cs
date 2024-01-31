@@ -422,31 +422,27 @@ namespace wleepay.API.Controllers
             try
             {
                 var userDetail = await _userDetailsService.GetStaffPermissionsById(userId);
-                string[] deserializedNumbers = JsonSerializer.Deserialize<string[]>(userDetail.StaffPermissions.FirstOrDefault().Permissions);
-
-                //Console.WriteLine("Deserialized numbers:");
-                //foreach (var num in deserializedNumbers)
-                //{
-                //    Console.WriteLine(num);
-                //}
-
-                string jsonString = JsonSerializer.Serialize(deserializedNumbers);
-
+                // string[] deserializedNumbers = JsonSerializer.Deserialize<string[]>(userDetail.StaffPermissions.FirstOrDefault().Permissions);
                 var userResource = _mapper.Map<ApplicationUser, StaffPermissionsResponseResource>(userDetail);
 
-                var secretKey = "1234567890123456";
+                if (!string.IsNullOrEmpty(userDetail?.UserDetail?.Permissions))
+                {
+                    string jsonString = JsonSerializer.Serialize(userDetail?.UserDetail?.Permissions);
 
-                //userResource.StaffPermissions.FirstOrDefault().Permissions = deserializedNumbers;
+                    var secretKey = "1234567890123456";
+
+                    userDetail.UserDetail.Permissions = Common.Encrypt(jsonString, secretKey).ToString();
+                }
                 return Ok(new
                 {
                     userResource,
-                    permissions = Common.Encrypt(jsonString, secretKey)
+                    session = userDetail.UserDetail.Permissions
                 });
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
 
-                throw e;
+                throw ex;
             }
         }
 
