@@ -16,5 +16,7 @@ namespace wleepay.Core.Services
         Task<IEnumerable<Wallet>> CreateCustomerWallet(string userId);
         Task<IEnumerable<Wallet>> CreateAgentWallet(string userId);
         Task<Wallet> GetUserDetailsByWalletIdAndCurrency(long walletId);
+        Task<IEnumerable<Wallet>> GetWalletByWalletTypeId(long walletTypeId);
+
     }
 }

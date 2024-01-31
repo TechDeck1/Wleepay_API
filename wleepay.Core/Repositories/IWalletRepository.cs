@@ -12,5 +12,7 @@ namespace wleepay.Core.Repositories
         Task<IEnumerable<Wallet>> GetWalletsByUserId(string userId, int currencyId = 0, int typpe =0);
         Task<Wallet>  GetUserByWalletIdAndTransferType(long userId, int type);
         Task<Wallet> GetUserDetailsByWalletIdAndCurrency(long walletId);
+        Task<IEnumerable<Wallet>> GetWalletByWalletTypeId(long walletTypeId);
+
     }
 }

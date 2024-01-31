@@ -68,5 +68,16 @@ namespace wleepay.Data.Repositories
 
             return walletList;
         }
+
+        public async Task<IEnumerable<Wallet>> GetWalletByWalletTypeId(long walletTypeId)
+        {
+            var wallet = WPContext.Wallet.Where(w => w.Type == walletTypeId).AsQueryable();
+            var walletDetail = await wallet
+                .Include(w => w.Currency)
+                .Include(w => w.WalletType)
+                .ToListAsync();
+
+            return walletDetail;
+        }
     }
 }

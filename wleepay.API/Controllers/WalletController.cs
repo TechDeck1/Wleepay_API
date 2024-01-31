@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -49,6 +50,18 @@ namespace wleepay.API.Controllers
                 return BadRequest("Please select userId.");
             
             var walletData = await _walletService.GetWalletsByUserId(userId);
+            var walletListResource = _mapper.Map<IEnumerable<Wallet>, IEnumerable<WalletResource>>(walletData);
+
+            return Ok(walletListResource);
+        }
+
+        [HttpGet("GetWalletByWalletTypeId/{walletTypeId}")]
+        public async Task<IActionResult> GetWalletByWalletTypeId(long walletTypeId)
+        {
+            if (walletTypeId == null)
+                return BadRequest("Please select userId.");
+
+            var walletData = await _walletService.GetWalletByWalletTypeId(walletTypeId);
             var walletListResource = _mapper.Map<IEnumerable<Wallet>, IEnumerable<WalletResource>>(walletData);
 
             return Ok(walletListResource);

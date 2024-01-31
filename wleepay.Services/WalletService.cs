@@ -7,6 +7,7 @@ using wleepay.Core.Models;
 using wleepay.Core.Services;
 using System.Linq;
 using wleepay.Core.Enums;
+using Microsoft.SqlServer.Management.Smo;
 
 namespace wleepay.Services
 {
@@ -167,6 +168,11 @@ namespace wleepay.Services
         public async Task<Wallet> GetUserDetailsByWalletIdAndCurrency(long walletId)
         {
             return await _unitOfWork.Wallet.GetUserDetailsByWalletIdAndCurrency(walletId);
+        }
+
+        public async Task<IEnumerable<Wallet>> GetWalletByWalletTypeId(long walletTypeId)
+        {
+            return await _unitOfWork.Wallet.GetWalletByWalletTypeId(walletTypeId);
         }
     }
 }
