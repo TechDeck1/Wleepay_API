@@ -93,6 +93,12 @@ namespace wleepay.API.Controllers
             if (newTransactionResource != null)
             {
                 await SendTransactionActionSMS(newTransaction);
+
+                if(transactionRequest.TransferTypeId == Core.Enums.TransferTypes.CashOnHand.GetHashCode())
+                {
+                    await SendTransactionActionEmail(newTransaction);
+
+                }
             }
             return Ok(newTransactionResource);
         }
@@ -221,6 +227,26 @@ namespace wleepay.API.Controllers
 
         }
 
+        [HttpPost("TopUpSystemWallet")]
+        public async Task<IActionResult> CreateTransactionForSystemWallet([FromBody] CreateTransactionResource transactionRequest)
+        {
+            var validator = new CreateTransactionValidator();
+            var validationResult = await validator.ValidateAsync(transactionRequest);
+
+            if (!validationResult.IsValid)
+                return BadRequest(validationResult.Errors);
+
+            var transactionToCreate = _mapper.Map<CreateTransactionResource, Transaction>(transactionRequest);
+            var newTransaction = await _transactionService.InitiateTransaction(transactionToCreate);
+
+            var newTransactionResource = _mapper.Map<Transaction, TransactionResource>(newTransaction);
+            if (newTransactionResource != null)
+            {
+                await SendTransactionActionSMS(newTransaction);
+            }
+            return Ok(newTransactionResource);
+        }
+
 
         #region Helper function
         private async Task<TransactionResource> ChangePaymentRequestStatus(long paymentRequestId, Core.Enums.TransactionStatus status)
@@ -269,6 +295,13 @@ namespace wleepay.API.Controllers
                 string name = $"{fromWalletUser.ApplicationUser.UserDetail.FirstName} {fromWalletUser.ApplicationUser.UserDetail.LastName}";
                 messageText = GenerateMessageText(transaction.Amount, userWallet.Currency.Name, name, transaction.Id, status, transaction.TransferTypeId, true);
             }
+            else if (transaction.TransferTypeId == Core.Enums.TransferTypes.CashOnHand.GetHashCode())
+            {
+                userWallet = toWalletUser;
+                string name = $"{fromWalletUser.ApplicationUser.UserDetail.FirstName} {fromWalletUser.ApplicationUser.UserDetail.LastName}";
+                messageText = GenerateMessageText(transaction.Amount, userWallet.Currency.Name, name, transaction.Id, status, transaction.TransferTypeId, true);
+
+            }
 
             string result = string.Empty;
 
@@ -291,6 +324,8 @@ namespace wleepay.API.Controllers
                 case Core.Enums.TransactionStatus.Approved:
                     if (transactionTypeId == Core.Enums.TransferTypes.WleeTransfer.GetHashCode())
                         messageText = MessagesTemplates.PaymentReceived(amountString, currency, userName, transactionId);
+                    else if (transactionTypeId == Core.Enums.TransferTypes.CashOnHand.GetHashCode())
+                        messageText = MessagesTemplates.PaymentReceived(amountString, currency, userName, transactionId);
                     else
                         messageText = MessagesTemplates.PaymentApprovedRejected(amountString, currency, userName, transactionId, isCashout);
                     break;
@@ -301,6 +336,48 @@ namespace wleepay.API.Controllers
             }
             return messageText;
         }
+
+        private async Task<string> SendTransactionActionEmail(Transaction transaction)
+
+        {
+            var userWallet = new Wallet();
+            string messageText = string.Empty;
+            string emailText = string.Empty;
+
+            var status = (Core.Enums.TransactionStatus)transaction.Status;
+            //Get from wallet user details
+            var fromWalletUser = await _walletService.GetUserDetailsByWalletIdAndCurrency(transaction.FromWalletId);
+            //Get to wallet user details
+            var toWalletUser = await _walletService.GetUserDetailsByWalletIdAndCurrency(transaction.ToWalletId);
+
+            //check transaction type
+            if (transaction.TransferTypeId == Core.Enums.TransferTypes.CashOnHand.GetHashCode())
+            {
+                userWallet = toWalletUser;
+                string recieverName = $"{userWallet.ApplicationUser.UserDetail.FirstName} {userWallet.ApplicationUser.UserDetail.LastName}";
+                string name = $"{fromWalletUser.ApplicationUser.UserDetail.FirstName} {fromWalletUser.ApplicationUser.UserDetail.LastName}";
+                emailText = GenerateEmailText(transaction.Amount, userWallet.Currency.Name, name, transaction.Id, status, transaction.TransferTypeId, true, recieverName);
+            }
+
+            string result = string.Empty;
+           
+            if (!string.IsNullOrEmpty(emailText))
+                result = _smsService.sendMessage(messageText, userWallet.ApplicationUser.UserDetail.PhoneNumber);
+
+            return result;
+        }
+
+        private string GenerateEmailText(double amount, string currency, string userName, long transactionId, Core.Enums.TransactionStatus status, int transactionTypeId, bool isCashout = false, string recieverName="")
+        {
+            string messageText = string.Empty;
+            string amountString = amount.ToString("C2");
+            
+            if (transactionTypeId == Core.Enums.TransferTypes.CashOnHand.GetHashCode())
+                messageText = MessagesTemplates.PaymentReceivedEmail(amountString, currency, userName, transactionId, recieverName);
+            
+            return messageText;
+        }
+
         #endregion
     }
 }

@@ -13,7 +13,8 @@ namespace wleepay.Core.Enums
         WleeTransfer = 5,
         TopUp = 6,
         FillAgent = 7,
-        AgentCommissionCashout = 8
+        AgentCommissionCashout = 8,
+        CashOnHand = 9
     }
 
 }

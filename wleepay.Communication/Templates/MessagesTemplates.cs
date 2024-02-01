@@ -82,5 +82,37 @@ namespace wleepay.Communication.Templates
                 ";
 
         }
+
+        public static string PaymentReceivedEmail(string amount, string currency, string customer, long txNumber, string ReceiverName)
+        {
+            return $@"
+                    <html>
+                    <head>
+                        <style>
+                           body {{
+                            font-family: 'Arial', sans-serif;
+                            margin: 0; /* Remove default body margin */
+                            padding: 0; /* Remove default body padding */
+                        }}
+                        .container {{
+                            max-width: 600px;
+                            margin: 0 0;
+                        }}
+                        p {{
+                            margin-top: 0; /* Remove top margin for paragraphs */
+                            margin-bottom: 1em; /* Add a bottom margin for paragraphs for spacing */
+                        }}
+                        </style>
+                    </head>
+                    <body>
+                        <div class='container'>
+                            <p>Dear {ReceiverName},</p>
+                            <p>A payment of {amount} {currency} received from {customer}.</p>
+                        </div>
+                    </body>
+                    </html>
+                ";
+
+        }
     }
 }
