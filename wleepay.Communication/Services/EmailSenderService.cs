@@ -616,5 +616,52 @@ namespace wleepay.Communication.Services
             }
 
         }
+
+        public async Task<bool> EmailForAccountCreationToSystemAdmin(string email, string name, string phone)
+        {
+            var subject = "Wleepay portal account setup/activation confirmation notice (Do not reply)";
+            var recipientEmail = "ariel.ranjot@gmail.com";
+            // var recipientEmail = email;
+
+            AccountCreationTemplateForSystemAdmin template = new AccountCreationTemplateForSystemAdmin
+            {
+                SystemAdminEmail = email,
+                SystemAdminFirstName = name,
+                SystemAdminPhoneNumber = phone
+            };
+
+            string htmlTemplate = template.GenerateHtml();
+
+            // Sender's email address and credentials
+            string senderEmail = "ranjotk@arielsoftwares.com";
+
+            var apiKey = _configuration.GetSection("SendGrid:WleePaySendGridApiKey").Value.ToString();
+            var client = new SendGridClient(apiKey);
+            var msg = new SendGridMessage()
+            {
+                From = new EmailAddress(senderEmail, "lionel"),
+                Subject = subject,
+                PlainTextContent = "Dear..",
+                HtmlContent = htmlTemplate
+
+            };
+            msg.AddTo(new EmailAddress(recipientEmail, "shikha"));
+            var response = await client.SendEmailAsync(msg);
+            Console.WriteLine(response.Body.ToString(), response.StatusCode);
+
+            // A success status code means SendGrid received the email request and will process it.
+            // If email is not received, use this URL to debug: https://app.sendgrid.com/email_activity 
+            if (response.IsSuccessStatusCode)
+            {
+                Console.WriteLine(response.IsSuccessStatusCode ? "Email queued successfully!" : "Something went wrong!");
+                return true;
+            }
+            else
+            {
+                return false;
+
+            }
+            
+        }
     }
 }

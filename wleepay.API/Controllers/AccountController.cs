@@ -1157,7 +1157,9 @@ namespace wleepay.API.Controllers
                         
                         //add user details
                         await _userDetailsService.AddOrUpdateUserDetails(userDetails);
-                       
+                        
+                        await _emailSender.EmailForAccountCreationToSystemAdmin(decryptedEmail, userDetails.FirstName, userDetails.PhoneNumber);
+
                         systemActivityLog.Description = GenericMessagesForSystemLogs.CompleteLoginProcess.ToDescriptionString();
                         var addLogs = await _systemActivityLogsService.AddSystemLogs(systemActivityLog);
                       

@@ -422,12 +422,12 @@ namespace wleepay.API.Controllers
             try
             {
                 var userDetail = await _userDetailsService.GetStaffPermissionsById(userId);
-                // string[] deserializedNumbers = JsonSerializer.Deserialize<string[]>(userDetail.StaffPermissions.FirstOrDefault().Permissions);
+                string[] deserializedNumbers = JsonSerializer.Deserialize<string[]>(userDetail?.UserDetail?.Permissions);
                 var userResource = _mapper.Map<ApplicationUser, StaffPermissionsResponseResource>(userDetail);
 
                 if (!string.IsNullOrEmpty(userDetail?.UserDetail?.Permissions))
                 {
-                    string jsonString = JsonSerializer.Serialize(userDetail?.UserDetail?.Permissions);
+                    string jsonString = JsonSerializer.Serialize(deserializedNumbers);
 
                     var secretKey = "1234567890123456";
 
