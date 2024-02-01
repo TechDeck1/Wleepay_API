@@ -470,6 +470,11 @@ namespace wleepay.API.Controllers
                             }
                         }
 
+                        if (roleEnumStringValue == Core.Enums.Role.SystemAdmin)
+                        {
+                            await _walletService.CreateSystemAdminWallet(newUser.Id);
+                        }
+
                         //save data
                         var updatedDetails = await _userDetailsService.AddOrUpdateUserDetails(userDetailsToInsert);
 

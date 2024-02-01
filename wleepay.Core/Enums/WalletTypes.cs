@@ -13,7 +13,8 @@ namespace wleepay.Core.Enums
         AgentComission = 5,
         AgentAccount = 6,
         MemberAccount = 7,
-        MerchantAccount = 8
+        MerchantAccount = 8,
+        SystemWallet = 9
     }
 
 }

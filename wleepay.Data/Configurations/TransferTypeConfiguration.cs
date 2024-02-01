@@ -125,13 +125,24 @@ namespace wleepay.Data.Configurations
                 TransferFee = null
             });
 
+            
             builder.HasData(new TransferType
             {
                 Id = 8,
                 Name = "Cashout Agent Commission",
                 FromWalletType = 5,
                 ToWalletType = 1,
-                Description = "Transfer from Agent Commission a/c to system float n a/c",
+                Description = "Transfer from Agent Commission a/c  to system float n a/c",
+                TransferFee = null
+            });
+
+            builder.HasData(new TransferType
+            {
+                Id = 9,
+                Name = "Cash On Hand",
+                FromWalletType = 1,
+                ToWalletType = 9,
+                Description = "Transfer from system float n a/c to sytem admin a/c",
                 TransferFee = null
             });
         }
