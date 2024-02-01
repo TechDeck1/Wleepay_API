@@ -29,6 +29,7 @@ using DevExpress.Data.Filtering.Helpers;
 using wleepay.Core.Enums;
 using Microsoft.SqlServer.Management.Smo;
 using wleepay.API.Helpers;
+using System.Text.Json;
 
 namespace wleepay.API.Controllers
 {
@@ -292,6 +293,15 @@ namespace wleepay.API.Controllers
                         var ipAddress = HttpContext.Connection.RemoteIpAddress.ToString();
                         _logger.LogInformation($"Action: {ControllerContext.ActionDescriptor.ActionName}, User: {userDetails.UserId}, Timestamp: {DateTime.UtcNow}, IP: {ipAddress}");
                        
+                        if (!string.IsNullOrEmpty(userDetails?.Permissions))
+                        {
+                            string jsonString = JsonSerializer.Serialize(userDetails?.Permissions);
+
+                            var secretKey = "1234567890123456";
+
+                            userDetails.Permissions = Common.Encrypt(jsonString, secretKey).ToString();
+                        }
+
                         return Ok(new
                         {
                             data = (new
@@ -302,9 +312,11 @@ namespace wleepay.API.Controllers
                                 Role = userRole?[0]
 
                             }),
+                            Session = userDetails.Permissions,
                             IsExpired = false,
                             Success= true,
                             Message=Messages.VerificationSuccessfull.ToDescriptionString()
+
                         });
                     }
                     else
@@ -315,6 +327,7 @@ namespace wleepay.API.Controllers
                             IsExpired = false,
                             Success = true,
                             Message =Messages.WrongOtp.ToDescriptionString(),
+
                         });
                     }
                 }
@@ -326,6 +339,7 @@ namespace wleepay.API.Controllers
                         IsExpired = true,
                         Success=false,
                         Message = Messages.OtpExpired.ToDescriptionString(),
+
                     });
 
                 }
