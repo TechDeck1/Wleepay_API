@@ -17,6 +17,7 @@ using SendGrid;
 using SendGrid.Helpers.Mail;
 using Microsoft.Extensions.Configuration;
 using Twilio;
+using Newtonsoft.Json.Linq;
 
 namespace wleepay.Communication.Services
 {
@@ -269,13 +270,13 @@ namespace wleepay.Communication.Services
         public async Task<bool> SendEmailToStaffToCompleteLoginProcess(string email, string uri, string username)
         {
 
-            var subject = "Complete Login process";
+            var subject = "Complete sign-up process";
             var recipientEmail = "ariel.ranjot@gmail.com";
             // var recipientEmail = email;
 
-            string resetPasswordLink = uri;
+            string LinkForAccountSetup = uri;
 
-            var htmlTemplate = $"Dear {username},\n\nPlease click the following link to complete your login process:\n {resetPasswordLink}";
+            var htmlTemplate = $"Dear {username},\n\nPlease click the following link to complete your signup process:\n {LinkForAccountSetup}";
 
             // Sender's email address and credentials
             string senderEmail = "ranjotk@arielsoftwares.com";
@@ -538,12 +539,12 @@ namespace wleepay.Communication.Services
             }
         }
 
-        public async Task<bool> ReplyForCustomerTicket(string Message, string email, string subject)
+        public async Task<bool> ReplyForCustomerTicket(string message, string email, string subject)
         {
             var emailSubject = subject;
             var recipientEmail = "ariel.ranjot@gmail.com";
 
-            string htmlTemplate = Message;
+            string htmlTemplate = message;
 
             // Sender's email address and credentials
             string senderEmail = "ranjotk@arielsoftwares.com";
@@ -662,6 +663,39 @@ namespace wleepay.Communication.Services
 
             }
             
+        }
+
+        public async Task<string> EmailForPaymentRecieved(string messageText, string phoneNumber)
+        {
+            var emailSubject = "Payment Recieved";
+            var recipientEmail = "ariel.ranjot@gmail.com";
+
+            string htmlTemplate = messageText;
+
+            // Sender's email address and credentials
+            string senderEmail = "ranjotk@arielsoftwares.com";
+
+            var apiKey = _configuration.GetSection("SendGrid:WleePaySendGridApiKey").Value.ToString();
+            var client = new SendGridClient(apiKey);
+            var msg = new SendGridMessage()
+            {
+                From = new EmailAddress(senderEmail, "lionel"),
+                Subject = emailSubject,
+                PlainTextContent = "Dear..",
+                HtmlContent = htmlTemplate
+
+            };
+            msg.AddTo(new EmailAddress(recipientEmail, "shikha"));
+            var response = await client.SendEmailAsync(msg);
+            Console.WriteLine(response.Body.ToString(), response.StatusCode);
+
+            // A success status code means SendGrid received the email request and will process it.
+            // Errors can still occur when SendGrid tries to send the email. 
+            // If email is not received, use this URL to debug: https://app.sendgrid.com/email_activity 
+            
+            Console.WriteLine(response.IsSuccessStatusCode ? "Email queued successfully!" : "Something went wrong!");
+            return response.IsSuccessStatusCode ? "Email queued successfully!" : "Something went wrong!";
+           
         }
     }
 }

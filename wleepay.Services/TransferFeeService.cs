@@ -25,6 +25,10 @@ namespace wleepay.Services
 
         public async Task<TransferFee> UpdateTransferFee(TransferFee fee)
         {
+            if (fee.Id == null) 
+            {
+                fee.Id = 1;
+            }
             var transferFee = await _unitOfWork.TransferFee.GetByIdAsync(fee.Id);
             if(transferFee != null)
             {

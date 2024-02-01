@@ -23,12 +23,15 @@ namespace wleepay.API.Controllers
         private readonly IWalletService _walletService;
         private readonly ISMSService _smsService;
         private readonly IMapper _mapper;
-        public TransactionController(ITransactionService transactionService, IWalletService walletService, ISMSService smsService, IMapper mapper)
+        private readonly IEmailSender _emailSender;
+
+        public TransactionController(ITransactionService transactionService, IWalletService walletService, ISMSService smsService, IMapper mapper, IEmailSender emailSender)
         {
             _transactionService = transactionService;
             _walletService = walletService;
             _smsService = smsService;
             _mapper = mapper;
+            _emailSender = emailSender;
         }
 
         [HttpPost("History")]
@@ -341,7 +344,6 @@ namespace wleepay.API.Controllers
 
         {
             var userWallet = new Wallet();
-            string messageText = string.Empty;
             string emailText = string.Empty;
 
             var status = (Core.Enums.TransactionStatus)transaction.Status;
@@ -362,7 +364,7 @@ namespace wleepay.API.Controllers
             string result = string.Empty;
            
             if (!string.IsNullOrEmpty(emailText))
-                result = _smsService.sendMessage(messageText, userWallet.ApplicationUser.UserDetail.PhoneNumber);
+                result = await _emailSender.EmailForPaymentRecieved(emailText, userWallet.ApplicationUser.UserDetail.PhoneNumber);
 
             return result;
         }
