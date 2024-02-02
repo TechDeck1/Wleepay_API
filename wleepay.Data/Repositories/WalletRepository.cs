@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using wleepay.Core.Enums;
 using wleepay.Core.Models;
 using wleepay.Core.Repositories;
 using wleepay.Data.Context;
@@ -78,6 +79,19 @@ namespace wleepay.Data.Repositories
                 .ToListAsync();
 
             return walletDetail;
+        }
+
+        public async Task<Wallet> SetCashOnHand(double amount, int currencyId, int WalletTypeId)
+        {
+            var wallet = await WPContext.Wallet.Where(w => w.Type == WalletTypeId && w.CurrencyId == currencyId).FirstOrDefaultAsync();
+            if(wallet != null)
+            {
+                wallet.Balance = amount; 
+                wallet.CurrencyId=currencyId;
+            }
+            await WPContext.SaveChangesAsync();
+
+            return wallet;
         }
     }
 }

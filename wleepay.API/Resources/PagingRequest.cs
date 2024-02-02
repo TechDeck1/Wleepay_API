@@ -42,4 +42,12 @@ namespace wleepay.API.Resources
         public int Size { get; set; }
     }
 
+    public class CashOnHandRequest 
+    {
+        public int WalletTypeId { get; set; }
+        public int CurrencyTypeId { get; set; }
+        public double Amount { get; set; }
+    }
+
+
 }

@@ -213,5 +213,10 @@ namespace wleepay.Services
         {
             return await _unitOfWork.Wallet.GetWalletByWalletTypeId(walletTypeId);
         }
+
+        public async Task<Wallet> SetCashOnHand(double amount, int currencyId, int WalletTypeId)
+        {
+            return await _unitOfWork.Wallet.SetCashOnHand(amount,currencyId,WalletTypeId);
+        }
     }
 }

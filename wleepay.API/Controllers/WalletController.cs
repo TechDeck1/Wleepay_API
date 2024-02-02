@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.SqlServer.Management.Smo;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,6 +11,7 @@ using wleepay.API.Resources;
 using wleepay.API.Validators;
 using wleepay.Core.Models;
 using wleepay.Core.Services;
+using wleepay.Services;
 
 namespace wleepay.API.Controllers
 {
@@ -67,6 +69,17 @@ namespace wleepay.API.Controllers
             return Ok(walletListResource);
         }
 
+
+        [HttpPost("SetCashOnHand")]
+        public async Task<IActionResult> SetCashOnHand(CashOnHandRequest request)
+        {
+            if (request.Amount == null)
+                return BadRequest("Invalid Request");
+            
+            var walletData = await _walletService.SetCashOnHand(request.Amount, request.CurrencyTypeId, request.WalletTypeId);
+
+            return Ok(walletData);
+        }
 
     }
 }
