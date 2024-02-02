@@ -293,5 +293,23 @@ namespace wleepay.Data.Repositories
                 return response;
             }
         }
+
+        public  async Task<IEnumerable<Transaction>> GetTransactionsByTypeAndCurrency(int type, int currency, int pageIndex = 0, int pageSize = 10)
+        {
+            int takeCount = pageSize;
+            int skipCount = pageIndex * pageSize;
+            var transactionQuery = WPContext.Transactions
+                .Where(w => w.Status != Core.Enums.TransactionStatus.Pending.GetHashCode() && w.TransferTypeId == type && w.FromWallet.CurrencyId == currency && w.FromWallet.Type == WalletTypes.SystemWallet.GetHashCode() && w.ToWallet.Type == WalletTypes.SystemWallet.GetHashCode());
+
+            return await transactionQuery
+                .OrderByDescending(w => w.CreatedDate)
+                .Skip(skipCount)
+                .Take(takeCount)
+                .Include(s => s.FromWallet.ApplicationUser.UserDetail)
+                .Include(s => s.FromWallet.Currency)
+                .Include(s => s.ToWallet.ApplicationUser.UserDetail)
+                .Include(s => s.TransferType)
+                .ToListAsync();
+        }
     }
 }

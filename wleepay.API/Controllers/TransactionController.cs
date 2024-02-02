@@ -230,26 +230,22 @@ namespace wleepay.API.Controllers
 
         }
 
-        [HttpPost("TopUpSystemWallet")]
-        public async Task<IActionResult> CreateTransactionForSystemWallet([FromBody] CreateTransactionResource transactionRequest)
+        [HttpPost("GetTransactionByTypeAndCurrency")]
+        public async Task<IActionResult> GetTransactionByTypeAndCurrency(TransactionPagingRequest pagination)
         {
-            var validator = new CreateTransactionValidator();
-            var validationResult = await validator.ValidateAsync(transactionRequest);
 
-            if (!validationResult.IsValid)
-                return BadRequest(validationResult.Errors);
+            var result = await _transactionService.GetTransactionsByTypeAndCurrency(pagination.TransferTypeId, pagination.CurrencyTypeId, pagination.Index, pagination.Size);
+            var transactionResources = result.Select(transaction => _mapper.Map<Transaction, TransactionHistoryResource>(transaction)).ToList();
 
-            var transactionToCreate = _mapper.Map<CreateTransactionResource, Transaction>(transactionRequest);
-            var newTransaction = await _transactionService.InitiateTransaction(transactionToCreate);
+            if (result == null)
+                return BadRequest("Invalid UserId");
 
-            var newTransactionResource = _mapper.Map<Transaction, TransactionResource>(newTransaction);
-            if (newTransactionResource != null)
+            return Ok(new
             {
-                await SendTransactionActionSMS(newTransaction);
-            }
-            return Ok(newTransactionResource);
+                //TotalCount = result.TotalCount,
+                Transactions = transactionResources
+            });
         }
-
 
         #region Helper function
         private async Task<TransactionResource> ChangePaymentRequestStatus(long paymentRequestId, Core.Enums.TransactionStatus status)

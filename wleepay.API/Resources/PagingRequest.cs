@@ -34,4 +34,12 @@ namespace wleepay.API.Resources
         public int Size { get; set; }
     }
 
+    public class TransactionPagingRequest
+    {
+        public int TransferTypeId { get; set; }
+        public int CurrencyTypeId { get; set; }
+        public int Index { get; set; }
+        public int Size { get; set; }
+    }
+
 }

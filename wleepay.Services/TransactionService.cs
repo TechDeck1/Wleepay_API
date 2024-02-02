@@ -113,6 +113,12 @@ namespace wleepay.Services
             return await _unitOfWork.Transaction.GetTopUpTransactions(pageIndex, pageSize);
         }
 
+        public async Task<IEnumerable<Transaction>> GetTransactionsByTypeAndCurrency(int type, int currency, int pageIndex = 0, int pageSize = 10)
+        {
+            return await _unitOfWork.Transaction.GetTransactionsByTypeAndCurrency(type, currency, pageIndex, pageSize);
+        }
+
+
         #region Helper function
         private Transaction GetTaxTransaction(long fromWalletId, double amount, long parentTransactionId, int currency)
         {
