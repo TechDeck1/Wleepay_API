@@ -295,7 +295,9 @@ namespace wleepay.API.Controllers
                        
                         if (!string.IsNullOrEmpty(userDetails?.Permissions))
                         {
-                            string jsonString = JsonSerializer.Serialize(userDetails?.Permissions);
+                            string[] deserializedNumbers = JsonSerializer.Deserialize<string[]>(userDetails?.Permissions);
+
+                            string jsonString = JsonSerializer.Serialize(deserializedNumbers);
 
                             var secretKey = "1234567890123456";
 
