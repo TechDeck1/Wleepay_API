@@ -159,6 +159,7 @@ namespace wleepay.API
             services.AddScoped<IWhatsAppService, WhatsAppService>();
             services.AddTransient<IUsersStaffRoleService, UsersStaffRoleService>();
             services.AddTransient<IVerificationService, VerificationService>();
+            services.AddTransient<ICashFlowService, CashFlowHistoryService>();
 
             //swagger config
             services.AddSwaggerGen(c =>

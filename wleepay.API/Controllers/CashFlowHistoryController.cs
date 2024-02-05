@@ -53,6 +53,24 @@ namespace wleepay.API.Controllers
             }
 
         }
+
+        [HttpGet("GetCashFlowHistory")]
+        public async Task<IActionResult> GetCashFlowHistoryAsync()
+        {
+            try
+            {
+               
+                var cashFlow = await _cashFlowService.GetAllCashFlowHistoryAsync();
+                return Ok(cashFlow);
+
+            }
+            catch (System.Exception ex)
+            {
+
+                return BadRequest(ex.Message);
+            }
+
+        }
     }
 
 }

@@ -25,8 +25,9 @@ namespace wleepay.API.Controllers
         private readonly IMapper _mapper;
         private readonly IEmailSender _emailSender;
         private readonly ICashFlowService _cashFlowService;
+        private readonly IUserDetailService _userDetailService;
 
-        public TransactionController(ITransactionService transactionService, IWalletService walletService, ISMSService smsService, IMapper mapper, IEmailSender emailSender, ICashFlowService cashFlowService)
+        public TransactionController(ITransactionService transactionService, IWalletService walletService, ISMSService smsService, IMapper mapper, IEmailSender emailSender, ICashFlowService cashFlowService, IUserDetailService userDetailService)
         {
             _transactionService = transactionService;
             _walletService = walletService;
@@ -34,6 +35,7 @@ namespace wleepay.API.Controllers
             _mapper = mapper;
             _emailSender = emailSender;
             _cashFlowService = cashFlowService;
+            _userDetailService = userDetailService;
         }
 
         [HttpPost("History")]
@@ -273,6 +275,8 @@ namespace wleepay.API.Controllers
         {
             var userWallet = new Wallet();
             string messageText = string.Empty;
+            string result = string.Empty;
+
             var status = (Core.Enums.TransactionStatus)transaction.Status;
             //Get from wallet user details
             var fromWalletUser = await _walletService.GetUserDetailsByWalletIdAndCurrency(transaction.FromWalletId);
@@ -309,10 +313,15 @@ namespace wleepay.API.Controllers
                 userWallet = toWalletUser;
                 string name = $"{fromWalletUser.ApplicationUser.UserDetail.FirstName} {fromWalletUser.ApplicationUser.UserDetail.LastName}";
                 messageText = GenerateMessageText(transaction.Amount, userWallet.Currency.Name, name, transaction.Id, status, transaction.TransferTypeId, true);
+                var allAgents = await _userDetailService.GetAllUsersById(Role.Agent, 0, 0, userWallet.ApplicationUser.Id);
+                var agentsListResource = _mapper.Map<IEnumerable<ApplicationUser>, IEnumerable<ApplicationUserResource>>(allAgents.UserDetails);
 
+                foreach (var agent in agentsListResource)
+                {
+                   result = _smsService.sendMessage(messageText, agent.UserDetail.PhoneNumber);
+                }
+                return result
             }
-
-            string result = string.Empty;
 
             if (!string.IsNullOrEmpty(messageText))
                 result = _smsService.sendMessage(messageText, userWallet.ApplicationUser.UserDetail.PhoneNumber);
