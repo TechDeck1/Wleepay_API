@@ -320,7 +320,7 @@ namespace wleepay.API.Controllers
                 {
                    result = _smsService.sendMessage(messageText, agent.UserDetail.PhoneNumber);
                 }
-                return result
+                return result;
             }
 
             if (!string.IsNullOrEmpty(messageText))
