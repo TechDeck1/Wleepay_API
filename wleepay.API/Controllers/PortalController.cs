@@ -174,15 +174,21 @@ namespace wleepay.API.Controllers
         }
 
         [HttpPost("TaxRates")]
-        public async Task<IActionResult> UpdateTaxRates([FromBody] TaxRateResourceModel model)
+        public async Task<IActionResult> UpdateTaxRates([FromBody] TaxRateResourceModel taxRateResourceModel)
         {
             var validator = new TaxRateRequestValidator();
-            var validationResult = await validator.ValidateAsync(model);
+            var validationResult = await validator.ValidateAsync(taxRateResourceModel);
             if (!validationResult.IsValid)
                 return BadRequest(validationResult.Errors);
 
-            var taxRates = _mapper.Map<TaxRateResourceModel, TransferFee>(model);
-            var updatedRates = await _transferFeeService.UpdateTransferFee(taxRates);
+            //var updatedRates = await _transferFeeService.UpdateTransferFee(taxRates);
+            var taxRates = await _transferFeeService.GetTransferFeeByDesc();
+            taxRates.OrganizationFee = taxRateResourceModel.OrganizationFee;
+            taxRates.AgentCommission = taxRateResourceModel.AgentCommission;
+            taxRates.TaxAmount = taxRateResourceModel.TaxAmount;
+            taxRates.CreatedDate = DateTime.UtcNow;
+            taxRates.IsDeleted = false;
+            var updatedRates = await _transferFeeService.AddTransferFee(taxRates);
 
             var updatedRatesResource = _mapper.Map<TransferFee, TaxRateResourceModel>(updatedRates);
             return Ok(updatedRatesResource);
@@ -406,6 +412,14 @@ namespace wleepay.API.Controllers
                 throw ex;
             }
 
+        }
+
+
+        [HttpGet("GetTaxRates")]
+        public async Task<IActionResult> GetAllTaxRatesHistory()
+        {
+            var transferFees = await _transferFeeService.GetAllTransferFees();
+            return Ok(transferFees);
         }
 
 

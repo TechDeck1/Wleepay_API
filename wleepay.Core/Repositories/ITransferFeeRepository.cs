@@ -8,5 +8,10 @@ namespace wleepay.Core.Repositories
 {
     public interface ITransferFeeRepository : IRepository<TransferFee>
     {
+        Task<TransferFee> GetTransferFeeDesc();
+        Task<IEnumerable<TransferFee>> GetAllTransferFee();
+
+        Task<TransferFee> AddTaxRates(TransferFee transferFee);
+
     }
 }

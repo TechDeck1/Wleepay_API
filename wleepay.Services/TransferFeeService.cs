@@ -17,7 +17,22 @@ namespace wleepay.Services
         {
             this._unitOfWork = unitOfWork;
         }
-       
+
+        public async Task<TransferFee> AddTransferFee(TransferFee transferFee)
+        {
+            return await _unitOfWork.TransferFee.AddTaxRates(transferFee);
+        }
+
+        public async Task<IEnumerable<TransferFee>> GetAllTransferFees()
+        {
+            return await _unitOfWork.TransferFee.GetAllAsync();
+        }
+
+        public async Task<TransferFee> GetTransferFeeByDesc()
+        {
+            return await _unitOfWork.TransferFee.GetTransferFeeDesc();
+        }
+
         public async Task<TransferFee> GetTransferFeeById(int id)
         {
             return await _unitOfWork.TransferFee.GetByIdAsync(id);

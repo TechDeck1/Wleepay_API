@@ -7,6 +7,8 @@ using System.Threading.Tasks;
 using wleepay.Core.Models;
 using wleepay.Core.Repositories;
 using wleepay.Data.Context;
+using static DevExpress.Xpo.Helpers.AssociatedCollectionCriteriaHelper;
+using static DevExpress.XtraPrinting.Native.PageSizeInfo;
 
 namespace wleepay.Data.Repositories
 {
@@ -20,6 +22,31 @@ namespace wleepay.Data.Repositories
         private WPContext WPContext
         {
             get { return Context as WPContext; }
+        }
+
+        public async Task<TransferFee> GetTransferFeeDesc()
+        {
+            var result = await  WPContext.TransferFees.OrderByDescending(x=>x.CreatedDate).FirstOrDefaultAsync();
+            return result;
+        }
+
+        public async Task<IEnumerable<TransferFee>> GetAllTransferFee()
+        {
+            var pageSize = 0;
+            var pageIndex = 0;
+            int takeCount = pageSize;
+            int skipCount = pageIndex * pageSize;
+            var result = await WPContext.TransferFees.OrderByDescending(x => x.CreatedDate)
+                .Skip(skipCount)
+                .Take(takeCount)
+                .ToListAsync();
+            return result;
+        }
+
+        public async Task<TransferFee> AddTaxRates(TransferFee transferFee)
+        {
+            var result = await WPContext.AddAsync(transferFee);
+            return transferFee;
         }
     }
 }
