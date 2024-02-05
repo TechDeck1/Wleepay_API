@@ -299,7 +299,7 @@ namespace wleepay.Data.Repositories
             int takeCount = pageSize;
             int skipCount = pageIndex * pageSize;
             var transactionQuery = WPContext.Transactions
-                .Where(w => w.Status != Core.Enums.TransactionStatus.Pending.GetHashCode() && w.TransferTypeId == type && w.FromWallet.CurrencyId == currency && w.FromWallet.Type == WalletTypes.SystemWallet.GetHashCode() && w.ToWallet.Type == WalletTypes.SystemWallet.GetHashCode());
+                .Where(w => w.Status != Core.Enums.TransactionStatus.Pending.GetHashCode() && w.TransferTypeId == type && w.FromWallet.CurrencyId == currency);
 
             return await transactionQuery
                 .OrderByDescending(w => w.CreatedDate)

@@ -36,6 +36,10 @@ namespace wleepay.Data.Configurations
             builder
                 .Property(t => t.Description);
 
+            builder.Property(t => t.CreatedDate);
+
+            builder.Property(t => t.IsDeleted);
+
             builder.HasData(new TransferFee
             {
                 Id = 1,
