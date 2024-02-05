@@ -25,25 +25,25 @@ namespace wleepay.API.Controllers
         }
 
         [HttpPost("CashFlowHistory")]
-        public async Task<IActionResult> AddCashFlowHistoryAsync(CashFlowHistoryResource cashFlowHistory)
+        public async Task<IActionResult> AddCashFlowHistoryAsync(CashFlowHistoryResource cashFlowHistoryResource)
         {
             try
             {
-                if (cashFlowHistory.WalletId == null)
+                if (cashFlowHistoryResource.WalletId == null)
                 {
                     return NotFound();
                 }
-                if (cashFlowHistory.DepositAmount != null)
-                    cashFlowHistory.TotalAmount = cashFlowHistory.DepositAmount + cashFlowHistory.TotalAmount;
+                if (cashFlowHistoryResource.DepositAmount != null)
+                    cashFlowHistoryResource.TotalAmount = cashFlowHistoryResource.DepositAmount + cashFlowHistoryResource.TotalAmount;
                 else
                 {
-                    cashFlowHistory.TotalAmount = cashFlowHistory.TotalAmount - cashFlowHistory.WithdrawAmount;
+                    cashFlowHistoryResource.TotalAmount = cashFlowHistoryResource.TotalAmount - cashFlowHistoryResource.WithdrawAmount;
                 }
-                var walletListResource = _mapper.Map<CashFlowHistoryResource, CashFlowHistory>(cashFlowHistory);
+                var cashFlowhistory = _mapper.Map<CashFlowHistoryResource, CashFlowHistory>(cashFlowHistoryResource);
 
-                //var cashFlow = await _cashFlowService.AddCashFlowHistoryAsync(cashFlowHistory);
-                //return Ok(cashFlow);
-                return Ok();
+                var cashFlow = await _cashFlowService.AddCashFlowHistoryAsync(cashFlowhistory);
+                return Ok(cashFlow);
+                //return Ok();
 
             }
             catch (System.Exception ex)
