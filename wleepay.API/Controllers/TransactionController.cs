@@ -24,14 +24,16 @@ namespace wleepay.API.Controllers
         private readonly ISMSService _smsService;
         private readonly IMapper _mapper;
         private readonly IEmailSender _emailSender;
+        private readonly ICashFlowService _cashFlowService;
 
-        public TransactionController(ITransactionService transactionService, IWalletService walletService, ISMSService smsService, IMapper mapper, IEmailSender emailSender)
+        public TransactionController(ITransactionService transactionService, IWalletService walletService, ISMSService smsService, IMapper mapper, IEmailSender emailSender, ICashFlowService cashFlowService)
         {
             _transactionService = transactionService;
             _walletService = walletService;
             _smsService = smsService;
             _mapper = mapper;
             _emailSender = emailSender;
+            _cashFlowService = cashFlowService;
         }
 
         [HttpPost("History")]
@@ -93,8 +95,16 @@ namespace wleepay.API.Controllers
             var newTransaction = await _transactionService.InitiateTransaction(transactionToCreate);
 
             var newTransactionResource = _mapper.Map<Transaction, TransactionResource>(newTransaction);
+            if(newTransactionResource != null && transactionRequest.TransferTypeId == (int)TransferTypes.CashOnHand)
+            {
+                var cashFlowHistory = await _cashFlowService.GetLatestCashFlowHistoryAsync();
+                cashFlowHistory.TotalAmount = cashFlowHistory.TotalAmount - transactionRequest.Amount;
+                await _cashFlowService.AddCashFlowHistoryAsync(cashFlowHistory);
+
+            }
             if (newTransactionResource != null)
             {
+
                 await SendTransactionActionSMS(newTransaction);
 
                 if(transactionRequest.TransferTypeId == Core.Enums.TransferTypes.CashOnHand.GetHashCode())

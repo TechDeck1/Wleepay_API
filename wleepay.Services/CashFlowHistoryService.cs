@@ -19,5 +19,15 @@ namespace wleepay.Services
         {
             return await _unitOfWork.CashFlowHistory.AddCashFlowHistoryAsync(cashFlowHistory);
         }
+
+        public async Task<IEnumerable<CashFlowHistory>> GetAllCashFlowHistoryAsync()
+        {
+            return await _unitOfWork.CashFlowHistory.GetAllCashFlowHistoryAsync();
+        }
+
+        public async Task<CashFlowHistory> GetLatestCashFlowHistoryAsync()
+        {
+            return await _unitOfWork.CashFlowHistory.GetLatestCashFlowHistoryAsync();
+        }
     }
 }

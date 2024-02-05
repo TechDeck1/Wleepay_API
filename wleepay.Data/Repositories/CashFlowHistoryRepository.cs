@@ -1,5 +1,7 @@
-﻿using System;
+﻿using DevExpress.Xpo;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using wleepay.Core.Models;
@@ -24,6 +26,18 @@ namespace wleepay.Data.Repositories
             await WPContext.CashFlowHistory.AddAsync(cashFlowHistory);
             WPContext.SaveChanges();
 
+            return cashFlowHistory;
+        }
+
+        public async Task<IEnumerable<CashFlowHistory>> GetAllCashFlowHistoryAsync()
+        {
+            var cashFlowHistory = await WPContext.CashFlowHistory.OrderByDescending(d => d.CreatedDate).ToListAsync();
+            return cashFlowHistory;
+        }
+
+        public async Task<CashFlowHistory> GetLatestCashFlowHistoryAsync()
+        {
+            var cashFlowHistory= await WPContext.CashFlowHistory.OrderByDescending(d=> d.CreatedDate).FirstOrDefaultAsync();
             return cashFlowHistory;
         }
     }

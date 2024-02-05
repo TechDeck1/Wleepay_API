@@ -563,6 +563,8 @@ D:\Offical\Wleepay_API\wleepay.API\bin\Release\net5.0\NLog.dll
 D:\Offical\Wleepay_API\wleepay.API\bin\Release\net5.0\NLog.Extensions.Logging.dll
 D:\Offical\Wleepay_API\wleepay.API\bin\Release\net5.0\NLog.Web.AspNetCore.dll
 D:\Offical\Wleepay_API\wleepay.API\bin\Release\net5.0\BouncyCastle.Crypto.dll
+D:\Offical\Wleepay_API\wleepay.API\bin\Release\net5.0\SendGrid.dll
+D:\Offical\Wleepay_API\wleepay.API\bin\Release\net5.0\StarkbankEcdsa.dll
 D:\Offical\Wleepay_API\wleepay.API\bin\Release\net5.0\Swashbuckle.AspNetCore.Swagger.dll
 D:\Offical\Wleepay_API\wleepay.API\bin\Release\net5.0\Swashbuckle.AspNetCore.SwaggerGen.dll
 D:\Offical\Wleepay_API\wleepay.API\bin\Release\net5.0\Swashbuckle.AspNetCore.SwaggerUI.dll
@@ -634,6 +636,7 @@ D:\Offical\Wleepay_API\wleepay.API\obj\Release\net5.0\wleepay.API.GeneratedMSBui
 D:\Offical\Wleepay_API\wleepay.API\obj\Release\net5.0\wleepay.API.AssemblyInfoInputs.cache
 D:\Offical\Wleepay_API\wleepay.API\obj\Release\net5.0\wleepay.API.AssemblyInfo.cs
 D:\Offical\Wleepay_API\wleepay.API\obj\Release\net5.0\wleepay.API.csproj.CoreCompileInputs.cache
+D:\Offical\Wleepay_API\wleepay.API\obj\Release\net5.0\wleepay.API.MvcApplicationPartsAssemblyInfo.cs
 D:\Offical\Wleepay_API\wleepay.API\obj\Release\net5.0\wleepay.API.MvcApplicationPartsAssemblyInfo.cache
 D:\Offical\Wleepay_API\wleepay.API\obj\Release\net5.0\scopedcss\bundle\wleepay.API.styles.css
 D:\Offical\Wleepay_API\wleepay.API\obj\Release\net5.0\staticwebassets\wleepay.API.StaticWebAssets.Manifest.cache
@@ -650,6 +653,3 @@ D:\Offical\Wleepay_API\wleepay.API\obj\Release\net5.0\refint\wleepay.API.dll
 D:\Offical\Wleepay_API\wleepay.API\obj\Release\net5.0\wleepay.API.pdb
 D:\Offical\Wleepay_API\wleepay.API\obj\Release\net5.0\wleepay.API.genruntimeconfig.cache
 D:\Offical\Wleepay_API\wleepay.API\obj\Release\net5.0\ref\wleepay.API.dll
-D:\Offical\Wleepay_API\wleepay.API\obj\Release\net5.0\wleepay.API.MvcApplicationPartsAssemblyInfo.cs
-D:\Offical\Wleepay_API\wleepay.API\bin\Release\net5.0\SendGrid.dll
-D:\Offical\Wleepay_API\wleepay.API\bin\Release\net5.0\StarkbankEcdsa.dll

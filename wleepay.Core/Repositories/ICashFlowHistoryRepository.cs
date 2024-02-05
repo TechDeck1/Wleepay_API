@@ -9,5 +9,7 @@ namespace wleepay.Core.Repositories
     public interface ICashFlowHistoryRepository: IRepository<CashFlowHistory>
     {
        Task<CashFlowHistory> AddCashFlowHistoryAsync(CashFlowHistory cashFlowHistory);
+       Task<CashFlowHistory> GetLatestCashFlowHistoryAsync();
+        Task <IEnumerable<CashFlowHistory>> GetAllCashFlowHistoryAsync();
     }
 }
