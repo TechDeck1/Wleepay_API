@@ -9,7 +9,8 @@ namespace wleepay.Core.Services
     public interface ICashFlowService
     {
         Task<CashFlowHistory> AddCashFlowHistoryAsync(CashFlowHistory cashFlowHistory);
-        Task<CashFlowHistory> GetLatestCashFlowHistoryAsync();
+        Task<CashFlowHistory> AddCashFlowHistoryForWithdraw(CashFlowHistory cashFlowHistory);
+        Task<CashFlowHistory> GetLatestCashFlowHistoryAsync(long WalletId);
         Task<IEnumerable<CashFlowHistory>> GetAllCashFlowHistoryAsync();
 
     }

@@ -36,12 +36,15 @@ namespace wleepay.API.Controllers
                 {
                     return NotFound();
                 }
-                var lastCashFlowHistory = await _cashFlowService.GetLatestCashFlowHistoryAsync();
-                if (cashFlowHistoryResource.DepositAmount != null)
-                    cashFlowHistoryResource.TotalAmount = cashFlowHistoryResource.DepositAmount + lastCashFlowHistory.TotalAmount;
+                var walletBalance =await _walletService.GetWallet((long)cashFlowHistoryResource.WalletId);
+                var lastCashFlowHistory = await _cashFlowService.GetLatestCashFlowHistoryAsync((long)cashFlowHistoryResource.WalletId);
+                if (cashFlowHistoryResource.DepositAmount != null) 
+                {
+                    cashFlowHistoryResource.TotalAmount = cashFlowHistoryResource.DepositAmount + walletBalance.Balance;
+                }
                 else
                 {
-                    cashFlowHistoryResource.TotalAmount = lastCashFlowHistory.TotalAmount - cashFlowHistoryResource.WithdrawAmount;
+                    cashFlowHistoryResource.TotalAmount = walletBalance.Balance - cashFlowHistoryResource.WithdrawAmount;
                 }
                 var cashFlowhistory = _mapper.Map<CashFlowHistoryResource, CashFlowHistory>(cashFlowHistoryResource);
 
@@ -75,6 +78,7 @@ namespace wleepay.API.Controllers
             }
 
         }
+
     }
 
 }

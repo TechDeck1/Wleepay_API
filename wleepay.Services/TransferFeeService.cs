@@ -25,7 +25,7 @@ namespace wleepay.Services
 
         public async Task<IEnumerable<TransferFee>> GetAllTransferFees()
         {
-            return await _unitOfWork.TransferFee.GetAllAsync();
+            return await _unitOfWork.TransferFee.GetAllTransferFeeAsync();
         }
 
         public async Task<TransferFee> GetTransferFeeByDesc()

@@ -99,9 +99,12 @@ namespace wleepay.API.Controllers
             var newTransactionResource = _mapper.Map<Transaction, TransactionResource>(newTransaction);
             if(newTransactionResource != null && transactionRequest.TransferTypeId == (int)TransferTypes.CashOnHand)
             {
-                var cashFlowHistory = await _cashFlowService.GetLatestCashFlowHistoryAsync();
-                cashFlowHistory.TotalAmount = cashFlowHistory.TotalAmount - transactionRequest.Amount;
-                await _cashFlowService.AddCashFlowHistoryAsync(cashFlowHistory);
+                var cashFlowHistory = await _cashFlowService.GetLatestCashFlowHistoryAsync(transactionRequest.FromWalletId);
+                CashFlowHistory cashFlow = new CashFlowHistory();
+                cashFlow.TotalAmount = transactionRequest.Amount- cashFlowHistory.TotalAmount;
+                cashFlow.WithdrawAmount = transactionRequest.Amount;
+                cashFlow.WalletId = transactionRequest.FromWalletId;
+                await _cashFlowService.AddCashFlowHistoryForWithdraw(cashFlow);
 
             }
             if (newTransactionResource != null)
@@ -362,8 +365,10 @@ namespace wleepay.API.Controllers
             string emailText = string.Empty;
 
             var status = (Core.Enums.TransactionStatus)transaction.Status;
+
             //Get from wallet user details
             var fromWalletUser = await _walletService.GetUserDetailsByWalletIdAndCurrency(transaction.FromWalletId);
+
             //Get to wallet user details
             var toWalletUser = await _walletService.GetUserDetailsByWalletIdAndCurrency(transaction.ToWalletId);
 

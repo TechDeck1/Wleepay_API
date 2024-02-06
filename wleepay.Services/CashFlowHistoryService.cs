@@ -20,14 +20,19 @@ namespace wleepay.Services
             return await _unitOfWork.CashFlowHistory.AddCashFlowHistoryAsync(cashFlowHistory);
         }
 
+        public async Task<CashFlowHistory> AddCashFlowHistoryForWithdraw(CashFlowHistory cashFlowHistory)
+        {
+            return await _unitOfWork.CashFlowHistory.AddCashFlowHistoryForWithdraw(cashFlowHistory);
+        }
+
         public async Task<IEnumerable<CashFlowHistory>> GetAllCashFlowHistoryAsync()
         {
             return await _unitOfWork.CashFlowHistory.GetAllCashFlowHistoryAsync();
         }
 
-        public async Task<CashFlowHistory> GetLatestCashFlowHistoryAsync()
+        public async Task<CashFlowHistory> GetLatestCashFlowHistoryAsync(long walletId)
         {
-            return await _unitOfWork.CashFlowHistory.GetLatestCashFlowHistoryAsync();
+            return await _unitOfWork.CashFlowHistory.GetLatestCashFlowHistoryAsync(walletId);
         }
     }
 }

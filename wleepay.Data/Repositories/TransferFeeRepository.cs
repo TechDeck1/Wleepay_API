@@ -51,5 +51,11 @@ namespace wleepay.Data.Repositories
             WPContext.SaveChanges();
             return await WPContext.TransferFees.OrderByDescending(x => x.CreatedDate).FirstOrDefaultAsync();
         }
+
+        public async Task<IEnumerable<TransferFee>> GetAllTransferFeeAsync()
+        {
+            var result = await WPContext.TransferFees.OrderByDescending(x => x.CreatedDate).ToListAsync();
+            return result;
+        }
     }
 }
