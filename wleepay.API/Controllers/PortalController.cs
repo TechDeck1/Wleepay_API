@@ -48,6 +48,8 @@ namespace wleepay.API.Controllers
         private readonly ISMSService _SMSService;
         private readonly IEmailSender _emailSender;
         private readonly ISystemActivityLogsService _systemActivityLogsService;
+        private readonly ITransferTypeService _transferTypeService;
+
 
 
         public PortalController(UserManager<ApplicationUser> userManager,
@@ -59,7 +61,9 @@ namespace wleepay.API.Controllers
             IMapper mapper,
             ISMSService sMSService,
             IEmailSender emailSender,
-            ISystemActivityLogsService systemActivityLogsService)
+            ISystemActivityLogsService systemActivityLogsService,
+            ITransferTypeService transferTypeService
+            )
             
 
         {
@@ -73,6 +77,7 @@ namespace wleepay.API.Controllers
             _SMSService = sMSService;
             _emailSender = emailSender;
             _systemActivityLogsService = systemActivityLogsService;
+            _transferTypeService = transferTypeService;
         }
 
         
@@ -192,6 +197,29 @@ namespace wleepay.API.Controllers
 
             var updatedRatesResource = _mapper.Map<TransferFee, TaxRateResourceModel>(updatedRates);
             return Ok(updatedRatesResource);
+        }
+
+        [HttpPost("SetAgentCommissionTaxRates")]
+        public async Task<IActionResult> SetAgentCommissionTaxRates([FromBody] TaxRateResourceModel taxRateResourceModel)
+        {
+
+            //var updatedRates = await _transferFeeService.UpdateTransferFee(taxRates);
+            if(taxRateResourceModel.AgentCommission.Equals(0)) return BadRequest(Messages.InvalidRequest.ToDescriptionString());
+
+            var taxRates = await _transferFeeService.GetTransferFeeByDesc();
+            taxRateResourceModel.AgentCommission = taxRateResourceModel.AgentCommission;
+            taxRateResourceModel.OrganizationFee = taxRates.OrganizationFee;
+            taxRateResourceModel.TaxAmount = taxRates.TaxAmount;
+           
+            var updatedTaxRatesResource = _mapper.Map<TaxRateResourceModel, TransferFee>(taxRateResourceModel);
+            var updatedRates = await _transferFeeService.AddTransferFee(updatedTaxRatesResource);
+            if (updatedRates != null)
+            {
+                var types = await _transferTypeService.GetTransferTypeById((int)TransferTypes.CashOut);
+                types.TransferFee = updatedRates.Id;
+                await _transferTypeService.UpdateTransferTypeById(types);
+            }
+            return Ok(updatedRates);
         }
 
         [HttpPost("LockAccount")]

@@ -45,8 +45,11 @@ namespace wleepay.Data.Repositories
 
         public async Task<TransferFee> AddTaxRates(TransferFee transferFee)
         {
+            transferFee.CreatedDate= DateTime.Now;
+            transferFee.IsDeleted = false;
             var result = await WPContext.AddAsync(transferFee);
-            return transferFee;
+            WPContext.SaveChanges();
+            return await WPContext.TransferFees.OrderByDescending(x => x.CreatedDate).FirstOrDefaultAsync();
         }
     }
 }
