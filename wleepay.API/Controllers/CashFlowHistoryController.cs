@@ -33,11 +33,12 @@ namespace wleepay.API.Controllers
                 {
                     return NotFound();
                 }
+                var lastCashFlowHistory = await _cashFlowService.GetLatestCashFlowHistoryAsync();
                 if (cashFlowHistoryResource.DepositAmount != null)
-                    cashFlowHistoryResource.TotalAmount = cashFlowHistoryResource.DepositAmount + cashFlowHistoryResource.TotalAmount;
+                    cashFlowHistoryResource.TotalAmount = cashFlowHistoryResource.DepositAmount + lastCashFlowHistory.TotalAmount;
                 else
                 {
-                    cashFlowHistoryResource.TotalAmount = cashFlowHistoryResource.TotalAmount - cashFlowHistoryResource.WithdrawAmount;
+                    cashFlowHistoryResource.TotalAmount = lastCashFlowHistory.TotalAmount - cashFlowHistoryResource.WithdrawAmount;
                 }
                 var cashFlowhistory = _mapper.Map<CashFlowHistoryResource, CashFlowHistory>(cashFlowHistoryResource);
 
