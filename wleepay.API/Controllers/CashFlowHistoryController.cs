@@ -15,13 +15,16 @@ namespace wleepay.API.Controllers
     {
         private readonly ICashFlowService _cashFlowService;
         private readonly IMapper _mapper;
+        private readonly IWalletService _walletService;
+
 
         public CashFlowHistoryController(
-            ICashFlowService cashFlowService,IMapper mapper)
+            ICashFlowService cashFlowService,IMapper mapper, IWalletService walletService)
         {
 
             _cashFlowService = cashFlowService;
             _mapper = mapper;
+            _walletService = walletService;
         }
 
         [HttpPost("CashFlowHistory")]

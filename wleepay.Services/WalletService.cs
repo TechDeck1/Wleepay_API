@@ -53,7 +53,7 @@ namespace wleepay.Services
             return wallet;
         }
 
-        public async Task<Wallet> GetWallet(int id)
+        public async Task<Wallet> GetWallet(long id)
         {
             return await _unitOfWork.Wallet.GetByIdAsync(id);
         }

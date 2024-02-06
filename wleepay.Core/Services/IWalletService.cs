@@ -10,7 +10,7 @@ namespace wleepay.Core.Services
     public interface IWalletService
     {
         Task<IEnumerable<Wallet>> GetWalletsByUserId(string userId, int currencyId = 0);
-        Task<Wallet> GetWallet(int id);
+        Task<Wallet> GetWallet(long id);
         Task<Wallet> AddOrUpdateWallet(Wallet walletInfo);
         Task<Wallet> UpdateWalletBalance(int walletId, double balance);
         Task<IEnumerable<Wallet>> CreateCustomerWallet(string userId);
