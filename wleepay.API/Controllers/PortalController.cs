@@ -178,25 +178,27 @@ namespace wleepay.API.Controllers
             return BadRequest(Messages.BadRequest.ToDescriptionString());
         }
 
-        [HttpPost("TaxRates")]
+        [HttpPost("SetCashOutTaxRate")]
         public async Task<IActionResult> UpdateTaxRates([FromBody] TaxRateResourceModel taxRateResourceModel)
         {
-            var validator = new TaxRateRequestValidator();
-            var validationResult = await validator.ValidateAsync(taxRateResourceModel);
-            if (!validationResult.IsValid)
-                return BadRequest(validationResult.Errors);
-
             //var updatedRates = await _transferFeeService.UpdateTransferFee(taxRates);
-            var taxRates = await _transferFeeService.GetTransferFeeByDesc();
-            taxRates.OrganizationFee = taxRateResourceModel.OrganizationFee;
-            taxRates.AgentCommission = taxRateResourceModel.AgentCommission;
-            taxRates.TaxAmount = taxRateResourceModel.TaxAmount;
-            taxRates.CreatedDate = DateTime.UtcNow;
-            taxRates.IsDeleted = false;
-            var updatedRates = await _transferFeeService.AddTransferFee(taxRates);
+            if (taxRateResourceModel.OrganizationFee.Equals(0)) return BadRequest(Messages.InvalidRequest.ToDescriptionString());
 
-            var updatedRatesResource = _mapper.Map<TransferFee, TaxRateResourceModel>(updatedRates);
-            return Ok(updatedRatesResource);
+            var taxRates = await _transferFeeService.GetTransferFeeByDesc();
+            taxRateResourceModel.AgentCommission = taxRates.AgentCommission;
+            taxRateResourceModel.OrganizationFee = taxRateResourceModel.OrganizationFee;
+            taxRateResourceModel.TaxAmount = taxRates.TaxAmount;
+            taxRateResourceModel.Description = taxRates.Description;
+
+            var updatedTaxRatesResource = _mapper.Map<TaxRateResourceModel, TransferFee>(taxRateResourceModel);
+            var updatedRates = await _transferFeeService.AddTransferFee(updatedTaxRatesResource);
+            if (updatedRates != null)
+            {
+                var types = await _transferTypeService.GetTransferTypeById((int)TransferTypes.CashOut);
+                types.TransferFee = updatedRates.Id;
+                await _transferTypeService.UpdateTransferTypeById(types);
+            }
+            return Ok(updatedRates);
         }
 
         [HttpPost("SetAgentCommissionTaxRates")]
@@ -210,7 +212,8 @@ namespace wleepay.API.Controllers
             taxRateResourceModel.AgentCommission = taxRateResourceModel.AgentCommission;
             taxRateResourceModel.OrganizationFee = taxRates.OrganizationFee;
             taxRateResourceModel.TaxAmount = taxRates.TaxAmount;
-           
+            taxRateResourceModel.Description = taxRates.Description;
+
             var updatedTaxRatesResource = _mapper.Map<TaxRateResourceModel, TransferFee>(taxRateResourceModel);
             var updatedRates = await _transferFeeService.AddTransferFee(updatedTaxRatesResource);
             if (updatedRates != null)
