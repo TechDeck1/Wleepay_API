@@ -21,7 +21,7 @@ namespace wleepay.Core.Repositories
         Task<double> CalculateWalletTransaction(long walletId, bool isMonthly = false);
         Task<TransactionResponseResource> GetCashoutTransactions(int pageIndex = 0, int pageSize = 0);
         Task<TransactionResponseResource> GetTopUpTransactions(int pageIndex = 0, int pageSize= 0);
-        Task<IEnumerable<Transaction>> GetTransactionsByTypeAndCurrency(int type, int currency, int pageIndex = 0, int pageSize = 10);
+        Task<TransactionResponseResource> GetTransactionsByTypeAndCurrency(int type, int currency, int pageIndex = 0, int pageSize = 10);
 
 
 

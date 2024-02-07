@@ -253,14 +253,14 @@ namespace wleepay.API.Controllers
         {
 
             var result = await _transactionService.GetTransactionsByTypeAndCurrency(pagination.TransferTypeId, pagination.CurrencyTypeId, pagination.Index, pagination.Size);
-            var transactionResources = result.Select(transaction => _mapper.Map<Transaction, TransactionHistoryResource>(transaction)).ToList();
+            var transactionResources = result.Transactions.Select(transaction => _mapper.Map<Transaction, TransactionHistoryResource>(transaction)).ToList();
 
             if (result == null)
                 return BadRequest("Invalid UserId");
 
             return Ok(new
             {
-                //TotalCount = result.TotalCount,
+                TotalCount = result.TotalCount,
                 Transactions = transactionResources
             });
         }

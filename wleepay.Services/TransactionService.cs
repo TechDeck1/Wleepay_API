@@ -113,7 +113,7 @@ namespace wleepay.Services
             return await _unitOfWork.Transaction.GetTopUpTransactions(pageIndex, pageSize);
         }
 
-        public async Task<IEnumerable<Transaction>> GetTransactionsByTypeAndCurrency(int type, int currency, int pageIndex = 0, int pageSize = 10)
+        public async Task<TransactionResponseResource> GetTransactionsByTypeAndCurrency(int type, int currency, int pageIndex = 0, int pageSize = 10)
         {
             return await _unitOfWork.Transaction.GetTransactionsByTypeAndCurrency(type, currency, pageIndex, pageSize);
         }
