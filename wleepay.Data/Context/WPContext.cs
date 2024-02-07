@@ -33,6 +33,7 @@ namespace wleepay.Data.Context
         public DbSet<UsersStaffRole> UsersStaffRole { get; set; }
         public DbSet<Verification> Verification { get; set; }
         public DbSet<CashFlowHistory> CashFlowHistory { get; set; }
+        public DbSet<SystemStatus> SystemStatus { get; set; }
 
 
         public WPContext(DbContextOptions<WPContext> options) : base(options)
@@ -70,6 +71,7 @@ namespace wleepay.Data.Context
             builder.ApplyConfiguration(new UserStaffRoleConfiguration());
             builder.ApplyConfiguration(new VerificationConfiguration());
             builder.ApplyConfiguration(new CashFlowHistoryConfiguration());
+            builder.ApplyConfiguration(new SystemStatusConfiguration());
 
 
         }
