@@ -89,7 +89,7 @@ namespace wleepay.Data.Repositories
                 .Take(takeCount)
                 .ToListAsync();
             CashFlowHistoryResponse cashFlowHistoryResponse = new CashFlowHistoryResponse();
-            cashFlowHistoryResponse.TotalCount = await WPContext.CashFlowHistory.CountAsync();
+            cashFlowHistoryResponse.TotalCount = await WPContext.CashFlowHistory.Where(x => x.CurrencyId == currencyId).CountAsync();
             cashFlowHistoryResponse.CashFlowHistory = cashFlowHistory;
             return cashFlowHistoryResponse;
         }
