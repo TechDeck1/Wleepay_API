@@ -33,6 +33,7 @@ namespace wleepay.Core
         IUsersStaffRoleRepository UsersStaffRole { get; }
         IVerificationRepository Verification { get; }
         ICashFlowHistoryRepository CashFlowHistory { get; }
+        ISystemStatusRepository SystemStatus { get; }
 
 
         Task<int> CommitAsync();

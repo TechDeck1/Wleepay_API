@@ -36,6 +36,7 @@ namespace wleepay.Data
         private IUsersStaffRoleRepository _usersStaffRoleRepository;
         private IVerificationRepository _verificationRepository;
         private ICashFlowHistoryRepository _cashFlowHistoryRepository;
+        private ISystemStatusRepository _systemStatusRepository;
 
 
 
@@ -68,6 +69,7 @@ namespace wleepay.Data
         public IUsersStaffRoleRepository UsersStaffRole => _usersStaffRoleRepository = _usersStaffRoleRepository ?? new UsersStaffRoleRepository(_context);
         public IVerificationRepository Verification => _verificationRepository = _verificationRepository ?? new VerificationRepository(_context);
         public ICashFlowHistoryRepository CashFlowHistory => _cashFlowHistoryRepository= _cashFlowHistoryRepository ?? new CashFlowHistoryRepository(_context);
+        public ISystemStatusRepository SystemStatus => _systemStatusRepository= _systemStatusRepository ?? new SystemStatusRepository(_context);    
 
         public async Task<int> CommitAsync()
         {

@@ -160,6 +160,7 @@ namespace wleepay.API
             services.AddTransient<IUsersStaffRoleService, UsersStaffRoleService>();
             services.AddTransient<IVerificationService, VerificationService>();
             services.AddTransient<ICashFlowService, CashFlowHistoryService>();
+            services.AddTransient<ISystemStatusService, SystemStatusService>();
 
             //swagger config
             services.AddSwaggerGen(c =>
