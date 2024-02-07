@@ -53,11 +53,6 @@ namespace wleepay.Data.Configurations
                .OnDelete(DeleteBehavior.ClientNoAction)
                .HasForeignKey(k => k.WalletId);
 
-            builder
-              .HasOne(k => k.Currency)
-              .WithMany(k => k.CashFlowHistory)
-              .OnDelete(DeleteBehavior.ClientNoAction)
-              .HasForeignKey(k => k.CurrencyId);
 
             builder.HasData(new CashFlowHistory
             {

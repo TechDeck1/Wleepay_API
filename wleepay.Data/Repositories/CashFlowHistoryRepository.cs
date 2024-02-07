@@ -60,7 +60,6 @@ namespace wleepay.Data.Repositories
             var newAddedCashFlowHistory = await WPContext.CashFlowHistory
                 .Where(w => w.Id == cashFlowHistory.Id)
                 .Include(w => w.toWallet)
-                .Include(w => w.TransactionStatus)
                 .FirstOrDefaultAsync();
 
             return newAddedCashFlowHistory;

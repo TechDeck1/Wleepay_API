@@ -16,10 +16,6 @@ namespace wleepay.Core.Models
         public DateTime CreatedDate { get; set; }
 
         public virtual Wallet toWallet { get; set; }
-        public virtual Currency Currency { get; set; }
-        public virtual TransactionStatus TransactionStatus { get; set; }
-
-
 
     }
 }

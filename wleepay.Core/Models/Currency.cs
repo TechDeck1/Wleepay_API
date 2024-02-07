@@ -9,13 +9,11 @@ namespace wleepay.Core.Models
     {
         public Currency() {
             Wallets = new Collection<Wallet>();
-            CashFlowHistory = new Collection<CashFlowHistory>();
         }
         public int Id { get; set; }
         public string Name { get; set; }
         public string Symbol { get; set; }
 
         public virtual ICollection<Wallet> Wallets { get; set; }
-        public virtual ICollection<CashFlowHistory> CashFlowHistory { get; set; }
     }
 }
