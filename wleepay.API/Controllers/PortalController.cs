@@ -446,10 +446,10 @@ namespace wleepay.API.Controllers
         }
 
 
-        [HttpGet("GetTaxRates")]
-        public async Task<IActionResult> GetAllTaxRatesHistory()
+        [HttpPost("GetTaxRates")]
+        public async Task<IActionResult> GetAllTaxRatesHistory(PagingRequestForRates pagingRequestForRates)
         {
-            var transferFees = await _transferFeeService.GetAllTransferFees();
+            var transferFees = await _transferFeeService.GetAllTransferFees(pagingRequestForRates.Index, pagingRequestForRates.Size);
             return Ok(transferFees);
         }
 

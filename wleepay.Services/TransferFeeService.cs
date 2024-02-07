@@ -6,6 +6,7 @@ using wleepay.Core;
 using wleepay.Core.Models;
 using wleepay.Core.Services;
 using System.Linq;
+using wleepay.Core.DTO.Response;
 
 namespace wleepay.Services
 {
@@ -23,9 +24,9 @@ namespace wleepay.Services
             return await _unitOfWork.TransferFee.AddTaxRates(transferFee);
         }
 
-        public async Task<IEnumerable<TransferFee>> GetAllTransferFees()
+        public async Task<TaxRatesResponse> GetAllTransferFees(int index, int pageSize)
         {
-            return await _unitOfWork.TransferFee.GetAllTransferFeeAsync();
+            return await _unitOfWork.TransferFee.GetAllTransferFeeAsync(index, pageSize);
         }
 
         public async Task<TransferFee> GetTransferFeeByDesc()

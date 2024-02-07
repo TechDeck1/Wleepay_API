@@ -49,5 +49,11 @@ namespace wleepay.API.Resources
         public double Amount { get; set; }
     }
 
+    public class PagingRequestForRates
+    {
+        public int Index { get; set; }
+        public int Size { get; set; }
+    }
+
 
 }

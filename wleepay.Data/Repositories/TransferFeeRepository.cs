@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using wleepay.Core.DTO.Response;
 using wleepay.Core.Models;
 using wleepay.Core.Repositories;
 using wleepay.Data.Context;
@@ -52,10 +53,18 @@ namespace wleepay.Data.Repositories
             return await WPContext.TransferFees.OrderByDescending(x => x.CreatedDate).FirstOrDefaultAsync();
         }
 
-        public async Task<IEnumerable<TransferFee>> GetAllTransferFeeAsync()
+        public async Task<TaxRatesResponse> GetAllTransferFeeAsync(int pageIndex, int pageSize)
         {
-            var result = await WPContext.TransferFees.OrderByDescending(x => x.CreatedDate).ToListAsync();
-            return result;
+            int takeCount = pageSize;
+            int skipCount = pageIndex * pageSize;
+            var result = await WPContext.TransferFees.OrderByDescending(x => x.CreatedDate)
+                .Skip(skipCount)
+                .Take(takeCount)
+                .ToListAsync();
+            TaxRatesResponse taxRatesResponse = new TaxRatesResponse();
+            taxRatesResponse.TotalCount = await WPContext.TransferFees.CountAsync();
+            taxRatesResponse.TaxRates = result;
+            return taxRatesResponse;
         }
     }
 }
