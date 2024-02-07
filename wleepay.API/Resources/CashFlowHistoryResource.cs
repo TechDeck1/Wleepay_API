@@ -7,5 +7,6 @@
         public double? TotalAmount { get; set; }
         public double? DepositAmount { get; set; }
         public double? WithdrawAmount { get; set; }
+        public int? CurrencyId { get; set; }
     }
 }

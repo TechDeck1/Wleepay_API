@@ -35,15 +35,29 @@ namespace wleepay.Data.Configurations
             builder
             .Property(c => c.WithdrawAmount);
 
+            builder.Property(c => c.PreviousAmount);
+
+
+            builder
+            .Property(c => c.CurrencyId);
+
 
             builder
                .Property(c => c.CreatedDate);
+
+
 
             builder
                .HasOne(k => k.toWallet)
                .WithMany(k => k.CashFlowHistory)
                .OnDelete(DeleteBehavior.ClientNoAction)
                .HasForeignKey(k => k.WalletId);
+
+            builder
+              .HasOne(k => k.Currency)
+              .WithMany(k => k.CashFlowHistory)
+              .OnDelete(DeleteBehavior.ClientNoAction)
+              .HasForeignKey(k => k.CurrencyId);
 
             builder.HasData(new CashFlowHistory
             {

@@ -93,20 +93,23 @@ namespace wleepay.API.Controllers
             if (!validationResult.IsValid)
                 return BadRequest(validationResult.Errors);
 
-            var transactionToCreate = _mapper.Map<CreateTransactionResource, Transaction>(transactionRequest);
-            var newTransaction = await _transactionService.InitiateTransaction(transactionToCreate);
-
-            var newTransactionResource = _mapper.Map<Transaction, TransactionResource>(newTransaction);
-            if(newTransactionResource != null && transactionRequest.TransferTypeId == (int)TransferTypes.CashOnHand)
+            var walletBalance = await _walletService.GetWallet(transactionRequest.FromWalletId);
+            if (transactionRequest != null && transactionRequest.TransferTypeId == (int)TransferTypes.CashOnHand)
             {
-                var cashFlowHistory = await _cashFlowService.GetLatestCashFlowHistoryAsync(transactionRequest.FromWalletId);
                 CashFlowHistory cashFlow = new CashFlowHistory();
-                cashFlow.TotalAmount = transactionRequest.Amount- cashFlowHistory.TotalAmount;
+                cashFlow.TotalAmount = walletBalance.Balance - transactionRequest.Amount;
                 cashFlow.WithdrawAmount = transactionRequest.Amount;
                 cashFlow.WalletId = transactionRequest.FromWalletId;
-                await _cashFlowService.AddCashFlowHistoryForWithdraw(cashFlow);
+                cashFlow.CurrencyId = walletBalance.CurrencyId;
+                cashFlow.PreviousAmount = walletBalance.Balance;
 
+                await _cashFlowService.AddCashFlowHistoryForWithdraw(cashFlow);
             }
+
+            var transactionToCreate = _mapper.Map<CreateTransactionResource, Transaction>(transactionRequest);
+            var newTransaction = await _transactionService.InitiateTransaction(transactionToCreate);
+            var newTransactionResource = _mapper.Map<Transaction, TransactionResource>(newTransaction);
+          
             if (newTransactionResource != null)
             {
 

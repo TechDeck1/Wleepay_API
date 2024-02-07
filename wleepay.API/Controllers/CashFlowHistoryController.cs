@@ -46,7 +46,10 @@ namespace wleepay.API.Controllers
                 {
                     cashFlowHistoryResource.TotalAmount = walletBalance.Balance - cashFlowHistoryResource.WithdrawAmount;
                 }
+
                 var cashFlowhistory = _mapper.Map<CashFlowHistoryResource, CashFlowHistory>(cashFlowHistoryResource);
+                cashFlowhistory.CurrencyId = walletBalance.CurrencyId;
+                cashFlowhistory.PreviousAmount = walletBalance.Balance;
 
                 var cashFlow = await _cashFlowService.AddCashFlowHistoryAsync(cashFlowhistory);
                 return Ok(cashFlow);
