@@ -55,5 +55,12 @@ namespace wleepay.API.Resources
         public int Size { get; set; }
     }
 
+    public class PagingRequestForCashFlow
+    {
+        public int CurrencyId { get; set; }
+        public int Index { get; set; }
+        public int Size { get; set; }
+    }
+
 
 }

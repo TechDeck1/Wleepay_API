@@ -64,13 +64,13 @@ namespace wleepay.API.Controllers
 
         }
 
-        [HttpGet("GetCashFlowHistory")]
-        public async Task<IActionResult> GetCashFlowHistoryAsync()
+        [HttpPost("GetCashFlowHistory")]
+        public async Task<IActionResult> GetCashFlowHistoryAsync(PagingRequestForCashFlow pagingRequestForCashFlow )
         {
             try
             {
                
-                var cashFlow = await _cashFlowService.GetAllCashFlowHistoryAsync();
+                var cashFlow = await _cashFlowService.GetAllCashFlowHistoryAsync(pagingRequestForCashFlow.CurrencyId, pagingRequestForCashFlow.Index, pagingRequestForCashFlow.Size);
                 return Ok(cashFlow);
 
             }

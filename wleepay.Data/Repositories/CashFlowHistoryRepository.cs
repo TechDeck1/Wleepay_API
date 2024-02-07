@@ -1,13 +1,16 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using System;
+using System.CodeDom;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using wleepay.Core.DTO.Response;
 using wleepay.Core.Models;
 using wleepay.Core.Repositories;
 using wleepay.Data.Context;
+using static DevExpress.XtraPrinting.Native.PageSizeInfo;
 
 namespace wleepay.Data.Repositories
 {
@@ -78,10 +81,18 @@ namespace wleepay.Data.Repositories
             return cashFlowHistory;
         }
 
-        public async Task<IEnumerable<CashFlowHistory>> GetAllCashFlowHistoryAsync()
+        public async Task<CashFlowHistoryResponse> GetAllCashFlowHistoryAsync(int currencyId, int index, int size)
         {
-            var cashFlowHistory = await WPContext.CashFlowHistory.OrderByDescending(d => d.CreatedDate).ToListAsync();
-            return cashFlowHistory;
+            int takeCount = size;
+            int skipCount = index * size;
+            var cashFlowHistory = await WPContext.CashFlowHistory.Where(x=>x.CurrencyId==currencyId).OrderByDescending(d => d.CreatedDate)
+                .Skip(skipCount)
+                .Take(takeCount)
+                .ToListAsync();
+            CashFlowHistoryResponse cashFlowHistoryResponse = new CashFlowHistoryResponse();
+            cashFlowHistoryResponse.TotalCount = await WPContext.CashFlowHistory.CountAsync();
+            cashFlowHistoryResponse.CashFlowHistory = cashFlowHistory;
+            return cashFlowHistoryResponse;
         }
 
         public async Task<CashFlowHistory> GetLatestCashFlowHistoryAsync(long walletId)

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using wleepay.Core;
+using wleepay.Core.DTO.Response;
 using wleepay.Core.Models;
 using wleepay.Core.Services;
 
@@ -25,9 +26,9 @@ namespace wleepay.Services
             return await _unitOfWork.CashFlowHistory.AddCashFlowHistoryForWithdraw(cashFlowHistory);
         }
 
-        public async Task<IEnumerable<CashFlowHistory>> GetAllCashFlowHistoryAsync()
+        public async Task<CashFlowHistoryResponse> GetAllCashFlowHistoryAsync(int currency, int index, int size)
         {
-            return await _unitOfWork.CashFlowHistory.GetAllCashFlowHistoryAsync();
+            return await _unitOfWork.CashFlowHistory.GetAllCashFlowHistoryAsync(currency, index, size);
         }
 
         public async Task<CashFlowHistory> GetLatestCashFlowHistoryAsync(long walletId)
