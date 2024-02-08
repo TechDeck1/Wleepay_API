@@ -15,7 +15,6 @@ namespace wleepay.API.Resources
         public AddressResource Address { get; set; }
         public ApplicationRole UserRoles { get; set; }
         public IEnumerable<UsersStaffRoleResource> UsersStaffRole { get; set; }
-        public IEnumerable<StaffPermissionResource> StaffPermissions { get; set; }
 
     }
 }

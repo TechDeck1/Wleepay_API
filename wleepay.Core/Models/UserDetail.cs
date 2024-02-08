@@ -31,7 +31,7 @@ namespace wleepay.Core.Models
         public DateTime? VerificationExpiry { get; set; }
         public int Status { get; set; }
         public string WleePhoneNumber { get; set; }
-        public DateTime HireDate { get; set; }
+        public DateTime? HireDate { get; set; }
         public int SecurityQuestionId { get; set; }
         public string SecurityAnswerText { get; set; }
         public string CreatedBy { get; set; }

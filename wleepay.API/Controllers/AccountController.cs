@@ -1191,6 +1191,55 @@ namespace wleepay.API.Controllers
             });
         }
 
+        [HttpPost("UpdatePermissions")]
+        public async Task<IActionResult> UpdatePermissions([FromBody] StaffPermissionAndRoleResource staffPermissionAndRoleResource)
+        {
+            var user = await _userManager.FindByEmailAsync(staffPermissionAndRoleResource.EmailId);
+            if(user == null)
+            {
+                return BadRequest();
+            }
+             var userDetail = await _userDetailsService.GetUserDetailsById(user.Id);
+            if(userDetail == null)
+            {
+                return BadRequest();
+            }
+
+            if (userDetail.Permissions != null)
+            {
+
+                // Initialize an empty list to store enum values as strings
+                List<string> perType = new List<string>();
+
+                foreach (var permission in userDetail.Permissions)
+                {
+                    // Convert the integer to the corresponding enum value
+                    PermissionTypes enumPermission = (PermissionTypes)permission;
+
+                    // Append the enum value as string to the list
+                    perType.Add(enumPermission.ToString());
+                }
+
+                // Convert the list to an array if necessary
+                string[] perTypeArray = perType.ToArray();
+
+                var permissionTypes = JsonSerializer.Serialize(perTypeArray);
+
+                userDetail.Permissions = permissionTypes;
+            }
+
+            UsersStaffRole usersStaffRole = new UsersStaffRole();
+            usersStaffRole.UserId = user.Id;
+            usersStaffRole.CreatedDate = DateTime.Now;
+            usersStaffRole.StaffRoleId = staffPermissionAndRoleResource.StaffRole;
+            await _usersStaffRoleService.AddUserStaffRole(usersStaffRole);
+
+            //add user details
+            var result =  await _userDetailsService.AddOrUpdateUserDetails(userDetail);
+            return Ok(result);
+
+        }
+
         #region helper methods
         private string GenerateJSONWebToken(UserDetail userInfo)
         {
