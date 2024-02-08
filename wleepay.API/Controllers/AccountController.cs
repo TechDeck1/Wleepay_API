@@ -1231,7 +1231,7 @@ namespace wleepay.API.Controllers
             UsersStaffRole usersStaffRole = new UsersStaffRole();
             usersStaffRole.UserId = user.Id;
             usersStaffRole.CreatedDate = DateTime.Now;
-            usersStaffRole.StaffRoleId = staffPermissionAndRoleResource.StaffRole;
+            usersStaffRole.StaffRoleId = staffPermissionAndRoleResource.StaffRoleId;
             await _usersStaffRoleService.AddUserStaffRole(usersStaffRole);
 
             //add user details
