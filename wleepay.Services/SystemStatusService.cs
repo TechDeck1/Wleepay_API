@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using wleepay.Core;
+using wleepay.Core.Enums;
 using wleepay.Core.Models;
 using wleepay.Core.Services;
 
@@ -21,8 +22,21 @@ namespace wleepay.Services
 
         public async Task<SystemStatus> AddSystemStatus(SystemStatus status)
         {
-            await _unitOfWork.SystemStatus.AddAsync(status);
+            await _unitOfWork.SystemStatus.AddSystemStatus(status);
             return status;
+        }
+
+        public async Task<SystemStatus> GetSystemStatus()
+        {
+           var result=  await _unitOfWork.SystemStatus.GetSystemStatus();
+           await _unitOfWork.CommitAsync();
+           return result;
+        }
+
+        public async Task<SystemStatus> GetSystemStatusById(int id)
+        {
+            var result = await _unitOfWork.SystemStatus.GetSystemStatusById(id);
+            return result;
         }
     }
 }

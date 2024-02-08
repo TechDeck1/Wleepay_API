@@ -34,5 +34,19 @@ namespace wleepay.API.Controllers
             var result = await _systemStatusService.AddSystemStatus(systemStatus);
             return Ok(result);
         }
+
+        [HttpGet("GetSystemStatus")]
+        public async Task<IActionResult> GetSystemStatus()
+        {
+            var result = await _systemStatusService.GetSystemStatus();
+            return Ok(result);
+        }
+
+        [HttpGet("GetSystemStatusById/{id}")]
+        public async Task<IActionResult> GetSystemStatusById(int id)
+        {
+            var result = await _systemStatusService.GetSystemStatusById(id);
+            return Ok(result);
+        }
     }
 }
