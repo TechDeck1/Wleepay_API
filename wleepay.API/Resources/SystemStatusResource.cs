@@ -8,6 +8,6 @@ namespace wleepay.API.Resources
         public string Reason { get; set; }
         public string Description { get; set; }
         public bool Status { get; set; }
-        public DateTime CreatedDate { get; set; }
+
     }
 }

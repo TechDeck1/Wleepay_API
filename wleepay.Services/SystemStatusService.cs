@@ -20,9 +20,9 @@ namespace wleepay.Services
         }
 
 
-        public async Task<SystemStatus> AddSystemStatus(SystemStatus status)
+        public async Task<SystemStatus> AddUpdateSystemStatus(SystemStatus status)
         {
-            await _unitOfWork.SystemStatus.AddSystemStatus(status);
+            await _unitOfWork.SystemStatus.AddUpdateSystemStatus(status);
             return status;
         }
 

@@ -8,7 +8,7 @@ namespace wleepay.Core.Services
 {
     public interface ISystemStatusService
     {
-        Task<SystemStatus> AddSystemStatus(SystemStatus status);
+        Task<SystemStatus> AddUpdateSystemStatus(SystemStatus status);
         Task<SystemStatus> GetSystemStatus();
         Task<SystemStatus> GetSystemStatusById(int id);
 

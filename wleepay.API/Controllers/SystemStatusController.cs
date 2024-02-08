@@ -31,7 +31,7 @@ namespace wleepay.API.Controllers
             var systemStatus = _mapper.Map<SystemStatusResource, SystemStatus>(systemStatusResource);
             systemStatus.Status = systemStatusResource.Status;
             systemStatus.CreatedDate = DateTime.Now;
-            var result = await _systemStatusService.AddSystemStatus(systemStatus);
+            var result = await _systemStatusService.AddUpdateSystemStatus(systemStatus);
             return Ok(result);
         }
 
@@ -46,6 +46,19 @@ namespace wleepay.API.Controllers
         public async Task<IActionResult> GetSystemStatusById(int id)
         {
             var result = await _systemStatusService.GetSystemStatusById(id);
+            return Ok(result);
+        }
+
+        [HttpPut("UpdateSystemStatus")]
+        public async Task<IActionResult> UpdateSystemStatus([FromBody] SystemStatusResource systemStatusResource)
+        {
+            if(systemStatusResource.Id <= 0)
+            {
+                return BadRequest("Cannont update status id is null");
+
+            }
+            var systemStatus = _mapper.Map<SystemStatusResource, SystemStatus>(systemStatusResource);
+            var result = await _systemStatusService.AddUpdateSystemStatus(systemStatus);
             return Ok(result);
         }
     }

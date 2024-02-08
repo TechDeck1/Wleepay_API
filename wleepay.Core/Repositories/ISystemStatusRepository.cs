@@ -8,7 +8,7 @@ namespace wleepay.Core.Repositories
 {
     public interface ISystemStatusRepository : IRepository<SystemStatus>
     {
-        Task<SystemStatus> AddSystemStatus(SystemStatus systemStatus);
+        Task<SystemStatus> AddUpdateSystemStatus(SystemStatus systemStatus);
         Task<SystemStatus> GetSystemStatus();
         Task<SystemStatus> GetSystemStatusById(int id);
     }

@@ -30,10 +30,20 @@ namespace wleepay.Data.Repositories
             return result;
         }
 
-        public async Task<SystemStatus> AddSystemStatus(SystemStatus systemStatus)
+        public async Task<SystemStatus> AddUpdateSystemStatus(SystemStatus systemStatus)
         {
-            await WPContext.SystemStatus.AddAsync(systemStatus);
-            WPContext.SaveChanges();
+            if (systemStatus.Id <= 0)
+            {
+                await WPContext.SystemStatus.AddAsync(systemStatus);
+                WPContext.SaveChanges();
+            }
+            else
+            {
+                var result = await WPContext.SystemStatus.Where(x => x.Id == systemStatus.Id).FirstOrDefaultAsync();
+                result.Status = systemStatus.Status;
+                WPContext.SaveChanges();
+
+            }
             return systemStatus;
         }
     }
