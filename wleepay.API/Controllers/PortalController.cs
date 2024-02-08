@@ -30,6 +30,9 @@ using wleepay.Core.Enums;
 using Microsoft.SqlServer.Management.Smo;
 using wleepay.API.Helpers;
 using System.Text.Json;
+using wleepay.Communication.Services;
+using wleepay.Communication.Templates;
+using wleepay.Services;
 
 namespace wleepay.API.Controllers
 {
@@ -197,7 +200,19 @@ namespace wleepay.API.Controllers
                 var types = await _transferTypeService.GetTransferTypeById((int)TransferTypes.CashOut);
                 types.TransferFee = updatedRates.Id;
                 await _transferTypeService.UpdateTransferTypeById(types);
+
+                var allAgents = await _userDetailsService.GetUserByRole((int)Role.Agent);
+                var agentsListResource = _mapper.Map<IEnumerable<ApplicationUser>, IEnumerable<ApplicationUserResource>>(allAgents);
+
+                foreach (var agent in agentsListResource)
+                {
+                    var message = MessagesTemplates.TaxRateUpdateMessage(taxRateResourceModel.AgentCommission.ToString(), agent.UserDetail.FirstName, TaxRates.CashOutFeeRate.ToDescriptionString());
+
+                    var result = _SMSService.sendMessage(message, agent.UserDetail.PhoneNumber);
+                }
+
             }
+
             return Ok(updatedRates);
         }
 
@@ -221,6 +236,16 @@ namespace wleepay.API.Controllers
                 var types = await _transferTypeService.GetTransferTypeById((int)TransferTypes.CashOut);
                 types.TransferFee = updatedRates.Id;
                 await _transferTypeService.UpdateTransferTypeById(types);
+
+                var allAgents = await _userDetailsService.GetUserByRole((int)Role.Agent);
+                var agentsListResource = _mapper.Map<IEnumerable<ApplicationUser>, IEnumerable<ApplicationUserResource>>(allAgents);
+
+                foreach (var agent in agentsListResource)
+                {
+                    var message = MessagesTemplates.TaxRateUpdateMessage(taxRateResourceModel.AgentCommission.ToString(), agent.UserDetail.FirstName, TaxRates.AgentCommisionRate.ToDescriptionString());
+
+                    var result = _SMSService.sendMessage(message, agent.UserDetail.PhoneNumber);
+                }
             }
             return Ok(updatedRates);
         }
@@ -335,8 +360,8 @@ namespace wleepay.API.Controllers
                             string[] deserializedNumbers = JsonSerializer.Deserialize<string[]>(userDetails?.Permissions);
 
                             string jsonString = JsonSerializer.Serialize(deserializedNumbers);
-
-                            var secretKey = "1234567890123456";
+                            
+                            var secretKey = _configuration.GetSection("SecretKeyForEncryptAndDecrypt").Value; //secret key
 
                             userDetails.Permissions = Common.Encrypt(jsonString, secretKey).ToString();
                         }

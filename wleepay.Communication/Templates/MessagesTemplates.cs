@@ -114,5 +114,69 @@ namespace wleepay.Communication.Templates
                 ";
 
         }
+
+        public static string PaymentReceivedInCashOnHandAccount(string amount, string currency, string SmsReciverName)
+        {
+            return $@"
+                    <html>
+                    <head>
+                        <style>
+                           body {{
+                            font-family: 'Arial', sans-serif;
+                            margin: 0; /* Remove default body margin */
+                            padding: 0; /* Remove default body padding */
+                        }}
+                        .container {{
+                            max-width: 600px;
+                            margin: 0 0;
+                        }}
+                        p {{
+                            margin-top: 0; /* Remove top margin for paragraphs */
+                            margin-bottom: 1em; /* Add a bottom margin for paragraphs for spacing */
+                        }}
+                        </style>
+                    </head>
+                    <body>
+                        <div class='container'>
+                            <p>Dear {SmsReciverName},</p>
+                            <p>A payment of {amount} {currency} is credited to cash on hand account.</p>
+                        </div>
+                    </body>
+                    </html>
+                ";
+
+        }
+
+        public static string TaxRateUpdateMessage(string taxRate, string SmsReciverName, string Taxtype)
+        {
+            return $@"
+                    <html>
+                    <head>
+                        <style>
+                           body {{
+                            font-family: 'Arial', sans-serif;
+                            margin: 0; /* Remove default body margin */
+                            padding: 0; /* Remove default body padding */
+                        }}
+                        .container {{
+                            max-width: 600px;
+                            margin: 0 0;
+                        }}
+                        p {{
+                            margin-top: 0; /* Remove top margin for paragraphs */
+                            margin-bottom: 1em; /* Add a bottom margin for paragraphs for spacing */
+                        }}
+                        </style>
+                    </head>
+                    <body>
+                        <div class='container'>
+                            <p>Dear {SmsReciverName},</p>
+                            <p>A tax rate for {Taxtype} is changed by {taxRate}%. </p>
+                        </div>
+                    </body>
+                    </html>
+                ";
+
+        }
     }
 }

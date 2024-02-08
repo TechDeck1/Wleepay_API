@@ -4,8 +4,14 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using wleepay.API.Resources;
+using wleepay.Core.Enums;
 using wleepay.Core.Models;
 using wleepay.Core.Services;
+using static DevExpress.Xpo.Helpers.AssociatedCollectionCriteriaHelper;
+using wleepay.Services;
+using wleepay.Communication.Interface;
+using wleepay.Communication.Templates;
+using Twilio.TwiML.Voice;
 
 namespace wleepay.API.Controllers
 {
@@ -16,15 +22,19 @@ namespace wleepay.API.Controllers
         private readonly ICashFlowService _cashFlowService;
         private readonly IMapper _mapper;
         private readonly IWalletService _walletService;
+        private readonly IUserDetailService _userDetailService;
+        private readonly ISMSService _sMSService;
 
 
         public CashFlowHistoryController(
-            ICashFlowService cashFlowService,IMapper mapper, IWalletService walletService)
+            ICashFlowService cashFlowService,IMapper mapper, IWalletService walletService, IUserDetailService userDetailService, ISMSService sMSService)
         {
 
             _cashFlowService = cashFlowService;
             _mapper = mapper;
             _walletService = walletService;
+            _userDetailService = userDetailService;
+            _sMSService = sMSService;
         }
 
         [HttpPost("CashFlowHistory")]
@@ -50,8 +60,21 @@ namespace wleepay.API.Controllers
                 var cashFlowhistory = _mapper.Map<CashFlowHistoryResource, CashFlowHistory>(cashFlowHistoryResource);
                 cashFlowhistory.CurrencyId = walletBalance.CurrencyId;
                 cashFlowhistory.PreviousAmount = walletBalance.Balance;
-
                 var cashFlow = await _cashFlowService.AddCashFlowHistoryAsync(cashFlowhistory);
+                if (cashFlow != null)
+                {
+
+                    var allAgents = await _userDetailService.GetUserByRole((int)Role.Agent);
+                    var agentsListResource = _mapper.Map<IEnumerable<ApplicationUser>, IEnumerable<ApplicationUserResource>>(allAgents);
+                    var currencySymbol = cashFlowhistory.CurrencyId == 1 ? "$L" : "$";
+
+                    foreach (var agent in agentsListResource)
+                    {
+                        var message = MessagesTemplates.PaymentReceivedInCashOnHandAccount(cashFlowHistoryResource.DepositAmount.ToString(), currencySymbol, agent.UserDetail.FirstName);
+
+                        var result = _sMSService.sendMessage(message, agent.UserDetail.PhoneNumber);
+                    }
+                }
                 return Ok(cashFlow);
                 //return Ok();
 

@@ -94,7 +94,7 @@ namespace wleepay.API.Controllers
                 return BadRequest(validationResult.Errors);
 
             var walletBalance = await _walletService.GetWallet(transactionRequest.FromWalletId);
-            if (transactionRequest != null && transactionRequest.TransferTypeId == (int)TransferTypes.CashOnHand)
+            if (transactionRequest != null && transactionRequest.TransferTypeId == (int)TransferTypes.TopUpSystemWallet)
             {
                 CashFlowHistory cashFlow = new CashFlowHistory();
                 cashFlow.TotalAmount = walletBalance.Balance - transactionRequest.Amount;
@@ -115,7 +115,7 @@ namespace wleepay.API.Controllers
 
                 await SendTransactionActionSMS(newTransaction);
 
-                if(transactionRequest.TransferTypeId == Core.Enums.TransferTypes.CashOnHand.GetHashCode())
+                if(transactionRequest.TransferTypeId == Core.Enums.TransferTypes.TopUpSystemWallet.GetHashCode())
                 {
                     await SendTransactionActionEmail(newTransaction);
 
@@ -314,7 +314,7 @@ namespace wleepay.API.Controllers
                 string name = $"{fromWalletUser.ApplicationUser.UserDetail.FirstName} {fromWalletUser.ApplicationUser.UserDetail.LastName}";
                 messageText = GenerateMessageText(transaction.Amount, userWallet.Currency.Name, name, transaction.Id, status, transaction.TransferTypeId, true);
             }
-            else if (transaction.TransferTypeId == Core.Enums.TransferTypes.CashOnHand.GetHashCode())
+            else if (transaction.TransferTypeId == Core.Enums.TransferTypes.TopUpSystemWallet.GetHashCode())
             {
                 userWallet = toWalletUser;
                 string name = $"{fromWalletUser.ApplicationUser.UserDetail.FirstName} {fromWalletUser.ApplicationUser.UserDetail.LastName}";
@@ -348,7 +348,7 @@ namespace wleepay.API.Controllers
                 case Core.Enums.TransactionStatus.Approved:
                     if (transactionTypeId == Core.Enums.TransferTypes.WleeTransfer.GetHashCode())
                         messageText = MessagesTemplates.PaymentReceived(amountString, currency, userName, transactionId);
-                    else if (transactionTypeId == Core.Enums.TransferTypes.CashOnHand.GetHashCode())
+                    else if (transactionTypeId == Core.Enums.TransferTypes.TopUpSystemWallet.GetHashCode())
                         messageText = MessagesTemplates.PaymentReceived(amountString, currency, userName, transactionId);
                     else
                         messageText = MessagesTemplates.PaymentApprovedRejected(amountString, currency, userName, transactionId, isCashout);
@@ -376,7 +376,7 @@ namespace wleepay.API.Controllers
             var toWalletUser = await _walletService.GetUserDetailsByWalletIdAndCurrency(transaction.ToWalletId);
 
             //check transaction type
-            if (transaction.TransferTypeId == Core.Enums.TransferTypes.CashOnHand.GetHashCode())
+            if (transaction.TransferTypeId == Core.Enums.TransferTypes.TopUpSystemWallet.GetHashCode())
             {
                 userWallet = toWalletUser;
                 string recieverName = $"{userWallet.ApplicationUser.UserDetail.FirstName} {userWallet.ApplicationUser.UserDetail.LastName}";
@@ -397,7 +397,7 @@ namespace wleepay.API.Controllers
             string messageText = string.Empty;
             string amountString = amount.ToString("C2");
             
-            if (transactionTypeId == Core.Enums.TransferTypes.CashOnHand.GetHashCode())
+            if (transactionTypeId == Core.Enums.TransferTypes.TopUpSystemWallet.GetHashCode())
                 messageText = MessagesTemplates.PaymentReceivedEmail(amountString, currency, userName, transactionId, recieverName);
             
             return messageText;

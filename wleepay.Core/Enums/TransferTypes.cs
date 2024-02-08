@@ -14,7 +14,7 @@ namespace wleepay.Core.Enums
         TopUp = 6,
         FillAgent = 7,
         AgentCommissionCashout = 8,
-        CashOnHand = 9
+        TopUpSystemWallet = 9
     }
 
 }

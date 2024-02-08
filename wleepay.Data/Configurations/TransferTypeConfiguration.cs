@@ -139,10 +139,10 @@ namespace wleepay.Data.Configurations
             builder.HasData(new TransferType
             {
                 Id = 9,
-                Name = "Cash On Hand",
+                Name = "Top Up System Wallet",
                 FromWalletType = 1,
                 ToWalletType = 9,
-                Description = "Transfer from system float n a/c to sytem admin a/c",
+                Description = "Transfer from system float n a/c to sytem wallet",
                 TransferFee = null
             });
         }
