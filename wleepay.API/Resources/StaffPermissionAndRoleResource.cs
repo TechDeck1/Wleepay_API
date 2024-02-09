@@ -7,7 +7,7 @@ namespace wleepay.API.Resources
     {
         public string EmailId { get; set; }
         public int StaffRoleId { get; set; }
-        public string Permissions { get; set; }
+        public int[] Permissions { get; set; }
 
     }
 }
