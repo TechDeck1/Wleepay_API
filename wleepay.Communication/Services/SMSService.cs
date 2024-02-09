@@ -38,7 +38,6 @@ namespace wleepay.Communication.Services
                 messageOptions.From = new PhoneNumber("+12136993028");
                 messageOptions.Body = message;
 
-
                 var messageResponse = MessageResource.Create(messageOptions);
                 var result = messageResponse.Status.ToString();
                 return result;

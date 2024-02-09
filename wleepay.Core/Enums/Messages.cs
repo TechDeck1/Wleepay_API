@@ -19,6 +19,7 @@ namespace wleepay.Core.Enums
         [Description("You can't create Super Admin.")] IsSuperAdmin,
         [Description("Email is already in use.")] EmailAlreadyUsed,
         [Description("Phone number is already in use.")] PhoneAlreadyUsed,
+        [Description("Phone number and email is already in use.")] PhoneAndEmailAlreadyUsed,
         [Description("Can't create user.")] UserNotCreated,
         [Description("Link has been sent to your email to reset your password.")] LinkSentForResetPassword,
         [Description("Password is successfully updated.")] PasswordUpdated,

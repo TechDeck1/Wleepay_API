@@ -262,18 +262,25 @@ namespace wleepay.API.Controllers
                 if (userDetail.Role == 0)
                     return BadRequest(Messages.IsSuperAdmin.ToDescriptionString());
 
+                //check if phone number already exists
+                var userExistWithPhone = await _userDetailsService.IsPhoneAlreadyRegistered(userDetail.PhoneNumber);
+
                 //check if user exists with email
                 ApplicationUser applicationUser = new ApplicationUser();
                 if (!string.IsNullOrEmpty(userDetail.EmailId))
                     applicationUser = await _userManager.FindByEmailAsync(userDetail.EmailId);
 
-                if (applicationUser != null && !string.IsNullOrEmpty(applicationUser.Id))
+                if ((applicationUser != null && !string.IsNullOrEmpty(applicationUser.Id)) || userExistWithPhone == true)
+                {
+                    if (applicationUser != null && !string.IsNullOrEmpty(applicationUser.Id) && userExistWithPhone == true)
+                    return BadRequest(Messages.PhoneAndEmailAlreadyUsed.ToDescriptionString());
+
+                    if (applicationUser != null && !string.IsNullOrEmpty(applicationUser.Id))
                     return BadRequest(Messages.EmailAlreadyUsed.ToDescriptionString());
 
-                //check if phone number already exists
-                var userExistWithPhone = await _userDetailsService.IsPhoneAlreadyRegistered(userDetail.PhoneNumber);
-                if (userExistWithPhone == true)
+                    if (userExistWithPhone == true)
                     return BadRequest(Messages.PhoneAlreadyUsed.ToDescriptionString());
+                }
 
                 //create new user with identity
 
@@ -414,18 +421,26 @@ namespace wleepay.API.Controllers
                 if (userDetail.Role == 0)
                     return BadRequest(Messages.IsSuperAdmin.ToDescriptionString());
 
+
+                //check if phone number already exists
+                var userExistWithPhone = await _userDetailsService.IsPhoneAlreadyRegistered(userDetail.PhoneNumber);
+
                 //check if user exists with email
                 ApplicationUser applicationUser = new ApplicationUser();
                 if (!string.IsNullOrEmpty(userDetail.EmailId))
                     applicationUser = await _userManager.FindByEmailAsync(userDetail.EmailId);
 
-                if (applicationUser != null && !string.IsNullOrEmpty(applicationUser.Id))
-                    return BadRequest(Messages.EmailAlreadyUsed.ToDescriptionString());
+                if ((applicationUser != null && !string.IsNullOrEmpty(applicationUser.Id)) || userExistWithPhone == true)
+                {
+                    if (applicationUser != null && !string.IsNullOrEmpty(applicationUser.Id) && userExistWithPhone == true)
+                        return BadRequest(Messages.PhoneAndEmailAlreadyUsed.ToDescriptionString());
 
-                //check if phone number already exists
-                var userExistWithPhone = await _userDetailsService.IsPhoneAlreadyRegistered(userDetail.PhoneNumber);
-                if (userExistWithPhone == true)
-                    return BadRequest(Messages.PhoneAlreadyUsed.ToDescriptionString());
+                    if (applicationUser != null && !string.IsNullOrEmpty(applicationUser.Id))
+                        return BadRequest(Messages.EmailAlreadyUsed.ToDescriptionString());
+
+                    if (userExistWithPhone == true)
+                        return BadRequest(Messages.PhoneAlreadyUsed.ToDescriptionString());
+                }
 
                 var verificationDetails = await _verificationService.GetVerificationByPhone(userDetail.PhoneNumber);
 
