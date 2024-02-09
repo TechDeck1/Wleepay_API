@@ -890,10 +890,18 @@ namespace wleepay.API.Controllers
                         //email staff for account activation
                         await _emailSender.EmailForAccountActivatedToStaff(decryptedEmail, userDetails.FirstName, userDetails.PhoneNumber);
                         // email admin for staff's account activation
-                        await _emailSender.EmailForAccountActivatedToSystemAdmin(decryptedEmail, userDetails.FirstName, userDetails.PhoneNumber);
+
+                        var allSystemAdmins = await _userDetailsService.GetUserByRole((int)Role.SystemAdmin);
+                        var allSystemAdminsList = _mapper.Map<IEnumerable<ApplicationUser>, IEnumerable<ApplicationUserResource>>(allSystemAdmins);
+
+                        foreach (var systemAdmin in allSystemAdminsList)
+                        {
+                            await _emailSender.EmailForAccountActivatedToSystemAdmin(decryptedEmail, systemAdmin.UserDetail.FirstName, systemAdmin.UserDetail.PhoneNumber);
+                        }
+
                         //add logs
                         systemActivityLog.Description = GenericMessagesForSystemLogs.CompleteLoginProcess.ToDescriptionString();
-                        var addLogs = await _systemActivityLogsService.AddSystemLogs(systemActivityLog);
+                        await _systemActivityLogsService.AddSystemLogs(systemActivityLog);
                         //return response
                         return Ok(new
                         {
@@ -1070,7 +1078,7 @@ namespace wleepay.API.Controllers
                 int minutesDifference = (int)difference.TotalMinutes;
 
                 // Check if the given date is expired (more than 2 minutes ago)
-                bool isExpired = minutesDifference >= 2;
+                bool isExpired = minutesDifference >= 1;
 
                 if (!isExpired)
                 {

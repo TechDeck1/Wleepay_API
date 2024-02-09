@@ -334,7 +334,7 @@ namespace wleepay.API.Controllers
                 int minutesDifference = (int)difference.TotalMinutes;
 
                 // Check if the given date is expired (more than 2 minutes ago)
-                bool isExpired = minutesDifference >= 2;
+                bool isExpired = minutesDifference >= 1;
 
                 object data = null;
                 if (!isExpired)
