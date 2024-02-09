@@ -896,7 +896,7 @@ namespace wleepay.API.Controllers
 
                         foreach (var systemAdmin in allSystemAdminsList)
                         {
-                            await _emailSender.EmailForAccountActivatedToSystemAdmin(decryptedEmail, systemAdmin.UserDetail.FirstName, systemAdmin.UserDetail.PhoneNumber);
+                            await _emailSender.EmailForAccountActivatedToSystemAdmin(decryptedEmail, userDetails.FirstName, userDetails.PhoneNumber, userDetails.Permissions);
                         }
 
                         //add logs

@@ -442,7 +442,7 @@ namespace wleepay.API.Controllers
                         systemActivityLog.Description = GenericMessagesForSystemLogs.AccountActivated.ToDescriptionString();
 
                         await _emailSender.EmailForAccountActivatedToStaff(model.EmailId, userDetails.FirstName, userDetails.PhoneNumber);
-                        await _emailSender.EmailForAccountActivatedToSystemAdmin(model.EmailId, userDetails.FirstName , userDetails.PhoneNumber);
+                        await _emailSender.EmailForAccountActivatedToSystemAdmin(model.EmailId, userDetails.FirstName , userDetails.PhoneNumber, userDetails.Permissions);
                     }
                     else
                     {
@@ -452,7 +452,7 @@ namespace wleepay.API.Controllers
                       
                         _SMSService.sendMessage(message, userDetails.PhoneNumber);
                         await _emailSender.EmailForAccountDeactivatedToStaff(model.EmailId, userDetails.FirstName, userDetails.PhoneNumber);
-                        await _emailSender.EmailForAccountDeactivatedToSystemAdmin(model.EmailId, userDetails.FirstName, userDetails.PhoneNumber);
+                        await _emailSender.EmailForAccountDeactivatedToSystemAdmin(model.EmailId, userDetails.FirstName, userDetails.PhoneNumber, userDetails.Permissions);
                     }
 
                     var addLogs = await _systemActivityLogsService.AddSystemLogs(systemActivityLog);
