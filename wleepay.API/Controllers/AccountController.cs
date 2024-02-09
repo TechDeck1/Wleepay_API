@@ -1205,13 +1205,13 @@ namespace wleepay.API.Controllers
                 return BadRequest();
             }
 
-            if (userDetail.Permissions != null)
+            if (staffPermissionAndRoleResource.Permissions != null)
             {
 
                 // Initialize an empty list to store enum values as strings
                 List<string> perType = new List<string>();
 
-                foreach (var permission in userDetail.Permissions)
+                foreach (var permission in staffPermissionAndRoleResource.Permissions)
                 {
                     // Convert the integer to the corresponding enum value
                     PermissionTypes enumPermission = (PermissionTypes)permission;
