@@ -63,11 +63,12 @@ namespace wleepay.API.Controllers
                 cashFlowhistory.CurrencyId = walletBalance.CurrencyId;
                 cashFlowhistory.PreviousAmount = walletBalance.Balance;
                 var cashFlow = await _cashFlowService.AddCashFlowHistoryAsync(cashFlowhistory);
-                var currencySymbol = cashFlowhistory.CurrencyId == 1 ? "$L" : "$";
+                double amount = (double)cashFlowHistoryResource.DepositAmount;
+                var currencySymbol = cashFlowhistory.CurrencyId == 1 ? "LRD" : "USD";
 
                 var userDetail = await _userDetailService.GetApplicationUserById(walletBalance.UserId);
 
-                var message = MessagesTemplates.PaymentReceivedInCashOnHandAccount(cashFlowHistoryResource.DepositAmount.ToString(), currencySymbol, userDetail.UserDetail.FirstName);
+                var message = MessagesTemplates.PaymentReceivedInCashOnHandAccount(amount.ToString("C2", new CultureInfo("en-US")), currencySymbol, userDetail.UserDetail.FirstName);
 
                 var result = _sMSService.sendMessage(message, userDetail.PhoneNumber);
                 
