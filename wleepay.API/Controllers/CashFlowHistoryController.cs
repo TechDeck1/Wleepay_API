@@ -12,6 +12,7 @@ using wleepay.Services;
 using wleepay.Communication.Interface;
 using wleepay.Communication.Templates;
 using Twilio.TwiML.Voice;
+using System.Globalization;
 
 namespace wleepay.API.Controllers
 {
@@ -42,6 +43,7 @@ namespace wleepay.API.Controllers
         {
             try
             {
+
                 if (cashFlowHistoryResource.WalletId == null)
                 {
                     return NotFound();
@@ -64,12 +66,11 @@ namespace wleepay.API.Controllers
                 var currencySymbol = cashFlowhistory.CurrencyId == 1 ? "$L" : "$";
 
                 var userDetail = await _userDetailService.GetApplicationUserById(walletBalance.UserId);
+
                 var message = MessagesTemplates.PaymentReceivedInCashOnHandAccount(cashFlowHistoryResource.DepositAmount.ToString(), currencySymbol, userDetail.UserDetail.FirstName);
 
                 var result = _sMSService.sendMessage(message, userDetail.PhoneNumber);
                 
-               
-
                 return Ok(cashFlow);
 
             }

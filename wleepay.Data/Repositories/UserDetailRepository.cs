@@ -36,7 +36,7 @@ namespace wleepay.Data.Repositories
 
         public async Task<IEnumerable<ApplicationUser>> GetUserDetailsByRole(int role)
         {
-            return await WPContext.Users
+            var result = await WPContext.Users
                 .Include(s => s.UserRoles)
                     .ThenInclude(s => s.Role)
                 .Include(s => s.UserDetail)
@@ -49,6 +49,7 @@ namespace wleepay.Data.Repositories
                     .ThenInclude(s => s.Currency)
                 .Where(user => user.UserRoles == null || user.UserRoles.FirstOrDefault().Role.Name == ((Core.Enums.Role)role).ToString())
                 .ToListAsync();
+            return result;
         }
 
         public async Task<UserDetailsResponseResource> GetUsers(Core.Enums.Role role, int pageIndex = 0, int pageSize = 10)
