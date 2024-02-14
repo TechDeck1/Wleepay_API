@@ -61,22 +61,16 @@ namespace wleepay.API.Controllers
                 cashFlowhistory.CurrencyId = walletBalance.CurrencyId;
                 cashFlowhistory.PreviousAmount = walletBalance.Balance;
                 var cashFlow = await _cashFlowService.AddCashFlowHistoryAsync(cashFlowhistory);
-                if (cashFlow != null)
-                {
+                var currencySymbol = cashFlowhistory.CurrencyId == 1 ? "$L" : "$";
 
-                    var allAgents = await _userDetailService.GetUserByRole((int)Role.Agent);
-                    var agentsListResource = _mapper.Map<IEnumerable<ApplicationUser>, IEnumerable<ApplicationUserResource>>(allAgents);
-                    var currencySymbol = cashFlowhistory.CurrencyId == 1 ? "$L" : "$";
+                var userDetail = await _userDetailService.GetApplicationUserById(walletBalance.UserId);
+                var message = MessagesTemplates.PaymentReceivedInCashOnHandAccount(cashFlowHistoryResource.DepositAmount.ToString(), currencySymbol, userDetail.UserDetail.FirstName);
 
-                    foreach (var agent in agentsListResource)
-                    {
-                        var message = MessagesTemplates.PaymentReceivedInCashOnHandAccount(cashFlowHistoryResource.DepositAmount.ToString(), currencySymbol, agent.UserDetail.FirstName);
+                var result = _sMSService.sendMessage(message, userDetail.PhoneNumber);
+                
+               
 
-                        var result = _sMSService.sendMessage(message, agent.UserDetail.PhoneNumber);
-                    }
-                }
                 return Ok(cashFlow);
-                //return Ok();
 
             }
             catch (System.Exception ex)

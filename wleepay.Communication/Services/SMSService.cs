@@ -22,6 +22,9 @@ namespace wleepay.Communication.Services
             TwilioClient.Init(accountSid, authToken);
         }
 
+        //client's to from number +12027318402
+        //client's From phone number +18564223507 
+        //chnage both while deploying changes to live
         public string sendMessage(string message, string phoneNumber)
         {
             try
@@ -34,8 +37,8 @@ namespace wleepay.Communication.Services
 
                 //return messageRes.Status.ToString();
                 var messageOptions = new CreateMessageOptions(
-                new PhoneNumber("+917023027618"));
-                messageOptions.From = new PhoneNumber("+12136993028");
+                new PhoneNumber("+12027318402"));
+                messageOptions.From = new PhoneNumber("+18564223507");
                 messageOptions.Body = message;
 
                 var messageResponse = MessageResource.Create(messageOptions);
