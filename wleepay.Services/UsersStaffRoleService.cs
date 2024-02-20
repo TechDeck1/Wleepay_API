@@ -18,16 +18,16 @@ namespace wleepay.Services
 
         public async Task<UsersStaffRole> AddUserStaffRole(UsersStaffRole usersStaffRole)
         {
-            if (usersStaffRole.UserId == null)
-            {
-                await _unitOfWork.UsersStaffRole.AddAsync(usersStaffRole);
-                await _unitOfWork.CommitAsync();
-            }
+            //if (usersStaffRole.UserId == null)
+            //{
+            //    await _unitOfWork.UsersStaffRole.AddAsync(usersStaffRole);
+            //    await _unitOfWork.CommitAsync();
+            //}
             //else
             //{
-            //    await _unitOfWork.UsersStaffRole.
-            //}
-            return usersStaffRole;
+                var result = await _unitOfWork.UsersStaffRole.AddUserStaffRole(usersStaffRole);
+           // }
+            return result;
         }
     }
 }

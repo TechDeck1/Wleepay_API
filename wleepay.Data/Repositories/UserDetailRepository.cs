@@ -30,6 +30,8 @@ namespace wleepay.Data.Repositories
                 .Include(s => s.KYCLevelDetail)
                 .Include(s => s.KYCStatus)
                 .Include(s => s.County)
+                .Include(s => s.ApplicationUser.UsersStaffRole)
+                    .ThenInclude(s => s.StaffRoles)
                 .FirstOrDefaultAsync();
             return userDetails;
         }
