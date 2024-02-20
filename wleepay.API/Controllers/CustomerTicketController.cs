@@ -31,8 +31,6 @@ namespace wleepay.API.Controllers
         private readonly INotesService _notesService;
         private readonly IWhatsAppService _whatsAppService;
 
-
-
         public CustomerTicketController(
             ICustomerTicketsService customerTickets,
             UserManager<ApplicationUser> userManager,
@@ -82,7 +80,7 @@ namespace wleepay.API.Controllers
                 var customerTicketsToInsert = _mapper.Map<AddCustomerTicketRequestResponse, CustomerTickets>(customerTickets);
 
                 customerTicketsToInsert.IsSeen = false;
-                customerTicketsToInsert.Notes.FirstOrDefault().AddedBy= userDetail.UserDetail.FirstName+ " " + userDetail.UserDetail.LastName;
+                customerTicketsToInsert.Notes.FirstOrDefault().AddedBy= userDetail.UserDetail.UserId;
                 var tickets = await _customerTicketsService.AddUpdateCustomerTickets(customerTicketsToInsert);
 
                 var ticketDetails = await _customerTicketsService.GetCustomerTicketsById(customerTicketsToInsert.Id);
@@ -232,7 +230,6 @@ namespace wleepay.API.Controllers
 
             if (tickets != null)
             {
-
 
                 var message = MessagesTemplates.CustomerTicketReplyMessage(userDetail.UserDetail.FirstName, request.Notes.FirstOrDefault().Note);
                 var subject = Messages.SubjectForTicketClosed.ToDescriptionString();
