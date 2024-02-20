@@ -169,6 +169,7 @@ namespace wleepay.API.Controllers
                     message = Messages.TicketNotFound.ToDescriptionString()
                 });
             }
+
             var message = MessagesTemplates.CustomerTicketReplyMessage(userDetail.UserDetail.FirstName, request.Note);
             var subject = Messages.SubjectForTicketUpdated.ToDescriptionString();
 
