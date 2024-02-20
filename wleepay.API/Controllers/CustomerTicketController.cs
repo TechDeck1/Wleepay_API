@@ -122,7 +122,7 @@ namespace wleepay.API.Controllers
         [HttpPost("GetAllCustomerTickets")]
         public async Task<IActionResult> GetAllCustomerTickets(CustomerTicketRequest request)
         {
-            var tickets = await _customerTicketsService.GetAllCustomerTickets(request.PhoneNumber, request.PageIndex, request.PageSize);
+            var tickets = await _customerTicketsService.GetAllCustomerTickets(request.PhoneNumber,request.status, request.PageIndex, request.PageSize);
             var customerTicketsToInsert = _mapper.Map<IEnumerable<CustomerTickets>, IEnumerable<AddCustomerTicketResponseResource>>(tickets.CustomerTickets);
 
             return Ok(new 

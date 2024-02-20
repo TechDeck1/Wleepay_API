@@ -24,12 +24,10 @@ namespace wleepay.Communication.Services
     public class EmailSenderService : IEmailSender
     {
         private readonly IConfiguration _configuration;
-        private readonly string _fromNumber;
 
         public EmailSenderService(IConfiguration configuration)
         {
             _configuration = configuration;
-            string sendGridApiKey = configuration.GetSection("SendGrid:WleePaySendGridApiKey").Value.ToString();
         }
 
         //Change recipient email to "lionelbernard@wleepay.com" when deploy changes to live
@@ -37,7 +35,7 @@ namespace wleepay.Communication.Services
         {
             
             var subject = "Failed Login attempt";
-              var recipientEmail = "lionelbernard@wleepay.com";
+            var recipientEmail = "lionelbernard@wleepay.com";
             // var recipientEmail = email;
 
             EmailLockOutTemplateForSystemAdmin template = new EmailLockOutTemplateForSystemAdmin

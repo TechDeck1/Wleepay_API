@@ -48,7 +48,7 @@ namespace wleepay.Data.Repositories
 
         }
 
-        public async Task<CustomerServiceResponseResource> GetAllCustomerTickets(string phoneNumber, int pageIndex, int pageSize)
+        public async Task<CustomerServiceResponseResource> GetAllCustomerTickets(string phoneNumber,int status, int pageIndex, int pageSize)
         {
             if (pageSize <= 0)
             {
@@ -58,16 +58,27 @@ namespace wleepay.Data.Repositories
             int skipCount = pageIndex * pageSize;
             var totalCount = 0;
             List<CustomerTickets> tickets;
-            if (string.IsNullOrEmpty(phoneNumber))
+            if (string.IsNullOrEmpty(phoneNumber) && status == (int)CustomerTicketStatus.Closed)
             {
-                 tickets = await WPContext.CustomerTickets.Where(x => x.Status == (int)CustomerTicketStatus.Open)
-                                                            .Include(x => x.Notes)
+                 tickets = await WPContext.CustomerTickets.Include(x => x.Notes)
                                                             .Include(x => x.IssueType)
                                                             .OrderByDescending(x => x.CreatedDate)
                                                             .Skip(skipCount)
                                                             .Take(takeCount)
                                                             .ToListAsync();
-                 totalCount = await WPContext.CustomerTickets.Where(x => x.Status == (int)CustomerTicketStatus.Open).CountAsync();
+                 totalCount = await WPContext.CustomerTickets.CountAsync();
+
+            }
+            if (string.IsNullOrEmpty(phoneNumber) && status == (int)CustomerTicketStatus.Open)
+            {
+                tickets = await WPContext.CustomerTickets.Where(x => x.Status == (int)CustomerTicketStatus.Open)
+                                                           .Include(x => x.Notes)
+                                                           .Include(x => x.IssueType)
+                                                           .OrderByDescending(x => x.CreatedDate)
+                                                           .Skip(skipCount)
+                                                           .Take(takeCount)
+                                                           .ToListAsync();
+                totalCount = await WPContext.CustomerTickets.Where(x => x.Status == (int)CustomerTicketStatus.Open).CountAsync();
 
             }
             else
