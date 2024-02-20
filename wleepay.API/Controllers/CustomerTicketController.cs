@@ -170,6 +170,12 @@ namespace wleepay.API.Controllers
                 });
             }
 
+            Notes notesToInsert = new Notes();
+            notesToInsert.CustomerTicketId = request.CustomerTicketId;
+            notesToInsert.Note = request.Note;
+            notesToInsert.AddedBy = request.UserId;
+            var notes = await _notesService.AddUpdateNotes(notesToInsert);
+
             var message = MessagesTemplates.CustomerTicketReplyMessage(userDetail.UserDetail.FirstName, request.Note);
             var subject = Messages.SubjectForTicketUpdated.ToDescriptionString();
 
@@ -190,7 +196,7 @@ namespace wleepay.API.Controllers
                 return Ok(new
                 {
                     status = true,
-                    message = Messages.TicketClosed.ToDescriptionString(),
+                    message = Messages.TicketUpdated.ToDescriptionString(),
                 });
             }
 
@@ -226,35 +232,23 @@ namespace wleepay.API.Controllers
 
             if (tickets != null)
             {
-                var notesToInsert = _mapper.Map<NotesResource, Notes>(request.Notes.FirstOrDefault());
-                notesToInsert.CustomerTicketId = request.CustomerTicketId;
-                var notes = await _notesService.AddUpdateNotes(notesToInsert);
+
 
                 var message = MessagesTemplates.CustomerTicketReplyMessage(userDetail.UserDetail.FirstName, request.Notes.FirstOrDefault().Note);
                 var subject = Messages.SubjectForTicketClosed.ToDescriptionString();
 
-                if (notes != null)
+                if (tickets.CustomerContact == (int)CustomerServiceContactMethod.Email)
                 {
-
-                    if (tickets.CustomerContact == (int)CustomerServiceContactMethod.Email)
-                    {
-                        await _emailSender.ReplyForCustomerTicket(message, userDetail.Email, subject);
-                    }
-                    if (tickets.CustomerContact == (int)CustomerServiceContactMethod.Phone)
-                    {
-                        _sMSService.sendMessage(message, userDetail.PhoneNumber);
-                    }
-                    if (tickets.CustomerContact == (int)CustomerServiceContactMethod.Whatsapp)
-                    {
-                        _whatsAppService.sendMessageForCustomerTicket(message, userDetail.PhoneNumber);
-                    }
-
-                    return Ok(new
-                    {
-                        status = true,
-                        message = Messages.TicketClosed.ToDescriptionString()
-                    });
+                    await _emailSender.ReplyForCustomerTicket(message, userDetail.Email, subject);
                 }
+                if (tickets.CustomerContact == (int)CustomerServiceContactMethod.Phone)
+                {
+                    _sMSService.sendMessage(message, userDetail.PhoneNumber);
+                }
+                if (tickets.CustomerContact == (int)CustomerServiceContactMethod.Whatsapp)
+                {
+                    _whatsAppService.sendMessageForCustomerTicket(message, userDetail.PhoneNumber);
+                }                
                 
                 return Ok(new
                 {

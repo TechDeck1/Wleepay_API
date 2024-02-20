@@ -470,7 +470,6 @@ namespace wleepay.API.Controllers
 
         }
 
-
         [HttpPost("GetTaxRates")]
         public async Task<IActionResult> GetAllTaxRatesHistory(PagingRequestForRates pagingRequestForRates)
         {
