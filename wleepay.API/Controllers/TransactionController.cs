@@ -42,11 +42,11 @@ namespace wleepay.API.Controllers
         [HttpPost("History")]
         public async Task<IActionResult> GetTrasactionHistoryByWalletId([FromBody] TransactionPageRequest request)
         {
-            var transactionList = await _transactionService.GetTransactionsByWalletId(request.WalletId, request.Index, request.Size);
-            if (transactionList.Count() > 0)
+            var transactionResult = await _transactionService.GetTransactionsByWalletId(request.WalletId, request.Index, request.Size);
+            if (transactionResult.Transactions.Count() > 0)
             {
-                var transactionResourceList = _mapper.Map<IEnumerable<Transaction>, IEnumerable<TransactionHistoryResource>>(transactionList);
-                return Ok(transactionResourceList);
+                var transactionResourceList = _mapper.Map<IEnumerable<Transaction>, IEnumerable<TransactionHistoryResource>>(transactionResult.Transactions);
+                return Ok(new { Transactions = transactionResourceList, TotalCount = transactionResult.TotalCount });
             }
 
             return Ok(new List<TransactionResource>());
@@ -110,13 +110,13 @@ namespace wleepay.API.Controllers
             var transactionToCreate = _mapper.Map<CreateTransactionResource, Transaction>(transactionRequest);
             var newTransaction = await _transactionService.InitiateTransaction(transactionToCreate);
             var newTransactionResource = _mapper.Map<Transaction, TransactionResource>(newTransaction);
-          
+
             if (newTransactionResource != null)
             {
 
                 await SendTransactionActionSMS(newTransaction);
 
-                if(transactionRequest.TransferTypeId == Core.Enums.TransferTypes.TopUpSystemWallet.GetHashCode())
+                if (transactionRequest.TransferTypeId == Core.Enums.TransferTypes.TopUpSystemWallet.GetHashCode())
                 {
                     await SendTransactionActionEmail(newTransaction);
 
@@ -243,8 +243,8 @@ namespace wleepay.API.Controllers
 
             return Ok(new
             {
-                TotalCount= result.TotalCount,
-                Transactions= transactionResources
+                TotalCount = result.TotalCount,
+                Transactions = transactionResources
             });
 
         }
@@ -325,7 +325,7 @@ namespace wleepay.API.Controllers
 
                 foreach (var agent in agentsListResource)
                 {
-                   result = _smsService.sendMessage(messageText, agent.UserDetail.PhoneNumber);
+                    result = _smsService.sendMessage(messageText, agent.UserDetail.PhoneNumber);
                 }
                 return result;
             }
@@ -388,22 +388,22 @@ namespace wleepay.API.Controllers
             }
 
             string result = string.Empty;
-           
+
             if (!string.IsNullOrEmpty(emailText))
                 result = await _emailSender.EmailForPaymentRecieved(emailText, userWallet.ApplicationUser.UserDetail.PhoneNumber);
 
             return result;
         }
 
-        private string GenerateEmailText(double amount, Currency currency, string userName, long transactionId, Core.Enums.TransactionStatus status, int transactionTypeId, bool isCashout = false, string recieverName="")
+        private string GenerateEmailText(double amount, Currency currency, string userName, long transactionId, Core.Enums.TransactionStatus status, int transactionTypeId, bool isCashout = false, string recieverName = "")
         {
             string messageText = string.Empty;
             string amountString = amount.ToString("C2", new CultureInfo("en-US"));
-            string currencyName = currency.Symbol == "L$" ? "LRD" : "USD"; 
+            string currencyName = currency.Symbol == "L$" ? "LRD" : "USD";
 
             if (transactionTypeId == Core.Enums.TransferTypes.TopUpSystemWallet.GetHashCode())
                 messageText = MessagesTemplates.PaymentReceivedEmail(amountString, currencyName, userName, transactionId, recieverName);
-            
+
             return messageText;
         }
 

@@ -11,7 +11,7 @@ namespace wleepay.Core.Services
 {
     public interface ITransactionService
     {
-        Task<IEnumerable<Transaction>> GetTransactionsByWalletId(long walletId, int pageIndex = 0, int pageSize = 10);
+        Task<TransactionResponseResource> GetTransactionsByWalletId(long walletId, int pageIndex = 0, int pageSize = 10);
         Task<IEnumerable<Transaction>> GetTransactionsByType(TransferTypes type, int pageIndex = 0, int pageSize = 10);
         Task<Transaction> GetTransactionsById(long Id);
         Task<IEnumerable<Transaction>> GetWalletsTransactions(IEnumerable<long> walletIdList);

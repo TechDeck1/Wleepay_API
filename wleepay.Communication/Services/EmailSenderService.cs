@@ -690,7 +690,7 @@ namespace wleepay.Communication.Services
 
             //msg.AddCc("lionelbernard@wleepay.com");
 
-            msg.AddTo(new EmailAddress(recipientEmail, "shi//a"));
+            msg.AddTo(new EmailAddress(recipientEmail, "shikha"));
 
             var response = await client.SendEmailAsync(msg);
             Console.WriteLine(response.Body.ToString(), response.StatusCode);

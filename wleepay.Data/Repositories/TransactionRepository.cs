@@ -144,7 +144,7 @@ namespace wleepay.Data.Repositories
                 .FirstOrDefaultAsync();
         }
 
-        public async Task<IEnumerable<Transaction>> GetTransactionsByWalletId(long walletId, int pageIndex = 0, int pageSize = 10)
+        public async Task<TransactionResponseResource> GetTransactionsByWalletId(long walletId, int pageIndex = 0, int pageSize = 10)
         {
             int takeCount = pageSize;
             int skipCount = pageIndex * pageSize;
@@ -154,7 +154,9 @@ namespace wleepay.Data.Repositories
             if(walletId != 0)
                 transactionQuery = transactionQuery.Where(w=> w.FromWalletId == walletId || w.ToWalletId == walletId);
 
-            return await transactionQuery
+            TransactionResponseResource response = new TransactionResponseResource();
+            response.TotalCount = transactionQuery.Count();
+            response.Transactions = await transactionQuery
                 .OrderByDescending(w => w.CreatedDate)
                 .Skip(skipCount)
                 .Take(takeCount)
@@ -163,6 +165,8 @@ namespace wleepay.Data.Repositories
                 .Include(s => s.ToWallet.ApplicationUser.UserDetail)
                 .Include(s => s.TransferType)
                 .ToListAsync();
+
+            return response;
         }
 
         public async Task<IEnumerable<Transaction>> GetTransactionsByType(TransferTypes type, int pageIndex = 0, int pageSize = 10)

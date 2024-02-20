@@ -10,7 +10,7 @@ namespace wleepay.Core.Repositories
 {
     public interface ITransactionRepository : IRepository<Transaction>
     {
-        Task<IEnumerable<Transaction>> GetTransactionsByWalletId(long walletId, int pageIndex = 0, int pageSize = 10);
+        Task<TransactionResponseResource> GetTransactionsByWalletId(long walletId, int pageIndex = 0, int pageSize = 10);
         Task<IEnumerable<Transaction>> GetTransactionsByType(Core.Enums.TransferTypes type, int pageIndex = 0, int pageSize = 10);
         Task<IEnumerable<Transaction>> GetWalletsTransactions(IEnumerable<long> walletIdList);
         Task<Transaction> AddUpdateTransaction(Transaction transactionDetail);

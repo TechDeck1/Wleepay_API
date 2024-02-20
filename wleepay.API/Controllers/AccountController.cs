@@ -838,9 +838,16 @@ namespace wleepay.API.Controllers
                 if (updatedDetail.Succeeded)
                 {
                     // send email to staff and admin for password change
-                    await _emailSender.SendPasswordChangeEmailToSystemAdminstrator(decryptedEmail, userDetails.FirstName, user.PhoneNumber);
-                    await _emailSender.SendPasswordChangeEmailToStaff(decryptedEmail, userDetails.FirstName, userDetails.PhoneNumber);
-
+                    var userRole = await _userManager.GetRolesAsync(user);
+                    if (userRole.FirstOrDefault() != null && userRole.FirstOrDefault() == "SystemAdmin")
+                    {
+                        await _emailSender.SendPasswordChangeEmailToStaff(decryptedEmail, userDetails.FirstName, userDetails.PhoneNumber);
+                    }
+                    else
+                    {
+                        await _emailSender.SendPasswordChangeEmailToStaff(decryptedEmail, userDetails.FirstName, userDetails.PhoneNumber);
+                        await _emailSender.SendPasswordChangeEmailToSystemAdminstrator(decryptedEmail, userDetails.FirstName, user.PhoneNumber);
+                    }
                     // return response
                     return Ok(new
                     {
@@ -1218,12 +1225,12 @@ namespace wleepay.API.Controllers
         public async Task<IActionResult> UpdatePermissions([FromBody] StaffPermissionAndRoleResource staffPermissionAndRoleResource)
         {
             var user = await _userManager.FindByEmailAsync(staffPermissionAndRoleResource.EmailId);
-            if(user == null)
+            if (user == null)
             {
                 return BadRequest();
             }
-             var userDetail = await _userDetailsService.GetUserDetailsById(user.Id);
-            if(userDetail == null)
+            var userDetail = await _userDetailsService.GetUserDetailsById(user.Id);
+            if (userDetail == null)
             {
                 return BadRequest();
             }
@@ -1258,10 +1265,67 @@ namespace wleepay.API.Controllers
             await _usersStaffRoleService.AddUserStaffRole(usersStaffRole);
 
             //add user details
-            var result =  await _userDetailsService.AddOrUpdateUserDetails(userDetail);
+            var result = await _userDetailsService.AddOrUpdateUserDetails(userDetail);
             return Ok(result);
 
         }
+
+        [HttpPost("ForgotPinSystemAdmin")]
+        public async Task<IActionResult> ForgotPinSystemAdmin([FromBody] ForgotPinResourceSystemAdmin forgotPinResourceSystemAdmin)
+        {
+            //get user detail by email
+            var user = await _userManager.FindByEmailAsync(forgotPinResourceSystemAdmin.Email);
+            if (user == null)
+                return BadRequest(Messages.NotFound.ToDescriptionString());
+
+            var userDetails = await _userDetailsService.GetUserDetailsById(user.Id);
+            if (userDetails != null)
+            {
+                //check if users phonenumber, email, security answer and security question matches
+                if (userDetails.PhoneNumber == forgotPinResourceSystemAdmin.PhoneNumber && user.Email == forgotPinResourceSystemAdmin.Email)
+                {
+                    //generated the token
+                    var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+                    var secretKey = _configuration.GetSection("SecretKeyForEncryptAndDecrypt").Value; //secret key
+                    string encryptedEmail = Common.Encrypt(forgotPinResourceSystemAdmin.Email, secretKey);
+                    var EncodedEncryptedEmail = HttpUtility.UrlEncode(encryptedEmail);
+                    var encodedToken = HttpUtility.UrlEncode(token);
+
+                    // Created callback url
+                    string callbackUrl = $"{forgotPinResourceSystemAdmin.ClientURI}?token={encodedToken}&email={(EncodedEncryptedEmail)}";
+
+                    var username = userDetails.FirstName + " " + userDetails.LastName;
+
+                    // Store token in db by userId
+                    TokenStorage tokenStorage = new TokenStorage();
+                    tokenStorage.UserId = user.Id;
+                    tokenStorage.Token = encodedToken;
+                    await _tokenStorageService.UpdateToken(tokenStorage);
+
+                    //send mail to user for forgot password link
+                    await _emailSender.SendForgotPasswordEmailLink(forgotPinResourceSystemAdmin.Email, callbackUrl, username);
+
+                    return Ok(new
+                    {
+                        Success = true,
+                        Message = Messages.LinkSentForResetPassword.ToDescriptionString()
+                    });
+
+                }
+                else
+                {
+                    return Ok(new
+                    {
+                        Success = false,
+                        Message = Messages.DetailsNotCorrect.ToDescriptionString()
+
+                    });
+
+                }
+            }
+            return BadRequest();
+        }
+
 
         #region helper methods
         private string GenerateJSONWebToken(UserDetail userInfo)

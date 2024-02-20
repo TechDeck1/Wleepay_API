@@ -31,7 +31,7 @@ namespace wleepay.Services
             return await _unitOfWork.Transaction.GetTransactionDetails(Id);
         }
 
-        public async Task<IEnumerable<Transaction>> GetTransactionsByWalletId(long walletId, int pageIndex = 0, int pageSize = 10)
+        public async Task<TransactionResponseResource> GetTransactionsByWalletId(long walletId, int pageIndex = 0, int pageSize = 10)
         {
             return await _unitOfWork.Transaction.GetTransactionsByWalletId(walletId, pageIndex, pageSize);
         }

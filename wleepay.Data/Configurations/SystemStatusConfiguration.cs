@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Text;
 using wleepay.Core.Models;
 
+
 namespace wleepay.Data.Configurations
 {
     public class SystemStatusConfiguration : IEntityTypeConfiguration<SystemStatus>

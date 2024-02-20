@@ -15,6 +15,15 @@ namespace wleepay.API.Resources
        
     }
 
+    public class ForgotPinResourceSystemAdmin
+    {
+        [Required]
+        [EmailAddress]
+        public string? Email { get; set; }
+        public string PhoneNumber { get; set; }
+        public string? ClientURI { get; set; }
+    }
+
     public class LinkForLoginSetupResource
     {
         public string? Email { get; set; }
