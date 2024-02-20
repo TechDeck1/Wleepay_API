@@ -2,9 +2,14 @@
 using System.Threading.Tasks;
 using wleepay.Core.Services;
 using wleepay.API.Resources;
+using Microsoft.AspNetCore.Authorization;
 
 namespace wleepay.API.Controllers
 {
+    [Route("api/[controller]")]
+    [ApiController]
+    [Authorize(AuthenticationSchemes = "Bearer")]
+
     public class SystemActivityController : Controller
     {
 
@@ -17,7 +22,7 @@ namespace wleepay.API.Controllers
             _systemActivityLogsService = systemActivityLogsService;
         }
 
-        [HttpGet("SystemLogs")]
+        [HttpPost("SystemLogs")]
         public async Task<IActionResult> GetSystemAllLogs(Pagination request)
         {
             if (!string.IsNullOrEmpty(request.Email))
