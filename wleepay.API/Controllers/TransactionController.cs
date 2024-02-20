@@ -266,7 +266,7 @@ namespace wleepay.API.Controllers
             });
         }
 
-        [HttpPost("GetTransactionsByUserId/{userId}")]
+        [HttpGet("GetTransactionsByUserId/{userId}")]
         public async Task<IActionResult> GetTransactionsByUserId(string userId)
         {
             var transactionResult = await _transactionService.GetTransactionsByUserId(userId);

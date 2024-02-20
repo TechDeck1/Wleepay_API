@@ -6,11 +6,6 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace wleepay.API.Controllers
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    //[Authorize(AuthenticationSchemes = "Bearer")]
-    [AllowAnonymous]
-
 
     public class SystemActivityController : Controller
     {
@@ -24,7 +19,7 @@ namespace wleepay.API.Controllers
             _systemActivityLogsService = systemActivityLogsService;
         }
 
-        [HttpPost("SystemLogs")]
+        [HttpGet("SystemLogs")]
         public async Task<IActionResult> GetSystemAllLogs(Pagination request)
         {
             if (!string.IsNullOrEmpty(request.Email))
