@@ -336,7 +336,7 @@ namespace wleepay.API.Controllers
                 // Check if the given date is expired (more than 2 minutes ago)
                 bool isExpired = minutesDifference >= 1;
 
-                object data = null;
+                object Data = null;
                 if (!isExpired)
                 {
                     if (userDetails.VerificationCode == model.Code)
@@ -368,7 +368,7 @@ namespace wleepay.API.Controllers
 
                         return Ok(new
                         {
-                            data = (new
+                            Data = (new
                             {
                                 UserId = userDetails.UserId,
                                 Token = token,
@@ -387,7 +387,7 @@ namespace wleepay.API.Controllers
                     {
                         return Ok(new
                         {
-                            data,
+                            Data,
                             IsExpired = false,
                             Success = true,
                             Message =Messages.WrongOtp.ToDescriptionString(),
@@ -399,7 +399,7 @@ namespace wleepay.API.Controllers
                 {
                     return Ok(new 
                     {
-                        data,
+                        Data,
                         IsExpired = true,
                         Success=false,
                         Message = Messages.OtpExpired.ToDescriptionString(),

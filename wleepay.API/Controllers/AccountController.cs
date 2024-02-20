@@ -805,9 +805,10 @@ namespace wleepay.API.Controllers
         [HttpPost("ResetPassword")]
         public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordResource resetPasswordDto)
         {
-            if (!ModelState.IsValid)
+            if(string.IsNullOrEmpty(resetPasswordDto.Password) && string.IsNullOrEmpty(resetPasswordDto.ConfirmPassword))
+            {
                 return BadRequest();
-
+            }
             var secretKey = _configuration.GetSection("SecretKeyForEncryptAndDecrypt").Value; //secret key
             string decryptedEmail = Common.Decrypt(resetPasswordDto.Email, secretKey); // helper function for decryption
 
@@ -1286,13 +1287,17 @@ namespace wleepay.API.Controllers
                 {
                     //generated the token
                     var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+                    var baseUrl = _configuration.GetSection("BaseUrl").Value;
                     var secretKey = _configuration.GetSection("SecretKeyForEncryptAndDecrypt").Value; //secret key
+
                     string encryptedEmail = Common.Encrypt(forgotPinResourceSystemAdmin.Email, secretKey);
                     var EncodedEncryptedEmail = HttpUtility.UrlEncode(encryptedEmail);
                     var encodedToken = HttpUtility.UrlEncode(token);
 
+                    var clientURI = baseUrl + "/set-pin";
+
                     // Created callback url
-                    string callbackUrl = $"{forgotPinResourceSystemAdmin.ClientURI}?token={encodedToken}&email={(EncodedEncryptedEmail)}";
+                    string callbackUrl = $"{clientURI}?token={encodedToken}&email={(EncodedEncryptedEmail)}";
 
                     var username = userDetails.FirstName + " " + userDetails.LastName;
 
