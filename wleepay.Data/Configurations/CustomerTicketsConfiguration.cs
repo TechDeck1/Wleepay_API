@@ -36,6 +36,9 @@ namespace wleepay.Data.Configurations
              .Property(u => u.CustomerContact);
 
             builder
+             .Property(u => u.UserId);
+
+            builder
                 .Property(u => u.IssueTypeId)
                 .IsRequired();
 

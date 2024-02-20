@@ -80,6 +80,8 @@ namespace wleepay.API.Controllers
                 var customerTicketsToInsert = _mapper.Map<AddCustomerTicketRequestResponse, CustomerTickets>(customerTickets);
 
                 customerTicketsToInsert.IsSeen = false;
+                customerTicketsToInsert.UserId = customerTickets.UserId;
+
                 customerTicketsToInsert.Notes.FirstOrDefault().AddedBy= userDetail.UserDetail.UserId;
                 var tickets = await _customerTicketsService.AddUpdateCustomerTickets(customerTicketsToInsert);
 
