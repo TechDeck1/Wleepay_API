@@ -81,6 +81,7 @@ namespace wleepay.API.Controllers
 
                 customerTicketsToInsert.IsSeen = false;
                 customerTicketsToInsert.UserId = customerTickets.UserId;
+                customerTicketsToInsert.Source = userDetail.UserRoles.FirstOrDefault().Role.Name;
 
                 customerTicketsToInsert.Notes.FirstOrDefault().AddedBy= userDetail.UserDetail.UserId;
                 var tickets = await _customerTicketsService.AddUpdateCustomerTickets(customerTicketsToInsert);

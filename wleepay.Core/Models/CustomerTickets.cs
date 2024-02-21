@@ -18,6 +18,7 @@ namespace wleepay.Core.Models
         public string PhoneNumber { get; set; }
         public string UserId { get; set; }
         public int IssueTypeId { get; set; }
+        public string Source { get; set; }
         public int CustomerContact { get; set; }
         public int Status { get; set; }
         public DateTime CreatedDate { get; set; }

@@ -28,6 +28,9 @@ namespace wleepay.Data.Configurations
              .Property(u => u.UpdatedDate);
 
             builder
+           .Property(u => u.Source);
+
+            builder
               .Property(u => u.PhoneNumber)
               .HasMaxLength(13)
               .IsRequired();
