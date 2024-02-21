@@ -60,16 +60,16 @@ namespace wleepay.Data.Repositories
             List<CustomerTickets> tickets;
             if (string.IsNullOrEmpty(phoneNumber) && status == (int)CustomerTicketStatus.Closed)
             {
-                 tickets = await WPContext.CustomerTickets.Include(x => x.Notes)
-                                                            .Include(x => x.IssueType)
-                                                            .OrderByDescending(x => x.CreatedDate)
-                                                            .Skip(skipCount)
-                                                            .Take(takeCount)
-                                                            .ToListAsync();
-                 totalCount = await WPContext.CustomerTickets.CountAsync();
+                tickets = await WPContext.CustomerTickets.Include(x => x.Notes)
+                                                           .Include(x => x.IssueType)
+                                                           .OrderByDescending(x => x.CreatedDate)
+                                                           .Skip(skipCount)
+                                                           .Take(takeCount)
+                                                           .ToListAsync();
+                totalCount = await WPContext.CustomerTickets.CountAsync();
 
             }
-            if (string.IsNullOrEmpty(phoneNumber) && status == (int)CustomerTicketStatus.Open)
+            else if (string.IsNullOrEmpty(phoneNumber) && status == (int)CustomerTicketStatus.Open)
             {
                 tickets = await WPContext.CustomerTickets.Where(x => x.Status == (int)CustomerTicketStatus.Open)
                                                            .Include(x => x.Notes)
@@ -79,6 +79,18 @@ namespace wleepay.Data.Repositories
                                                            .Take(takeCount)
                                                            .ToListAsync();
                 totalCount = await WPContext.CustomerTickets.Where(x => x.Status == (int)CustomerTicketStatus.Open).CountAsync();
+
+            }
+            else if (!string.IsNullOrEmpty(phoneNumber) && status == (int)CustomerTicketStatus.Closed)
+            {
+                tickets = await WPContext.CustomerTickets.Where(x => x.PhoneNumber.Contains(phoneNumber))
+                                                             .Include(x => x.Notes)
+                                                             .Include(x => x.IssueType)
+                                                             .OrderByDescending(x => x.CreatedDate)
+                                                             .Skip(skipCount)
+                                                             .Take(takeCount)
+                                                             .ToListAsync();
+                totalCount = await WPContext.CustomerTickets.Where(x => x.Status == (int)CustomerTicketStatus.Open && x.PhoneNumber.Contains(phoneNumber)).CountAsync();
 
             }
             else
