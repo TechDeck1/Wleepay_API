@@ -17,7 +17,9 @@ namespace wleepay.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize(AuthenticationSchemes = "Bearer")]
+    //[Authorize(AuthenticationSchemes = "Bearer")]
+    [AllowAnonymous]
+
     public class WalletController : Controller
     {
         private readonly IMapper _mapper;

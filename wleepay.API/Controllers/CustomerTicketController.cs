@@ -19,6 +19,7 @@ namespace wleepay.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [AllowAnonymous]
 
     public class CustomerTicketController : Controller
     {

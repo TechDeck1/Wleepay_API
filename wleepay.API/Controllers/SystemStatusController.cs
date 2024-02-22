@@ -13,7 +13,9 @@ namespace wleepay.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize(AuthenticationSchemes = "Bearer")]
+    //[Authorize(AuthenticationSchemes = "Bearer")]
+    [AllowAnonymous]
+
     public class SystemStatusController : Controller
     {
         private readonly ISystemStatusService _systemStatusService;
