@@ -9,6 +9,7 @@ namespace wleepay.Core.Services
     public interface IUsersStaffRoleService
     {
         Task<UsersStaffRole> AddUserStaffRole(UsersStaffRole usersStaffRole);
+        Task<UsersStaffRole> UpdateUserStaffRole(UsersStaffRole usersStaffRole);
 
     }
 }

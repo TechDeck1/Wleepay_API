@@ -18,12 +18,14 @@ using SendGrid.Helpers.Mail;
 using Microsoft.Extensions.Configuration;
 using Twilio;
 using Newtonsoft.Json.Linq;
+using static wleepay.Communication.EmailTemplates.EmailTemplates;
 
 namespace wleepay.Communication.Services
 {
     public class EmailSenderService : IEmailSender
     {
         private readonly IConfiguration _configuration;
+
 
         public EmailSenderService(IConfiguration configuration)
         {
@@ -65,7 +67,6 @@ namespace wleepay.Communication.Services
             Console.WriteLine(response.Body.ToString(), response.StatusCode);
 
             // A success status code means SendGrid received the email request and will process it.
-            // If email is not received, use this URL to debug: https://app.sendgrid.com/email_activity 
             if (response.IsSuccessStatusCode)
             {
                 Console.WriteLine(response.IsSuccessStatusCode ? "Email queued successfully!" : "Something went wrong!");
@@ -134,8 +135,10 @@ namespace wleepay.Communication.Services
             var recipientEmail = "ariel.ranjot@gmail.com";
 
             string resetPasswordLink = uri;
+            EmailHtmlTemplates template = new EmailHtmlTemplates();
 
-            var htmlTemplate = $"Dear {username},\n\nPlease click the following link to reset your password:\n {resetPasswordLink}";
+            var htmlTemplate = template.EmailTemplate(email, uri, username);
+           // var htmlTemplate = $"Dear {username},\n\nPlease click the following link to reset your password:\n {resetPasswordLink}";
 
             // Sender's email address and credentials
             string senderEmail = "ranjotk@arielsoftwares.com";
@@ -273,7 +276,11 @@ namespace wleepay.Communication.Services
 
             string LinkForAccountSetup = uri;
 
-            var htmlTemplate = $"Dear {username},\n\nPlease click the following link to complete your signup process:\n {LinkForAccountSetup}";
+
+            EmailHtmlTemplates template = new EmailHtmlTemplates();
+
+            var htmlTemplate = template.EmailTemplate(email, uri, username);
+            //var htmlTemplate = $"Dear {username},\n\nPlease click the following link to complete your signup process:\n {LinkForAccountSetup}";
 
             // Sender's email address and credentials
             string senderEmail = "ranjotk@arielsoftwares.com";
@@ -582,7 +589,11 @@ namespace wleepay.Communication.Services
               var recipientEmail = "ariel.ranjot@gmail.com";
             string resetPasswordLink = uri;
 
-            var htmlTemplate = $"Dear {username},\n\n Please click the following link to complete your sign up process:\n\n{resetPasswordLink}";
+            EmailHtmlTemplates template = new EmailHtmlTemplates();
+
+            var htmlTemplate = template.EmailTemplate(email, uri, username);
+
+           // var htmlTemplate = $"Dear {username},\n\n Please click the following link to complete your sign up process:\n\n{resetPasswordLink}";
 
             // Sender's email address and credentials
             string senderEmail = "ranjotk@arielsoftwares.com";
@@ -699,5 +710,43 @@ namespace wleepay.Communication.Services
             return response.IsSuccessStatusCode ? "Email queued successfully!" : "Something went wrong!";
            
         }
+
+        public async Task<string> SendEmailAsync(string email, string template, string name, string mailSubject)
+        {
+
+            var subject = mailSubject;
+            // recipient's email address and credentials
+            var recipientEmail = "ariel.ranjot@gmail.com";
+
+            // Sender's email address and credentials
+            string senderEmail = "ranjotk@arielsoftwares.com";
+
+            var apiKey = _configuration.GetSection("SendGrid:WleePaySendGridApiKey").Value.ToString();
+            var client = new SendGridClient(apiKey);
+            var msg = new SendGridMessage()
+            {
+                From = new EmailAddress(senderEmail, "lionel"),
+                Subject = subject,
+                PlainTextContent = "",
+                HtmlContent = template
+
+            };
+            msg.AddTo(new EmailAddress(recipientEmail, name));
+            var response = await client.SendEmailAsync(msg);
+
+            // A success status code means SendGrid received the email request and will process it.
+            if (response.IsSuccessStatusCode)
+            {
+                Console.WriteLine(response.IsSuccessStatusCode ? "Email queued successfully!" : "Something went wrong!");
+                return response.IsSuccessStatusCode ? "Email queued successfully!" : "Something went wrong!";
+            }
+            else
+            {
+                return response.IsSuccessStatusCode ? "Email queued successfully!" : "Something went wrong!";
+
+            }
+
+        }
+
     }
 }

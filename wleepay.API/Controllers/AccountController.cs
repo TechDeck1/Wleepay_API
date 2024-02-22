@@ -36,6 +36,9 @@ using wleepay.API.Helpers;
 using DevExpress.XtraEditors.Filtering;
 using NLog.Targets;
 using System.Text.Json;
+using static wleepay.Communication.EmailTemplates.EmailTemplates;
+using static wleepay.Communication.EmailTemplates.PasswordChangeTemplate;
+using static wleepay.Communication.EmailTemplates.AccountActivatedTemplate;
 
 namespace wleepay.API.Controllers
 {
@@ -777,8 +780,13 @@ namespace wleepay.API.Controllers
                     tokenStorage.Token= encodedToken;
                     await _tokenStorageService.UpdateToken(tokenStorage);
 
+                    EmailHtmlTemplates template = new EmailHtmlTemplates();
+
+                    var htmlTemplate = template.EmailTemplate(forgotPasswordDto.Email, callbackUrl, username);
+
+                    var subject = "Reset password token";
                     //send mail to user for forgot password link
-                    await _emailSender.SendForgotPasswordEmailLink(forgotPasswordDto.Email, callbackUrl , username);
+                    await _emailSender.SendEmailAsync(forgotPasswordDto.Email, htmlTemplate, username, subject);
 
                     return Ok(new 
                     {
@@ -839,15 +847,47 @@ namespace wleepay.API.Controllers
                 {
                     // send email to staff and admin for password change
                     var userRole = await _userManager.GetRolesAsync(user);
-                    if (userRole.FirstOrDefault() != null && userRole.FirstOrDefault() == "SystemAdmin")
+                    var allAdmins = await _userDetailsService.GetUserByRole((int)Role.SuperAdmin);
+
+                    //if (userRole.FirstOrDefault() != null && userRole.FirstOrDefault() == "SystemAdmin")
+                    //{
+                    //    PasswordChangeTemplateForStaff passwordChangeTemplateForStaff = new PasswordChangeTemplateForStaff
+                    //    {
+                    //        StaffEmail = decryptedEmail,
+                    //        StaffFirstName = userDetails.FirstName,
+                    //        StaffPhoneNumber = userDetails.PhoneNumber
+                    //    };
+
+                    //    string htmlTemplateForstaff = passwordChangeTemplateForStaff.GenerateHtml();
+                    //    await _emailSender.SendEmailAsync(decryptedEmail, htmlTemplateForstaff, userDetails.FirstName);
+                    //   // await _emailSender.SendPasswordChangeEmailToStaff(decryptedEmail, userDetails.FirstName, userDetails.PhoneNumber);
+                    //}
+                    //else
+                    //{
+                    PasswordChangeTemplateForStaff passwordChangeTemplateForStaff = new PasswordChangeTemplateForStaff
                     {
-                        await _emailSender.SendPasswordChangeEmailToStaff(decryptedEmail, userDetails.FirstName, userDetails.PhoneNumber);
-                    }
-                    else
+                        StaffEmail = decryptedEmail,
+                        StaffFirstName = userDetails.FirstName,
+                        StaffPhoneNumber = userDetails.PhoneNumber
+                    };
+                    var subject = "Alert: Wleepay portal password change notice (Do not reply)";
+                    string htmlTemplateForstaff = passwordChangeTemplateForStaff.GenerateHtml();
+                    await _emailSender.SendEmailAsync(decryptedEmail, htmlTemplateForstaff, userDetails.FirstName, subject);
+                    //await _emailSender.SendPasswordChangeEmailToStaff(decryptedEmail, userDetails.FirstName, userDetails.PhoneNumber);
+
+                    PasswordChangeTemplateForSystemAdmin passwordChangeTemplateForSystemAdmin = new PasswordChangeTemplateForSystemAdmin
                     {
-                        await _emailSender.SendPasswordChangeEmailToStaff(decryptedEmail, userDetails.FirstName, userDetails.PhoneNumber);
-                        await _emailSender.SendPasswordChangeEmailToSystemAdminstrator(decryptedEmail, userDetails.FirstName, user.PhoneNumber);
+                        StaffEmail = decryptedEmail,
+                        StaffFirstName = userDetails.FirstName,
+                        StaffPhoneNumber = userDetails.PhoneNumber
+                    };
+                    string htmlTemplateForSystemAdmin = passwordChangeTemplateForSystemAdmin.GenerateHtml();
+                    foreach (var admin in allAdmins)
+                    {
+                        await _emailSender.SendEmailAsync(admin.Email, htmlTemplateForSystemAdmin, admin.UserDetail.FirstName, subject);
+                        //await _emailSender.SendPasswordChangeEmailToSystemAdminstrator(decryptedEmail, userDetails.FirstName, user.PhoneNumber);
                     }
+                    // }
                     // return response
                     return Ok(new
                     {
@@ -915,10 +955,22 @@ namespace wleepay.API.Controllers
 
                         var allSystemAdmins = await _userDetailsService.GetUserByRole((int)Role.SystemAdmin);
                         var allSystemAdminsList = _mapper.Map<IEnumerable<ApplicationUser>, IEnumerable<ApplicationUserResource>>(allSystemAdmins);
+                       
+                        AccountActivatedTemplateForSystemAdmin template = new AccountActivatedTemplateForSystemAdmin
+                        {
+                            StaffEmail = decryptedEmail,
+                            StaffFirstName = userDetails.FirstName,
+                            StaffPhoneNumber = userDetails.PhoneNumber,
+                            StaffPermissions = userDetails.Permissions
 
+                        };
+
+                        string htmlTemplate = template.GenerateHtml();
+                        var subject = "Wleepay portal account setup/activation confirmation notice (Do not reply)";
                         foreach (var systemAdmin in allSystemAdminsList)
                         {
-                            await _emailSender.EmailForAccountActivatedToSystemAdmin(decryptedEmail, userDetails.FirstName, userDetails.PhoneNumber, userDetails.Permissions);
+                            await _emailSender.SendEmailAsync(systemAdmin.Email,htmlTemplate, userDetails.FirstName, subject);
+                           // await _emailSender.EmailForAccountActivatedToSystemAdmin(decryptedEmail, userDetails.FirstName, userDetails.PhoneNumber, userDetails.Permissions);
                         }
 
                         //add logs
@@ -1187,8 +1239,18 @@ namespace wleepay.API.Controllers
                         
                         //add user details
                         await _userDetailsService.AddOrUpdateUserDetails(userDetails);
-                        
-                        await _emailSender.EmailForAccountCreationToSystemAdmin(decryptedEmail, userDetails.FirstName, userDetails.PhoneNumber);
+
+                        AccountCreationTemplateForSystemAdmin template = new AccountCreationTemplateForSystemAdmin
+                        {
+                            SystemAdminEmail = decryptedEmail,
+                            SystemAdminFirstName = userDetails.FirstName,
+                            SystemAdminPhoneNumber = userDetails.PhoneNumber
+                        };
+
+                        var subject = "Wleepay portal account setup/activation confirmation notice (Do not reply)";
+                        string htmlTemplate = template.GenerateHtml();
+                        await _emailSender.SendEmailAsync(decryptedEmail, htmlTemplate, userDetails.FirstName, subject);
+                        //await _emailSender.EmailForAccountCreationToSystemAdmin(decryptedEmail, userDetails.FirstName, userDetails.PhoneNumber);
 
                         systemActivityLog.Description = GenericMessagesForSystemLogs.CompleteLoginProcess.ToDescriptionString();
                         var addLogs = await _systemActivityLogsService.AddSystemLogs(systemActivityLog);
@@ -1262,7 +1324,7 @@ namespace wleepay.API.Controllers
             usersStaffRole.UserId = user.Id;
             usersStaffRole.CreatedDate = DateTime.Now;
             usersStaffRole.StaffRoleId = staffPermissionAndRoleResource.StaffRoleId;
-            await _usersStaffRoleService.AddUserStaffRole(usersStaffRole);
+            await _usersStaffRoleService.UpdateUserStaffRole(usersStaffRole);
 
             //add user details
             var result = await _userDetailsService.AddOrUpdateUserDetails(userDetail);
@@ -1306,8 +1368,15 @@ namespace wleepay.API.Controllers
                     tokenStorage.Token = encodedToken;
                     await _tokenStorageService.UpdateToken(tokenStorage);
 
+                    EmailHtmlTemplates template = new EmailHtmlTemplates();
+                    var htmlTemplate = template.EmailTemplate(forgotPinResourceSystemAdmin.Email, callbackUrl, username);
+
+                    var subject = "Reset password token";
                     //send mail to user for forgot password link
-                    await _emailSender.SendForgotPasswordEmailLink(forgotPinResourceSystemAdmin.Email, callbackUrl, username);
+                    await _emailSender.SendEmailAsync(forgotPinResourceSystemAdmin.Email, htmlTemplate, username, subject);
+                    
+                    //send mail to user for forgot password link
+                    //await _emailSender.SendForgotPasswordEmailLink(forgotPinResourceSystemAdmin.Email, callbackUrl, username);
 
                     return Ok(new
                     {
@@ -1406,7 +1475,11 @@ namespace wleepay.API.Controllers
                     var token = HttpUtility.UrlEncode(encryptedText);
                     string callbackUrl = $"{linkForLoginSetup.ClientURI}?email={(token)}";
                     var username = userDetails.FirstName + " " + userDetails.LastName;
-                    await _emailSender.SendEmailToStaffToCompleteLoginProcess(linkForLoginSetup.Email, callbackUrl, username);
+                    EmailHtmlTemplates template = new EmailHtmlTemplates();
+                    var subject = "Complete sign-up process";
+                    var htmlTemplate = template.EmailTemplateForAccountSetup(linkForLoginSetup.Email, callbackUrl, username);
+                    await _emailSender.SendEmailAsync(linkForLoginSetup.Email, htmlTemplate, username, subject);
+                   // await _emailSender.SendEmailToStaffToCompleteLoginProcess(linkForLoginSetup.Email, callbackUrl, username);
                    
                     return true;
 
@@ -1443,7 +1516,13 @@ namespace wleepay.API.Controllers
                     var token = HttpUtility.UrlEncode(encryptedText);
                     string callbackUrl = $"{completeSignUpResourceModel.ClientURI}?email={(token)}";
                     var username = userDetails.FirstName + " " + userDetails.LastName;
-                    await _emailSender.SendEmailToSystemAdminToCompleteSignUp(completeSignUpResourceModel.Email, callbackUrl, username);
+                    EmailHtmlTemplates template = new EmailHtmlTemplates();
+
+                    var subject = "Complete sign-up process";
+                    var htmlTemplate = template.EmailTemplateForAccountSetup(completeSignUpResourceModel.Email, callbackUrl, username);
+
+                    await _emailSender.SendEmailAsync(completeSignUpResourceModel.Email, htmlTemplate, username, subject);
+                   // await _emailSender.SendEmailToSystemAdminToCompleteSignUp(completeSignUpResourceModel.Email, callbackUrl, username);
 
                     return true;
 

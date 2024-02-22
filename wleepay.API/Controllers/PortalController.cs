@@ -33,6 +33,9 @@ using System.Text.Json;
 using wleepay.Communication.Services;
 using wleepay.Communication.Templates;
 using wleepay.Services;
+using static wleepay.Communication.EmailTemplates.EmailLockOutTemplate;
+using static wleepay.Communication.EmailTemplates.AccountActivatedTemplate;
+using static wleepay.Communication.EmailTemplates.AccountDeactivatedTemplate;
 
 namespace wleepay.API.Controllers
 {
@@ -123,9 +126,30 @@ namespace wleepay.API.Controllers
             {
                 await _userDetailsService.UpdateUserStatus(user.Id, (int)Status.DeActive);
 
-                //_logger.LogInformation("Login attempt for email {Email} from IP {IPAddress} at {Timestamp}", loginRequest.Email, GetClientIpAddress(), DateTime.UtcNow);
-                await _emailSender.SendEmailAsyncForLockAccountToStaff(loginRequest.Email, userDetails.FirstName,userDetails.PhoneNumber);
-                await  _emailSender.SendEmailAsyncForLockAccountToSystemAdmin(loginRequest.Email, userDetails.FirstName, userDetails.PhoneNumber);
+                EmailLockOutTemplateForStaff emailLockOutTemplateForStaff = new EmailLockOutTemplateForStaff
+                {
+                    StaffEmail = loginRequest.Email,
+                    StaffFirstName = userDetails.FirstName,
+                    StaffPhoneNumber = userDetails.PhoneNumber
+                };
+                var subject = "Failed Login attempt";
+                string htmlTemplateForStaff = emailLockOutTemplateForStaff.GenerateHtml();
+                await _emailSender.SendEmailAsync(loginRequest.Email, htmlTemplateForStaff, userDetails.FirstName, subject);
+
+                EmailLockOutTemplateForSystemAdmin emailLockOutTemplateForSystemAdmin = new EmailLockOutTemplateForSystemAdmin
+                {
+                    StaffEmail = loginRequest.Email,
+                    StaffFirstName = userDetails.FirstName,
+                    StaffPhoneNumber = userDetails.PhoneNumber
+                };
+
+                string htmlTemplateForSystemAdmin = emailLockOutTemplateForSystemAdmin.GenerateHtml();
+                var allAdmins = await _userDetailsService.GetUserByRole((int)Role.SuperAdmin);
+                foreach (var admin in allAdmins)
+                {
+                    await _emailSender.SendEmailAsync(admin.Email, htmlTemplateForSystemAdmin, admin.UserDetail.FirstName, subject);
+                    //await _emailSender.SendPasswordChangeEmailToSystemAdminstrator(decryptedEmail, userDetails.FirstName, user.PhoneNumber);
+                }
 
                 systemActivityLog.Description = GenericMessagesForSystemLogs.AccountLocked.ToDescriptionString();
                  await _systemActivityLogsService.AddSystemLogs(systemActivityLog);
@@ -154,7 +178,7 @@ namespace wleepay.API.Controllers
                 
                 await _systemActivityLogsService.AddSystemLogs(systemActivityLog);
 
-                if (userRole[0] == "Staff")
+                if (userRole[0] == "Staff" || userRole[0] == Role.SystemAdmin.ToDescriptionString())
                 {
                     return Ok(new
                     {
@@ -440,9 +464,26 @@ namespace wleepay.API.Controllers
                     {
                         systemActivityLog.Action = ActionsForSystemLogs.Activate.ToDescriptionString();
                         systemActivityLog.Description = GenericMessagesForSystemLogs.AccountActivated.ToDescriptionString();
-
                         await _emailSender.EmailForAccountActivatedToStaff(model.EmailId, userDetails.FirstName, userDetails.PhoneNumber);
-                        await _emailSender.EmailForAccountActivatedToSystemAdmin(model.EmailId, userDetails.FirstName , userDetails.PhoneNumber, userDetails.Permissions);
+                       
+                        var allSystemAdmins = await _userDetailsService.GetUserByRole((int)Role.SystemAdmin);
+                        var allSystemAdminsList = _mapper.Map<IEnumerable<ApplicationUser>, IEnumerable<ApplicationUserResource>>(allSystemAdmins);
+
+                        AccountActivatedTemplateForSystemAdmin template = new AccountActivatedTemplateForSystemAdmin
+                        {
+                            StaffEmail = model.EmailId,
+                            StaffFirstName = userDetails.FirstName,
+                            StaffPhoneNumber = userDetails.PhoneNumber,
+                            StaffPermissions = userDetails.Permissions
+
+                        };
+                        var subject = "Wleepay portal account setup/activation confirmation notice (Do not reply)";
+                        string htmlTemplate = template.GenerateHtml();
+                        foreach (var systemAdmin in allSystemAdminsList)
+                        {
+                            await _emailSender.SendEmailAsync(systemAdmin.Email, htmlTemplate, userDetails.FirstName, subject);
+                        }
+                        //await _emailSender.EmailForAccountActivatedToSystemAdmin(model.EmailId, userDetails.FirstName , userDetails.PhoneNumber, userDetails.Permissions);
                     }
                     else
                     {
@@ -451,8 +492,35 @@ namespace wleepay.API.Controllers
                         systemActivityLog.Description = GenericMessagesForSystemLogs.AccountDeActivated.ToDescriptionString();
                       
                         _SMSService.sendMessage(message, userDetails.PhoneNumber);
-                        await _emailSender.EmailForAccountDeactivatedToStaff(model.EmailId, userDetails.FirstName, userDetails.PhoneNumber);
-                        await _emailSender.EmailForAccountDeactivatedToSystemAdmin(model.EmailId, userDetails.FirstName, userDetails.PhoneNumber, userDetails.Permissions);
+                        AccountDeactivatedTemplateForStaff accountDeactivatedTemplateForStaff = new AccountDeactivatedTemplateForStaff
+                        {
+                            StaffEmail = model.EmailId,
+                            StaffFirstName = userDetails.FirstName,
+                            StaffPhoneNumber = userDetails.PhoneNumber
+                        };
+                        var subject = "Alert: Wleepay portal account DeActivation notice (Do not reply)";
+                        string htmlTemplateForStaff = accountDeactivatedTemplateForStaff.GenerateHtml();
+                        await _emailSender.SendEmailAsync(model.EmailId, htmlTemplateForStaff, userDetails.FirstName, subject);
+                       // await _emailSender.EmailForAccountDeactivatedToStaff(model.EmailId, userDetails.FirstName, userDetails.PhoneNumber);
+
+                        var allSystemAdmins = await _userDetailsService.GetUserByRole((int)Role.SystemAdmin);
+                        var allSystemAdminsList = _mapper.Map<IEnumerable<ApplicationUser>, IEnumerable<ApplicationUserResource>>(allSystemAdmins);
+
+                        AccountDeactivatedTemplateForSystemAdmin template = new AccountDeactivatedTemplateForSystemAdmin
+                        {
+                            StaffEmail = model.EmailId,
+                            StaffFirstName = userDetails.FirstName,
+                            StaffPhoneNumber = userDetails.PhoneNumber,
+                            StaffPermissions = userDetails.Permissions
+
+                        };
+
+                        string htmlTemplate = template.GenerateHtml();
+                        foreach (var systemAdmin in allSystemAdminsList)
+                        {
+                            await _emailSender.SendEmailAsync(systemAdmin.Email, htmlTemplate, userDetails.FirstName, subject);
+                        }
+                        //await _emailSender.EmailForAccountDeactivatedToSystemAdmin(model.EmailId, userDetails.FirstName, userDetails.PhoneNumber, userDetails.Permissions);
                     }
 
                     var addLogs = await _systemActivityLogsService.AddSystemLogs(systemActivityLog);

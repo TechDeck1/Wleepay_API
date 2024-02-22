@@ -19,19 +19,18 @@ namespace wleepay.Data.Repositories
         }
         public async Task<UsersStaffRole> AddUserStaffRole(UsersStaffRole usersStaffRole)
         {
-            if (usersStaffRole.UserId == null)
-            {
-                await WPContext.UsersStaffRole.AddAsync(usersStaffRole);
-                WPContext.SaveChanges();
-            }
-            else
-            {
-                var result = WPContext.UsersStaffRole.Where(x=>x.UserId == usersStaffRole.UserId).FirstOrDefault();
-                result.UpdatedDate = DateTime.Now;
-                result.StaffRoleId = usersStaffRole.StaffRoleId;
-                WPContext.SaveChanges();
+            await WPContext.UsersStaffRole.AddAsync(usersStaffRole);
+            WPContext.SaveChanges();
+            return usersStaffRole;
+        }
 
-            }
+        public async Task<UsersStaffRole> UpdateUserStaffRole(UsersStaffRole usersStaffRole)
+        {
+            
+            var result = WPContext.UsersStaffRole.Where(x => x.UserId == usersStaffRole.UserId).FirstOrDefault();
+            result.UpdatedDate = DateTime.Now;
+            result.StaffRoleId = usersStaffRole.StaffRoleId;
+            WPContext.SaveChanges();
             return usersStaffRole;
         }
     }

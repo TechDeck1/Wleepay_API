@@ -9,6 +9,7 @@ namespace wleepay.Core.Repositories
     public interface IUsersStaffRoleRepository : IRepository<UsersStaffRole>
     {
         Task<UsersStaffRole> AddUserStaffRole(UsersStaffRole usersStaffRole);
+        Task<UsersStaffRole> UpdateUserStaffRole(UsersStaffRole usersStaffRole);
 
     }
 }

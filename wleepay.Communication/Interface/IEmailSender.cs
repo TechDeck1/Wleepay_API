@@ -23,6 +23,7 @@ namespace wleepay.Communication.Interface
         Task<bool> SendEmailToSystemAdminToCompleteSignUp(string email, string uri, string username);
         Task<bool> EmailForAccountCreationToSystemAdmin(string email, string name, string phone);
         Task<string> EmailForPaymentRecieved(string messageText, string phoneNumber);
+        Task<string> SendEmailAsync(string email,string template, string username, string mailSubject);
 
 
     }
