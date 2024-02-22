@@ -215,7 +215,7 @@ namespace wleepay.Storage.Services
             }
             catch(Exception ex)
             {
-                return "";
+                return ex.Message;
             }
             
         }
@@ -236,7 +236,7 @@ namespace wleepay.Storage.Services
             }
             catch (Exception ex)
             {
-                return "";
+                return ex.Message;
             }
         }
     }

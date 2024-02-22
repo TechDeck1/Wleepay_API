@@ -7,9 +7,13 @@ using wleepay.Core.Services;
 using wleepay.Core.Models;
 using AutoMapper;
 using System;
+using Microsoft.AspNetCore.Authorization;
 
 namespace wleepay.API.Controllers
 {
+    [Route("api/[controller]")]
+    [ApiController]
+    [Authorize(AuthenticationSchemes = "Bearer")]
     public class SystemStatusController : Controller
     {
         private readonly ISystemStatusService _systemStatusService;

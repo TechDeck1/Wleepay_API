@@ -13,11 +13,14 @@ using wleepay.Communication.Interface;
 using wleepay.Communication.Templates;
 using Twilio.TwiML.Voice;
 using System.Globalization;
+using Microsoft.AspNetCore.Authorization;
 
 namespace wleepay.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(AuthenticationSchemes = "Bearer")]
+
     public class CashFlowHistoryController : Controller
     {
         private readonly ICashFlowService _cashFlowService;

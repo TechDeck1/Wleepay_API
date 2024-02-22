@@ -1,12 +1,14 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using wleepay.Core.Services;
 
 namespace wleepay.API.Controllers
 {
   
-        [Route("api/[controller]")]
-        [ApiController]
+    [Route("api/[controller]")]
+    [ApiController]
+    [Authorize(AuthenticationSchemes = "Bearer")]
 
     public class StaffAndPermissionRolesController : Controller
     {

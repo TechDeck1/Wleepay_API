@@ -283,7 +283,6 @@ namespace wleepay.API.Controllers
                 }
 
                 //create new user with identity
-
                 var newUser = new ApplicationUser() { UserName = userDetail.PhoneNumber, Id = Guid.NewGuid().ToString() };
                 if (!string.IsNullOrEmpty(userDetail.EmailId))
                     newUser.Email = userDetail.EmailId;
@@ -747,7 +746,7 @@ namespace wleepay.API.Controllers
         }
 
         [HttpPost("ForgotPassword")]
-        public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordResource forgotPasswordDto)
+        public async Task<IActionResult> ForgotPasswordForStaff([FromBody] ForgotPasswordResource forgotPasswordDto)
         {
             //get user detail by email
             var user = await _userManager.FindByEmailAsync(forgotPasswordDto.Email);
@@ -868,7 +867,7 @@ namespace wleepay.API.Controllers
         }
 
         [HttpPost("LoginSetup")]
-        public async Task<IActionResult> SetupLoginPassword([FromBody] SetupLoginResources setupLogin)
+        public async Task<IActionResult> SetupLoginPasswordForStaff([FromBody] SetupLoginResources setupLogin)
         {
             var secretKey = _configuration.GetSection("SecretKeyForEncryptAndDecrypt").Value; //secret key
             string decryptedEmail = Common.Decrypt(setupLogin.Email, secretKey); // helper function for decryption
@@ -1149,7 +1148,7 @@ namespace wleepay.API.Controllers
         }
 
         [HttpPost("SetPin")]
-        public async Task<IActionResult> SetPin([FromBody] SetPinResources setupLogin)
+        public async Task<IActionResult> SetPinForSystemAdmin([FromBody] SetPinResources setupLogin)
         {
             var secretKey = _configuration.GetSection("SecretKeyForEncryptAndDecrypt").Value; //secret key
             string decryptedEmail = Common.Decrypt(setupLogin.Email, secretKey); // helper function for decryption

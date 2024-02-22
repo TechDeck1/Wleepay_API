@@ -131,7 +131,7 @@ namespace wleepay.Communication.Services
         public async Task<bool> SendForgotPasswordEmailLink(string email, string uri, string username)
         {
             var subject = "Reset password token ";
-              var recipientEmail = "ariel.ranjot@gmail.com";
+            var recipientEmail = "ariel.ranjot@gmail.com";
 
             string resetPasswordLink = uri;
 
@@ -202,7 +202,6 @@ namespace wleepay.Communication.Services
             Console.WriteLine(response.Body.ToString(), response.StatusCode);
 
             // A success status code means SendGrid received the email request and will process it.
-            // If email is not received, use this URL to debug: https://app.sendgrid.com/email_activity 
             if (response.IsSuccessStatusCode)
             {
                 Console.WriteLine(response.IsSuccessStatusCode ? "Email queued successfully!" : "Something went wrong!");
@@ -251,7 +250,6 @@ namespace wleepay.Communication.Services
             Console.WriteLine(response.Body.ToString(), response.StatusCode);
 
             // A success status code means SendGrid received the email request and will process it.
-            // If email is not received, use this URL to debug: https://app.sendgrid.com/email_activity 
             if (response.IsSuccessStatusCode)
             {
                 Console.WriteLine(response.IsSuccessStatusCode ? "Email queued successfully!" : "Something went wrong!");
@@ -295,7 +293,6 @@ namespace wleepay.Communication.Services
             Console.WriteLine(response.Body.ToString(), response.StatusCode);
 
             // A success status code means SendGrid received the email request and will process it.
-            // If email is not received, use this URL to debug: https://app.sendgrid.com/email_activity 
             if (response.IsSuccessStatusCode)
             {
                 Console.WriteLine(response.IsSuccessStatusCode ? "Email queued successfully!" : "Something went wrong!");
@@ -345,7 +342,6 @@ namespace wleepay.Communication.Services
             Console.WriteLine(response.Body.ToString(), response.StatusCode);
 
             // A success status code means SendGrid received the email request and will process it.
-            // If email is not received, use this URL to debug: https://app.sendgrid.com/email_activity 
             if (response.IsSuccessStatusCode)
             {
                 Console.WriteLine(response.IsSuccessStatusCode ? "Email queued successfully!" : "Something went wrong!");
