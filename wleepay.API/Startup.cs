@@ -82,13 +82,13 @@ namespace wleepay.API
                 options.RequireHttpsMetadata = false;
                 options.TokenValidationParameters = new TokenValidationParameters()
                 {
-                    //ValidateIssuer = false,
-                    //ValidateAudience = false,
+                    ValidateIssuer = false,
+                    ValidateAudience = false,
                     ValidAudience = Configuration["JWT:ValidAudience"],
                     ValidIssuer = Configuration["JWT:ValidIssuer"],
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["JWT:Secret"])),
-                    ValidateIssuer = true,
-                    ValidateAudience = true,
+                    //ValidateIssuer = true,
+                    //ValidateAudience = true,
                     ValidateIssuerSigningKey = true,
                     ValidateLifetime = true,
                     RequireExpirationTime = true,
