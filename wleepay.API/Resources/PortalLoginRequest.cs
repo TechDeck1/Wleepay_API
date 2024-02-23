@@ -9,6 +9,7 @@ namespace wleepay.API.Resources
     {
         public string Email { get; set; }
         public string Password { get; set; }
+        public string[]? LoginFor { get; set; }
     }
 
 

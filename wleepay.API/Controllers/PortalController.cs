@@ -102,6 +102,19 @@ namespace wleepay.API.Controllers
             var userDetails = await _userDetailsService.GetUserDetailsById(user.Id);
             var result = await _signInManager.PasswordSignInAsync(user, loginRequest.Password ,false, lockoutOnFailure: true);
            
+            //Get user role
+            var userRole = await _userManager.GetRolesAsync(user);
+            if(!loginRequest.LoginFor.Contains(userRole[0]))
+            {
+                return Ok(new
+                {
+                    //UserId = user.Id,
+                    Success = false,
+                    Message = Messages.WrongLoginPage.ToDescriptionString(),
+                });
+
+            }
+            
             SystemActivityLog systemActivityLog = new SystemActivityLog();
             systemActivityLog.UserId = user.Id;
             systemActivityLog.Email = loginRequest.Email;
@@ -165,8 +178,6 @@ namespace wleepay.API.Controllers
             if (result.Succeeded)
             {
                 
-                //Get user role
-                var userRole = await _userManager.GetRolesAsync(user);
 
                 //generate token
                 var token = GenerateJSONWebToken(userDetails, userRole?[0]);

@@ -42,6 +42,7 @@ namespace wleepay.Core.Enums
         [Description("OTP is sent successfully")] OTPSent,
         [Description("Ticket Closed.")] SubjectForTicketClosed,
         [Description("Reply for Ticket.")] SubjectForTicketUpdated,
+        [Description("You cannot login from this screen.")] WrongLoginPage,
 
 
 
