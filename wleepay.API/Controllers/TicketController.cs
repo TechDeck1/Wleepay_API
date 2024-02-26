@@ -23,7 +23,7 @@ namespace wleepay.API.Controllers
     [Authorize(AuthenticationSchemes = "Bearer")]
     //[AllowAnonymous]
 
-    public class CustomerTicketController : Controller
+    public class TicketController : Controller
     {
 
         private readonly ICustomerTicketsService _customerTicketsService;
@@ -35,7 +35,7 @@ namespace wleepay.API.Controllers
         private readonly INotesService _notesService;
         private readonly IWhatsAppService _whatsAppService;
 
-        public CustomerTicketController(
+        public TicketController(
             ICustomerTicketsService customerTickets,
             UserManager<ApplicationUser> userManager,
             IMapper mapper,
@@ -56,7 +56,7 @@ namespace wleepay.API.Controllers
             _whatsAppService = whatsAppService;
         }
 
-        [HttpPost("AddUpdateCustomerTickets")]
+        [HttpPost]
         public async Task<IActionResult> AddUpdateCustomerTickets(AddCustomerTicketRequestResponse customerTickets)
         {
             try
@@ -126,10 +126,10 @@ namespace wleepay.API.Controllers
            
         }
 
-        [HttpPost("GetAllCustomerTickets")]
-        public async Task<IActionResult> GetAllCustomerTickets(CustomerTicketRequest request)
+        [HttpGet("{PhoneNumber}/{status}/{PageIndex}/{PageSize}")]
+        public async Task<IActionResult> GetAllCustomerTickets(string phoneNumber, int status, int pageIndex, int? pageSize=10)
         {
-            var tickets = await _customerTicketsService.GetAllCustomerTickets(request.PhoneNumber,request.status, request.PageIndex, request.PageSize);
+            var tickets = await _customerTicketsService.GetAllCustomerTickets(phoneNumber, status, pageIndex, pageSize);
             var customerTicketsToInsert = _mapper.Map<IEnumerable<CustomerTickets>, IEnumerable<AddCustomerTicketResponseResource>>(tickets.CustomerTickets);
 
             return Ok(new 

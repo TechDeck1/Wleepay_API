@@ -25,7 +25,7 @@ namespace wleepay.Services
             return tickets;
         }
 
-        public async Task<CustomerServiceResponseResource> GetAllCustomerTickets(string phoneNumber,int status, int pageIndex, int pageSize)
+        public async Task<CustomerServiceResponseResource> GetAllCustomerTickets(string phoneNumber,int status, int pageIndex, int? pageSize)
         {
             var tickets = await _unitOfWork.CustomerTickets.GetAllCustomerTickets(phoneNumber,status, pageIndex, pageSize);
             return tickets;
