@@ -406,7 +406,7 @@ namespace wleepay.API.Controllers
             string result = string.Empty;
 
             if (!string.IsNullOrEmpty(emailText))
-                result = await _emailSender.EmailForPaymentRecieved(emailText, userWallet.ApplicationUser.UserDetail.PhoneNumber);
+                result = await _emailSender.EmailForPaymentRecieved(emailText, userWallet.ApplicationUser.Email);
 
             return result;
         }

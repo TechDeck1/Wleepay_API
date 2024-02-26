@@ -33,7 +33,7 @@ namespace wleepay.Communication.EmailTemplates
                         <div class='container'>
                             <p>Dear {username},</p>
                             <p>Please click the following link to reset your password</p>
-                            <p>{uri}</p>
+                            <p><a href={uri}>click here</a></p>
                         </div>
                     </body>
                     </html>
@@ -66,7 +66,8 @@ namespace wleepay.Communication.EmailTemplates
                         <div class='container'>
                             <p>Dear {username},</p>
                             <p>Please click the following link to complete your signup process:</p>
-                            <p>{uri}</p>
+                            <p><a href={uri}>click here</a></p>
+              
                         </div>
                     </body>
                     </html>

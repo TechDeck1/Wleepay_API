@@ -1371,7 +1371,7 @@ namespace wleepay.API.Controllers
                     EmailHtmlTemplates template = new EmailHtmlTemplates();
                     var htmlTemplate = template.EmailTemplate(forgotPinResourceSystemAdmin.Email, callbackUrl, username);
 
-                    var subject = "Reset password token";
+                    var subject = "Reset password";
                     //send mail to user for forgot password link
                     await _emailSender.SendEmailAsync(forgotPinResourceSystemAdmin.Email, htmlTemplate, username, subject);
                     
