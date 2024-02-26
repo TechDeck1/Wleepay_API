@@ -153,7 +153,7 @@ namespace wleepay.API.Controllers
             });
         }
 
-        [HttpPost("{ticketId}/replies")]
+        [HttpPost("reply")]
         public async Task<IActionResult> ReplyForCustomerTicket(CustomerTicketReplyResource request)
         {
             var userDetail = await _userDetailsService.GetApplicationUserById(request.UserId);
@@ -208,26 +208,27 @@ namespace wleepay.API.Controllers
             return BadRequest();
         }
 
-        [HttpPost("CloseCustomerTicket")]
-        public async Task<IActionResult> CloseCustomerTicket(CustomerTicketCloseResource request)
+        [HttpPost("{ticketId}/close")]
+        public async Task<IActionResult> CloseCustomerTicket(int ticketId)
         {
-            var userDetail = await _userDetailsService.GetApplicationUserById(request.UserId);
-            if (userDetail == null)
-            {
-                return Ok(new
-                {
-                    status = false,
-                    message = Messages.NotFound.ToDescriptionString()
-                });
-            }
+            
 
-            var ticketToUpdated = await _customerTicketsService.GetCustomerTicketsById(request.CustomerTicketId);
+            var ticketToUpdated = await _customerTicketsService.GetCustomerTicketsById(ticketId);
             if (ticketToUpdated == null)
             {
                 return Ok(new
                 {
                     status = false,
                     message = Messages.TicketNotFound.ToDescriptionString()
+                });
+            }
+            var userDetail = await _userDetailsService.GetApplicationUserById(ticketToUpdated.UserId);
+            if (userDetail == null)
+            {
+                return Ok(new
+                {
+                    status = false,
+                    message = Messages.NotFound.ToDescriptionString()
                 });
             }
 
@@ -238,7 +239,7 @@ namespace wleepay.API.Controllers
             if (tickets != null)
             {
 
-                var message = MessagesTemplates.CustomerTicketReplyMessage(userDetail.UserDetail.FirstName, request.Notes.FirstOrDefault().Note);
+                var message = MessagesTemplates.CustomerTicketClosedMessage(ticketToUpdated.IssueType.Description, ticketId);
                 var subject = Messages.SubjectForTicketClosed.ToDescriptionString();
 
                 if (tickets.CustomerContact == (int)CustomerServiceContactMethod.Email)
@@ -265,12 +266,12 @@ namespace wleepay.API.Controllers
             return BadRequest();
         }
 
-        [HttpPatch("ReportSeenStatus")]
-        public async Task<IActionResult> PatchReportSeenStatus(CustomerTicketSeenStatusRequest request)
+        [HttpPatch("{ticketId}/status")]
+        public async Task<IActionResult> PatchReportSeenStatus(int ticketId, [FromQuery] bool isSeen)
         {
             try
             {
-                var ticketToUpdated = await _customerTicketsService.GetCustomerTicketsById(request.CustomerTicketId);
+                var ticketToUpdated = await _customerTicketsService.GetCustomerTicketsById(ticketId);
                 if (ticketToUpdated == null)
                 {
                     return Ok(new
@@ -280,7 +281,7 @@ namespace wleepay.API.Controllers
                     });
                 }
 
-                ticketToUpdated.IsSeen = request.IsSeen;
+                ticketToUpdated.IsSeen = isSeen;
                 ticketToUpdated.UpdatedDate = DateTime.UtcNow;
                 var tickets = await _customerTicketsService.AddUpdateCustomerTickets(ticketToUpdated);
                 if (tickets != null)
