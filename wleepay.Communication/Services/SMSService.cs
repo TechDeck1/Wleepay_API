@@ -37,7 +37,7 @@ namespace wleepay.Communication.Services
 
                 //return messageRes.Status.ToString();
                 var messageOptions = new CreateMessageOptions(
-                new PhoneNumber("+12027318402"));
+                new PhoneNumber(phoneNumber));
                 messageOptions.From = new PhoneNumber("+18564223507");
                 messageOptions.Body = message;
 

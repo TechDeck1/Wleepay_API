@@ -241,7 +241,7 @@ namespace wleepay.API.Controllers
 
                 foreach (var agent in agentsListResource)
                 {
-                    var message = MessagesTemplates.TaxRateUpdateMessage(taxRateResourceModel.AgentCommission.ToString(), agent.UserDetail.FirstName, TaxRates.CashOutFeeRate.ToDescriptionString());
+                    var message = MessagesTemplates.TaxRateUpdateMessage(taxRateResourceModel.OrganizationFee.ToString(), agent.UserDetail.FirstName, TaxRates.CashOutFeeRate.ToDescriptionString());
 
                     var result = _SMSService.sendMessage(message, agent.UserDetail.PhoneNumber);
                 }
