@@ -87,7 +87,7 @@ namespace wleepay.API.Controllers
                 customerTicketsToInsert.UserId = customerTickets.UserId;
                 customerTicketsToInsert.Source = userDetail.UserRoles.FirstOrDefault().Role.Name;
 
-                customerTicketsToInsert.Notes.FirstOrDefault().AddedBy= userDetail.UserDetail.UserId;
+                customerTicketsToInsert.Notes.FirstOrDefault().AddedBy = userDetail.UserDetail.UserId;
                 var tickets = await _customerTicketsService.AddUpdateCustomerTickets(customerTicketsToInsert);
 
                 var ticketDetails = await _customerTicketsService.GetCustomerTicketsById(customerTicketsToInsert.Id);
@@ -107,7 +107,7 @@ namespace wleepay.API.Controllers
                     {
                         _whatsAppService.sendMessageForCustomerTicket(message, userDetail.PhoneNumber);
                     }
-                   
+
                 }
                 return Ok(new
                 {
@@ -123,19 +123,19 @@ namespace wleepay.API.Controllers
                     message = ex.Message.ToString(),
                 });
             }
-           
+
         }
 
-        [HttpGet("{phoneNumber}/{status}")]
-        public async Task<IActionResult> GetAllCustomerTickets(string phoneNumber, int status,[FromQuery] int pageIndex, [FromQuery]int? pageSize=10)
+        [HttpGet]
+        public async Task<IActionResult> GetAllCustomerTickets([FromQuery]string phoneNumber, [FromQuery] int status, [FromQuery] int pageIndex, [FromQuery] int? pageSize = 10)
         {
             var tickets = await _customerTicketsService.GetAllCustomerTickets(phoneNumber, status, pageIndex, pageSize);
             var customerTicketsToInsert = _mapper.Map<IEnumerable<CustomerTickets>, IEnumerable<AddCustomerTicketResponseResource>>(tickets.CustomerTickets);
 
-            return Ok(new 
+            return Ok(new
             {
-                totalCount=tickets.TotalCount,
-                customerTickets= customerTicketsToInsert,
+                totalCount = tickets.TotalCount,
+                customerTickets = customerTicketsToInsert,
             });
 
         }
@@ -153,7 +153,7 @@ namespace wleepay.API.Controllers
             });
         }
 
-        [HttpPost("ReplyForCustomerTicket")]
+        [HttpPost("{ticketId}/replies")]
         public async Task<IActionResult> ReplyForCustomerTicket(CustomerTicketReplyResource request)
         {
             var userDetail = await _userDetailsService.GetApplicationUserById(request.UserId);
