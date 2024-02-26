@@ -20,8 +20,8 @@ namespace wleepay.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize(AuthenticationSchemes = "Bearer")]
-    //[AllowAnonymous]
+    //[Authorize(AuthenticationSchemes = "Bearer")]
+    [AllowAnonymous]
 
     public class TicketController : Controller
     {
@@ -126,8 +126,8 @@ namespace wleepay.API.Controllers
            
         }
 
-        [HttpGet("{PhoneNumber}/{status}/{PageIndex}/{PageSize}")]
-        public async Task<IActionResult> GetAllCustomerTickets(string phoneNumber, int status, int pageIndex, int? pageSize=10)
+        [HttpGet("{phoneNumber}/{status}")]
+        public async Task<IActionResult> GetAllCustomerTickets(string phoneNumber, int status,[FromQuery] int pageIndex, [FromQuery]int? pageSize=10)
         {
             var tickets = await _customerTicketsService.GetAllCustomerTickets(phoneNumber, status, pageIndex, pageSize);
             var customerTicketsToInsert = _mapper.Map<IEnumerable<CustomerTickets>, IEnumerable<AddCustomerTicketResponseResource>>(tickets.CustomerTickets);
