@@ -54,8 +54,8 @@ namespace wleepay.Data.Repositories
             {
                 pageSize = 10;
             }
-            int takeCount = pageSize;
-            int skipCount = pageIndex * pageSize;
+            int takeCount = (int)pageSize;
+            int skipCount = (int)(pageIndex * pageSize);
             var totalCount = 0;
             List<CustomerTickets> tickets;
             if (string.IsNullOrEmpty(phoneNumber) && status == (int)CustomerTicketStatus.Closed)
