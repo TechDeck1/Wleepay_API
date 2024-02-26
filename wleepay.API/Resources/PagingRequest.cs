@@ -29,7 +29,7 @@ namespace wleepay.API.Resources
 
     public class SystemLogsPagination
     {
-        public string UserId { get; set; }
+        //public string UserId { get; set; }
         public int Index { get; set; }
         public int Size { get; set; }
     }
@@ -58,7 +58,7 @@ namespace wleepay.API.Resources
     public class PagingRequestForCashFlow
     {
         public int CurrencyId { get; set; }
-        public int Index { get; set; }
+        public int Index{ get; set; }
         public int Size { get; set; }
     }
 

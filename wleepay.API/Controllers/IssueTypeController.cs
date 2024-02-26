@@ -23,7 +23,7 @@ namespace wleepay.API.Controllers
             _lookupService = lookupService;
         }
 
-        [HttpGet("IssueTypes")]
+        [HttpGet]
         public async Task<IActionResult> GetAllIssueTypesAsync()
         {
             try

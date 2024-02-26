@@ -6,7 +6,10 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace wleepay.API.Controllers
 {
-
+    [Route("api/[controller]")]
+    [ApiController]
+    //[Authorize(AuthenticationSchemes = "Bearer")]
+    [AllowAnonymous]
     public class SystemActivityController : Controller
     {
 
@@ -19,8 +22,8 @@ namespace wleepay.API.Controllers
             _systemActivityLogsService = systemActivityLogsService;
         }
 
-        [HttpGet("SystemLogs")]
-        public async Task<IActionResult> GetSystemAllLogs(Pagination request)
+        [HttpGet]
+        public async Task<IActionResult> GetSystemAllLogs([FromQuery]Pagination request)
         {
             if (!string.IsNullOrEmpty(request.Email))
             {
@@ -34,21 +37,21 @@ namespace wleepay.API.Controllers
             }
         }
 
-        [HttpGet("SystemLogsById")]
-        public async Task<IActionResult> GetSystemLogsById([FromQuery]SystemLogsPagination request)
+        [HttpGet("{userId}")]
+        public async Task<IActionResult> GetSystemLogsById(string userId, [FromQuery] int pageIndex=0, [FromQuery] int pageSize=10)
         {
-            var logs = await _systemActivityLogsService.GetAllSystemById(request.UserId, request.Index , request.Size);
+            var logs = await _systemActivityLogsService.GetAllSystemById(userId, pageIndex, pageSize);
             return Ok(logs);
         }
 
-        [HttpGet("FilterLogsByEmail")]
-        public async Task<IActionResult> FilterLogsByEmail(FilterLogs filterLogs)
+        [HttpGet("{email}")]
+        public async Task<IActionResult> FilterLogsByEmail(string email, [FromQuery] int pageIndex = 0, [FromQuery] int pageSize = 10)
         {
-            var logs = await _systemActivityLogsService.FilterLogsByEmail(filterLogs.Email , filterLogs.Index, filterLogs.Size);
+            var logs = await _systemActivityLogsService.FilterLogsByEmail(email, pageIndex, pageSize);
             return Ok(logs);
         }
 
-        [HttpDelete("DeleteLogsById/{id}")]
+        [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteLogsById(int id)
         {
             var result = await _systemActivityLogsService.DeleteLogsById(id);

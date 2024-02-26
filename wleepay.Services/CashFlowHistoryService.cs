@@ -26,7 +26,7 @@ namespace wleepay.Services
             return await _unitOfWork.CashFlowHistory.AddCashFlowHistoryForWithdraw(cashFlowHistory);
         }
 
-        public async Task<CashFlowHistoryResponse> GetAllCashFlowHistoryAsync(int currency, int index, int size)
+        public async Task<CashFlowHistoryResponse> GetAllCashFlowHistoryAsync(int currency, int index=0, int size = 10)
         {
             return await _unitOfWork.CashFlowHistory.GetAllCashFlowHistoryAsync(currency, index, size);
         }

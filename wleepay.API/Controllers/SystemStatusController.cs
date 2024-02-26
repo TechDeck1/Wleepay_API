@@ -30,7 +30,7 @@ namespace wleepay.API.Controllers
             _mapper = mapper;
         }
 
-        [HttpPost("AddSystemsystem")]
+        [HttpPost]
         public async Task<IActionResult> AddSystemStatus([FromBody]SystemStatusResource systemStatusResource)
         {
             if (systemStatusResource == null) {  return BadRequest(); }
@@ -41,21 +41,21 @@ namespace wleepay.API.Controllers
             return Ok(result);
         }
 
-        [HttpGet("GetSystemStatus")]
+        [HttpGet]
         public async Task<IActionResult> GetSystemStatus()
         {
             var result = await _systemStatusService.GetSystemStatus();
             return Ok(result);
         }
 
-        [HttpGet("GetSystemStatusById/{id}")]
+        [HttpGet("{id}")]
         public async Task<IActionResult> GetSystemStatusById(int id)
         {
             var result = await _systemStatusService.GetSystemStatusById(id);
             return Ok(result);
         }
 
-        [HttpPut("UpdateSystemStatus")]
+        [HttpPut]
         public async Task<IActionResult> UpdateSystemStatus([FromBody] SystemStatusResource systemStatusResource)
         {
             if(systemStatusResource.Id <= 0)

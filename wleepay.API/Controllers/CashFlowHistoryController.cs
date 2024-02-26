@@ -43,7 +43,7 @@ namespace wleepay.API.Controllers
             _sMSService = sMSService;
         }
 
-        [HttpPost("CashFlowHistory")]
+        [HttpPost]
         public async Task<IActionResult> AddCashFlowHistoryAsync(CashFlowHistoryResource cashFlowHistoryResource)
         {
             try
@@ -88,8 +88,8 @@ namespace wleepay.API.Controllers
 
         }
 
-        [HttpPost("GetCashFlowHistory")]
-        public async Task<IActionResult> GetCashFlowHistoryAsync(PagingRequestForCashFlow pagingRequestForCashFlow )
+        [HttpGet]
+        public async Task<IActionResult> GetCashFlowHistoryAsync([FromQuery]PagingRequestForCashFlow pagingRequestForCashFlow )
         {
             try
             {
