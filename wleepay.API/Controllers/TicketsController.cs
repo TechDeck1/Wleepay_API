@@ -23,7 +23,7 @@ namespace wleepay.API.Controllers
     //[Authorize(AuthenticationSchemes = "Bearer")]
     [AllowAnonymous]
 
-    public class TicketController : Controller
+    public class TicketsController : Controller
     {
 
         private readonly ICustomerTicketsService _customerTicketsService;
@@ -35,7 +35,7 @@ namespace wleepay.API.Controllers
         private readonly INotesService _notesService;
         private readonly IWhatsAppService _whatsAppService;
 
-        public TicketController(
+        public TicketsController(
             ICustomerTicketsService customerTickets,
             UserManager<ApplicationUser> userManager,
             IMapper mapper,
