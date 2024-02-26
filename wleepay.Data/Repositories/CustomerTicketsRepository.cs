@@ -48,7 +48,7 @@ namespace wleepay.Data.Repositories
 
         }
 
-        public async Task<CustomerServiceResponseResource> GetAllCustomerTickets(string phoneNumber,int status, int pageIndex, int pageSize)
+        public async Task<CustomerServiceResponseResource> GetAllCustomerTickets(string phoneNumber,int status, int pageIndex, int? pageSize)
         {
             if (pageSize <= 0)
             {
