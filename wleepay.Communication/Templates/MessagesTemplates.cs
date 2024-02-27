@@ -126,5 +126,9 @@ namespace wleepay.Communication.Templates
             return $"Dear {SmsReciverName}, \n A tax rate for {Taxtype} is changed by {taxRate}%. ";
 
         }
+        public static string CustomerTicketReplyMessageSmsTemplate(string Username, string message)
+        {
+            return $" Dear {Username}, \n\n Reply from system administrator:\n\n{message}";
+        }
     }
 }

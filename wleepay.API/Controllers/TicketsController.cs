@@ -165,6 +165,7 @@ namespace wleepay.API.Controllers
                     message = Messages.NotFound.ToDescriptionString()
                 });
             }
+
             var ticket = await _customerTicketsService.GetCustomerTicketsById(request.CustomerTicketId);
             if (ticket == null)
             {
@@ -175,28 +176,41 @@ namespace wleepay.API.Controllers
                 });
             }
 
+            var memberDetails = await _userDetailsService.GetApplicationUserById(request.UserId);
+            if (memberDetails == null)
+            {
+                return Ok(new
+                {
+                    status = false,
+                    message = Messages.NotFound.ToDescriptionString()
+                });
+            }
+
+
+
             Notes notesToInsert = new Notes();
             notesToInsert.CustomerTicketId = request.CustomerTicketId;
             notesToInsert.Note = request.Note;
             notesToInsert.AddedBy = request.UserId;
             var notes = await _notesService.AddUpdateNotes(notesToInsert);
 
-            var message = MessagesTemplates.CustomerTicketReplyMessage(userDetail.UserDetail.FirstName, request.Note);
+            var message = MessagesTemplates.CustomerTicketReplyMessage(memberDetails.UserDetail.FirstName, request.Note);
             var subject = Messages.SubjectForTicketUpdated.ToDescriptionString();
 
             if (request.Note != null)
             {
                 if (ticket.CustomerContact == (int)CustomerServiceContactMethod.Email)
                 {
-                    await _emailSender.ReplyForCustomerTicket(message, userDetail.Email, subject);
+                    await _emailSender.ReplyForCustomerTicket(message, memberDetails.Email, subject);
                 }
                 if (ticket.CustomerContact == (int)CustomerServiceContactMethod.Phone)
                 {
-                    _sMSService.sendMessage(message, userDetail.PhoneNumber);
+                    var smsMessageTemplate = MessagesTemplates.CustomerTicketReplyMessageSmsTemplate(memberDetails.UserDetail.FirstName, request.Note);
+                    _sMSService.sendMessage(smsMessageTemplate, memberDetails.PhoneNumber);
                 }
                 if (ticket.CustomerContact == (int)CustomerServiceContactMethod.Whatsapp)
                 {
-                    _whatsAppService.sendMessageForCustomerTicket(message, userDetail.PhoneNumber);
+                    _whatsAppService.sendMessageForCustomerTicket(message, memberDetails.PhoneNumber);
                 }
                 return Ok(new
                 {
