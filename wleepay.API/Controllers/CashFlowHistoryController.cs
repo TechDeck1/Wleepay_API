@@ -35,7 +35,6 @@ namespace wleepay.API.Controllers
         public CashFlowHistoryController(
             ICashFlowService cashFlowService,IMapper mapper, IWalletService walletService, IUserDetailService userDetailService, ISMSService sMSService)
         {
-
             _cashFlowService = cashFlowService;
             _mapper = mapper;
             _walletService = walletService;
@@ -48,7 +47,6 @@ namespace wleepay.API.Controllers
         {
             try
             {
-
                 if (cashFlowHistoryResource.WalletId == null)
                 {
                     return NotFound();

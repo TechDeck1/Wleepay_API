@@ -56,8 +56,6 @@ namespace wleepay.API.Controllers
         private readonly ISystemActivityLogsService _systemActivityLogsService;
         private readonly ITransferTypeService _transferTypeService;
 
-
-
         public PortalController(UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
             IUserDetailService userDetailsService,
@@ -507,7 +505,6 @@ namespace wleepay.API.Controllers
                         {
                             await _emailSender.SendEmailAsync(systemAdmin.Email, htmlTemplate, systemAdmin.UserDetail.FirstName, subject);
                         }
-                        //await _emailSender.EmailForAccountActivatedToSystemAdmin(model.EmailId, userDetails.FirstName , userDetails.PhoneNumber, userDetails.Permissions);
                     }
                     else
                     {
@@ -562,8 +559,8 @@ namespace wleepay.API.Controllers
 
         }
 
-        [HttpPost("GetTaxRates")]
-        public async Task<IActionResult> GetAllTaxRatesHistory(PagingRequestForRates pagingRequestForRates)
+        [HttpGet("TaxRates")]
+        public async Task<IActionResult> GetAllTaxRatesHistory([FromQuery]PagingRequestForRates pagingRequestForRates)
         {
             var transferFees = await _transferFeeService.GetAllTransferFees(pagingRequestForRates.Index, pagingRequestForRates.Size);
             return Ok(transferFees);
