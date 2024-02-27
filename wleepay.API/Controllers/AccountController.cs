@@ -371,11 +371,11 @@ namespace wleepay.API.Controllers
 
                         //generate jwt token
                         var token = GenerateJSONWebToken(userDetailsToInsert);
-                        LinkForLoginSetupResource linkForLoginSetup = new LinkForLoginSetupResource();
-                        linkForLoginSetup.Email = userDetail.EmailId;
-                        linkForLoginSetup.PhoneNumber = userDetail.PhoneNumber;
-                        linkForLoginSetup.ClientURI = baseUrl+ "/account-setup";
-                        var result = await GenerateLinkForLoginSetup(linkForLoginSetup);
+                        CompleteSignUpResourceModel completeSignUpResourceModel = new CompleteSignUpResourceModel();
+                        completeSignUpResourceModel.Email = userDetail.EmailId;
+                        completeSignUpResourceModel.PhoneNumber = userDetail.PhoneNumber;
+                        completeSignUpResourceModel.ClientURI = baseUrl+ "/account-setup";
+                        var result = await GenerateLinkForComleteSignUp(completeSignUpResourceModel);
                         
                         //send registration sucess message on mobile number
                         _smsService.sendMessage(MessagesTemplates.RegistrationSuccessMessage(updatedDetails.AccountNumber, updatedDetails?.KYCLevelDetail?.Name), updatedDetails.PhoneNumber);
@@ -1438,39 +1438,6 @@ namespace wleepay.API.Controllers
             }
         }
 
-        private async Task<bool> GenerateLinkForLoginSetup(LinkForLoginSetupResource linkForLoginSetup)
-        {
-            var user = await _userManager.FindByEmailAsync(linkForLoginSetup.Email);
-            if (user == null)
-                return false;
-           
-            var userDetails = await _userDetailsService.GetUserDetailsById(user.Id);
-            if (userDetails != null)
-            {
-                if (userDetails.PhoneNumber == linkForLoginSetup.PhoneNumber && user.Email == linkForLoginSetup.Email)
-                {
-                    // Your secret key for encryption (16, 24, or 32 bytes for AES)
-                    var secretKey = _configuration.GetSection("SecretKeyForEncryptAndDecrypt").Value; //secret key
-
-                    // Encrypt the text
-                    string encryptedText = Common.Encrypt(linkForLoginSetup.Email, secretKey);
-                    var token = HttpUtility.UrlEncode(encryptedText);
-                    string callbackUrl = $"{linkForLoginSetup.ClientURI}?email={(token)}";
-                    var username = userDetails.FirstName + " " + userDetails.LastName;
-                    EmailHtmlTemplates template = new EmailHtmlTemplates();
-                    var subject = "Complete sign-up process";
-                    var htmlTemplate = template.EmailTemplateForAccountSetup(linkForLoginSetup.Email, callbackUrl, username);
-                    await _emailSender.SendEmailAsync(linkForLoginSetup.Email, htmlTemplate, username, subject);
-                   // await _emailSender.SendEmailToStaffToCompleteLoginProcess(linkForLoginSetup.Email, callbackUrl, username);
-                   
-                    return true;
-
-                }
-               
-            }
-            return false;
-        }
-
         private string GetClientIpAddress()
         {
             if (HttpContext.Connection.RemoteIpAddress != null)
@@ -1493,6 +1460,7 @@ namespace wleepay.API.Controllers
                 {
                     // Your secret key for encryption (16, 24, or 32 bytes for AES)
                     var secretKey = _configuration.GetSection("SecretKeyForEncryptAndDecrypt").Value; //secret key
+                    
                     // Encrypt the text
                     string encryptedText = Common.Encrypt(completeSignUpResourceModel.Email, secretKey);
                     var token = HttpUtility.UrlEncode(encryptedText);
@@ -1504,7 +1472,6 @@ namespace wleepay.API.Controllers
                     var htmlTemplate = template.EmailTemplateForAccountSetup(completeSignUpResourceModel.Email, callbackUrl, username);
 
                     await _emailSender.SendEmailAsync(completeSignUpResourceModel.Email, htmlTemplate, username, subject);
-                   // await _emailSender.SendEmailToSystemAdminToCompleteSignUp(completeSignUpResourceModel.Email, callbackUrl, username);
 
                     return true;
 
