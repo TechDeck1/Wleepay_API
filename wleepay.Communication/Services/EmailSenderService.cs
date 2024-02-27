@@ -5,20 +5,10 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using wleepay.Communication.Interface;
-using Twilio.TwiML.Messaging;
-using wleepay.Communication.EmailTemplates;
-using static wleepay.Communication.EmailTemplates.AccountDeactivatedTemplate;
-using static wleepay.Communication.EmailTemplates.AccountActivatedTemplate;
-using System.Numerics;
-using System.Xml.Linq;
-using static wleepay.Communication.EmailTemplates.PasswordChangeTemplate;
-using static wleepay.Communication.EmailTemplates.EmailLockOutTemplate;
 using SendGrid;
 using SendGrid.Helpers.Mail;
 using Microsoft.Extensions.Configuration;
-using Twilio;
-using Newtonsoft.Json.Linq;
-using static wleepay.Communication.EmailTemplates.EmailTemplates;
+
 
 namespace wleepay.Communication.Services
 {

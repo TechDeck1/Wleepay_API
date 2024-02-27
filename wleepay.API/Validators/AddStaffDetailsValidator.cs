@@ -30,12 +30,6 @@ namespace wleepay.API.Validators
             RuleFor(a => a.Gender)
                 .NotEmpty()
                 .NotNull();
-
-            //RuleFor(a => a.KYCLevel)
-            //    .NotEmpty()
-            //    .GreaterThan(0)
-            //    .NotNull();
-
             
         }
     }
