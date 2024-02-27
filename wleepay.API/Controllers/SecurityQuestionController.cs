@@ -27,7 +27,7 @@ namespace wleepay.API.Controllers
             _lookupService = lookupService;
         }
 
-        [HttpGet("SecurityQuestions")]
+        [HttpGet]
         public async Task<IActionResult> GetSecurityQuestions()
         {
             var questions = await _lookupService.GetAllSecurityQuestions();

@@ -44,12 +44,12 @@ namespace wleepay.API.Controllers
             return Ok(logs);
         }
 
-        [HttpGet("{email}")]
-        public async Task<IActionResult> FilterLogsByEmail(string email, [FromQuery] int pageIndex = 0, [FromQuery] int pageSize = 10)
-        {
-            var logs = await _systemActivityLogsService.FilterLogsByEmail(email, pageIndex, pageSize);
-            return Ok(logs);
-        }
+        //[HttpGet("{email}")]
+        //public async Task<IActionResult> FilterLogsByEmail(string email, [FromQuery] int pageIndex = 0, [FromQuery] int pageSize = 10)
+        //{
+        //    var logs = await _systemActivityLogsService.FilterLogsByEmail(email, pageIndex, pageSize);
+        //    return Ok(logs);
+        //}
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteLogsById(int id)
