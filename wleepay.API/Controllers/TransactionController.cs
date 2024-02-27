@@ -18,8 +18,8 @@ namespace wleepay.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    //[Authorize(AuthenticationSchemes = "Bearer")]
-    [AllowAnonymous]
+    [Authorize(AuthenticationSchemes = "Bearer")]
+    //[AllowAnonymous]
 
     public class TransactionController : Controller
     {
