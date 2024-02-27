@@ -469,17 +469,31 @@ namespace wleepay.API.Controllers
                     systemActivityLog.UserId = user.Id;
                     systemActivityLog.Email = model.EmailId;
                     systemActivityLog.IpAddress = GetClientIpAddress();
+                    
                     //update activity status for user
                     var result = await _userDetailsService.UpdateUserStatus(model.UserId, model.Status);
                     if (model.Status == (int)Status.Active)
                     {
                         systemActivityLog.Action = ActionsForSystemLogs.Activate.ToDescriptionString();
                         systemActivityLog.Description = GenericMessagesForSystemLogs.AccountActivated.ToDescriptionString();
-                        await _emailSender.EmailForAccountActivatedToStaff(model.EmailId, userDetails.FirstName, userDetails.PhoneNumber);
-                       
+
+                        var subject = "Wleepay portal account setup/activation confirmation notice (Do not reply)";
+
+                        //send email to staff for activation
+                        AccountActivatedTemplateForStaff templateForstaff = new AccountActivatedTemplateForStaff
+                        {
+                            StaffEmail = model.EmailId,
+                            StaffFirstName = userDetails.FirstName,
+                            StaffPhoneNumber = userDetails.PhoneNumber,
+
+                        };
+
+                        string htmlTemplateForStaff = templateForstaff.GenerateHtml();
+                        await _emailSender.SendEmailAsync(model.EmailId, htmlTemplateForStaff, userDetails.FirstName, subject);
+
+                        //send email to all admins for activation
                         var allSystemAdmins = await _userDetailsService.GetUserByRole((int)Role.SystemAdmin);
                         var allSystemAdminsList = _mapper.Map<IEnumerable<ApplicationUser>, IEnumerable<ApplicationUserResource>>(allSystemAdmins);
-
                         AccountActivatedTemplateForSystemAdmin template = new AccountActivatedTemplateForSystemAdmin
                         {
                             StaffEmail = model.EmailId,
@@ -488,11 +502,10 @@ namespace wleepay.API.Controllers
                             StaffPermissions = userDetails.Permissions
 
                         };
-                        var subject = "Wleepay portal account setup/activation confirmation notice (Do not reply)";
                         string htmlTemplate = template.GenerateHtml();
                         foreach (var systemAdmin in allSystemAdminsList)
                         {
-                            await _emailSender.SendEmailAsync(systemAdmin.Email, htmlTemplate, userDetails.FirstName, subject);
+                            await _emailSender.SendEmailAsync(systemAdmin.Email, htmlTemplate, systemAdmin.UserDetail.FirstName, subject);
                         }
                         //await _emailSender.EmailForAccountActivatedToSystemAdmin(model.EmailId, userDetails.FirstName , userDetails.PhoneNumber, userDetails.Permissions);
                     }
@@ -501,8 +514,9 @@ namespace wleepay.API.Controllers
                         string message = "The wleepay staff with this email " + model.EmailId + " is now deactivated";
                         systemActivityLog.Action = ActionsForSystemLogs.Deactivate.ToDescriptionString();
                         systemActivityLog.Description = GenericMessagesForSystemLogs.AccountDeActivated.ToDescriptionString();
-                      
                         _SMSService.sendMessage(message, userDetails.PhoneNumber);
+                        
+                        //send email to staff for deactivation
                         AccountDeactivatedTemplateForStaff accountDeactivatedTemplateForStaff = new AccountDeactivatedTemplateForStaff
                         {
                             StaffEmail = model.EmailId,
@@ -512,8 +526,8 @@ namespace wleepay.API.Controllers
                         var subject = "Alert: Wleepay portal account DeActivation notice (Do not reply)";
                         string htmlTemplateForStaff = accountDeactivatedTemplateForStaff.GenerateHtml();
                         await _emailSender.SendEmailAsync(model.EmailId, htmlTemplateForStaff, userDetails.FirstName, subject);
-                       // await _emailSender.EmailForAccountDeactivatedToStaff(model.EmailId, userDetails.FirstName, userDetails.PhoneNumber);
 
+                        //send email to all admins for deactivation
                         var allSystemAdmins = await _userDetailsService.GetUserByRole((int)Role.SystemAdmin);
                         var allSystemAdminsList = _mapper.Map<IEnumerable<ApplicationUser>, IEnumerable<ApplicationUserResource>>(allSystemAdmins);
 
@@ -531,7 +545,6 @@ namespace wleepay.API.Controllers
                         {
                             await _emailSender.SendEmailAsync(systemAdmin.Email, htmlTemplate, userDetails.FirstName, subject);
                         }
-                        //await _emailSender.EmailForAccountDeactivatedToSystemAdmin(model.EmailId, userDetails.FirstName, userDetails.PhoneNumber, userDetails.Permissions);
                     }
 
                     var addLogs = await _systemActivityLogsService.AddSystemLogs(systemActivityLog);

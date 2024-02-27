@@ -97,7 +97,7 @@ namespace wleepay.API.Controllers
                     var subject = Messages.TicketCreated.ToDescriptionString();
                     if (tickets.CustomerContact == (int)CustomerServiceContactMethod.Email)
                     {
-                        await _emailSender.ReplyForCustomerTicket(message, userDetail.Email, subject);
+                        await _emailSender.SendEmailAsync(userDetail.Email, message, userDetail.UserDetail.FirstName, subject);
                     }
                     if (tickets.CustomerContact == (int)CustomerServiceContactMethod.Phone)
                     {
@@ -201,7 +201,8 @@ namespace wleepay.API.Controllers
             {
                 if (ticket.CustomerContact == (int)CustomerServiceContactMethod.Email)
                 {
-                    await _emailSender.ReplyForCustomerTicket(message, memberDetails.Email, subject);
+                    //await _emailSender.ReplyForCustomerTicket(message, memberDetails.Email, subject);
+                    await _emailSender.SendEmailAsync(userDetail.Email, message, userDetail.UserDetail.FirstName, subject);
                 }
                 if (ticket.CustomerContact == (int)CustomerServiceContactMethod.Phone)
                 {
@@ -258,7 +259,9 @@ namespace wleepay.API.Controllers
 
                 if (tickets.CustomerContact == (int)CustomerServiceContactMethod.Email)
                 {
-                    await _emailSender.ReplyForCustomerTicket(message, userDetail.Email, subject);
+                    //await _emailSender.ReplyForCustomerTicket(message, userDetail.Email, subject);
+                    await _emailSender.SendEmailAsync(userDetail.Email, message, userDetail.UserDetail.FirstName, subject);
+
                 }
                 if (tickets.CustomerContact == (int)CustomerServiceContactMethod.Phone)
                 {

@@ -60,7 +60,6 @@ namespace wleepay.Communication.EmailTemplates
             public string StaffEmail { get; set; }
             public string StaffPhoneNumber { get; set; }
             public string StaffFirstName { get; set; }
-            public string StaffPermissions { get; set; }
 
             public string GenerateHtml()
             {

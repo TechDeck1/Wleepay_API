@@ -949,10 +949,22 @@ namespace wleepay.API.Controllers
                         userDetails.SecurityQuestionId = setupLogin.SecurityQuestionId;  
                         //add user details
                         await _userDetailsService.AddOrUpdateUserDetails(userDetails);
-                        //email staff for account activation
-                        await _emailSender.EmailForAccountActivatedToStaff(decryptedEmail, userDetails.FirstName, userDetails.PhoneNumber);
-                        // email admin for staff's account activation
+                        var subject = "Wleepay portal account setup/activation confirmation notice (Do not reply)";
 
+                        AccountActivatedTemplateForStaff templateForstaff = new AccountActivatedTemplateForStaff
+                        {
+                            StaffEmail = decryptedEmail,
+                            StaffFirstName = userDetails.FirstName,
+                            StaffPhoneNumber = userDetails.PhoneNumber,
+
+                        };
+
+                        string htmlTemplateForStaff = templateForstaff.GenerateHtml();
+                        //email staff for account activation
+                        await _emailSender.SendEmailAsync(decryptedEmail, htmlTemplateForStaff, userDetails.FirstName, subject);
+                        // await _emailSender.EmailForAccountActivatedToStaff(decryptedEmail, userDetails.FirstName, userDetails.PhoneNumber);
+
+                        // email admin for staff's account activation
                         var allSystemAdmins = await _userDetailsService.GetUserByRole((int)Role.SystemAdmin);
                         var allSystemAdminsList = _mapper.Map<IEnumerable<ApplicationUser>, IEnumerable<ApplicationUserResource>>(allSystemAdmins);
                        
@@ -966,10 +978,9 @@ namespace wleepay.API.Controllers
                         };
 
                         string htmlTemplate = template.GenerateHtml();
-                        var subject = "Wleepay portal account setup/activation confirmation notice (Do not reply)";
                         foreach (var systemAdmin in allSystemAdminsList)
                         {
-                            await _emailSender.SendEmailAsync(systemAdmin.Email,htmlTemplate, userDetails.FirstName, subject);
+                            await _emailSender.SendEmailAsync(systemAdmin.Email,htmlTemplate, systemAdmin.UserDetail.FirstName, subject);
                            // await _emailSender.EmailForAccountActivatedToSystemAdmin(decryptedEmail, userDetails.FirstName, userDetails.PhoneNumber, userDetails.Permissions);
                         }
 
