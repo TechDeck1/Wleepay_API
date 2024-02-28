@@ -17,6 +17,8 @@ namespace wleepay.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(AuthenticationSchemes = "Bearer")]
+
     public class KYCController : Controller
     {
         private readonly IKYCDocumentsService _kycDocumentsService;

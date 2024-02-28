@@ -14,6 +14,8 @@ namespace wleepay.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(AuthenticationSchemes = "Bearer")]
+
 
     public class SecurityQuestionController : Controller
     {

@@ -140,18 +140,18 @@ namespace wleepay.API.Controllers
 
         }
 
-        [HttpPost("GetCustomerTicketsByPhone")]
-        public async Task<IActionResult> GetCustomerTicketsByPhone(CustomerTicketRequest request)
-        {
-            var tickets = await _customerTicketsService.GetCustomerTicketsByPhoneNumber(request.PhoneNumber, request.PageIndex, request.PageSize);
-            var customerTicketsToInsert = _mapper.Map<IEnumerable<CustomerTickets>, IEnumerable<AddCustomerTicketResponseResource>>(tickets.CustomerTickets);
+        //[HttpPost("GetCustomerTicketsByPhone")]
+        //public async Task<IActionResult> GetCustomerTicketsByPhone(CustomerTicketRequest request)
+        //{
+        //    var tickets = await _customerTicketsService.GetCustomerTicketsByPhoneNumber(request.PhoneNumber, request.PageIndex, request.PageSize);
+        //    var customerTicketsToInsert = _mapper.Map<IEnumerable<CustomerTickets>, IEnumerable<AddCustomerTicketResponseResource>>(tickets.CustomerTickets);
 
-            return Ok(new
-            {
-                totalCount = tickets.TotalCount,
-                customerTickets = customerTicketsToInsert
-            });
-        }
+        //    return Ok(new
+        //    {
+        //        totalCount = tickets.TotalCount,
+        //        customerTickets = customerTicketsToInsert
+        //    });
+        //}
 
         [HttpPost("reply")]
         public async Task<IActionResult> ReplyForCustomerTicket(CustomerTicketReplyResource request)

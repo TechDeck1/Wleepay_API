@@ -41,7 +41,8 @@ namespace wleepay.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [AllowAnonymous]
+    [Authorize(AuthenticationSchemes = "Bearer")]
+
     public class PortalController : Controller
     {
         private readonly UserManager<ApplicationUser> _userManager;
@@ -84,7 +85,7 @@ namespace wleepay.API.Controllers
             _transferTypeService = transferTypeService;
         }
 
-        
+        [AllowAnonymous]
         [HttpPost("Login")]
         public async Task<IActionResult> Login([FromBody] PortalLoginRequest loginRequest)
         {
@@ -298,6 +299,7 @@ namespace wleepay.API.Controllers
 
         }
 
+        [AllowAnonymous]
         [HttpPost("UnLockAccount")]
         public async Task<IActionResult> UnlockAccount([FromBody] LockAccount model)
         {
@@ -315,6 +317,7 @@ namespace wleepay.API.Controllers
 
         }
 
+        [AllowAnonymous]
         [HttpPost("SendCode")]
         public async Task<IActionResult> SendOTP([FromBody] SendCode model)
         {
@@ -349,6 +352,7 @@ namespace wleepay.API.Controllers
 
         }
 
+        [AllowAnonymous]
         [HttpPost("VerifyCode")]
         public async Task<IActionResult> VerifyCode([FromBody]VerificationModel model)
         {
@@ -450,6 +454,7 @@ namespace wleepay.API.Controllers
 
         }
 
+        [AllowAnonymous]
         [HttpPost("ActiveOrDeactivateAccount")]
         public async Task<IActionResult> ActiveOrDeActiveAccount([FromBody] ActivateDeactivateAccountResource model)
         {

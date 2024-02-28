@@ -44,7 +44,8 @@ namespace wleepay.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [AllowAnonymous]
+    [Authorize(AuthenticationSchemes = "Bearer")]
+    //[AllowAnonymous]
     public class AccountController : Controller
     {
         private readonly UserManager<ApplicationUser> _userManager;
@@ -558,6 +559,7 @@ namespace wleepay.API.Controllers
             }
         }
 
+        [AllowAnonymous]
         [HttpPost("Login")]
         public async Task<IActionResult> Login([FromBody] LoginRequest loginRequest)
         {
@@ -629,6 +631,7 @@ namespace wleepay.API.Controllers
             return BadRequest("Invalid login request.");
         }
 
+        [AllowAnonymous]
         [HttpPost("SendOTP")]
         public async Task<IActionResult> SendOTP([FromBody] OTPRequest otpRequest)
         {
@@ -654,6 +657,7 @@ namespace wleepay.API.Controllers
             }
         }
 
+        [AllowAnonymous]
         [HttpPost("UpdatePin")]
         public async Task<IActionResult> UpdatePIN([FromBody] LoginRequest updatePinRequest)
         {
@@ -684,6 +688,7 @@ namespace wleepay.API.Controllers
             }
         }
 
+        [AllowAnonymous]
         [HttpGet("isPhoneNumberExists")]
         public async Task<IActionResult> CheckPhoneNumberExists(string phoneNumber)
         {
@@ -695,6 +700,7 @@ namespace wleepay.API.Controllers
              return Ok(result);
         }
 
+        [AllowAnonymous]
         [HttpPost("SmileIdentityResponse")]
         public async Task<IActionResult> SmileIdentityStatus([FromBody] SmileIdentityResponse response)
         {
@@ -745,6 +751,7 @@ namespace wleepay.API.Controllers
             return Ok();
         }
 
+        [AllowAnonymous]
         [HttpPost("ForgotPassword")]
         public async Task<IActionResult> ForgotPasswordForStaff([FromBody] ForgotPasswordResource forgotPasswordDto)
         {
@@ -806,6 +813,7 @@ namespace wleepay.API.Controllers
             return BadRequest();
         }
 
+        [AllowAnonymous]
         [HttpPost("ResetPassword")]
         public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordResource resetPasswordDto)
         {
@@ -989,6 +997,7 @@ namespace wleepay.API.Controllers
             });
         }
 
+        [AllowAnonymous]
         [HttpPost("AccountAlreadySetup")]
         public async Task<IActionResult> CheckIfAccountAlreadySetup(AccountExistVerificationResource resource)
         {
@@ -1027,6 +1036,7 @@ namespace wleepay.API.Controllers
 
         }
 
+        [AllowAnonymous]
         [HttpPost("CheckIfLinkIsExpired")]
         public async Task<IActionResult> CheckIfLinkIsExpired(CheckTokenExpirationResource resource)
         {
@@ -1184,6 +1194,7 @@ namespace wleepay.API.Controllers
 
         }
 
+        [AllowAnonymous]
         [HttpPost("SetPin")]
         public async Task<IActionResult> SetPinForSystemAdmin([FromBody] SetPinResources setupLogin)
         {
@@ -1317,6 +1328,7 @@ namespace wleepay.API.Controllers
 
         }
 
+        [AllowAnonymous]
         [HttpPost("ForgotPinSystemAdmin")]
         public async Task<IActionResult> ForgotPinSystemAdmin([FromBody] ForgotPinResourceSystemAdmin forgotPinResourceSystemAdmin)
         {

@@ -217,11 +217,11 @@ namespace wleepay.API.Controllers
             return Ok(result);
         }
 
-        [HttpPost("Cashout")]
-        public async Task<IActionResult> CashoutTransactions(Pagination pagination)
+        [HttpGet("Cashout")]
+        public async Task<IActionResult> CashoutTransactions([FromQuery] int pageIndex = 0, [FromQuery] int pageSize = 10)
         {
 
-            var result = await _transactionService.GetCashoutTransactions(pagination.Index, pagination.Size);
+            var result = await _transactionService.GetCashoutTransactions(pageIndex, pageSize);
             var transactionResources = result.Transactions.Select(transaction => _mapper.Map<Transaction, TransactionHistoryResource>(transaction)).ToList();
 
             if (result == null)
@@ -234,11 +234,11 @@ namespace wleepay.API.Controllers
             });
         }
 
-        [HttpPost("TopUp")]
-        public async Task<IActionResult> TopUpTransactions(Pagination pagination)
+        [HttpGet("TopUp")]
+        public async Task<IActionResult> TopUpTransactions([FromQuery]int pageIndex=0 , [FromQuery] int pageSize=10)
         {
 
-            var result = await _transactionService.GetTopUpTransactions(pagination.Index, pagination.Size);
+            var result = await _transactionService.GetTopUpTransactions(pageIndex, pageSize);
             var transactionResources = result.Transactions.Select(transaction => _mapper.Map<Transaction, TransactionHistoryResource>(transaction)).ToList();
 
             if (result == null)
@@ -252,11 +252,11 @@ namespace wleepay.API.Controllers
 
         }
 
-        [HttpPost("GetTransactionByTypeAndCurrency")]
-        public async Task<IActionResult> GetTransactionByTypeAndCurrency(TransactionPagingRequest pagination)
+        [HttpGet("{transferTypeId}/{currencyTypeId}")]
+        public async Task<IActionResult> GetTransactionByTypeAndCurrency(int transferTypeId,int currencyTypeId, [FromQuery] int pageIndex=0 , [FromQuery] int pageSize=10)
         {
 
-            var result = await _transactionService.GetTransactionsByTypeAndCurrency(pagination.TransferTypeId, pagination.CurrencyTypeId, pagination.Index, pagination.Size);
+            var result = await _transactionService.GetTransactionsByTypeAndCurrency(transferTypeId, currencyTypeId, pageIndex, pageSize);
             var transactionResources = result.Transactions.Select(transaction => _mapper.Map<Transaction, TransactionHistoryResource>(transaction)).ToList();
 
             if (result == null)
@@ -269,18 +269,18 @@ namespace wleepay.API.Controllers
             });
         }
 
-        [HttpGet("GetTransactionsByUserId/{userId}")]
-        public async Task<IActionResult> GetTransactionsByUserId(string userId)
-        {
-            var transactionResult = await _transactionService.GetTransactionsByUserId(userId);
-            if (transactionResult.Transactions.Count() > 0)
-            {
-                var transactionResourceList = _mapper.Map<IEnumerable<Transaction>, IEnumerable<TransactionHistoryResource>>(transactionResult.Transactions);
-                return Ok(new { Transactions = transactionResourceList, TotalCount = transactionResult.TotalCount });
-            }
+        //[HttpGet("{userId}")]
+        //public async Task<IActionResult> GetTransactionsByUserId(string userId)
+        //{
+        //    var transactionResult = await _transactionService.GetTransactionsByUserId(userId);
+        //    if (transactionResult.Transactions.Count() > 0)
+        //    {
+        //        var transactionResourceList = _mapper.Map<IEnumerable<Transaction>, IEnumerable<TransactionHistoryResource>>(transactionResult.Transactions);
+        //        return Ok(new { Transactions = transactionResourceList, TotalCount = transactionResult.TotalCount });
+        //    }
 
-            return Ok(new List<TransactionResource>());
-        }
+        //    return Ok(new List<TransactionResource>());
+        //}
 
         #region Helper function
         private async Task<TransactionResource> ChangePaymentRequestStatus(long paymentRequestId, Core.Enums.TransactionStatus status)

@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,6 +14,8 @@ namespace wleepay.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(AuthenticationSchemes = "Bearer")]
+
     public class TransferTypeController : Controller
     {
         private readonly ITransferTypeService _transferTypeService;
@@ -24,7 +27,7 @@ namespace wleepay.API.Controllers
             _mapper = mapper;
         }
 
-        [HttpGet("TransferType/{fromWalletTypeId}/{toWalletTypeId}")]
+        [HttpGet("{fromWalletTypeId}/{toWalletTypeId}")]
         public async Task<IActionResult> GetTransferType(int fromWalletTypeId, int toWalletTypeId)
         {
             var transferType = await _transferTypeService.GetTransferTypeForTransaction(fromWalletTypeId, toWalletTypeId);
@@ -33,7 +36,7 @@ namespace wleepay.API.Controllers
             return Ok(transferTypeResource);
         }
 
-        [HttpGet("TransferType/{typeId}")]
+        [HttpGet("{typeId}")]
         public async Task<IActionResult> GetTransferType(int typeId)
         {
             var transferType = await _transferTypeService.GetTransferTypeById(typeId);

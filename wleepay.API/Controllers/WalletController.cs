@@ -59,7 +59,7 @@ namespace wleepay.API.Controllers
             return Ok(walletListResource);
         }
 
-        [HttpGet("GetWalletByWalletTypeId/{walletTypeId}")]
+        [HttpGet("{walletTypeId}/walletType")]
         public async Task<IActionResult> GetWalletByWalletTypeId(long walletTypeId)
         {
             if (walletTypeId == null)
@@ -72,16 +72,16 @@ namespace wleepay.API.Controllers
         }
 
 
-        [HttpPost("SetCashOnHand")]
-        public async Task<IActionResult> SetCashOnHand(CashOnHandRequest request)
-        {
-            if (request.Amount == null)
-                return BadRequest("Invalid Request");
+        //[HttpPost("setCashOnHand")]
+        //public async Task<IActionResult> SetCashOnHand(CashOnHandRequest request)
+        //{
+        //    if (request.Amount == null)
+        //        return BadRequest("Invalid Request");
             
-            var walletData = await _walletService.SetCashOnHand(request.Amount, request.CurrencyTypeId, request.WalletTypeId);
+        //    var walletData = await _walletService.SetCashOnHand(request.Amount, request.CurrencyTypeId, request.WalletTypeId);
 
-            return Ok(walletData);
-        }
+        //    return Ok(walletData);
+        //}
 
     }
 }

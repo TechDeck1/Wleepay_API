@@ -366,10 +366,11 @@ namespace wleepay.API.Controllers
             return Ok(transactionResource);
         }
 
-        [HttpPost("GetAllUsersById")]
-        public async Task<IActionResult> GetAllUsersById([FromBody] AgentRequest request)
+        [HttpGet("{userId}/createdBy")]
+        public async Task<IActionResult> GetAllUsersById(string userId, int roleId , int pageIndex, int pageSize)
         {
-            var userList = await _userDetailsService.GetAllUsersById(request.Role ,request.Index, request.Size, request.CreatedBy);
+            Role role = (Role)roleId;
+            var userList = await _userDetailsService.GetAllUsersById(role, pageIndex, pageSize, userId);
             var userListResource = _mapper.Map<IEnumerable<ApplicationUser>, IEnumerable<ApplicationUserResource>>(userList.UserDetails);
             return Ok(new
             {
@@ -378,20 +379,20 @@ namespace wleepay.API.Controllers
             });
         }
 
-        [HttpPost("GetAllUsersByRole/{role}")]
-        public async Task<IActionResult> GetAllUsersByRole(int role)
-        {
-            var userList = await _userDetailsService.GetUserByRole(role);
-            var userListResource = _mapper.Map<IEnumerable<ApplicationUser>, IEnumerable<ApplicationUserResource>>(userList);
-            return Ok(userListResource);
-        }
+        //[HttpGet("{role}/role")]
+        //public async Task<IActionResult> GetAllUsersByRole(int role)
+        //{
+        //    var userList = await _userDetailsService.GetUserByRole(role);
+        //    var userListResource = _mapper.Map<IEnumerable<ApplicationUser>, IEnumerable<ApplicationUserResource>>(userList);
+        //    return Ok(userListResource);
+        //}
 
-        [HttpPost("VerifyUserAccountByPhone")]
-        public async Task<IActionResult> VerifyUserAccountByPhoneAsync([FromBody] SearchRequestForVerification request)
+        [HttpGet("{phoneNumber}/VerifyAccountByPhone")]
+        public async Task<IActionResult> VerifyUserAccountByPhoneAsync(string phoneNumber)
         {
             TransactionAndUserResponseResource result = null;
-            if (!string.IsNullOrEmpty(request.PhoneNumber))
-                result = await _userDetailsService.VerifyUserAccountByPhone(request.PhoneNumber);
+            if (!string.IsNullOrEmpty(phoneNumber))
+                result = await _userDetailsService.VerifyUserAccountByPhone(phoneNumber);
           
             object userDetails = null;
            
