@@ -113,6 +113,7 @@ namespace wleepay.API.Controllers
             _verificationService = verificationService;
         }
 
+        [AllowAnonymous]
         [HttpPost("Registration")]
         public async Task<IActionResult> Register([FromBody] AddUserDetailsResource userDetail)
         {
