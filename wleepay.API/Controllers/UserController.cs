@@ -226,6 +226,7 @@ namespace wleepay.API.Controllers
             
         }
 
+        [AllowAnonymous]
         [HttpPost("DocumentKYCImage")]
         public async Task<IActionResult> DocumentKYCImage(documentKycImage documentKycImage)
         {
