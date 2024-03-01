@@ -14,8 +14,6 @@ namespace wleepay.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize(AuthenticationSchemes = "Bearer")]
-
 
     public class SecurityQuestionController : Controller
     {
@@ -29,6 +27,7 @@ namespace wleepay.API.Controllers
             _lookupService = lookupService;
         }
 
+        [AllowAnonymous]
         [HttpGet]
         public async Task<IActionResult> GetSecurityQuestions()
         {

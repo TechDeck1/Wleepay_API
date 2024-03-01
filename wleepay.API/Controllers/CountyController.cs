@@ -28,6 +28,7 @@ namespace wleepay.API.Controllers
             _mapper = mapper;
         }
 
+        [AllowAnonymous]
         [HttpGet]
         public async Task<IEnumerable<LookupResource>> GetAllCounties()
         {

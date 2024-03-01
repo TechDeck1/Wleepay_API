@@ -26,7 +26,6 @@ namespace wleepay.API.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [Authorize(AuthenticationSchemes = "Bearer")]
-    //[AllowAnonymous]
     public class UserController : Controller
     {
 
@@ -66,6 +65,7 @@ namespace wleepay.API.Controllers
             return Ok(userResource);
         }
 
+        [AllowAnonymous]
         [HttpGet("{userId}/extraInfo")]
         public async Task<IActionResult> GetApplicationUserById(string userId)
         {
