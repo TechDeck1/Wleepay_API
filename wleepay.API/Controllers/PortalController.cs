@@ -571,6 +571,41 @@ namespace wleepay.API.Controllers
             return Ok(transferFees);
         }
 
+        [HttpPost]
+        [Route("refresh-token")]
+        public async Task<IActionResult> RefreshToken(RefreshTokenModel tokenModel)
+        {
+            if (tokenModel is null)
+            {
+                return BadRequest("Invalid client request");
+            }
+
+            string? accessToken = tokenModel.Token;
+
+            var principal = GetPrincipalFromExpiredToken(accessToken);
+            if (principal == null)
+            {
+                return BadRequest("Invalid access token or refresh token");
+            }
+
+            string username = principal.Identity.Name;
+
+            var user = await _userManager.FindByNameAsync("admin@wlee.com");
+
+            if (user == null)
+            {
+                return BadRequest("Invalid access token or refresh token");
+            }
+
+            var newAccessToken = CreateToken(principal.Claims.ToList());
+
+            await _userManager.UpdateAsync(user);
+
+            return new ObjectResult(new
+            {
+                accessToken = new JwtSecurityTokenHandler().WriteToken(newAccessToken),
+            });
+        }
 
         #region helper methods
         private string GenerateJSONWebToken(UserDetail userInfo, string userRole)
@@ -580,7 +615,8 @@ namespace wleepay.API.Controllers
                 {
                     new Claim(ClaimTypes.Name, userInfo.FirstName),
                     new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                    new Claim(ClaimTypes.Role, userRole) // Adding a role claim
+                    new Claim(ClaimTypes.Role, userRole), // Adding a role claim
+                    new Claim(ClaimTypes.Email, userInfo.ApplicationUser.Email)
 
                 };
 
@@ -602,6 +638,45 @@ namespace wleepay.API.Controllers
             }
             return "Unknown";
         }
+
+        private ClaimsPrincipal? GetPrincipalFromExpiredToken(string? token)
+        {
+            var tokenValidationParameters = new TokenValidationParameters
+            {
+                ValidateAudience = false,
+                ValidateIssuer = false,
+                ValidateIssuerSigningKey = true,
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:Secret"])),
+                ValidateLifetime = false
+            };
+
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var principal = tokenHandler.ValidateToken(token, tokenValidationParameters, out SecurityToken securityToken);
+            if (securityToken is not JwtSecurityToken jwtSecurityToken || !jwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256, StringComparison.InvariantCultureIgnoreCase))
+                throw new SecurityTokenException("Invalid token");
+
+            return principal;
+
+        }
+
+        private JwtSecurityToken CreateToken(List<Claim> authClaims)
+        {
+            var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:Secret"]));
+            _ = int.TryParse(_configuration["JWT:TokenValidityInMinutes"], out int tokenValidityInMinutes);
+
+            var token = new JwtSecurityToken(
+                issuer: _configuration["JWT:ValidIssuer"],
+                audience: _configuration["JWT:ValidAudience"],
+                expires: DateTime.Now.AddMinutes(30),
+                claims: authClaims,
+                signingCredentials: new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256)
+                );
+
+            return token;
+        }
+
+
+
         #endregion
     }
 }

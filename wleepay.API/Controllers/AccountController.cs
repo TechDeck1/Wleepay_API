@@ -1403,6 +1403,8 @@ namespace wleepay.API.Controllers
                 {
                     new Claim(ClaimTypes.Name, userInfo.FirstName),
                     new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                    new Claim(ClaimTypes.Email, userInfo.ApplicationUser.Email)
+
                 };
 
             var token = new JwtSecurityToken(
