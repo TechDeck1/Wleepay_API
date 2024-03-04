@@ -36,6 +36,7 @@ using wleepay.Services;
 using static wleepay.Communication.EmailTemplates.EmailLockOutTemplate;
 using static wleepay.Communication.EmailTemplates.AccountActivatedTemplate;
 using static wleepay.Communication.EmailTemplates.AccountDeactivatedTemplate;
+using SendGrid.Helpers.Mail;
 
 namespace wleepay.API.Controllers
 {
@@ -582,28 +583,34 @@ namespace wleepay.API.Controllers
 
             string? accessToken = tokenModel.Token;
 
-            var principal = GetPrincipalFromExpiredToken(accessToken);
-            if (principal == null)
+            var handler = new JwtSecurityTokenHandler();
+            var jsonToken = handler.ReadToken(accessToken) as JwtSecurityToken;
+            string emailAddress = "";
+            if (jsonToken != null)
+            {
+                // Get the emailAddress claim
+                emailAddress = jsonToken.Claims.First(claim => claim.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress").Value;
+                Console.WriteLine("emailAddress: " + emailAddress);
+            }
+            else
             {
                 return BadRequest("Invalid access token or refresh token");
             }
-
-            string username = principal.Identity.Name;
-
-            var user = await _userManager.FindByNameAsync("admin@wlee.com");
+            var user = await _userManager.FindByEmailAsync(emailAddress);
 
             if (user == null)
             {
                 return BadRequest("Invalid access token or refresh token");
             }
+            var userRole = await _userManager.GetRolesAsync(user);
 
-            var newAccessToken = CreateToken(principal.Claims.ToList());
+            var userResource = _mapper.Map<ApplicationUser, UserDetail>(user);
 
-            await _userManager.UpdateAsync(user);
+            var newAccessToken = GenerateJSONWebToken(userResource, userRole?[0]);
 
             return new ObjectResult(new
             {
-                accessToken = new JwtSecurityTokenHandler().WriteToken(newAccessToken),
+                accessToken = newAccessToken,
             });
         }
 
@@ -639,25 +646,25 @@ namespace wleepay.API.Controllers
             return "Unknown";
         }
 
-        private ClaimsPrincipal? GetPrincipalFromExpiredToken(string? token)
-        {
-            var tokenValidationParameters = new TokenValidationParameters
-            {
-                ValidateAudience = false,
-                ValidateIssuer = false,
-                ValidateIssuerSigningKey = true,
-                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:Secret"])),
-                ValidateLifetime = false
-            };
+        //private ClaimsPrincipal? GetPrincipalFromExpiredToken(string? token)
+        //{
+        //    var tokenValidationParameters = new TokenValidationParameters
+        //    {
+        //        ValidateAudience = false,
+        //        ValidateIssuer = false,
+        //        ValidateIssuerSigningKey = true,
+        //        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:Secret"])),
+        //        ValidateLifetime = false
+        //    };
 
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var principal = tokenHandler.ValidateToken(token, tokenValidationParameters, out SecurityToken securityToken);
-            if (securityToken is not JwtSecurityToken jwtSecurityToken || !jwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256, StringComparison.InvariantCultureIgnoreCase))
-                throw new SecurityTokenException("Invalid token");
+        //    var tokenHandler = new JwtSecurityTokenHandler();
+        //    var principal = tokenHandler.ValidateToken(token, tokenValidationParameters, out SecurityToken securityToken);
+        //    if (securityToken is not JwtSecurityToken jwtSecurityToken || !jwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256, StringComparison.InvariantCultureIgnoreCase))
+        //        throw new SecurityTokenException("Invalid token");
 
-            return principal;
+        //    return principal;
 
-        }
+        //}
 
         private JwtSecurityToken CreateToken(List<Claim> authClaims)
         {
