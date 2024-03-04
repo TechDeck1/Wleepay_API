@@ -69,7 +69,6 @@ namespace wleepay.API.Controllers
         private readonly IUsersStaffRoleService _usersStaffRoleService;
         private readonly IVerificationService _verificationService;
 
-
         public AccountController(UserManager<ApplicationUser> userManager,
             RoleManager<ApplicationRole> roleManager,
             SignInManager<ApplicationUser> signInManager,

@@ -572,6 +572,7 @@ namespace wleepay.API.Controllers
             return Ok(transferFees);
         }
 
+        [AllowAnonymous]
         [HttpPost]
         [Route("refresh-token")]
         public async Task<IActionResult> RefreshToken(RefreshTokenModel tokenModel)
@@ -604,14 +605,15 @@ namespace wleepay.API.Controllers
             }
             var userRole = await _userManager.GetRolesAsync(user);
 
-            var userResource = _mapper.Map<ApplicationUser, UserDetail>(user);
+            var userDetails = await _userDetailsService.GetUserDetailsById(user.Id);
 
-            var newAccessToken = GenerateJSONWebToken(userResource, userRole?[0]);
+            var newAccessToken = GenerateJSONWebToken(userDetails, userRole?[0]);
 
-            return new ObjectResult(new
+            return Ok(new
             {
                 accessToken = newAccessToken,
-            });
+            }
+            );
         }
 
         #region helper methods
@@ -630,10 +632,11 @@ namespace wleepay.API.Controllers
             var token = new JwtSecurityToken(
                 issuer: _configuration["JWT:ValidIssuer"],
                 audience: _configuration["JWT:ValidAudience"],
-                expires: DateTime.Now.AddMinutes(30),
+                expires: DateTime.Now.AddMinutes(5),
                 claims: authClaims,
                 signingCredentials: new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256)
                 );
+
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
 
