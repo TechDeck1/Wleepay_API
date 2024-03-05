@@ -153,6 +153,20 @@ namespace wleepay.API.Controllers
         //    });
         //}
 
+        [HttpGet("{Id}")]
+        public async Task<IActionResult> GetCustomerTicketById(int Id)
+        {
+            var tickets = await _customerTicketsService.GetCustomerTicketsById(Id);
+            var customerTicketsToInsert = _mapper.Map<CustomerTickets, AddCustomerTicketResponseResource>(tickets);
+
+            return Ok(new
+            {
+                customerTickets = customerTicketsToInsert,
+            });
+
+        }
+
+
         [HttpPost("reply")]
         public async Task<IActionResult> ReplyForCustomerTicket(CustomerTicketReplyResource request)
         {
