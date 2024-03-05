@@ -60,7 +60,7 @@ namespace wleepay.Data.Repositories
             List<CustomerTickets> tickets;
             if (string.IsNullOrEmpty(phoneNumber) && status == (int)CustomerTicketStatus.Closed)
             {
-                tickets = await WPContext.CustomerTickets.Include(x => x.Notes)
+                tickets = await WPContext.CustomerTickets.Include(x => x.Notes.OrderByDescending(x => x.CreatedDate))
                                                            .Include(x => x.IssueType)
                                                            .OrderByDescending(x => x.CreatedDate)
                                                            .Skip(skipCount)
@@ -72,7 +72,7 @@ namespace wleepay.Data.Repositories
             else if (string.IsNullOrEmpty(phoneNumber) && status == (int)CustomerTicketStatus.Open)
             {
                 tickets = await WPContext.CustomerTickets.Where(x => x.Status == (int)CustomerTicketStatus.Open)
-                                                           .Include(x => x.Notes)
+                                                           .Include(x => x.Notes.OrderByDescending(x => x.CreatedDate))
                                                            .Include(x => x.IssueType)
                                                            .OrderByDescending(x => x.CreatedDate)
                                                            .Skip(skipCount)
@@ -84,7 +84,7 @@ namespace wleepay.Data.Repositories
             else if (!string.IsNullOrEmpty(phoneNumber) && status == (int)CustomerTicketStatus.Closed)
             {
                 tickets = await WPContext.CustomerTickets.Where(x => x.PhoneNumber.Contains(phoneNumber))
-                                                             .Include(x => x.Notes)
+                                                             .Include(x => x.Notes.OrderByDescending(x => x.CreatedDate))
                                                              .Include(x => x.IssueType)
                                                              .OrderByDescending(x => x.CreatedDate)
                                                              .Skip(skipCount)
@@ -96,7 +96,7 @@ namespace wleepay.Data.Repositories
             else
             {
                  tickets = await WPContext.CustomerTickets.Where(x => x.Status == (int)CustomerTicketStatus.Open && x.PhoneNumber.Contains(phoneNumber))
-                                                            .Include(x => x.Notes)
+                                                            .Include(x => x.Notes.OrderByDescending(x => x.CreatedDate))
                                                             .Include(x => x.IssueType)
                                                             .OrderByDescending(x => x.CreatedDate)
                                                             .Skip(skipCount)
@@ -142,9 +142,11 @@ namespace wleepay.Data.Repositories
         public async Task<CustomerTickets> GetCustomerTicketsById(int Id)
         {
             var tickets = await WPContext.CustomerTickets.Where(x => x.Id == Id)
-                                                    .Include(x => x.Notes)
+                                                    .Include(x => x.Notes.OrderByDescending(x => x.CreatedDate))
                                                     .Include(x => x.IssueType)
                                                     .FirstOrDefaultAsync();
+
+
             return tickets;
         }
 
