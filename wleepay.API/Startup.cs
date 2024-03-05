@@ -31,6 +31,7 @@ using IEmailSender = wleepay.Communication.Interface.IEmailSender;
 using Microsoft.AspNet.Identity;
 using wleepay.Core.Repositories;
 using wleepay.Data.Repositories;
+using wleepay.API.Hub;
 
 namespace wleepay.API
 {
@@ -97,13 +98,15 @@ namespace wleepay.API
 
             });
 
+            services.AddSignalR();
 
             services.AddCors(options => {
                 options.AddPolicy("AllowAllHeaders",
-                    builder => builder.AllowAnyOrigin()
-                    .AllowAnyMethod()
-                    .AllowAnyHeader());
-            });
+                    builder =>  builder.AllowAnyMethod()
+                    .AllowAnyHeader()
+                    .AllowCredentials()
+                    .SetIsOriginAllowed((hosts) => true));
+        });
 
             services.Configure<IdentityOptions>(options =>
             {
@@ -243,7 +246,10 @@ namespace wleepay.API
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapHub<StatusHubClient>("/status");
+
             });
+
             app.UseSwagger();
             app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "wleepay.API v1"));
         }

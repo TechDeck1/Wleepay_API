@@ -8,6 +8,8 @@ using wleepay.Core.Models;
 using AutoMapper;
 using System;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.SignalR;
+using wleepay.API.Hub;
 
 namespace wleepay.API.Controllers
 {
@@ -20,14 +22,17 @@ namespace wleepay.API.Controllers
     {
         private readonly ISystemStatusService _systemStatusService;
         private readonly IMapper _mapper;
-
+        private IHubContext<StatusHubClient, IStatusHubClient> statusHub;
 
         public SystemStatusController(
-            ISystemStatusService statusService, IMapper mapper)
+            ISystemStatusService statusService,
+            IMapper mapper,
+            IHubContext<StatusHubClient, IStatusHubClient> _statusHub)
         {
-
             _systemStatusService = statusService;
             _mapper = mapper;
+            statusHub = _statusHub;
+
         }
 
         [HttpPost]
@@ -45,6 +50,8 @@ namespace wleepay.API.Controllers
         public async Task<IActionResult> GetSystemStatus()
         {
             var result = await _systemStatusService.GetSystemStatus();
+            statusHub.Clients.All.SendStatusToUser(result);
+
             return Ok(result);
         }
 
