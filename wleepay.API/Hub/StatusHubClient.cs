@@ -13,7 +13,7 @@ namespace wleepay.API.Hub
         {
             this._unitOfWork = unitOfWork;
         }
-        public async Task SendStatusToUser(SystemStatus message)
+        public async Task SendStatusToUser()
         {
             var result = await _unitOfWork.SystemStatus.GetSystemStatus();
             await Clients.All.SendStatusToUser(result);

@@ -32,6 +32,7 @@ using Microsoft.AspNet.Identity;
 using wleepay.Core.Repositories;
 using wleepay.Data.Repositories;
 using wleepay.API.Hub;
+using wleepay.API.Middleware;
 
 namespace wleepay.API
 {
@@ -164,6 +165,9 @@ namespace wleepay.API
             services.AddTransient<IVerificationService, VerificationService>();
             services.AddTransient<ICashFlowService, CashFlowHistoryService>();
             services.AddTransient<ISystemStatusService, SystemStatusService>();
+            services.AddScoped<SystemLockMiddleware>();
+
+
 
             //swagger config
             services.AddSwaggerGen(c =>
@@ -221,6 +225,9 @@ namespace wleepay.API
                 app.UseDeveloperExceptionPage();
 
             }
+
+            app.UseMiddleware<SystemLockMiddleware>(); // Register your middleware
+
             //app.UseStaticFiles(new StaticFileOptions()
             //{
             //    FileProvider = new PhysicalFileProvider(
