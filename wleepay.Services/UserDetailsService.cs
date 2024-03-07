@@ -24,7 +24,7 @@ namespace wleepay.Services
             UserDetail userDetail = new UserDetail();
             if (detail.Id > 0)
             {
-                userDetail = await _unitOfWork.UserDetail.GetUserDetailsById(detail.UserId);
+                //userDetail = await _unitOfWork.UserDetail.GetUserDetailsById(detail.UserId);
                 if (userDetail != null)
                 {
                     userDetail = detail;

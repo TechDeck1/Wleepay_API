@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Microsoft.SqlServer.Management.Smo;
 using System;
 using System.Collections.Generic;
 using System.Drawing.Imaging;
@@ -15,6 +16,7 @@ using System.Threading.Tasks;
 using wleepay.API.Helpers;
 using wleepay.API.Resources;
 using wleepay.API.Validators;
+using wleepay.Core.Common;
 using wleepay.Core.DTO.Response;
 using wleepay.Core.Enums;
 using wleepay.Core.Models;
@@ -37,6 +39,7 @@ namespace wleepay.API.Controllers
         private readonly ISmileIdentityJobService _smileIdentityJobService;
         private readonly IMapper _mapper;
         private readonly ILogger<UserController> _logger;
+        private readonly IUsersStaffRoleService _usersStaffRoleService;
 
         public UserController(UserManager<ApplicationUser> userManager,
             IUserDetailService userDetailsService,
@@ -45,7 +48,9 @@ namespace wleepay.API.Controllers
             IKYCDocumentsService kycDocumentsService,
             ISmileIdentityJobService smileIdentityJobService,
             IMapper mapper,
-            ILogger<UserController> logger)
+            ILogger<UserController> logger, 
+            IUsersStaffRoleService usersStaffRoleService)
+
         {
             _userManager = userManager;
             _userDetailsService = userDetailsService;
@@ -55,6 +60,7 @@ namespace wleepay.API.Controllers
             _smileIdentityJobService = smileIdentityJobService;
             _mapper = mapper;
             _logger = logger;
+            _usersStaffRoleService = usersStaffRoleService;
         }
 
         [HttpGet("{userId}")]
@@ -447,6 +453,51 @@ namespace wleepay.API.Controllers
 
                 throw ex;
             }
+        }
+
+        [HttpPut("edit")]
+        public async Task<IActionResult> EditUserDetails(EditUserDetailResource editUserDetailResource)
+        {
+            if (editUserDetailResource == null)
+            {
+                return BadRequest();
+            }
+            var applicationUser = await _userManager.FindByEmailAsync(editUserDetailResource.Email);
+            if(applicationUser == null)
+            {
+                return BadRequest();
+            }
+            var userExistWithPhone = await _userDetailsService.IsPhoneAlreadyRegistered(editUserDetailResource.PhoneNumber);
+            if (userExistWithPhone == true)
+                return BadRequest(Messages.PhoneAlreadyUsed.ToDescriptionString());
+
+            applicationUser.PhoneNumber = editUserDetailResource.PhoneNumber;
+            applicationUser.UserName = editUserDetailResource.PhoneNumber;
+
+            var isUserUpdated = await _userManager.UpdateAsync(applicationUser);
+            if (isUserUpdated.Succeeded)
+            {
+                var userDetail = await _userDetailsService.GetUserDetailsById(applicationUser.Id);
+                if (userDetail == null)
+                {
+                    return BadRequest();
+                }
+                userDetail.FirstName = editUserDetailResource.FirstName;
+                userDetail.LastName = editUserDetailResource.LastName;
+                userDetail.PhoneNumber = editUserDetailResource.PhoneNumber;
+
+                await _userDetailsService.AddOrUpdateUserDetails(userDetail);
+                UsersStaffRole usersStaffRole = new UsersStaffRole();
+                usersStaffRole.UserId = applicationUser.Id;
+                usersStaffRole.UpdatedDate= DateTime.UtcNow;
+                usersStaffRole.StaffRoleId = editUserDetailResource.StaffRoleId;
+                await _usersStaffRoleService.UpdateUserStaffRole(usersStaffRole);
+
+            }
+
+            return Ok();
+
+
         }
 
         #region helper methods
