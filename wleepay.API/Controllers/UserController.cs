@@ -462,10 +462,12 @@ namespace wleepay.API.Controllers
             {
                 return BadRequest();
             }
-            var applicationUser = await _userManager.FindByEmailAsync(editUserDetailResource.Email);
+
+            var applicationUser = await _userManager.FindByIdAsync(editUserDetailResource.UserId);
+            
             if(applicationUser == null)
             {
-                return BadRequest();
+                return BadRequest(Messages.NotFound.ToDescriptionString());
             }
             var userExistWithPhone = await _userDetailsService.IsPhoneAlreadyRegistered(editUserDetailResource.PhoneNumber);
             if (userExistWithPhone == true)
@@ -480,8 +482,9 @@ namespace wleepay.API.Controllers
                 var userDetail = await _userDetailsService.GetUserDetailsById(applicationUser.Id);
                 if (userDetail == null)
                 {
-                    return BadRequest();
+                    return BadRequest(Messages.NotFound.ToDescriptionString());
                 }
+
                 userDetail.FirstName = editUserDetailResource.FirstName;
                 userDetail.LastName = editUserDetailResource.LastName;
                 userDetail.PhoneNumber = editUserDetailResource.PhoneNumber;
@@ -495,7 +498,7 @@ namespace wleepay.API.Controllers
 
             }
 
-            return Ok();
+            return Ok(Messages.InfoUpdated.ToDescriptionString());
 
 
         }
