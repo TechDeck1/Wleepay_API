@@ -223,7 +223,7 @@ namespace wleepay.Data.Repositories
                 .Include(s => s.Wallets)
                     .ThenInclude(s => s.Currency)
                 .OrderByDescending(w => w.UserDetail.CreatedDate)
-                .Where(entity => entity.Email.Contains(email) && entity.UserRoles.FirstOrDefault().Role.Name == role.ToString())
+                .Where(entity => entity.Email.Contains(email) || entity.UserDetail.PhoneNumber.Contains(email) && entity.UserRoles.FirstOrDefault().Role.Name == role.ToString())
                 .Skip(skipCount)
                 .Take(takeCount)
                 .ToListAsync();
