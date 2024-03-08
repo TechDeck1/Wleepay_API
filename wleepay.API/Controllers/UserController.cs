@@ -470,27 +470,29 @@ namespace wleepay.API.Controllers
             {
                 return BadRequest(Messages.NotFound.ToDescriptionString());
             }
+            var userDetail = await _userDetailsService.GetUserDetailsById(applicationUser.Id);
+            if (userDetail == null)
+            {
+                return BadRequest(Messages.NotFound.ToDescriptionString());
+            }
+            if(userDetail.PhoneNumber!= editUserDetailResource.PhoneNumber) 
+            {
+                var userExistWithPhone = await _userDetailsService.IsPhoneAlreadyRegistered(editUserDetailResource.PhoneNumber);
+                if (userExistWithPhone == true)
+                    return BadRequest(Messages.PhoneAlreadyUsed.ToDescriptionString());
 
-            //var userExistWithPhone = await _userDetailsService.IsPhoneAlreadyRegistered(editUserDetailResource.PhoneNumber);
-            //if (userExistWithPhone == true)
-            //    return BadRequest(Messages.PhoneAlreadyUsed.ToDescriptionString());
-
-            //applicationUser.PhoneNumber = editUserDetailResource.PhoneNumber;
-            //applicationUser.UserName = editUserDetailResource.PhoneNumber;
+                applicationUser.PhoneNumber = editUserDetailResource.PhoneNumber;
+                applicationUser.UserName = editUserDetailResource.PhoneNumber;
+            }
 
             var isUserUpdated = await _userManager.UpdateAsync(applicationUser);
             if (isUserUpdated.Succeeded)
             {
-                var userDetail = await _userDetailsService.GetUserDetailsById(applicationUser.Id);
-                if (userDetail == null)
-                {
-                    return BadRequest(Messages.NotFound.ToDescriptionString());
-                }
-
+               
                 userDetail.FirstName = editUserDetailResource.FirstName;
                 userDetail.LastName = editUserDetailResource.LastName;
                 userDetail.WleePhoneNumber = editUserDetailResource.WleePhoneNumber;
-                //userDetail.PhoneNumber = editUserDetailResource.PhoneNumber;
+                userDetail.PhoneNumber = editUserDetailResource.PhoneNumber;
 
                 await _userDetailsService.AddOrUpdateUserDetails(userDetail);
                 UsersStaffRole usersStaffRole = new UsersStaffRole();
