@@ -121,9 +121,9 @@ namespace wleepay.API.Controllers
         [HttpPost("all")]
         public async Task<IActionResult> GetUserList([FromBody] PagingRequest request)
         {
-            if (!string.IsNullOrEmpty(request.Email))
+            if (!string.IsNullOrEmpty(request.SearchText))
             {
-                var result = await _userDetailsService.SearchUsersByEmail(request.Email, request.Role, request.Index, request.Size);
+                var result = await _userDetailsService.SearchUsersByEmail(request.SearchText, request.Role, request.Index, request.Size);
                 var userDetailResource = _mapper.Map<IEnumerable<ApplicationUser>, IEnumerable<ApplicationUserResource>>(result.UserDetails);
                 return Ok(new
                 {
@@ -460,7 +460,8 @@ namespace wleepay.API.Controllers
         {
             if (editUserDetailResource == null)
             {
-                return BadRequest();
+                // The model is null
+                return BadRequest("The model is null");
             }
 
             var applicationUser = await _userManager.FindByIdAsync(editUserDetailResource.UserId);
@@ -469,12 +470,13 @@ namespace wleepay.API.Controllers
             {
                 return BadRequest(Messages.NotFound.ToDescriptionString());
             }
-            var userExistWithPhone = await _userDetailsService.IsPhoneAlreadyRegistered(editUserDetailResource.PhoneNumber);
-            if (userExistWithPhone == true)
-                return BadRequest(Messages.PhoneAlreadyUsed.ToDescriptionString());
 
-            applicationUser.PhoneNumber = editUserDetailResource.PhoneNumber;
-            applicationUser.UserName = editUserDetailResource.PhoneNumber;
+            //var userExistWithPhone = await _userDetailsService.IsPhoneAlreadyRegistered(editUserDetailResource.PhoneNumber);
+            //if (userExistWithPhone == true)
+            //    return BadRequest(Messages.PhoneAlreadyUsed.ToDescriptionString());
+
+            //applicationUser.PhoneNumber = editUserDetailResource.PhoneNumber;
+            //applicationUser.UserName = editUserDetailResource.PhoneNumber;
 
             var isUserUpdated = await _userManager.UpdateAsync(applicationUser);
             if (isUserUpdated.Succeeded)
@@ -487,7 +489,8 @@ namespace wleepay.API.Controllers
 
                 userDetail.FirstName = editUserDetailResource.FirstName;
                 userDetail.LastName = editUserDetailResource.LastName;
-                userDetail.PhoneNumber = editUserDetailResource.PhoneNumber;
+                userDetail.WleePhoneNumber = editUserDetailResource.WleePhoneNumber;
+                //userDetail.PhoneNumber = editUserDetailResource.PhoneNumber;
 
                 await _userDetailsService.AddOrUpdateUserDetails(userDetail);
                 UsersStaffRole usersStaffRole = new UsersStaffRole();
@@ -498,8 +501,15 @@ namespace wleepay.API.Controllers
 
             }
 
-            return Ok(Messages.InfoUpdated.ToDescriptionString());
+            return Ok(new
+            {
+                Success = true,
+                UserId = editUserDetailResource.UserId,
+                FirstName = editUserDetailResource.FirstName,
+                LastName = editUserDetailResource.LastName,
+                Message = Messages.InfoUpdated.ToDescriptionString()
 
+            });
 
         }
 

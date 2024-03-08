@@ -203,7 +203,7 @@ namespace wleepay.Data.Repositories
             }
         }
 
-        public async Task<UserDetailsResponseResource> SearchApplicationUserByEmail(string email, Core.Enums.Role role, int index, int size)
+        public async Task<UserDetailsResponseResource> SearchApplicationUserByEmail(string searchText, Core.Enums.Role role, int index, int size)
         {
             if (size <= 0)
             {
@@ -223,13 +223,13 @@ namespace wleepay.Data.Repositories
                 .Include(s => s.Wallets)
                     .ThenInclude(s => s.Currency)
                 .OrderByDescending(w => w.UserDetail.CreatedDate)
-                .Where(entity => entity.Email.Contains(email) || entity.UserDetail.PhoneNumber.Contains(email) && entity.UserRoles.FirstOrDefault().Role.Name == role.ToString())
+                .Where(entity => (entity.Email.Contains(searchText) || entity.UserDetail.PhoneNumber.Contains(searchText) || entity.UserDetail.FirstName.Contains(searchText) || entity.UserDetail.LastName.Contains(searchText)) && entity.UserRoles.FirstOrDefault().Role.Name == role.ToString())
                 .Skip(skipCount)
                 .Take(takeCount)
                 .ToListAsync();
 
             var totalCount = await WPContext.Users
-                              .Where(entity => entity.Email.Contains(email) && entity.UserRoles.FirstOrDefault().Role.Name == role.ToString()).CountAsync();
+                              .Where(entity => entity.Email.Contains(searchText) && entity.UserRoles.FirstOrDefault().Role.Name == role.ToString()).CountAsync();
 
             UserDetailsResponseResource response = new UserDetailsResponseResource();
             response.UserDetails = result;
