@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using wleepay.API.Middleware;
 using wleepay.API.Resources;
 using wleepay.Communication.Interface;
 using wleepay.Communication.Templates;
@@ -21,6 +22,7 @@ namespace wleepay.API.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [Authorize(AuthenticationSchemes = "Bearer")]
+    [SystemLock]
     //[AllowAnonymous]
 
     public class TicketsController : Controller

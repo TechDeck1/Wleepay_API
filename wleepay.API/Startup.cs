@@ -165,7 +165,6 @@ namespace wleepay.API
             services.AddTransient<IVerificationService, VerificationService>();
             services.AddTransient<ICashFlowService, CashFlowHistoryService>();
             services.AddTransient<ISystemStatusService, SystemStatusService>();
-            services.AddScoped<SystemLockMiddleware>();
 
 
 
@@ -225,8 +224,6 @@ namespace wleepay.API
                 app.UseDeveloperExceptionPage();
 
             }
-
-            app.UseMiddleware<SystemLockMiddleware>(); // Register your middleware
 
             //app.UseStaticFiles(new StaticFileOptions()
             //{
