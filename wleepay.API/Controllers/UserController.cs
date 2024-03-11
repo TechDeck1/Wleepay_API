@@ -14,6 +14,7 @@ using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
 using wleepay.API.Helpers;
+using wleepay.API.Middleware;
 using wleepay.API.Resources;
 using wleepay.API.Validators;
 using wleepay.Core.Common;
@@ -456,6 +457,7 @@ namespace wleepay.API.Controllers
             }
         }
 
+        [SystemLock]
         [HttpPut("edit")]
         public async Task<IActionResult> EditUserDetails(EditUserDetailResource editUserDetailResource)
         {
