@@ -10,6 +10,7 @@ using System;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
 using wleepay.API.Hub;
+using wleepay.API.Middleware;
 
 namespace wleepay.API.Controllers
 {
@@ -34,6 +35,7 @@ namespace wleepay.API.Controllers
             statusHub = _statusHub;
 
         }
+
 
         [HttpPost]
         public async Task<IActionResult> AddSystemStatus([FromBody]SystemStatusResource systemStatusResource)

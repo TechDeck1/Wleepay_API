@@ -22,7 +22,6 @@ namespace wleepay.API.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [Authorize(AuthenticationSchemes = "Bearer")]
-    [SystemLock]
     //[AllowAnonymous]
 
     public class TicketsController : Controller
@@ -59,6 +58,7 @@ namespace wleepay.API.Controllers
         }
 
         [HttpPost]
+        [SystemLock]
         public async Task<IActionResult> AddUpdateCustomerTickets(AddCustomerTicketRequestResponse customerTickets)
         {
             try
@@ -169,6 +169,7 @@ namespace wleepay.API.Controllers
         }
 
 
+        [SystemLock]
         [HttpPost("reply")]
         public async Task<IActionResult> ReplyForCustomerTicket(CustomerTicketReplyResource request)
         {
@@ -239,6 +240,7 @@ namespace wleepay.API.Controllers
             return BadRequest();
         }
 
+        [SystemLock]
         [HttpPost("{ticketId}/close")]
         public async Task<IActionResult> CloseCustomerTicket(int ticketId)
         {
@@ -299,6 +301,7 @@ namespace wleepay.API.Controllers
             return BadRequest();
         }
 
+        [SystemLock]
         [HttpPatch("{ticketId}/status")]
         public async Task<IActionResult> PatchReportSeenStatus(int ticketId, [FromQuery] bool isSeen)
         {

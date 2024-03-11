@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
+using wleepay.API.Middleware;
 using wleepay.API.Resources;
 using wleepay.API.Validators;
 using wleepay.Communication.Interface;
@@ -88,6 +89,7 @@ namespace wleepay.API.Controllers
             return Ok(transactionAmount);
         }
 
+        [SystemLock]
         [HttpPost]
         public async Task<IActionResult> CreateTransaction([FromBody] CreateTransactionResource transactionRequest)
         {
@@ -138,6 +140,7 @@ namespace wleepay.API.Controllers
         //    return Ok(newTransactionResource);
         //}
 
+        [SystemLock]
         [HttpPost("request")]
         public async Task<IActionResult> CreatePaymentRequest([FromBody] CreateTransactionResource transactionRequest)
         {

@@ -7,7 +7,10 @@ using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Http;
 using System.Threading.Tasks;
 using wleepay.Services;
-
+using System.Linq;
+using static System.Net.WebRequestMethods;
+using wleepay.Core.Enums;
+using System;
 
 namespace wleepay.API.Middleware
 {
@@ -29,16 +32,30 @@ namespace wleepay.API.Middleware
 
             public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
             {
-                var systemStatus = await _statusService.GetSystemStatus(); // Retrieve system status from service
+                var userRoles = context.HttpContext.User.Claims
+               .Where(c => c.Type == "http://schemas.microsoft.com/ws/2008/06/identity/claims/role")
+               .Select(c => c.Value)
+               .ToList();
 
-                if (systemStatus.Status)
+                string userRole="";
+                foreach (var role in userRoles)
                 {
-                    context.Result = new ContentResult
+                    userRole= role.ToString();
+                }
+                if ( userRole == Role.Staff.ToString() || userRole == Role.Agent.ToString() || userRole == Role.Member.ToString())
+                {
+
+                    var systemStatus = await _statusService.GetSystemStatus(); // Retrieve system status from service
+
+                    if (systemStatus.Status)
                     {
-                        StatusCode = StatusCodes.Status503ServiceUnavailable,
-                        Content = "System is currently not available"
-                    };
-                    return;
+                        context.Result = new ContentResult
+                        {
+                            StatusCode = StatusCodes.Status503ServiceUnavailable,
+                            Content = "System is currently not available"
+                        };
+                        return;
+                    }
                 }
 
                 await next();

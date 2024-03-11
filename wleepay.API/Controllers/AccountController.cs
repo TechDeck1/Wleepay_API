@@ -39,6 +39,7 @@ using System.Text.Json;
 using static wleepay.Communication.EmailTemplates.EmailTemplates;
 using static wleepay.Communication.EmailTemplates.PasswordChangeTemplate;
 using static wleepay.Communication.EmailTemplates.AccountActivatedTemplate;
+using wleepay.API.Middleware;
 
 namespace wleepay.API.Controllers
 {
@@ -251,6 +252,7 @@ namespace wleepay.API.Controllers
             }
         }
 
+        [SystemLock]
         [HttpPost("RegisterStaff")]
         public async Task<IActionResult> RegisterStaff([FromBody] AddStaffDetailsResource userDetail)
         {
@@ -405,6 +407,7 @@ namespace wleepay.API.Controllers
             }
         }
 
+        [SystemLock]
         [HttpPost("RegisterSystemAdmin")]
         public async Task<IActionResult> RegisterSystemAdmin([FromBody] AddSystemAdminResource userDetail)
         {
@@ -1279,6 +1282,7 @@ namespace wleepay.API.Controllers
             });
         }
 
+        [SystemLock]
         [HttpPost("UpdatePermissions")]
         public async Task<IActionResult> UpdatePermissions([FromBody] StaffPermissionAndRoleResource staffPermissionAndRoleResource)
         {

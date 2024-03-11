@@ -14,6 +14,7 @@ using wleepay.Communication.Templates;
 using Twilio.TwiML.Voice;
 using System.Globalization;
 using Microsoft.AspNetCore.Authorization;
+using wleepay.API.Middleware;
 
 namespace wleepay.API.Controllers
 {
@@ -40,6 +41,7 @@ namespace wleepay.API.Controllers
             _sMSService = sMSService;
         }
 
+        [SystemLock]
         [HttpPost]
         public async Task<IActionResult> AddCashFlowHistoryAsync(CashFlowHistoryResource cashFlowHistoryResource)
         {

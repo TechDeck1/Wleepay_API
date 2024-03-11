@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using wleepay.Core.Services;
 using wleepay.API.Resources;
 using Microsoft.AspNetCore.Authorization;
+using wleepay.API.Middleware;
 
 namespace wleepay.API.Controllers
 {
@@ -51,6 +52,7 @@ namespace wleepay.API.Controllers
         //    return Ok(logs);
         //}
 
+        [SystemLock]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteLogsById(int id)
         {

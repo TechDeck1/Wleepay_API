@@ -37,6 +37,7 @@ using static wleepay.Communication.EmailTemplates.EmailLockOutTemplate;
 using static wleepay.Communication.EmailTemplates.AccountActivatedTemplate;
 using static wleepay.Communication.EmailTemplates.AccountDeactivatedTemplate;
 using SendGrid.Helpers.Mail;
+using wleepay.API.Middleware;
 
 namespace wleepay.API.Controllers
 {
@@ -216,6 +217,7 @@ namespace wleepay.API.Controllers
             return BadRequest(Messages.BadRequest.ToDescriptionString());
         }
 
+        [SystemLock]
         [HttpPost("SetCashOutTaxRate")]
         public async Task<IActionResult> UpdateTaxRates([FromBody] TaxRateResourceModel taxRateResourceModel)
         {
@@ -251,6 +253,7 @@ namespace wleepay.API.Controllers
             return Ok(updatedRates);
         }
 
+        [SystemLock]
         [HttpPost("SetAgentCommissionTaxRates")]
         public async Task<IActionResult> SetAgentCommissionTaxRates([FromBody] TaxRateResourceModel taxRateResourceModel)
         {
