@@ -43,6 +43,7 @@ namespace wleepay.Core.Enums
         [Description("Ticket Closed.")] SubjectForTicketClosed,
         [Description("Reply for Ticket.")] SubjectForTicketUpdated,
         [Description("You cannot login from this screen.")] WrongLoginPage,
+        [Description("Information is succesfully updated.")] InfoUpdated,
 
 
 

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MailKit.Search;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -24,7 +25,7 @@ namespace wleepay.Services
             UserDetail userDetail = new UserDetail();
             if (detail.Id > 0)
             {
-                userDetail = await _unitOfWork.UserDetail.GetUserDetailsById(detail.UserId);
+                //userDetail = await _unitOfWork.UserDetail.GetUserDetailsById(detail.UserId);
                 if (userDetail != null)
                 {
                     userDetail = detail;
@@ -168,9 +169,9 @@ namespace wleepay.Services
             return await _unitOfWork.UserDetail.GetAllUsersById(role, pageIndex, pageSize, createdBy);
         }
 
-        public async Task<UserDetailsResponseResource> SearchUsersByEmail(string email, Core.Enums.Role role, int index, int size)
+        public async Task<UserDetailsResponseResource> SearchUsersByEmail(string searchText, Core.Enums.Role role, int index, int size)
         {
-            return await _unitOfWork.UserDetail.SearchApplicationUserByEmail(email, role , index, size );
+            return await _unitOfWork.UserDetail.SearchApplicationUserByEmail(searchText, role , index, size );
         }
 
         public async Task<TransactionAndUserResponseResource> VerifyUserAccountByPhone(string phone)

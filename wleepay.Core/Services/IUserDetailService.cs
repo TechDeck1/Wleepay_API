@@ -27,7 +27,7 @@ namespace wleepay.Core.Services
         Task<UserDetail> UpdateUserVerificationCode(string UserId, string verificationCode);
         Task<UserDetail> UpdateUserStatus(string userId, int status);
         Task<UserDetailsResponseResource> GetAllUsersById(Core.Enums.Role role, int pageIndex, int pageSize, string createdBy);
-        Task<UserDetailsResponseResource> SearchUsersByEmail(string email, Core.Enums.Role role , int index, int size);
+        Task<UserDetailsResponseResource> SearchUsersByEmail(string searchText, Core.Enums.Role role , int index, int size);
         Task<TransactionAndUserResponseResource> VerifyUserAccountByPhone(string phone);
         Task<ApplicationUser> GetStaffPermissionsById(string userId);
 
