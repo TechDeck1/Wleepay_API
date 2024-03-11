@@ -78,7 +78,7 @@ namespace wleepay.API.Controllers
         }
 
         [HttpGet("{userId}/{currency}/{isMonthly}")]
-        public async Task<IActionResult> GetTrasactionById(string userId, int currency, bool isMonthly)
+        public async Task<IActionResult> GetTrasactionAmount(string userId, int currency, bool isMonthly)
         {
             var wallets = await _walletService.GetWalletsByUserId(userId, currency);
             var wallet = wallets.Where(w => w.Type == WalletTypes.MemberAccount.GetHashCode()).FirstOrDefault();
