@@ -35,13 +35,13 @@ namespace wleepay.Communication.Services
             var client = new SendGridClient(apiKey);
             var msg = new SendGridMessage()
             {
-                From = new EmailAddress(senderEmail, "lionel"),
+                From = new EmailAddress(senderEmail, "WleePay Team"),
                 Subject = emailSubject,
                 PlainTextContent = "",
                 HtmlContent = htmlTemplate,
             };
 
-            msg.AddTo(new EmailAddress(recipientEmail, "shikha"));
+            msg.AddTo(new EmailAddress(recipientEmail, "user"));
             var response = await client.SendEmailAsync(msg);
             string responseBody = await response.Body.ReadAsStringAsync();
 
@@ -65,7 +65,7 @@ namespace wleepay.Communication.Services
             var client = new SendGridClient(apiKey);
             var msg = new SendGridMessage()
             {
-                From = new EmailAddress(senderEmail, "lionel"),
+                From = new EmailAddress(senderEmail, "WleePay Team"),
                 Subject = subject,
                 PlainTextContent = "",
                 HtmlContent = template
