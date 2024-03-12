@@ -46,6 +46,7 @@ namespace wleepay.API.Controllers
             return Ok(result);
         }
 
+        [AllowAnonymous]
         [HttpGet]
         public async Task<IActionResult> GetSystemStatus()
         {
