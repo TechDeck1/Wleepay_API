@@ -22,6 +22,7 @@ using wleepay.Core.Enums;
 using wleepay.Core.Models;
 using wleepay.Core.Services;
 using wleepay.Storage.Interface;
+using wleepay.Storage.Services;
 
 namespace wleepay.API.Controllers
 {
@@ -40,6 +41,7 @@ namespace wleepay.API.Controllers
         private readonly IMapper _mapper;
         private readonly ILogger<UserController> _logger;
         private readonly IUsersStaffRoleService _usersStaffRoleService;
+        private readonly IUploadDocument _storageService;
 
         public UserController(UserManager<ApplicationUser> userManager,
             IUserDetailService userDetailsService,
@@ -49,7 +51,8 @@ namespace wleepay.API.Controllers
             ISmileIdentityJobService smileIdentityJobService,
             IMapper mapper,
             ILogger<UserController> logger, 
-            IUsersStaffRoleService usersStaffRoleService)
+            IUsersStaffRoleService usersStaffRoleService,
+            IUploadDocument storageService)
 
         {
             _userManager = userManager;
@@ -61,6 +64,7 @@ namespace wleepay.API.Controllers
             _mapper = mapper;
             _logger = logger;
             _usersStaffRoleService = usersStaffRoleService;
+            _storageService = storageService;
         }
 
         [HttpGet("{userId}")]
@@ -489,12 +493,28 @@ namespace wleepay.API.Controllers
             if (isUserUpdated.Succeeded)
             {
                
-                userDetail.FirstName = editUserDetailResource.FirstName;
-                userDetail.LastName = editUserDetailResource.LastName;
-                userDetail.WleePhoneNumber = editUserDetailResource.WleePhoneNumber;
-                userDetail.PhoneNumber = editUserDetailResource.PhoneNumber;
+                //userDetail.FirstName = editUserDetailResource.FirstName;
+                //userDetail.LastName = editUserDetailResource.LastName;
+                //userDetail.WleePhoneNumber = editUserDetailResource.WleePhoneNumber;
+                //userDetail.PhoneNumber = editUserDetailResource.PhoneNumber;
 
-                await _userDetailsService.AddOrUpdateUserDetails(userDetail);
+               _mapper.Map<EditUserDetailResource, UserDetail>(editUserDetailResource);
+                var combinedUserData= _mapper.Map(editUserDetailResource, userDetail);
+
+                if (!string.IsNullOrEmpty(userDetail.Image))
+                {
+                    //var profileURL = await _storageService.UploadImageWithURL(userDetailsToInsert.Image, "user-profile-picture", newUser.Id);
+                    //var profileURL = userDetailsToInsert.Image + "";
+                    var profileURL = _storageService.UploadUserProfileImage(userDetail.Image, userDetail.UserId);
+                    userDetail.Image = profileURL;
+                }
+
+                if (!string.IsNullOrEmpty(userDetail.KYCDocumentImage))
+                {
+                    var documentURL = _storageService.UploadKYCDocument(userDetail.KYCDocumentImage, userDetail.UserId);
+                    userDetail.KYCDocumentImage = documentURL.ToString();
+                }
+                await _userDetailsService.AddOrUpdateUserDetails(combinedUserData);
                 UsersStaffRole usersStaffRole = new UsersStaffRole();
                 usersStaffRole.UserId = applicationUser.Id;
                 usersStaffRole.UpdatedDate= DateTime.UtcNow;
