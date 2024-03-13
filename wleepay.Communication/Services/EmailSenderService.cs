@@ -31,7 +31,7 @@ namespace wleepay.Communication.Services
             string htmlTemplate = messageText;
 
             // Sender's email
-            string senderEmail = "ranjotk@arielsoftwares.com";
+            string senderEmail = "ariel.ranjot@gmail.com";
             var client = new SendGridClient(apiKey);
             var msg = new SendGridMessage()
             {
@@ -59,7 +59,7 @@ namespace wleepay.Communication.Services
             var recipientEmail = email;
 
             // Sender's email address and credentials
-            string senderEmail = "ranjotk@arielsoftwares.com";
+            string senderEmail = "ariel.ranjot@gmail.com";
 
             var apiKey = _configuration.GetSection("SendGrid:WleePaySendGridApiKey").Value.ToString();
             var client = new SendGridClient(apiKey);
