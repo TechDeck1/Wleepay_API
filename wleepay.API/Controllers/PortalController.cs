@@ -145,7 +145,7 @@ namespace wleepay.API.Controllers
                     StaffFirstName = userDetails.FirstName,
                     StaffPhoneNumber = userDetails.PhoneNumber
                 };
-                var subject = "Failed Login attempt";
+                var subject = EmailSubjectEnums.LoginFailed.ToDescriptionString();
                 string htmlTemplateForStaff = emailLockOutTemplateForStaff.GenerateHtml();
                 await _emailSender.SendEmailAsync(loginRequest.Email, htmlTemplateForStaff, userDetails.FirstName, subject);
 
@@ -481,7 +481,7 @@ namespace wleepay.API.Controllers
                         systemActivityLog.Action = ActionsForSystemLogs.Activate.ToDescriptionString();
                         systemActivityLog.Description = GenericMessagesForSystemLogs.AccountActivated.ToDescriptionString();
 
-                        var subject = "Wleepay portal account setup/activation confirmation notice (Do not reply)";
+                        var subject = EmailSubjectEnums.AccountSetupConfirmation.ToDescriptionString();
 
                         //send email to staff for activation
                         AccountActivatedTemplateForStaff templateForstaff = new AccountActivatedTemplateForStaff
@@ -526,7 +526,7 @@ namespace wleepay.API.Controllers
                             StaffFirstName = userDetails.FirstName,
                             StaffPhoneNumber = userDetails.PhoneNumber
                         };
-                        var subject = "Alert: Wleepay portal account DeActivation notice (Do not reply)";
+                        var subject = EmailSubjectEnums.AccountDeactivate.ToDescriptionString();
                         string htmlTemplateForStaff = accountDeactivatedTemplateForStaff.GenerateHtml();
                         await _emailSender.SendEmailAsync(model.EmailId, htmlTemplateForStaff, userDetails.FirstName, subject);
 
@@ -595,13 +595,13 @@ namespace wleepay.API.Controllers
             }
             else
             {
-                return BadRequest("Invalid access token or refresh token");
+                return BadRequest(Messages.InvalidAccessToken.ToDescriptionString());
             }
             var user = await _userManager.FindByEmailAsync(emailAddress);
 
             if (user == null)
             {
-                return BadRequest("Invalid access token or refresh token");
+                return BadRequest(Messages.InvalidAccessToken.ToDescriptionString());
             }
             var userRole = await _userManager.GetRolesAsync(user);
 
