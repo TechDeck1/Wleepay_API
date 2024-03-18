@@ -251,6 +251,14 @@ namespace wleepay.API
             {
                 endpoints.MapControllers();
                 endpoints.MapHub<StatusHubClient>("/status");
+                //endpoints.MapAreaControllerRoute(
+                //  name: "Portal",
+                //  areaName: "Portal",
+                //  pattern: "Portal/{controller=Home}/{action=Index}");
+                //endpoints.MapControllerRoute(
+                //  name: "default",
+                //  pattern: "{controller=Home}/{action=Index}/{id?}");
+
 
             });
 

@@ -24,19 +24,19 @@ namespace wleepay.API.Controllers
             _lookupService = lookupService;
         }
 
-        [HttpGet("StaffRoles")]
-        public async Task<IActionResult> GetStaffRoles()
-        {
-            var staffRoles = await _lookupService.GetAllStaffRoles();
-            return Ok(staffRoles);
-        }
+        //[HttpGet("StaffRoles")]
+        //public async Task<IActionResult> GetStaffRoles()
+        //{
+        //    var staffRoles = await _lookupService.GetAllStaffRoles();
+        //    return Ok(staffRoles);
+        //}
 
-        [HttpGet("StaffPermissions")]
-        public async Task<IActionResult> GetStaffPermissions()
-        {
-            var staffRoles = await _lookupService.GetAllStaffPermissions();
-            return Ok(staffRoles);
-        }
+        //[HttpGet("StaffPermissions")]
+        //public async Task<IActionResult> GetStaffPermissions()
+        //{
+        //    var staffRoles = await _lookupService.GetAllStaffPermissions();
+        //    return Ok(staffRoles);
+        //}
     }
     
 }

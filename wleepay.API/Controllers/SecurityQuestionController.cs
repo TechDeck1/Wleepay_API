@@ -27,12 +27,12 @@ namespace wleepay.API.Controllers
             _lookupService = lookupService;
         }
 
-        [AllowAnonymous]
-        [HttpGet]
-        public async Task<IActionResult> GetSecurityQuestions()
-        {
-            var questions = await _lookupService.GetAllSecurityQuestions();
-            return Ok(questions);
-        }
+        //[AllowAnonymous]
+        //[HttpGet]
+        //public async Task<IActionResult> GetSecurityQuestions()
+        //{
+        //    var questions = await _lookupService.GetAllSecurityQuestions();
+        //    return Ok(questions);
+        //}
     }
 }
