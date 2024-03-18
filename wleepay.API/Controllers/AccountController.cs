@@ -23,18 +23,10 @@ using wleepay.Storage.Interface;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using System.IO;
-using static System.Net.WebRequestMethods;
-using Microsoft.AspNetCore.Identity.UI.Services;
-using Microsoft.AspNetCore.WebUtilities;
 using IEmailSender = wleepay.Communication.Interface.IEmailSender;
-using Twilio.TwiML.Messaging;
 using System.Web;
 using wleepay.Core.Enums;
-using System.Security.Cryptography;
-using wleepay.Communication.Services;
 using wleepay.API.Helpers;
-using DevExpress.XtraEditors.Filtering;
-using NLog.Targets;
 using System.Text.Json;
 using static wleepay.Communication.EmailTemplates.EmailTemplates;
 using static wleepay.Communication.EmailTemplates.PasswordChangeTemplate;
@@ -45,7 +37,6 @@ namespace wleepay.API.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [Authorize(AuthenticationSchemes = "Bearer")]
-    //[AllowAnonymous]
     public class AccountController : Controller
     {
         private readonly UserManager<ApplicationUser> _userManager;
@@ -548,7 +539,7 @@ namespace wleepay.API.Controllers
                 return BadRequest(new 
                 { 
                     Success = false,
-                    Message = "Phone is not verified please verify your phone number."
+                    Message = Messages.PhoneNumberNotVerified.ToDescriptionString()
                 });
 
             }

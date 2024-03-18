@@ -10,6 +10,8 @@ using System;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
 using wleepay.API.Hub;
+using wleepay.Core.Enums;
+using wleepay.Core.Common;
 
 namespace wleepay.API.Controllers
 {
@@ -52,7 +54,6 @@ namespace wleepay.API.Controllers
         {
             var result = await _systemStatusService.GetSystemStatus();
             statusHub.Clients.All.SendStatusToUser(result);
-
             return Ok(result);
         }
 
@@ -68,7 +69,7 @@ namespace wleepay.API.Controllers
         {
             if(systemStatusResource.Id <= 0)
             {
-                return BadRequest("Cannont update status id is null");
+                return BadRequest(Messages.NotUpdated.ToDescriptionString());
 
             }
             var systemStatus = _mapper.Map<SystemStatusResource, SystemStatus>(systemStatusResource);

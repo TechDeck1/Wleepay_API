@@ -573,17 +573,15 @@ namespace wleepay.API.Controllers
         }
 
         [AllowAnonymous]
-        [HttpPost]
-        [Route("refresh-token")]
+        [HttpPost("refresh-token")]
         public async Task<IActionResult> RefreshToken(RefreshTokenModel tokenModel)
         {
-            if (tokenModel is null)
+            if (string.IsNullOrEmpty(tokenModel.Token))
             {
                 return BadRequest("Invalid client request");
             }
 
             string? accessToken = tokenModel.Token;
-
             var handler = new JwtSecurityTokenHandler();
             var jsonToken = handler.ReadToken(accessToken) as JwtSecurityToken;
             string emailAddress = "";
@@ -612,8 +610,7 @@ namespace wleepay.API.Controllers
             return Ok(new
             {
                 accessToken = newAccessToken,
-            }
-            );
+            });
         }
 
         #region helper methods
@@ -648,45 +645,6 @@ namespace wleepay.API.Controllers
             }
             return "Unknown";
         }
-
-        //private ClaimsPrincipal? GetPrincipalFromExpiredToken(string? token)
-        //{
-        //    var tokenValidationParameters = new TokenValidationParameters
-        //    {
-        //        ValidateAudience = false,
-        //        ValidateIssuer = false,
-        //        ValidateIssuerSigningKey = true,
-        //        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:Secret"])),
-        //        ValidateLifetime = false
-        //    };
-
-        //    var tokenHandler = new JwtSecurityTokenHandler();
-        //    var principal = tokenHandler.ValidateToken(token, tokenValidationParameters, out SecurityToken securityToken);
-        //    if (securityToken is not JwtSecurityToken jwtSecurityToken || !jwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256, StringComparison.InvariantCultureIgnoreCase))
-        //        throw new SecurityTokenException("Invalid token");
-
-        //    return principal;
-
-        //}
-
-        private JwtSecurityToken CreateToken(List<Claim> authClaims)
-        {
-            var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:Secret"]));
-            _ = int.TryParse(_configuration["JWT:TokenValidityInMinutes"], out int tokenValidityInMinutes);
-
-            var token = new JwtSecurityToken(
-                issuer: _configuration["JWT:ValidIssuer"],
-                audience: _configuration["JWT:ValidAudience"],
-                expires: DateTime.Now.AddMinutes(30),
-                claims: authClaims,
-                signingCredentials: new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256)
-                );
-
-            return token;
-        }
-
-
-
         #endregion
     }
 }
