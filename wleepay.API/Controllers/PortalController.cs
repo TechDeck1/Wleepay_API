@@ -146,7 +146,7 @@ namespace wleepay.API.Controllers
                     StaffFirstName = userDetails.FirstName,
                     StaffPhoneNumber = userDetails.PhoneNumber
                 };
-                var subject = "Failed Login attempt";
+                var subject = EmailSubjectEnums.LoginFailed.ToDescriptionString();
                 string htmlTemplateForStaff = emailLockOutTemplateForStaff.GenerateHtml();
                 await _emailSender.SendEmailAsync(loginRequest.Email, htmlTemplateForStaff, userDetails.FirstName, subject);
 
@@ -484,7 +484,7 @@ namespace wleepay.API.Controllers
                         systemActivityLog.Action = ActionsForSystemLogs.Activate.ToDescriptionString();
                         systemActivityLog.Description = GenericMessagesForSystemLogs.AccountActivated.ToDescriptionString();
 
-                        var subject = "Wleepay portal account setup/activation confirmation notice (Do not reply)";
+                        var subject = EmailSubjectEnums.AccountSetupConfirmation.ToDescriptionString();
 
                         //send email to staff for activation
                         AccountActivatedTemplateForStaff templateForstaff = new AccountActivatedTemplateForStaff
@@ -529,7 +529,7 @@ namespace wleepay.API.Controllers
                             StaffFirstName = userDetails.FirstName,
                             StaffPhoneNumber = userDetails.PhoneNumber
                         };
-                        var subject = "Alert: Wleepay portal account DeActivation notice (Do not reply)";
+                        var subject = EmailSubjectEnums.AccountDeactivate.ToDescriptionString();
                         string htmlTemplateForStaff = accountDeactivatedTemplateForStaff.GenerateHtml();
                         await _emailSender.SendEmailAsync(model.EmailId, htmlTemplateForStaff, userDetails.FirstName, subject);
 
@@ -576,17 +576,15 @@ namespace wleepay.API.Controllers
         }
 
         [AllowAnonymous]
-        [HttpPost]
-        [Route("refresh-token")]
+        [HttpPost("refresh-token")]
         public async Task<IActionResult> RefreshToken(RefreshTokenModel tokenModel)
         {
-            if (tokenModel is null)
+            if (string.IsNullOrEmpty(tokenModel.Token))
             {
                 return BadRequest("Invalid client request");
             }
 
             string? accessToken = tokenModel.Token;
-
             var handler = new JwtSecurityTokenHandler();
             var jsonToken = handler.ReadToken(accessToken) as JwtSecurityToken;
             string emailAddress = "";
@@ -598,13 +596,13 @@ namespace wleepay.API.Controllers
             }
             else
             {
-                return BadRequest("Invalid access token or refresh token");
+                return BadRequest(Messages.InvalidAccessToken.ToDescriptionString());
             }
             var user = await _userManager.FindByEmailAsync(emailAddress);
 
             if (user == null)
             {
-                return BadRequest("Invalid access token or refresh token");
+                return BadRequest(Messages.InvalidAccessToken.ToDescriptionString());
             }
             var userRole = await _userManager.GetRolesAsync(user);
 
@@ -615,8 +613,7 @@ namespace wleepay.API.Controllers
             return Ok(new
             {
                 accessToken = newAccessToken,
-            }
-            );
+            });
         }
 
         #region helper methods
@@ -651,45 +648,6 @@ namespace wleepay.API.Controllers
             }
             return "Unknown";
         }
-
-        //private ClaimsPrincipal? GetPrincipalFromExpiredToken(string? token)
-        //{
-        //    var tokenValidationParameters = new TokenValidationParameters
-        //    {
-        //        ValidateAudience = false,
-        //        ValidateIssuer = false,
-        //        ValidateIssuerSigningKey = true,
-        //        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:Secret"])),
-        //        ValidateLifetime = false
-        //    };
-
-        //    var tokenHandler = new JwtSecurityTokenHandler();
-        //    var principal = tokenHandler.ValidateToken(token, tokenValidationParameters, out SecurityToken securityToken);
-        //    if (securityToken is not JwtSecurityToken jwtSecurityToken || !jwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256, StringComparison.InvariantCultureIgnoreCase))
-        //        throw new SecurityTokenException("Invalid token");
-
-        //    return principal;
-
-        //}
-
-        private JwtSecurityToken CreateToken(List<Claim> authClaims)
-        {
-            var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:Secret"]));
-            _ = int.TryParse(_configuration["JWT:TokenValidityInMinutes"], out int tokenValidityInMinutes);
-
-            var token = new JwtSecurityToken(
-                issuer: _configuration["JWT:ValidIssuer"],
-                audience: _configuration["JWT:ValidAudience"],
-                expires: DateTime.Now.AddMinutes(30),
-                claims: authClaims,
-                signingCredentials: new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256)
-                );
-
-            return token;
-        }
-
-
-
         #endregion
     }
 }

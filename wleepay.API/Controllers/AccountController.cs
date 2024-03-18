@@ -23,18 +23,10 @@ using wleepay.Storage.Interface;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using System.IO;
-using static System.Net.WebRequestMethods;
-using Microsoft.AspNetCore.Identity.UI.Services;
-using Microsoft.AspNetCore.WebUtilities;
 using IEmailSender = wleepay.Communication.Interface.IEmailSender;
-using Twilio.TwiML.Messaging;
 using System.Web;
 using wleepay.Core.Enums;
-using System.Security.Cryptography;
-using wleepay.Communication.Services;
 using wleepay.API.Helpers;
-using DevExpress.XtraEditors.Filtering;
-using NLog.Targets;
 using System.Text.Json;
 using static wleepay.Communication.EmailTemplates.EmailTemplates;
 using static wleepay.Communication.EmailTemplates.PasswordChangeTemplate;
@@ -46,7 +38,6 @@ namespace wleepay.API.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [Authorize(AuthenticationSchemes = "Bearer")]
-    //[AllowAnonymous]
     public class AccountController : Controller
     {
         private readonly UserManager<ApplicationUser> _userManager;
@@ -551,7 +542,7 @@ namespace wleepay.API.Controllers
                 return BadRequest(new 
                 { 
                     Success = false,
-                    Message = "Phone is not verified please verify your phone number."
+                    Message = Messages.PhoneNumberNotVerified.ToDescriptionString()
                 });
 
             }
@@ -791,7 +782,7 @@ namespace wleepay.API.Controllers
 
                     var htmlTemplate = template.EmailTemplate(forgotPasswordDto.Email, callbackUrl, username);
 
-                    var subject = "Reset password token";
+                    var subject = EmailSubjectEnums.ResetPassword.ToDescriptionString();
                     //send mail to user for forgot password link
                     await _emailSender.SendEmailAsync(forgotPasswordDto.Email, htmlTemplate, username, subject);
 
@@ -856,7 +847,7 @@ namespace wleepay.API.Controllers
                   
                     var userRole = await _userManager.GetRolesAsync(user);
                     var allAdmins = await _userDetailsService.GetUserByRole((int)Role.SuperAdmin);
-                    var subject = "Alert: Wleepay portal password change notice (Do not reply)";
+                    var subject = EmailSubjectEnums.PasswordChanged.ToDescriptionString();
 
                     // send email to staff(user) 
                     PasswordChangeTemplateForStaff passwordChangeTemplateForStaff = new PasswordChangeTemplateForStaff
@@ -939,7 +930,7 @@ namespace wleepay.API.Controllers
                        
                         //add user details
                         await _userDetailsService.AddOrUpdateUserDetails(userDetails);
-                        var subject = "Wleepay portal account setup/activation confirmation notice (Do not reply)";
+                        var subject = EmailSubjectEnums.AccountSetupConfirmation.ToDescriptionString();
 
                         //send email to user/staff
                         AccountActivatedTemplateForStaff templateForstaff = new AccountActivatedTemplateForStaff
@@ -1246,7 +1237,7 @@ namespace wleepay.API.Controllers
                             SystemAdminPhoneNumber = userDetails.PhoneNumber
                         };
 
-                        var subject = "Wleepay portal account setup/activation confirmation notice (Do not reply)";
+                        var subject = EmailSubjectEnums.AccountSetupConfirmation.ToDescriptionString();
                         string htmlTemplate = template.GenerateHtml();
                         await _emailSender.SendEmailAsync(decryptedEmail, htmlTemplate, userDetails.FirstName, subject);
                         //await _emailSender.EmailForAccountCreationToSystemAdmin(decryptedEmail, userDetails.FirstName, userDetails.PhoneNumber);
@@ -1371,7 +1362,7 @@ namespace wleepay.API.Controllers
                     EmailHtmlTemplates template = new EmailHtmlTemplates();
                     var htmlTemplate = template.EmailTemplate(forgotPinResourceSystemAdmin.Email, callbackUrl, username);
 
-                    var subject = "Reset password";
+                    var subject = EmailSubjectEnums.ResetPassword.ToDescriptionString();
 
                     //send mail to user for forgot password link
                     await _emailSender.SendEmailAsync(forgotPinResourceSystemAdmin.Email, htmlTemplate, username, subject);

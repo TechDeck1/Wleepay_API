@@ -38,7 +38,7 @@ namespace wleepay.Data.Repositories
                         await WPContext.CashFlowHistory.AddAsync(cashFlowHistory);
                     }
 
-                    await WPContext.SaveChangesAsync();
+                    //await WPContext.SaveChangesAsync();
                   
                     //update receiver wallet balance
                     var receiverWallet = await WPContext.Wallet.Where(w => w.Id == cashFlowHistory.WalletId).FirstOrDefaultAsync();
@@ -60,7 +60,7 @@ namespace wleepay.Data.Repositories
             var newAddedCashFlowHistory = await WPContext.CashFlowHistory
                 .Where(w => w.Id == cashFlowHistory.Id)
                 .Include(w => w.toWallet)
-                .FirstOrDefaultAsync();
+                .FirstOrDefaultAsync(); //no query
 
             return newAddedCashFlowHistory;
 
@@ -88,10 +88,12 @@ namespace wleepay.Data.Repositories
                 .Skip(skipCount)
                 .Take(takeCount)
                 .ToListAsync();
-            CashFlowHistoryResponse cashFlowHistoryResponse = new CashFlowHistoryResponse();
-            cashFlowHistoryResponse.TotalCount = await WPContext.CashFlowHistory.Where(x => x.CurrencyId == currencyId).CountAsync();
-            cashFlowHistoryResponse.CashFlowHistory = cashFlowHistory;
-            return cashFlowHistoryResponse;
+          
+            return new CashFlowHistoryResponse
+            {
+                TotalCount = await WPContext.CashFlowHistory.Where(x => x.CurrencyId == currencyId).CountAsync(),
+                CashFlowHistory=cashFlowHistory
+            };
         }
 
         public async Task<CashFlowHistory> GetLatestCashFlowHistoryAsync(long walletId)

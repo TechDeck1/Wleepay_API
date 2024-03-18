@@ -14,6 +14,7 @@ namespace wleepay.API.Mapping
         {
 
             CreateMap<UserDetailResource, UserDetail>().ReverseMap();
+            CreateMap<EditUserDetailResource, UserDetail>().ReverseMap();
             CreateMap<ApplicationUser, ApplicationUserResource>()
                 .ForPath(dest => dest.UserRoles.Name, src => src.MapFrom(x => x.UserRoles.FirstOrDefault().Role.Name))
                 .ForPath(dest => dest.UserRoles.Id, src => src.MapFrom(x => x.UserRoles.FirstOrDefault().Role.Id))

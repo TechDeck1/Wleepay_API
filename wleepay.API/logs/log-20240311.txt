@@ -1,0 +1,449 @@
+2024-02-08 12:33:47 PM||DEBUG|wleepay.API.Program|init main 
+2024-02-08 12:33:58 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: https://localhost:5001 
+2024-02-08 12:33:58 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: https://localhost:5001 
+2024-02-08 12:33:58 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: http://localhost:5000 
+2024-02-08 12:33:58 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: http://localhost:5000 
+2024-02-08 12:33:58 PM||INFO|Microsoft.Hosting.Lifetime|Application started. Press Ctrl+C to shut down. 
+2024-02-08 12:33:58 PM||INFO|Microsoft.Hosting.Lifetime|Application started. Press Ctrl+C to shut down. 
+2024-02-08 12:33:58 PM||INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development 
+2024-02-08 12:33:58 PM||INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development 
+2024-02-08 12:33:58 PM||INFO|Microsoft.Hosting.Lifetime|Content root path: D:\Offical\Wleepay_API\wleepay.API 
+2024-02-08 12:33:58 PM||INFO|Microsoft.Hosting.Lifetime|Content root path: D:\Offical\Wleepay_API\wleepay.API 
+2024-02-08 12:42:09 PM||DEBUG|wleepay.API.Program|init main 
+2024-02-08 12:42:13 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: https://localhost:5001 
+2024-02-08 12:42:13 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: https://localhost:5001 
+2024-02-08 12:42:13 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: http://localhost:5000 
+2024-02-08 12:42:13 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: http://localhost:5000 
+2024-02-08 12:42:13 PM||INFO|Microsoft.Hosting.Lifetime|Application started. Press Ctrl+C to shut down. 
+2024-02-08 12:42:13 PM||INFO|Microsoft.Hosting.Lifetime|Application started. Press Ctrl+C to shut down. 
+2024-02-08 12:42:13 PM||INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development 
+2024-02-08 12:42:13 PM||INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development 
+2024-02-08 12:42:13 PM||INFO|Microsoft.Hosting.Lifetime|Content root path: D:\Offical\Wleepay_API\wleepay.API 
+2024-02-08 12:42:13 PM||INFO|Microsoft.Hosting.Lifetime|Content root path: D:\Offical\Wleepay_API\wleepay.API 
+2024-02-08 12:48:12 PM||DEBUG|wleepay.API.Program|init main 
+2024-02-08 12:48:16 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: https://localhost:5001 
+2024-02-08 12:48:16 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: https://localhost:5001 
+2024-02-08 12:48:16 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: http://localhost:5000 
+2024-02-08 12:48:16 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: http://localhost:5000 
+2024-02-08 12:48:16 PM||INFO|Microsoft.Hosting.Lifetime|Application started. Press Ctrl+C to shut down. 
+2024-02-08 12:48:16 PM||INFO|Microsoft.Hosting.Lifetime|Application started. Press Ctrl+C to shut down. 
+2024-02-08 12:48:16 PM||INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development 
+2024-02-08 12:48:16 PM||INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development 
+2024-02-08 12:48:16 PM||INFO|Microsoft.Hosting.Lifetime|Content root path: D:\Offical\Wleepay_API\wleepay.API 
+2024-02-08 12:48:16 PM||INFO|Microsoft.Hosting.Lifetime|Content root path: D:\Offical\Wleepay_API\wleepay.API 
+2024-02-08 13:58:48 PM||DEBUG|wleepay.API.Program|init main 
+2024-02-08 13:58:50 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: https://localhost:5001 
+2024-02-08 13:58:50 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: https://localhost:5001 
+2024-02-08 13:58:50 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: http://localhost:5000 
+2024-02-08 13:58:50 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: http://localhost:5000 
+2024-02-08 13:58:50 PM||INFO|Microsoft.Hosting.Lifetime|Application started. Press Ctrl+C to shut down. 
+2024-02-08 13:58:50 PM||INFO|Microsoft.Hosting.Lifetime|Application started. Press Ctrl+C to shut down. 
+2024-02-08 13:58:50 PM||INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development 
+2024-02-08 13:58:50 PM||INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development 
+2024-02-08 13:58:50 PM||INFO|Microsoft.Hosting.Lifetime|Content root path: D:\Offical\Wleepay_API\wleepay.API 
+2024-02-08 13:58:50 PM||INFO|Microsoft.Hosting.Lifetime|Content root path: D:\Offical\Wleepay_API\wleepay.API 
+2024-02-08 15:01:32 PM|20504|WARN|Microsoft.EntityFrameworkCore.Query|Compiling a query which loads related collections for more than one collection navigation either via 'Include' or through projection but no 'QuerySplittingBehavior' has been configured. By default Entity Framework will use 'QuerySplittingBehavior.SingleQuery' which can potentially result in slow query performance. See https://go.microsoft.com/fwlink/?linkid=2134277 for more information. To identify the query that's triggering this warning call 'ConfigureWarnings(w => w.Throw(RelationalEventId.MultipleCollectionIncludeWarning))' 
+2024-02-08 15:01:32 PM|20504|WARN|Microsoft.EntityFrameworkCore.Query|Compiling a query which loads related collections for more than one collection navigation either via 'Include' or through projection but no 'QuerySplittingBehavior' has been configured. By default Entity Framework will use 'QuerySplittingBehavior.SingleQuery' which can potentially result in slow query performance. See https://go.microsoft.com/fwlink/?linkid=2134277 for more information. To identify the query that's triggering this warning call 'ConfigureWarnings(w => w.Throw(RelationalEventId.MultipleCollectionIncludeWarning))' 
+2024-02-08 15:20:30 PM||DEBUG|wleepay.API.Program|init main 
+2024-02-08 15:20:34 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: https://localhost:5001 
+2024-02-08 15:20:34 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: https://localhost:5001 
+2024-02-08 15:20:34 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: http://localhost:5000 
+2024-02-08 15:20:34 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: http://localhost:5000 
+2024-02-08 15:20:34 PM||INFO|Microsoft.Hosting.Lifetime|Application started. Press Ctrl+C to shut down. 
+2024-02-08 15:20:34 PM||INFO|Microsoft.Hosting.Lifetime|Application started. Press Ctrl+C to shut down. 
+2024-02-08 15:20:34 PM||INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development 
+2024-02-08 15:20:34 PM||INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development 
+2024-02-08 15:20:34 PM||INFO|Microsoft.Hosting.Lifetime|Content root path: D:\Offical\Wleepay_API\wleepay.API 
+2024-02-08 15:20:34 PM||INFO|Microsoft.Hosting.Lifetime|Content root path: D:\Offical\Wleepay_API\wleepay.API 
+2024-02-08 15:20:53 PM|20504|WARN|Microsoft.EntityFrameworkCore.Query|Compiling a query which loads related collections for more than one collection navigation either via 'Include' or through projection but no 'QuerySplittingBehavior' has been configured. By default Entity Framework will use 'QuerySplittingBehavior.SingleQuery' which can potentially result in slow query performance. See https://go.microsoft.com/fwlink/?linkid=2134277 for more information. To identify the query that's triggering this warning call 'ConfigureWarnings(w => w.Throw(RelationalEventId.MultipleCollectionIncludeWarning))' 
+2024-02-08 15:20:53 PM|20504|WARN|Microsoft.EntityFrameworkCore.Query|Compiling a query which loads related collections for more than one collection navigation either via 'Include' or through projection but no 'QuerySplittingBehavior' has been configured. By default Entity Framework will use 'QuerySplittingBehavior.SingleQuery' which can potentially result in slow query performance. See https://go.microsoft.com/fwlink/?linkid=2134277 for more information. To identify the query that's triggering this warning call 'ConfigureWarnings(w => w.Throw(RelationalEventId.MultipleCollectionIncludeWarning))' 
+2024-02-08 15:30:50 PM|20504|WARN|Microsoft.EntityFrameworkCore.Query|Compiling a query which loads related collections for more than one collection navigation either via 'Include' or through projection but no 'QuerySplittingBehavior' has been configured. By default Entity Framework will use 'QuerySplittingBehavior.SingleQuery' which can potentially result in slow query performance. See https://go.microsoft.com/fwlink/?linkid=2134277 for more information. To identify the query that's triggering this warning call 'ConfigureWarnings(w => w.Throw(RelationalEventId.MultipleCollectionIncludeWarning))' 
+2024-02-08 15:30:50 PM|20504|WARN|Microsoft.EntityFrameworkCore.Query|Compiling a query which loads related collections for more than one collection navigation either via 'Include' or through projection but no 'QuerySplittingBehavior' has been configured. By default Entity Framework will use 'QuerySplittingBehavior.SingleQuery' which can potentially result in slow query performance. See https://go.microsoft.com/fwlink/?linkid=2134277 for more information. To identify the query that's triggering this warning call 'ConfigureWarnings(w => w.Throw(RelationalEventId.MultipleCollectionIncludeWarning))' 
+2024-02-08 17:27:32 PM||DEBUG|wleepay.API.Program|init main 
+2024-02-08 17:27:35 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: https://localhost:5001 
+2024-02-08 17:27:35 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: https://localhost:5001 
+2024-02-08 17:27:35 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: http://localhost:5000 
+2024-02-08 17:27:35 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: http://localhost:5000 
+2024-02-08 17:27:35 PM||INFO|Microsoft.Hosting.Lifetime|Application started. Press Ctrl+C to shut down. 
+2024-02-08 17:27:35 PM||INFO|Microsoft.Hosting.Lifetime|Application started. Press Ctrl+C to shut down. 
+2024-02-08 17:27:35 PM||INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development 
+2024-02-08 17:27:35 PM||INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development 
+2024-02-08 17:27:35 PM||INFO|Microsoft.Hosting.Lifetime|Content root path: D:\Offical\Wleepay_API\wleepay.API 
+2024-02-08 17:27:35 PM||INFO|Microsoft.Hosting.Lifetime|Content root path: D:\Offical\Wleepay_API\wleepay.API 
+2024-02-08 17:40:46 PM|20504|WARN|Microsoft.EntityFrameworkCore.Query|Compiling a query which loads related collections for more than one collection navigation either via 'Include' or through projection but no 'QuerySplittingBehavior' has been configured. By default Entity Framework will use 'QuerySplittingBehavior.SingleQuery' which can potentially result in slow query performance. See https://go.microsoft.com/fwlink/?linkid=2134277 for more information. To identify the query that's triggering this warning call 'ConfigureWarnings(w => w.Throw(RelationalEventId.MultipleCollectionIncludeWarning))' 
+2024-02-08 17:40:46 PM|20504|WARN|Microsoft.EntityFrameworkCore.Query|Compiling a query which loads related collections for more than one collection navigation either via 'Include' or through projection but no 'QuerySplittingBehavior' has been configured. By default Entity Framework will use 'QuerySplittingBehavior.SingleQuery' which can potentially result in slow query performance. See https://go.microsoft.com/fwlink/?linkid=2134277 for more information. To identify the query that's triggering this warning call 'ConfigureWarnings(w => w.Throw(RelationalEventId.MultipleCollectionIncludeWarning))' 
+2024-02-08 17:56:47 PM|20504|WARN|Microsoft.EntityFrameworkCore.Query|Compiling a query which loads related collections for more than one collection navigation either via 'Include' or through projection but no 'QuerySplittingBehavior' has been configured. By default Entity Framework will use 'QuerySplittingBehavior.SingleQuery' which can potentially result in slow query performance. See https://go.microsoft.com/fwlink/?linkid=2134277 for more information. To identify the query that's triggering this warning call 'ConfigureWarnings(w => w.Throw(RelationalEventId.MultipleCollectionIncludeWarning))' 
+2024-02-08 17:56:47 PM|20504|WARN|Microsoft.EntityFrameworkCore.Query|Compiling a query which loads related collections for more than one collection navigation either via 'Include' or through projection but no 'QuerySplittingBehavior' has been configured. By default Entity Framework will use 'QuerySplittingBehavior.SingleQuery' which can potentially result in slow query performance. See https://go.microsoft.com/fwlink/?linkid=2134277 for more information. To identify the query that's triggering this warning call 'ConfigureWarnings(w => w.Throw(RelationalEventId.MultipleCollectionIncludeWarning))' 
+2024-02-08 19:01:42 PM||DEBUG|wleepay.API.Program|init main 
+2024-02-08 19:01:45 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: https://localhost:5001 
+2024-02-08 19:01:45 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: https://localhost:5001 
+2024-02-08 19:01:45 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: http://localhost:5000 
+2024-02-08 19:01:45 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: http://localhost:5000 
+2024-02-08 19:01:45 PM||INFO|Microsoft.Hosting.Lifetime|Application started. Press Ctrl+C to shut down. 
+2024-02-08 19:01:45 PM||INFO|Microsoft.Hosting.Lifetime|Application started. Press Ctrl+C to shut down. 
+2024-02-08 19:01:45 PM||INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development 
+2024-02-08 19:01:45 PM||INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development 
+2024-02-08 19:01:45 PM||INFO|Microsoft.Hosting.Lifetime|Content root path: D:\Offical\Wleepay_API\wleepay.API 
+2024-02-08 19:01:45 PM||INFO|Microsoft.Hosting.Lifetime|Content root path: D:\Offical\Wleepay_API\wleepay.API 
+2024-02-21 14:52:22 PM||DEBUG|wleepay.API.Program|init main 
+2024-02-21 14:52:25 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: https://localhost:5001 
+2024-02-21 14:52:25 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: https://localhost:5001 
+2024-02-21 14:52:25 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: http://localhost:5000 
+2024-02-21 14:52:25 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: http://localhost:5000 
+2024-02-21 14:52:25 PM||INFO|Microsoft.Hosting.Lifetime|Application started. Press Ctrl+C to shut down. 
+2024-02-21 14:52:25 PM||INFO|Microsoft.Hosting.Lifetime|Application started. Press Ctrl+C to shut down. 
+2024-02-21 14:52:25 PM||INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development 
+2024-02-21 14:52:25 PM||INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development 
+2024-02-21 14:52:25 PM||INFO|Microsoft.Hosting.Lifetime|Content root path: D:\Offical\Wleepay_API\wleepay.API 
+2024-02-21 14:52:25 PM||INFO|Microsoft.Hosting.Lifetime|Content root path: D:\Offical\Wleepay_API\wleepay.API 
+2024-02-21 14:55:19 PM|20504|WARN|Microsoft.EntityFrameworkCore.Query|Compiling a query which loads related collections for more than one collection navigation either via 'Include' or through projection but no 'QuerySplittingBehavior' has been configured. By default Entity Framework will use 'QuerySplittingBehavior.SingleQuery' which can potentially result in slow query performance. See https://go.microsoft.com/fwlink/?linkid=2134277 for more information. To identify the query that's triggering this warning call 'ConfigureWarnings(w => w.Throw(RelationalEventId.MultipleCollectionIncludeWarning))' 
+2024-02-21 14:55:19 PM|20504|WARN|Microsoft.EntityFrameworkCore.Query|Compiling a query which loads related collections for more than one collection navigation either via 'Include' or through projection but no 'QuerySplittingBehavior' has been configured. By default Entity Framework will use 'QuerySplittingBehavior.SingleQuery' which can potentially result in slow query performance. See https://go.microsoft.com/fwlink/?linkid=2134277 for more information. To identify the query that's triggering this warning call 'ConfigureWarnings(w => w.Throw(RelationalEventId.MultipleCollectionIncludeWarning))' 
+2024-02-21 14:58:36 PM||DEBUG|wleepay.API.Program|init main 
+2024-02-21 14:58:38 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: https://localhost:5001 
+2024-02-21 14:58:38 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: https://localhost:5001 
+2024-02-21 14:58:38 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: http://localhost:5000 
+2024-02-21 14:58:38 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: http://localhost:5000 
+2024-02-21 14:58:38 PM||INFO|Microsoft.Hosting.Lifetime|Application started. Press Ctrl+C to shut down. 
+2024-02-21 14:58:38 PM||INFO|Microsoft.Hosting.Lifetime|Application started. Press Ctrl+C to shut down. 
+2024-02-21 14:58:38 PM||INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development 
+2024-02-21 14:58:38 PM||INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development 
+2024-02-21 14:58:38 PM||INFO|Microsoft.Hosting.Lifetime|Content root path: D:\Offical\Wleepay_API\wleepay.API 
+2024-02-21 14:58:38 PM||INFO|Microsoft.Hosting.Lifetime|Content root path: D:\Offical\Wleepay_API\wleepay.API 
+2024-02-21 15:01:45 PM|20504|WARN|Microsoft.EntityFrameworkCore.Query|Compiling a query which loads related collections for more than one collection navigation either via 'Include' or through projection but no 'QuerySplittingBehavior' has been configured. By default Entity Framework will use 'QuerySplittingBehavior.SingleQuery' which can potentially result in slow query performance. See https://go.microsoft.com/fwlink/?linkid=2134277 for more information. To identify the query that's triggering this warning call 'ConfigureWarnings(w => w.Throw(RelationalEventId.MultipleCollectionIncludeWarning))' 
+2024-02-21 15:01:45 PM|20504|WARN|Microsoft.EntityFrameworkCore.Query|Compiling a query which loads related collections for more than one collection navigation either via 'Include' or through projection but no 'QuerySplittingBehavior' has been configured. By default Entity Framework will use 'QuerySplittingBehavior.SingleQuery' which can potentially result in slow query performance. See https://go.microsoft.com/fwlink/?linkid=2134277 for more information. To identify the query that's triggering this warning call 'ConfigureWarnings(w => w.Throw(RelationalEventId.MultipleCollectionIncludeWarning))' 
+2024-03-05 15:33:34 PM||DEBUG|wleepay.API.Program|init main 
+2024-03-05 15:33:40 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: https://localhost:5001 
+2024-03-05 15:33:40 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: https://localhost:5001 
+2024-03-05 15:33:40 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: http://localhost:5000 
+2024-03-05 15:33:40 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: http://localhost:5000 
+2024-03-05 15:33:40 PM||INFO|Microsoft.Hosting.Lifetime|Application started. Press Ctrl+C to shut down. 
+2024-03-05 15:33:40 PM||INFO|Microsoft.Hosting.Lifetime|Application started. Press Ctrl+C to shut down. 
+2024-03-05 15:33:40 PM||INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development 
+2024-03-05 15:33:40 PM||INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development 
+2024-03-05 15:33:40 PM||INFO|Microsoft.Hosting.Lifetime|Content root path: D:\Offical\Wleepay_API\wleepay.API 
+2024-03-05 15:33:40 PM||INFO|Microsoft.Hosting.Lifetime|Content root path: D:\Offical\Wleepay_API\wleepay.API 
+2024-03-05 15:36:37 PM|20504|WARN|Microsoft.EntityFrameworkCore.Query|Compiling a query which loads related collections for more than one collection navigation either via 'Include' or through projection but no 'QuerySplittingBehavior' has been configured. By default Entity Framework will use 'QuerySplittingBehavior.SingleQuery' which can potentially result in slow query performance. See https://go.microsoft.com/fwlink/?linkid=2134277 for more information. To identify the query that's triggering this warning call 'ConfigureWarnings(w => w.Throw(RelationalEventId.MultipleCollectionIncludeWarning))' 
+2024-03-05 15:36:37 PM|20504|WARN|Microsoft.EntityFrameworkCore.Query|Compiling a query which loads related collections for more than one collection navigation either via 'Include' or through projection but no 'QuerySplittingBehavior' has been configured. By default Entity Framework will use 'QuerySplittingBehavior.SingleQuery' which can potentially result in slow query performance. See https://go.microsoft.com/fwlink/?linkid=2134277 for more information. To identify the query that's triggering this warning call 'ConfigureWarnings(w => w.Throw(RelationalEventId.MultipleCollectionIncludeWarning))' 
+2024-03-05 15:39:21 PM|20504|WARN|Microsoft.EntityFrameworkCore.Query|Compiling a query which loads related collections for more than one collection navigation either via 'Include' or through projection but no 'QuerySplittingBehavior' has been configured. By default Entity Framework will use 'QuerySplittingBehavior.SingleQuery' which can potentially result in slow query performance. See https://go.microsoft.com/fwlink/?linkid=2134277 for more information. To identify the query that's triggering this warning call 'ConfigureWarnings(w => w.Throw(RelationalEventId.MultipleCollectionIncludeWarning))' 
+2024-03-05 15:39:21 PM|20504|WARN|Microsoft.EntityFrameworkCore.Query|Compiling a query which loads related collections for more than one collection navigation either via 'Include' or through projection but no 'QuerySplittingBehavior' has been configured. By default Entity Framework will use 'QuerySplittingBehavior.SingleQuery' which can potentially result in slow query performance. See https://go.microsoft.com/fwlink/?linkid=2134277 for more information. To identify the query that's triggering this warning call 'ConfigureWarnings(w => w.Throw(RelationalEventId.MultipleCollectionIncludeWarning))' 
+2024-03-05 16:58:05 PM||DEBUG|wleepay.API.Program|init main 
+2024-03-05 16:58:08 PM|6|FATAL|Microsoft.AspNetCore.Hosting.Diagnostics|Application startup exception System.InvalidOperationException: The CORS protocol does not allow specifying a wildcard (any) origin and credentials at the same time. Configure the CORS policy by listing individual origins if credentials needs to be supported.
+   at Microsoft.AspNetCore.Cors.Infrastructure.CorsPolicyBuilder.Build()
+   at Microsoft.AspNetCore.Cors.Infrastructure.CorsOptions.AddPolicy(String name, Action`1 configurePolicy)
+   at wleepay.API.Startup.<>c.<ConfigureServices>b__4_5(CorsOptions options) in D:\Offical\Wleepay_API\wleepay.API\Startup.cs:line 104
+   at Microsoft.Extensions.Options.ConfigureNamedOptions`1.Configure(String name, TOptions options)
+   at Microsoft.Extensions.Options.OptionsFactory`1.Create(String name)
+   at Microsoft.Extensions.Options.OptionsManager`1.<>c__DisplayClass5_0.<Get>b__0()
+   at System.Lazy`1.ViaFactory(LazyThreadSafetyMode mode)
+   at System.Lazy`1.ExecutionAndPublication(LazyHelper executionAndPublication, Boolean useDefaultConstructor)
+   at System.Lazy`1.CreateValue()
+   at System.Lazy`1.get_Value()
+   at Microsoft.Extensions.Options.OptionsCache`1.GetOrAdd(String name, Func`1 createOptions)
+   at Microsoft.Extensions.Options.OptionsManager`1.Get(String name)
+   at Microsoft.Extensions.Options.OptionsManager`1.get_Value()
+   at Microsoft.AspNetCore.Cors.Infrastructure.CorsService..ctor(IOptions`1 options, ILoggerFactory loggerFactory)
+   at System.RuntimeMethodHandle.InvokeMethod(Object target, Object[] arguments, Signature sig, Boolean constructor, Boolean wrapExceptions)
+   at System.Reflection.RuntimeConstructorInfo.Invoke(BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.VisitConstructor(ConstructorCallSite constructorCallSite, RuntimeResolverContext context)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteVisitor`2.VisitCallSiteMain(ServiceCallSite callSite, TArgument argument)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.VisitDisposeCache(ServiceCallSite transientCallSite, RuntimeResolverContext context)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteVisitor`2.VisitCallSite(ServiceCallSite callSite, TArgument argument)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.Resolve(ServiceCallSite callSite, ServiceProviderEngineScope scope)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.DynamicServiceProviderEngine.<>c__DisplayClass1_0.<RealizeService>b__0(ServiceProviderEngineScope scope)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.ServiceProviderEngine.GetService(Type serviceType, ServiceProviderEngineScope serviceProviderEngineScope)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.ServiceProviderEngineScope.GetService(Type serviceType)
+   at Microsoft.Extensions.Internal.ActivatorUtilities.ConstructorMatcher.CreateInstance(IServiceProvider provider)
+   at Microsoft.Extensions.Internal.ActivatorUtilities.CreateInstance(IServiceProvider provider, Type instanceType, Object[] parameters)
+   at Microsoft.AspNetCore.Builder.UseMiddlewareExtensions.<>c__DisplayClass5_0.<UseMiddleware>b__0(RequestDelegate next)
+   at Microsoft.AspNetCore.Builder.ApplicationBuilder.Build()
+   at Microsoft.AspNetCore.Hosting.GenericWebHostService.StartAsync(CancellationToken cancellationToken)
+2024-03-05 16:58:08 PM|6|FATAL|Microsoft.AspNetCore.Hosting.Diagnostics|Application startup exception System.InvalidOperationException: The CORS protocol does not allow specifying a wildcard (any) origin and credentials at the same time. Configure the CORS policy by listing individual origins if credentials needs to be supported.
+   at Microsoft.AspNetCore.Cors.Infrastructure.CorsPolicyBuilder.Build()
+   at Microsoft.AspNetCore.Cors.Infrastructure.CorsOptions.AddPolicy(String name, Action`1 configurePolicy)
+   at wleepay.API.Startup.<>c.<ConfigureServices>b__4_5(CorsOptions options) in D:\Offical\Wleepay_API\wleepay.API\Startup.cs:line 104
+   at Microsoft.Extensions.Options.ConfigureNamedOptions`1.Configure(String name, TOptions options)
+   at Microsoft.Extensions.Options.OptionsFactory`1.Create(String name)
+   at Microsoft.Extensions.Options.OptionsManager`1.<>c__DisplayClass5_0.<Get>b__0()
+   at System.Lazy`1.ViaFactory(LazyThreadSafetyMode mode)
+   at System.Lazy`1.ExecutionAndPublication(LazyHelper executionAndPublication, Boolean useDefaultConstructor)
+   at System.Lazy`1.CreateValue()
+   at System.Lazy`1.get_Value()
+   at Microsoft.Extensions.Options.OptionsCache`1.GetOrAdd(String name, Func`1 createOptions)
+   at Microsoft.Extensions.Options.OptionsManager`1.Get(String name)
+   at Microsoft.Extensions.Options.OptionsManager`1.get_Value()
+   at Microsoft.AspNetCore.Cors.Infrastructure.CorsService..ctor(IOptions`1 options, ILoggerFactory loggerFactory)
+   at System.RuntimeMethodHandle.InvokeMethod(Object target, Object[] arguments, Signature sig, Boolean constructor, Boolean wrapExceptions)
+   at System.Reflection.RuntimeConstructorInfo.Invoke(BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.VisitConstructor(ConstructorCallSite constructorCallSite, RuntimeResolverContext context)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteVisitor`2.VisitCallSiteMain(ServiceCallSite callSite, TArgument argument)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.VisitDisposeCache(ServiceCallSite transientCallSite, RuntimeResolverContext context)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteVisitor`2.VisitCallSite(ServiceCallSite callSite, TArgument argument)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.Resolve(ServiceCallSite callSite, ServiceProviderEngineScope scope)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.DynamicServiceProviderEngine.<>c__DisplayClass1_0.<RealizeService>b__0(ServiceProviderEngineScope scope)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.ServiceProviderEngine.GetService(Type serviceType, ServiceProviderEngineScope serviceProviderEngineScope)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.ServiceProviderEngineScope.GetService(Type serviceType)
+   at Microsoft.Extensions.Internal.ActivatorUtilities.ConstructorMatcher.CreateInstance(IServiceProvider provider)
+   at Microsoft.Extensions.Internal.ActivatorUtilities.CreateInstance(IServiceProvider provider, Type instanceType, Object[] parameters)
+   at Microsoft.AspNetCore.Builder.UseMiddlewareExtensions.<>c__DisplayClass5_0.<UseMiddleware>b__0(RequestDelegate next)
+   at Microsoft.AspNetCore.Builder.ApplicationBuilder.Build()
+   at Microsoft.AspNetCore.Hosting.GenericWebHostService.StartAsync(CancellationToken cancellationToken)
+2024-03-05 16:58:08 PM||ERROR|wleepay.API.Program|Stopped program because of exception System.InvalidOperationException: The CORS protocol does not allow specifying a wildcard (any) origin and credentials at the same time. Configure the CORS policy by listing individual origins if credentials needs to be supported.
+   at Microsoft.AspNetCore.Cors.Infrastructure.CorsPolicyBuilder.Build()
+   at Microsoft.AspNetCore.Cors.Infrastructure.CorsOptions.AddPolicy(String name, Action`1 configurePolicy)
+   at wleepay.API.Startup.<>c.<ConfigureServices>b__4_5(CorsOptions options) in D:\Offical\Wleepay_API\wleepay.API\Startup.cs:line 104
+   at Microsoft.Extensions.Options.ConfigureNamedOptions`1.Configure(String name, TOptions options)
+   at Microsoft.Extensions.Options.OptionsFactory`1.Create(String name)
+   at Microsoft.Extensions.Options.OptionsManager`1.<>c__DisplayClass5_0.<Get>b__0()
+   at System.Lazy`1.ViaFactory(LazyThreadSafetyMode mode)
+   at System.Lazy`1.ExecutionAndPublication(LazyHelper executionAndPublication, Boolean useDefaultConstructor)
+   at System.Lazy`1.CreateValue()
+   at System.Lazy`1.get_Value()
+   at Microsoft.Extensions.Options.OptionsCache`1.GetOrAdd(String name, Func`1 createOptions)
+   at Microsoft.Extensions.Options.OptionsManager`1.Get(String name)
+   at Microsoft.Extensions.Options.OptionsManager`1.get_Value()
+   at Microsoft.AspNetCore.Cors.Infrastructure.CorsService..ctor(IOptions`1 options, ILoggerFactory loggerFactory)
+   at System.RuntimeMethodHandle.InvokeMethod(Object target, Object[] arguments, Signature sig, Boolean constructor, Boolean wrapExceptions)
+   at System.Reflection.RuntimeConstructorInfo.Invoke(BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.VisitConstructor(ConstructorCallSite constructorCallSite, RuntimeResolverContext context)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteVisitor`2.VisitCallSiteMain(ServiceCallSite callSite, TArgument argument)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.VisitDisposeCache(ServiceCallSite transientCallSite, RuntimeResolverContext context)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteVisitor`2.VisitCallSite(ServiceCallSite callSite, TArgument argument)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.Resolve(ServiceCallSite callSite, ServiceProviderEngineScope scope)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.DynamicServiceProviderEngine.<>c__DisplayClass1_0.<RealizeService>b__0(ServiceProviderEngineScope scope)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.ServiceProviderEngine.GetService(Type serviceType, ServiceProviderEngineScope serviceProviderEngineScope)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.ServiceProviderEngineScope.GetService(Type serviceType)
+   at Microsoft.Extensions.Internal.ActivatorUtilities.ConstructorMatcher.CreateInstance(IServiceProvider provider)
+   at Microsoft.Extensions.Internal.ActivatorUtilities.CreateInstance(IServiceProvider provider, Type instanceType, Object[] parameters)
+   at Microsoft.AspNetCore.Builder.UseMiddlewareExtensions.<>c__DisplayClass5_0.<UseMiddleware>b__0(RequestDelegate next)
+   at Microsoft.AspNetCore.Builder.ApplicationBuilder.Build()
+   at Microsoft.AspNetCore.Hosting.GenericWebHostService.StartAsync(CancellationToken cancellationToken)
+   at Microsoft.Extensions.Hosting.Internal.Host.StartAsync(CancellationToken cancellationToken)
+   at Microsoft.Extensions.Hosting.HostingAbstractionsHostExtensions.RunAsync(IHost host, CancellationToken token)
+   at Microsoft.Extensions.Hosting.HostingAbstractionsHostExtensions.RunAsync(IHost host, CancellationToken token)
+   at Microsoft.Extensions.Hosting.HostingAbstractionsHostExtensions.Run(IHost host)
+   at wleepay.API.Program.Main(String[] args) in D:\Offical\Wleepay_API\wleepay.API\Program.cs:line 24
+2024-03-05 16:58:08 PM||ERROR|wleepay.API.Program|Stopped program because of exception System.InvalidOperationException: The CORS protocol does not allow specifying a wildcard (any) origin and credentials at the same time. Configure the CORS policy by listing individual origins if credentials needs to be supported.
+   at Microsoft.AspNetCore.Cors.Infrastructure.CorsPolicyBuilder.Build()
+   at Microsoft.AspNetCore.Cors.Infrastructure.CorsOptions.AddPolicy(String name, Action`1 configurePolicy)
+   at wleepay.API.Startup.<>c.<ConfigureServices>b__4_5(CorsOptions options) in D:\Offical\Wleepay_API\wleepay.API\Startup.cs:line 104
+   at Microsoft.Extensions.Options.ConfigureNamedOptions`1.Configure(String name, TOptions options)
+   at Microsoft.Extensions.Options.OptionsFactory`1.Create(String name)
+   at Microsoft.Extensions.Options.OptionsManager`1.<>c__DisplayClass5_0.<Get>b__0()
+   at System.Lazy`1.ViaFactory(LazyThreadSafetyMode mode)
+   at System.Lazy`1.ExecutionAndPublication(LazyHelper executionAndPublication, Boolean useDefaultConstructor)
+   at System.Lazy`1.CreateValue()
+   at System.Lazy`1.get_Value()
+   at Microsoft.Extensions.Options.OptionsCache`1.GetOrAdd(String name, Func`1 createOptions)
+   at Microsoft.Extensions.Options.OptionsManager`1.Get(String name)
+   at Microsoft.Extensions.Options.OptionsManager`1.get_Value()
+   at Microsoft.AspNetCore.Cors.Infrastructure.CorsService..ctor(IOptions`1 options, ILoggerFactory loggerFactory)
+   at System.RuntimeMethodHandle.InvokeMethod(Object target, Object[] arguments, Signature sig, Boolean constructor, Boolean wrapExceptions)
+   at System.Reflection.RuntimeConstructorInfo.Invoke(BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.VisitConstructor(ConstructorCallSite constructorCallSite, RuntimeResolverContext context)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteVisitor`2.VisitCallSiteMain(ServiceCallSite callSite, TArgument argument)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.VisitDisposeCache(ServiceCallSite transientCallSite, RuntimeResolverContext context)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteVisitor`2.VisitCallSite(ServiceCallSite callSite, TArgument argument)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.Resolve(ServiceCallSite callSite, ServiceProviderEngineScope scope)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.DynamicServiceProviderEngine.<>c__DisplayClass1_0.<RealizeService>b__0(ServiceProviderEngineScope scope)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.ServiceProviderEngine.GetService(Type serviceType, ServiceProviderEngineScope serviceProviderEngineScope)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.ServiceProviderEngineScope.GetService(Type serviceType)
+   at Microsoft.Extensions.Internal.ActivatorUtilities.ConstructorMatcher.CreateInstance(IServiceProvider provider)
+   at Microsoft.Extensions.Internal.ActivatorUtilities.CreateInstance(IServiceProvider provider, Type instanceType, Object[] parameters)
+   at Microsoft.AspNetCore.Builder.UseMiddlewareExtensions.<>c__DisplayClass5_0.<UseMiddleware>b__0(RequestDelegate next)
+   at Microsoft.AspNetCore.Builder.ApplicationBuilder.Build()
+   at Microsoft.AspNetCore.Hosting.GenericWebHostService.StartAsync(CancellationToken cancellationToken)
+   at Microsoft.Extensions.Hosting.Internal.Host.StartAsync(CancellationToken cancellationToken)
+   at Microsoft.Extensions.Hosting.HostingAbstractionsHostExtensions.RunAsync(IHost host, CancellationToken token)
+   at Microsoft.Extensions.Hosting.HostingAbstractionsHostExtensions.RunAsync(IHost host, CancellationToken token)
+   at Microsoft.Extensions.Hosting.HostingAbstractionsHostExtensions.Run(IHost host)
+   at wleepay.API.Program.Main(String[] args) in D:\Offical\Wleepay_API\wleepay.API\Program.cs:line 24
+2024-03-05 16:59:02 PM||DEBUG|wleepay.API.Program|init main 
+2024-03-05 16:59:04 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: https://localhost:5001 
+2024-03-05 16:59:04 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: https://localhost:5001 
+2024-03-05 16:59:04 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: http://localhost:5000 
+2024-03-05 16:59:04 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: http://localhost:5000 
+2024-03-05 16:59:04 PM||INFO|Microsoft.Hosting.Lifetime|Application started. Press Ctrl+C to shut down. 
+2024-03-05 16:59:04 PM||INFO|Microsoft.Hosting.Lifetime|Application started. Press Ctrl+C to shut down. 
+2024-03-05 16:59:04 PM||INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development 
+2024-03-05 16:59:04 PM||INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development 
+2024-03-05 16:59:04 PM||INFO|Microsoft.Hosting.Lifetime|Content root path: D:\Offical\Wleepay_API\wleepay.API 
+2024-03-05 16:59:04 PM||INFO|Microsoft.Hosting.Lifetime|Content root path: D:\Offical\Wleepay_API\wleepay.API 
+2024-03-05 16:59:22 PM|20504|WARN|Microsoft.EntityFrameworkCore.Query|Compiling a query which loads related collections for more than one collection navigation either via 'Include' or through projection but no 'QuerySplittingBehavior' has been configured. By default Entity Framework will use 'QuerySplittingBehavior.SingleQuery' which can potentially result in slow query performance. See https://go.microsoft.com/fwlink/?linkid=2134277 for more information. To identify the query that's triggering this warning call 'ConfigureWarnings(w => w.Throw(RelationalEventId.MultipleCollectionIncludeWarning))' 
+2024-03-05 16:59:22 PM|20504|WARN|Microsoft.EntityFrameworkCore.Query|Compiling a query which loads related collections for more than one collection navigation either via 'Include' or through projection but no 'QuerySplittingBehavior' has been configured. By default Entity Framework will use 'QuerySplittingBehavior.SingleQuery' which can potentially result in slow query performance. See https://go.microsoft.com/fwlink/?linkid=2134277 for more information. To identify the query that's triggering this warning call 'ConfigureWarnings(w => w.Throw(RelationalEventId.MultipleCollectionIncludeWarning))' 
+2024-03-05 17:00:15 PM||DEBUG|wleepay.API.Program|init main 
+2024-03-05 17:00:18 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: https://localhost:5001 
+2024-03-05 17:00:18 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: https://localhost:5001 
+2024-03-05 17:00:18 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: http://localhost:5000 
+2024-03-05 17:00:18 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: http://localhost:5000 
+2024-03-05 17:00:18 PM||INFO|Microsoft.Hosting.Lifetime|Application started. Press Ctrl+C to shut down. 
+2024-03-05 17:00:18 PM||INFO|Microsoft.Hosting.Lifetime|Application started. Press Ctrl+C to shut down. 
+2024-03-05 17:00:18 PM||INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development 
+2024-03-05 17:00:18 PM||INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development 
+2024-03-05 17:00:18 PM||INFO|Microsoft.Hosting.Lifetime|Content root path: D:\Offical\Wleepay_API\wleepay.API 
+2024-03-05 17:00:18 PM||INFO|Microsoft.Hosting.Lifetime|Content root path: D:\Offical\Wleepay_API\wleepay.API 
+2024-03-05 17:00:34 PM|20504|WARN|Microsoft.EntityFrameworkCore.Query|Compiling a query which loads related collections for more than one collection navigation either via 'Include' or through projection but no 'QuerySplittingBehavior' has been configured. By default Entity Framework will use 'QuerySplittingBehavior.SingleQuery' which can potentially result in slow query performance. See https://go.microsoft.com/fwlink/?linkid=2134277 for more information. To identify the query that's triggering this warning call 'ConfigureWarnings(w => w.Throw(RelationalEventId.MultipleCollectionIncludeWarning))' 
+2024-03-05 17:00:34 PM|20504|WARN|Microsoft.EntityFrameworkCore.Query|Compiling a query which loads related collections for more than one collection navigation either via 'Include' or through projection but no 'QuerySplittingBehavior' has been configured. By default Entity Framework will use 'QuerySplittingBehavior.SingleQuery' which can potentially result in slow query performance. See https://go.microsoft.com/fwlink/?linkid=2134277 for more information. To identify the query that's triggering this warning call 'ConfigureWarnings(w => w.Throw(RelationalEventId.MultipleCollectionIncludeWarning))' 
+2024-03-05 17:29:44 PM||DEBUG|wleepay.API.Program|init main 
+2024-03-05 17:29:48 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: https://localhost:5001 
+2024-03-05 17:29:48 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: https://localhost:5001 
+2024-03-05 17:29:48 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: http://localhost:5000 
+2024-03-05 17:29:48 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: http://localhost:5000 
+2024-03-05 17:29:48 PM||INFO|Microsoft.Hosting.Lifetime|Application started. Press Ctrl+C to shut down. 
+2024-03-05 17:29:48 PM||INFO|Microsoft.Hosting.Lifetime|Application started. Press Ctrl+C to shut down. 
+2024-03-05 17:29:48 PM||INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development 
+2024-03-05 17:29:48 PM||INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development 
+2024-03-05 17:29:48 PM||INFO|Microsoft.Hosting.Lifetime|Content root path: D:\Offical\Wleepay_API\wleepay.API 
+2024-03-05 17:29:48 PM||INFO|Microsoft.Hosting.Lifetime|Content root path: D:\Offical\Wleepay_API\wleepay.API 
+2024-03-05 17:30:16 PM|20504|WARN|Microsoft.EntityFrameworkCore.Query|Compiling a query which loads related collections for more than one collection navigation either via 'Include' or through projection but no 'QuerySplittingBehavior' has been configured. By default Entity Framework will use 'QuerySplittingBehavior.SingleQuery' which can potentially result in slow query performance. See https://go.microsoft.com/fwlink/?linkid=2134277 for more information. To identify the query that's triggering this warning call 'ConfigureWarnings(w => w.Throw(RelationalEventId.MultipleCollectionIncludeWarning))' 
+2024-03-05 17:30:16 PM|20504|WARN|Microsoft.EntityFrameworkCore.Query|Compiling a query which loads related collections for more than one collection navigation either via 'Include' or through projection but no 'QuerySplittingBehavior' has been configured. By default Entity Framework will use 'QuerySplittingBehavior.SingleQuery' which can potentially result in slow query performance. See https://go.microsoft.com/fwlink/?linkid=2134277 for more information. To identify the query that's triggering this warning call 'ConfigureWarnings(w => w.Throw(RelationalEventId.MultipleCollectionIncludeWarning))' 
+2024-03-05 17:41:20 PM||DEBUG|wleepay.API.Program|init main 
+2024-03-05 17:41:25 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: https://localhost:5001 
+2024-03-05 17:41:25 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: https://localhost:5001 
+2024-03-05 17:41:25 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: http://localhost:5000 
+2024-03-05 17:41:25 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: http://localhost:5000 
+2024-03-05 17:41:25 PM||INFO|Microsoft.Hosting.Lifetime|Application started. Press Ctrl+C to shut down. 
+2024-03-05 17:41:25 PM||INFO|Microsoft.Hosting.Lifetime|Application started. Press Ctrl+C to shut down. 
+2024-03-05 17:41:25 PM||INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development 
+2024-03-05 17:41:25 PM||INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development 
+2024-03-05 17:41:25 PM||INFO|Microsoft.Hosting.Lifetime|Content root path: D:\Offical\Wleepay_API\wleepay.API 
+2024-03-05 17:41:25 PM||INFO|Microsoft.Hosting.Lifetime|Content root path: D:\Offical\Wleepay_API\wleepay.API 
+2024-03-05 17:41:44 PM|20504|WARN|Microsoft.EntityFrameworkCore.Query|Compiling a query which loads related collections for more than one collection navigation either via 'Include' or through projection but no 'QuerySplittingBehavior' has been configured. By default Entity Framework will use 'QuerySplittingBehavior.SingleQuery' which can potentially result in slow query performance. See https://go.microsoft.com/fwlink/?linkid=2134277 for more information. To identify the query that's triggering this warning call 'ConfigureWarnings(w => w.Throw(RelationalEventId.MultipleCollectionIncludeWarning))' 
+2024-03-05 17:41:44 PM|20504|WARN|Microsoft.EntityFrameworkCore.Query|Compiling a query which loads related collections for more than one collection navigation either via 'Include' or through projection but no 'QuerySplittingBehavior' has been configured. By default Entity Framework will use 'QuerySplittingBehavior.SingleQuery' which can potentially result in slow query performance. See https://go.microsoft.com/fwlink/?linkid=2134277 for more information. To identify the query that's triggering this warning call 'ConfigureWarnings(w => w.Throw(RelationalEventId.MultipleCollectionIncludeWarning))' 
+2024-03-05 17:45:07 PM||DEBUG|wleepay.API.Program|init main 
+2024-03-05 17:45:13 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: https://localhost:5001 
+2024-03-05 17:45:13 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: https://localhost:5001 
+2024-03-05 17:45:13 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: http://localhost:5000 
+2024-03-05 17:45:13 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: http://localhost:5000 
+2024-03-05 17:45:13 PM||INFO|Microsoft.Hosting.Lifetime|Application started. Press Ctrl+C to shut down. 
+2024-03-05 17:45:13 PM||INFO|Microsoft.Hosting.Lifetime|Application started. Press Ctrl+C to shut down. 
+2024-03-05 17:45:13 PM||INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development 
+2024-03-05 17:45:13 PM||INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development 
+2024-03-05 17:45:13 PM||INFO|Microsoft.Hosting.Lifetime|Content root path: D:\Offical\Wleepay_API\wleepay.API 
+2024-03-05 17:45:13 PM||INFO|Microsoft.Hosting.Lifetime|Content root path: D:\Offical\Wleepay_API\wleepay.API 
+2024-03-05 17:46:30 PM||DEBUG|wleepay.API.Program|init main 
+2024-03-05 17:46:34 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: https://localhost:5001 
+2024-03-05 17:46:34 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: https://localhost:5001 
+2024-03-05 17:46:34 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: http://localhost:5000 
+2024-03-05 17:46:34 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: http://localhost:5000 
+2024-03-05 17:46:34 PM||INFO|Microsoft.Hosting.Lifetime|Application started. Press Ctrl+C to shut down. 
+2024-03-05 17:46:34 PM||INFO|Microsoft.Hosting.Lifetime|Application started. Press Ctrl+C to shut down. 
+2024-03-05 17:46:34 PM||INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development 
+2024-03-05 17:46:34 PM||INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development 
+2024-03-05 17:46:34 PM||INFO|Microsoft.Hosting.Lifetime|Content root path: D:\Offical\Wleepay_API\wleepay.API 
+2024-03-05 17:46:34 PM||INFO|Microsoft.Hosting.Lifetime|Content root path: D:\Offical\Wleepay_API\wleepay.API 
+2024-03-05 17:46:52 PM|20504|WARN|Microsoft.EntityFrameworkCore.Query|Compiling a query which loads related collections for more than one collection navigation either via 'Include' or through projection but no 'QuerySplittingBehavior' has been configured. By default Entity Framework will use 'QuerySplittingBehavior.SingleQuery' which can potentially result in slow query performance. See https://go.microsoft.com/fwlink/?linkid=2134277 for more information. To identify the query that's triggering this warning call 'ConfigureWarnings(w => w.Throw(RelationalEventId.MultipleCollectionIncludeWarning))' 
+2024-03-05 17:46:52 PM|20504|WARN|Microsoft.EntityFrameworkCore.Query|Compiling a query which loads related collections for more than one collection navigation either via 'Include' or through projection but no 'QuerySplittingBehavior' has been configured. By default Entity Framework will use 'QuerySplittingBehavior.SingleQuery' which can potentially result in slow query performance. See https://go.microsoft.com/fwlink/?linkid=2134277 for more information. To identify the query that's triggering this warning call 'ConfigureWarnings(w => w.Throw(RelationalEventId.MultipleCollectionIncludeWarning))' 
+2024-03-08 12:44:36 PM||DEBUG|wleepay.API.Program|init main 
+2024-03-08 12:44:43 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: https://localhost:5001 
+2024-03-08 12:44:43 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: https://localhost:5001 
+2024-03-08 12:44:43 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: http://localhost:5000 
+2024-03-08 12:44:43 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: http://localhost:5000 
+2024-03-08 12:44:43 PM||INFO|Microsoft.Hosting.Lifetime|Application started. Press Ctrl+C to shut down. 
+2024-03-08 12:44:43 PM||INFO|Microsoft.Hosting.Lifetime|Application started. Press Ctrl+C to shut down. 
+2024-03-08 12:44:43 PM||INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development 
+2024-03-08 12:44:43 PM||INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development 
+2024-03-08 12:44:43 PM||INFO|Microsoft.Hosting.Lifetime|Content root path: D:\Offical\Wleepay_API\wleepay.API 
+2024-03-08 12:44:43 PM||INFO|Microsoft.Hosting.Lifetime|Content root path: D:\Offical\Wleepay_API\wleepay.API 
+2024-03-08 12:46:29 PM||DEBUG|wleepay.API.Program|init main 
+2024-03-08 12:46:32 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: https://localhost:5001 
+2024-03-08 12:46:32 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: https://localhost:5001 
+2024-03-08 12:46:32 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: http://localhost:5000 
+2024-03-08 12:46:32 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: http://localhost:5000 
+2024-03-08 12:46:32 PM||INFO|Microsoft.Hosting.Lifetime|Application started. Press Ctrl+C to shut down. 
+2024-03-08 12:46:32 PM||INFO|Microsoft.Hosting.Lifetime|Application started. Press Ctrl+C to shut down. 
+2024-03-08 12:46:32 PM||INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development 
+2024-03-08 12:46:32 PM||INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development 
+2024-03-08 12:46:32 PM||INFO|Microsoft.Hosting.Lifetime|Content root path: D:\Offical\Wleepay_API\wleepay.API 
+2024-03-08 12:46:32 PM||INFO|Microsoft.Hosting.Lifetime|Content root path: D:\Offical\Wleepay_API\wleepay.API 
+2024-03-08 12:48:30 PM|20504|WARN|Microsoft.EntityFrameworkCore.Query|Compiling a query which loads related collections for more than one collection navigation either via 'Include' or through projection but no 'QuerySplittingBehavior' has been configured. By default Entity Framework will use 'QuerySplittingBehavior.SingleQuery' which can potentially result in slow query performance. See https://go.microsoft.com/fwlink/?linkid=2134277 for more information. To identify the query that's triggering this warning call 'ConfigureWarnings(w => w.Throw(RelationalEventId.MultipleCollectionIncludeWarning))' 
+2024-03-08 12:48:30 PM|20504|WARN|Microsoft.EntityFrameworkCore.Query|Compiling a query which loads related collections for more than one collection navigation either via 'Include' or through projection but no 'QuerySplittingBehavior' has been configured. By default Entity Framework will use 'QuerySplittingBehavior.SingleQuery' which can potentially result in slow query performance. See https://go.microsoft.com/fwlink/?linkid=2134277 for more information. To identify the query that's triggering this warning call 'ConfigureWarnings(w => w.Throw(RelationalEventId.MultipleCollectionIncludeWarning))' 
+2024-03-08 12:48:41 PM|20504|WARN|Microsoft.EntityFrameworkCore.Query|Compiling a query which loads related collections for more than one collection navigation either via 'Include' or through projection but no 'QuerySplittingBehavior' has been configured. By default Entity Framework will use 'QuerySplittingBehavior.SingleQuery' which can potentially result in slow query performance. See https://go.microsoft.com/fwlink/?linkid=2134277 for more information. To identify the query that's triggering this warning call 'ConfigureWarnings(w => w.Throw(RelationalEventId.MultipleCollectionIncludeWarning))' 
+2024-03-08 12:48:41 PM|20504|WARN|Microsoft.EntityFrameworkCore.Query|Compiling a query which loads related collections for more than one collection navigation either via 'Include' or through projection but no 'QuerySplittingBehavior' has been configured. By default Entity Framework will use 'QuerySplittingBehavior.SingleQuery' which can potentially result in slow query performance. See https://go.microsoft.com/fwlink/?linkid=2134277 for more information. To identify the query that's triggering this warning call 'ConfigureWarnings(w => w.Throw(RelationalEventId.MultipleCollectionIncludeWarning))' 
+2024-03-08 12:59:59 PM|20504|WARN|Microsoft.EntityFrameworkCore.Query|Compiling a query which loads related collections for more than one collection navigation either via 'Include' or through projection but no 'QuerySplittingBehavior' has been configured. By default Entity Framework will use 'QuerySplittingBehavior.SingleQuery' which can potentially result in slow query performance. See https://go.microsoft.com/fwlink/?linkid=2134277 for more information. To identify the query that's triggering this warning call 'ConfigureWarnings(w => w.Throw(RelationalEventId.MultipleCollectionIncludeWarning))' 
+2024-03-08 12:59:59 PM|20504|WARN|Microsoft.EntityFrameworkCore.Query|Compiling a query which loads related collections for more than one collection navigation either via 'Include' or through projection but no 'QuerySplittingBehavior' has been configured. By default Entity Framework will use 'QuerySplittingBehavior.SingleQuery' which can potentially result in slow query performance. See https://go.microsoft.com/fwlink/?linkid=2134277 for more information. To identify the query that's triggering this warning call 'ConfigureWarnings(w => w.Throw(RelationalEventId.MultipleCollectionIncludeWarning))' 
+2024-03-08 13:02:59 PM||DEBUG|wleepay.API.Program|init main 
+2024-03-08 13:03:02 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: https://localhost:5001 
+2024-03-08 13:03:02 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: https://localhost:5001 
+2024-03-08 13:03:02 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: http://localhost:5000 
+2024-03-08 13:03:02 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: http://localhost:5000 
+2024-03-08 13:03:02 PM||INFO|Microsoft.Hosting.Lifetime|Application started. Press Ctrl+C to shut down. 
+2024-03-08 13:03:02 PM||INFO|Microsoft.Hosting.Lifetime|Application started. Press Ctrl+C to shut down. 
+2024-03-08 13:03:02 PM||INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development 
+2024-03-08 13:03:02 PM||INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development 
+2024-03-08 13:03:02 PM||INFO|Microsoft.Hosting.Lifetime|Content root path: D:\Offical\Wleepay_API\wleepay.API 
+2024-03-08 13:03:02 PM||INFO|Microsoft.Hosting.Lifetime|Content root path: D:\Offical\Wleepay_API\wleepay.API 
+2024-03-08 13:03:15 PM|20504|WARN|Microsoft.EntityFrameworkCore.Query|Compiling a query which loads related collections for more than one collection navigation either via 'Include' or through projection but no 'QuerySplittingBehavior' has been configured. By default Entity Framework will use 'QuerySplittingBehavior.SingleQuery' which can potentially result in slow query performance. See https://go.microsoft.com/fwlink/?linkid=2134277 for more information. To identify the query that's triggering this warning call 'ConfigureWarnings(w => w.Throw(RelationalEventId.MultipleCollectionIncludeWarning))' 
+2024-03-08 13:03:15 PM|20504|WARN|Microsoft.EntityFrameworkCore.Query|Compiling a query which loads related collections for more than one collection navigation either via 'Include' or through projection but no 'QuerySplittingBehavior' has been configured. By default Entity Framework will use 'QuerySplittingBehavior.SingleQuery' which can potentially result in slow query performance. See https://go.microsoft.com/fwlink/?linkid=2134277 for more information. To identify the query that's triggering this warning call 'ConfigureWarnings(w => w.Throw(RelationalEventId.MultipleCollectionIncludeWarning))' 
+2024-03-08 13:03:24 PM|20504|WARN|Microsoft.EntityFrameworkCore.Query|Compiling a query which loads related collections for more than one collection navigation either via 'Include' or through projection but no 'QuerySplittingBehavior' has been configured. By default Entity Framework will use 'QuerySplittingBehavior.SingleQuery' which can potentially result in slow query performance. See https://go.microsoft.com/fwlink/?linkid=2134277 for more information. To identify the query that's triggering this warning call 'ConfigureWarnings(w => w.Throw(RelationalEventId.MultipleCollectionIncludeWarning))' 
+2024-03-08 13:03:24 PM|20504|WARN|Microsoft.EntityFrameworkCore.Query|Compiling a query which loads related collections for more than one collection navigation either via 'Include' or through projection but no 'QuerySplittingBehavior' has been configured. By default Entity Framework will use 'QuerySplittingBehavior.SingleQuery' which can potentially result in slow query performance. See https://go.microsoft.com/fwlink/?linkid=2134277 for more information. To identify the query that's triggering this warning call 'ConfigureWarnings(w => w.Throw(RelationalEventId.MultipleCollectionIncludeWarning))' 
+2024-03-08 13:06:24 PM||DEBUG|wleepay.API.Program|init main 
+2024-03-08 13:06:26 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: https://localhost:5001 
+2024-03-08 13:06:26 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: https://localhost:5001 
+2024-03-08 13:06:26 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: http://localhost:5000 
+2024-03-08 13:06:26 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: http://localhost:5000 
+2024-03-08 13:06:26 PM||INFO|Microsoft.Hosting.Lifetime|Application started. Press Ctrl+C to shut down. 
+2024-03-08 13:06:26 PM||INFO|Microsoft.Hosting.Lifetime|Application started. Press Ctrl+C to shut down. 
+2024-03-08 13:06:26 PM||INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development 
+2024-03-08 13:06:26 PM||INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development 
+2024-03-08 13:06:26 PM||INFO|Microsoft.Hosting.Lifetime|Content root path: D:\Offical\Wleepay_API\wleepay.API 
+2024-03-08 13:06:26 PM||INFO|Microsoft.Hosting.Lifetime|Content root path: D:\Offical\Wleepay_API\wleepay.API 
+2024-03-08 13:06:39 PM|20504|WARN|Microsoft.EntityFrameworkCore.Query|Compiling a query which loads related collections for more than one collection navigation either via 'Include' or through projection but no 'QuerySplittingBehavior' has been configured. By default Entity Framework will use 'QuerySplittingBehavior.SingleQuery' which can potentially result in slow query performance. See https://go.microsoft.com/fwlink/?linkid=2134277 for more information. To identify the query that's triggering this warning call 'ConfigureWarnings(w => w.Throw(RelationalEventId.MultipleCollectionIncludeWarning))' 
+2024-03-08 13:06:39 PM|20504|WARN|Microsoft.EntityFrameworkCore.Query|Compiling a query which loads related collections for more than one collection navigation either via 'Include' or through projection but no 'QuerySplittingBehavior' has been configured. By default Entity Framework will use 'QuerySplittingBehavior.SingleQuery' which can potentially result in slow query performance. See https://go.microsoft.com/fwlink/?linkid=2134277 for more information. To identify the query that's triggering this warning call 'ConfigureWarnings(w => w.Throw(RelationalEventId.MultipleCollectionIncludeWarning))' 
+2024-03-08 13:07:08 PM|20504|WARN|Microsoft.EntityFrameworkCore.Query|Compiling a query which loads related collections for more than one collection navigation either via 'Include' or through projection but no 'QuerySplittingBehavior' has been configured. By default Entity Framework will use 'QuerySplittingBehavior.SingleQuery' which can potentially result in slow query performance. See https://go.microsoft.com/fwlink/?linkid=2134277 for more information. To identify the query that's triggering this warning call 'ConfigureWarnings(w => w.Throw(RelationalEventId.MultipleCollectionIncludeWarning))' 
+2024-03-08 13:07:08 PM|20504|WARN|Microsoft.EntityFrameworkCore.Query|Compiling a query which loads related collections for more than one collection navigation either via 'Include' or through projection but no 'QuerySplittingBehavior' has been configured. By default Entity Framework will use 'QuerySplittingBehavior.SingleQuery' which can potentially result in slow query performance. See https://go.microsoft.com/fwlink/?linkid=2134277 for more information. To identify the query that's triggering this warning call 'ConfigureWarnings(w => w.Throw(RelationalEventId.MultipleCollectionIncludeWarning))' 
+2024-03-08 13:10:52 PM||DEBUG|wleepay.API.Program|init main 
+2024-03-08 13:10:56 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: https://localhost:5001 
+2024-03-08 13:10:56 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: https://localhost:5001 
+2024-03-08 13:10:56 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: http://localhost:5000 
+2024-03-08 13:10:56 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: http://localhost:5000 
+2024-03-08 13:10:56 PM||INFO|Microsoft.Hosting.Lifetime|Application started. Press Ctrl+C to shut down. 
+2024-03-08 13:10:56 PM||INFO|Microsoft.Hosting.Lifetime|Application started. Press Ctrl+C to shut down. 
+2024-03-08 13:10:56 PM||INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development 
+2024-03-08 13:10:56 PM||INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development 
+2024-03-08 13:10:56 PM||INFO|Microsoft.Hosting.Lifetime|Content root path: D:\Offical\Wleepay_API\wleepay.API 
+2024-03-08 13:10:56 PM||INFO|Microsoft.Hosting.Lifetime|Content root path: D:\Offical\Wleepay_API\wleepay.API 
+2024-03-08 13:11:15 PM|20504|WARN|Microsoft.EntityFrameworkCore.Query|Compiling a query which loads related collections for more than one collection navigation either via 'Include' or through projection but no 'QuerySplittingBehavior' has been configured. By default Entity Framework will use 'QuerySplittingBehavior.SingleQuery' which can potentially result in slow query performance. See https://go.microsoft.com/fwlink/?linkid=2134277 for more information. To identify the query that's triggering this warning call 'ConfigureWarnings(w => w.Throw(RelationalEventId.MultipleCollectionIncludeWarning))' 
+2024-03-08 13:11:15 PM|20504|WARN|Microsoft.EntityFrameworkCore.Query|Compiling a query which loads related collections for more than one collection navigation either via 'Include' or through projection but no 'QuerySplittingBehavior' has been configured. By default Entity Framework will use 'QuerySplittingBehavior.SingleQuery' which can potentially result in slow query performance. See https://go.microsoft.com/fwlink/?linkid=2134277 for more information. To identify the query that's triggering this warning call 'ConfigureWarnings(w => w.Throw(RelationalEventId.MultipleCollectionIncludeWarning))' 
+2024-03-08 13:11:18 PM|20504|WARN|Microsoft.EntityFrameworkCore.Query|Compiling a query which loads related collections for more than one collection navigation either via 'Include' or through projection but no 'QuerySplittingBehavior' has been configured. By default Entity Framework will use 'QuerySplittingBehavior.SingleQuery' which can potentially result in slow query performance. See https://go.microsoft.com/fwlink/?linkid=2134277 for more information. To identify the query that's triggering this warning call 'ConfigureWarnings(w => w.Throw(RelationalEventId.MultipleCollectionIncludeWarning))' 
+2024-03-08 13:11:18 PM|20504|WARN|Microsoft.EntityFrameworkCore.Query|Compiling a query which loads related collections for more than one collection navigation either via 'Include' or through projection but no 'QuerySplittingBehavior' has been configured. By default Entity Framework will use 'QuerySplittingBehavior.SingleQuery' which can potentially result in slow query performance. See https://go.microsoft.com/fwlink/?linkid=2134277 for more information. To identify the query that's triggering this warning call 'ConfigureWarnings(w => w.Throw(RelationalEventId.MultipleCollectionIncludeWarning))' 
+2024-03-08 13:14:09 PM||DEBUG|wleepay.API.Program|init main 
+2024-03-08 13:14:12 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: https://localhost:5001 
+2024-03-08 13:14:12 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: https://localhost:5001 
+2024-03-08 13:14:12 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: http://localhost:5000 
+2024-03-08 13:14:12 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: http://localhost:5000 
+2024-03-08 13:14:12 PM||INFO|Microsoft.Hosting.Lifetime|Application started. Press Ctrl+C to shut down. 
+2024-03-08 13:14:12 PM||INFO|Microsoft.Hosting.Lifetime|Application started. Press Ctrl+C to shut down. 
+2024-03-08 13:14:12 PM||INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development 
+2024-03-08 13:14:12 PM||INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development 
+2024-03-08 13:14:12 PM||INFO|Microsoft.Hosting.Lifetime|Content root path: D:\Offical\Wleepay_API\wleepay.API 
+2024-03-08 13:14:12 PM||INFO|Microsoft.Hosting.Lifetime|Content root path: D:\Offical\Wleepay_API\wleepay.API 
+2024-03-08 13:14:45 PM|20504|WARN|Microsoft.EntityFrameworkCore.Query|Compiling a query which loads related collections for more than one collection navigation either via 'Include' or through projection but no 'QuerySplittingBehavior' has been configured. By default Entity Framework will use 'QuerySplittingBehavior.SingleQuery' which can potentially result in slow query performance. See https://go.microsoft.com/fwlink/?linkid=2134277 for more information. To identify the query that's triggering this warning call 'ConfigureWarnings(w => w.Throw(RelationalEventId.MultipleCollectionIncludeWarning))' 
+2024-03-08 13:14:45 PM|20504|WARN|Microsoft.EntityFrameworkCore.Query|Compiling a query which loads related collections for more than one collection navigation either via 'Include' or through projection but no 'QuerySplittingBehavior' has been configured. By default Entity Framework will use 'QuerySplittingBehavior.SingleQuery' which can potentially result in slow query performance. See https://go.microsoft.com/fwlink/?linkid=2134277 for more information. To identify the query that's triggering this warning call 'ConfigureWarnings(w => w.Throw(RelationalEventId.MultipleCollectionIncludeWarning))' 
+2024-03-08 13:15:02 PM|20504|WARN|Microsoft.EntityFrameworkCore.Query|Compiling a query which loads related collections for more than one collection navigation either via 'Include' or through projection but no 'QuerySplittingBehavior' has been configured. By default Entity Framework will use 'QuerySplittingBehavior.SingleQuery' which can potentially result in slow query performance. See https://go.microsoft.com/fwlink/?linkid=2134277 for more information. To identify the query that's triggering this warning call 'ConfigureWarnings(w => w.Throw(RelationalEventId.MultipleCollectionIncludeWarning))' 
+2024-03-08 13:15:02 PM|20504|WARN|Microsoft.EntityFrameworkCore.Query|Compiling a query which loads related collections for more than one collection navigation either via 'Include' or through projection but no 'QuerySplittingBehavior' has been configured. By default Entity Framework will use 'QuerySplittingBehavior.SingleQuery' which can potentially result in slow query performance. See https://go.microsoft.com/fwlink/?linkid=2134277 for more information. To identify the query that's triggering this warning call 'ConfigureWarnings(w => w.Throw(RelationalEventId.MultipleCollectionIncludeWarning))' 
+2024-03-08 13:30:14 PM|20504|WARN|Microsoft.EntityFrameworkCore.Query|Compiling a query which loads related collections for more than one collection navigation either via 'Include' or through projection but no 'QuerySplittingBehavior' has been configured. By default Entity Framework will use 'QuerySplittingBehavior.SingleQuery' which can potentially result in slow query performance. See https://go.microsoft.com/fwlink/?linkid=2134277 for more information. To identify the query that's triggering this warning call 'ConfigureWarnings(w => w.Throw(RelationalEventId.MultipleCollectionIncludeWarning))' 
+2024-03-08 13:30:14 PM|20504|WARN|Microsoft.EntityFrameworkCore.Query|Compiling a query which loads related collections for more than one collection navigation either via 'Include' or through projection but no 'QuerySplittingBehavior' has been configured. By default Entity Framework will use 'QuerySplittingBehavior.SingleQuery' which can potentially result in slow query performance. See https://go.microsoft.com/fwlink/?linkid=2134277 for more information. To identify the query that's triggering this warning call 'ConfigureWarnings(w => w.Throw(RelationalEventId.MultipleCollectionIncludeWarning))' 
+2024-03-11 17:35:12 PM||DEBUG|wleepay.API.Program|init main 
+2024-03-11 17:35:17 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: https://localhost:5001 
+2024-03-11 17:35:17 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: https://localhost:5001 
+2024-03-11 17:35:17 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: http://localhost:5000 
+2024-03-11 17:35:17 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: http://localhost:5000 
+2024-03-11 17:35:17 PM||INFO|Microsoft.Hosting.Lifetime|Application started. Press Ctrl+C to shut down. 
+2024-03-11 17:35:17 PM||INFO|Microsoft.Hosting.Lifetime|Application started. Press Ctrl+C to shut down. 
+2024-03-11 17:35:17 PM||INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development 
+2024-03-11 17:35:17 PM||INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development 
+2024-03-11 17:35:17 PM||INFO|Microsoft.Hosting.Lifetime|Content root path: D:\Offical\Wleepay_API\wleepay.API 
+2024-03-11 17:35:17 PM||INFO|Microsoft.Hosting.Lifetime|Content root path: D:\Offical\Wleepay_API\wleepay.API 
+2024-03-11 18:10:11 PM||DEBUG|wleepay.API.Program|init main 
+2024-03-11 18:10:14 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: https://localhost:5001 
+2024-03-11 18:10:14 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: https://localhost:5001 
+2024-03-11 18:10:14 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: http://localhost:5000 
+2024-03-11 18:10:14 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: http://localhost:5000 
+2024-03-11 18:10:14 PM||INFO|Microsoft.Hosting.Lifetime|Application started. Press Ctrl+C to shut down. 
+2024-03-11 18:10:14 PM||INFO|Microsoft.Hosting.Lifetime|Application started. Press Ctrl+C to shut down. 
+2024-03-11 18:10:14 PM||INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development 
+2024-03-11 18:10:14 PM||INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development 
+2024-03-11 18:10:14 PM||INFO|Microsoft.Hosting.Lifetime|Content root path: D:\Offical\Wleepay_API\wleepay.API 
+2024-03-11 18:10:14 PM||INFO|Microsoft.Hosting.Lifetime|Content root path: D:\Offical\Wleepay_API\wleepay.API 
+2024-03-11 18:12:29 PM|20504|WARN|Microsoft.EntityFrameworkCore.Query|Compiling a query which loads related collections for more than one collection navigation either via 'Include' or through projection but no 'QuerySplittingBehavior' has been configured. By default Entity Framework will use 'QuerySplittingBehavior.SingleQuery' which can potentially result in slow query performance. See https://go.microsoft.com/fwlink/?linkid=2134277 for more information. To identify the query that's triggering this warning call 'ConfigureWarnings(w => w.Throw(RelationalEventId.MultipleCollectionIncludeWarning))' 
+2024-03-11 18:12:29 PM|20504|WARN|Microsoft.EntityFrameworkCore.Query|Compiling a query which loads related collections for more than one collection navigation either via 'Include' or through projection but no 'QuerySplittingBehavior' has been configured. By default Entity Framework will use 'QuerySplittingBehavior.SingleQuery' which can potentially result in slow query performance. See https://go.microsoft.com/fwlink/?linkid=2134277 for more information. To identify the query that's triggering this warning call 'ConfigureWarnings(w => w.Throw(RelationalEventId.MultipleCollectionIncludeWarning))' 

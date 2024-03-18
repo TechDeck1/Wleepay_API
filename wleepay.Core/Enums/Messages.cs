@@ -44,6 +44,9 @@ namespace wleepay.Core.Enums
         [Description("Reply for Ticket.")] SubjectForTicketUpdated,
         [Description("You cannot login from this screen.")] WrongLoginPage,
         [Description("Information is succesfully updated.")] InfoUpdated,
+        [Description("Invalid access token or refresh token.")] InvalidAccessToken,
+        [Description("Phone is not verified please verify your phone number.")] PhoneNumberNotVerified,
+        [Description("Cannont update status id is null.")] NotUpdated,
 
 
 

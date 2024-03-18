@@ -52,7 +52,6 @@ namespace wleepay.API.Controllers
                     return NotFound();
                 }
                 var walletBalance =await _walletService.GetWallet((long)cashFlowHistoryResource.WalletId);
-                var lastCashFlowHistory = await _cashFlowService.GetLatestCashFlowHistoryAsync((long)cashFlowHistoryResource.WalletId);
                 if (cashFlowHistoryResource.DepositAmount != null) 
                 {
                     cashFlowHistoryResource.TotalAmount = cashFlowHistoryResource.DepositAmount + walletBalance.Balance;
