@@ -76,12 +76,18 @@ namespace wleepay.Data.Repositories
                 .Take(takeCount)
                 .ToListAsync();
 
-            var totalCount = await WPContext.Users.Where(s => s.UserRoles.FirstOrDefault().Role.Name == role.ToString()).CountAsync();
+            //var totalCount = await WPContext.Users.Where(s => s.UserRoles.FirstOrDefault().Role.Name == role.ToString()).CountAsync();
 
-            UserDetailsResponseResource response = new UserDetailsResponseResource();
-            response.UserDetails = result;
-            response.TotalCount = totalCount;
-            return response;
+            //UserDetailsResponseResource response = new UserDetailsResponseResource();
+            //response.UserDetails = result;
+            //response.TotalCount = totalCount;
+            //return response;
+
+            return new UserDetailsResponseResource
+            {
+                TotalCount = await WPContext.Users.Where(s => s.UserRoles.FirstOrDefault().Role.Name == role.ToString()).CountAsync(),
+                UserDetails = result
+            };
         }
 
         public async Task<ApplicationUser> GetApplicationUser(string userId = "", string name = "", string phoneNumber = "", bool fetchWallet = false, bool fetchKYCDoc = false, int role = 0)
@@ -170,13 +176,19 @@ namespace wleepay.Data.Repositories
                     .Take(takeCount)
                     .ToListAsync();
 
-                var totalCount = await WPContext.Users.Where(s => s.UserRoles.FirstOrDefault().Role.Name == role.ToString() && s.UserDetail.CreatedBy == createdBy).CountAsync();
+                return new UserDetailsResponseResource
+                {
+                    TotalCount = await WPContext.Users.Where(s => s.UserRoles.FirstOrDefault().Role.Name == role.ToString() && s.UserDetail.CreatedBy == createdBy).CountAsync(),
+                    UserDetails = result
+                };
 
-                UserDetailsResponseResource response = new UserDetailsResponseResource();
-                response.UserDetails = result;
-                response.TotalCount = totalCount;
+                //var totalCount = await WPContext.Users.Where(s => s.UserRoles.FirstOrDefault().Role.Name == role.ToString() && s.UserDetail.CreatedBy == createdBy).CountAsync();
 
-                return response;
+                //UserDetailsResponseResource response = new UserDetailsResponseResource();
+                //response.UserDetails = result;
+                //response.TotalCount = totalCount;
+
+                //return response;
 
             }
             else
@@ -193,13 +205,13 @@ namespace wleepay.Data.Repositories
                  .Where(s => s.UserRoles.FirstOrDefault().Role.Name == role.ToString() && s.UserDetail.CreatedBy == createdBy)
                  .ToListAsync();
 
-                var totalCount = await WPContext.Users.Where(s => s.UserRoles.FirstOrDefault().Role.Name == role.ToString() && s.UserDetail.CreatedBy == createdBy).CountAsync();
+               // var totalCount = await WPContext.Users.Where(s => s.UserRoles.FirstOrDefault().Role.Name == role.ToString() && s.UserDetail.CreatedBy == createdBy).CountAsync();
+                return new UserDetailsResponseResource{
+                   UserDetails = result,
+                   TotalCount = await WPContext.Users.Where(s => s.UserRoles.FirstOrDefault().Role.Name == role.ToString() && s.UserDetail.CreatedBy == createdBy).CountAsync(),
+                };
+              
 
-                UserDetailsResponseResource response = new UserDetailsResponseResource();
-                response.UserDetails = result;
-                response.TotalCount = totalCount;
-
-                return response;
             }
         }
 
@@ -207,7 +219,7 @@ namespace wleepay.Data.Repositories
         {
             if (size <= 0)
             {
-                size= 10;
+                size = 10;
             }
             int takeCount = size;
             int skipCount = index * size;
@@ -231,11 +243,19 @@ namespace wleepay.Data.Repositories
             var totalCount = await WPContext.Users
                               .Where(entity => entity.Email.Contains(searchText) && entity.UserRoles.FirstOrDefault().Role.Name == role.ToString()).CountAsync();
 
-            UserDetailsResponseResource response = new UserDetailsResponseResource();
-            response.UserDetails = result;
-            response.TotalCount = totalCount;
+            return new UserDetailsResponseResource
+            {
+                UserDetails = result,
+                TotalCount = await WPContext.Users
+                            .Where(entity => entity.Email.Contains(searchText) && entity.UserRoles.FirstOrDefault().Role.Name == role.ToString()).CountAsync()
+            };
+            
+            //UserDetailsResponseResource response = new UserDetailsResponseResource();
+            //response.UserDetails = result;
+            //response.TotalCount = totalCount;
 
-            return response;
+            //return response;
+
         }
 
         public async Task<TransactionAndUserResponseResource> VerifyUserAccountByPhone(string phoneNumber = "")
@@ -256,9 +276,9 @@ namespace wleepay.Data.Repositories
                  .AsQueryable();
 
             appUserQuery = appUserQuery.Where(user => user.UserDetail.PhoneNumber == phoneNumber);
-            var UserDetails= await appUserQuery.FirstOrDefaultAsync();
+            var UserDetails = await appUserQuery.FirstOrDefaultAsync();
 
-            if(UserDetails == null)
+            if (UserDetails == null)
             {
                 return null;
             }
@@ -267,26 +287,23 @@ namespace wleepay.Data.Repositories
 
             foreach (var item in UserDetails?.Wallets)
             {
-                var transactionQuery =WPContext.Transactions.Where(w => w.FromWalletId == item.Id || w.ToWalletId == item.Id).Include(x=>x.TransferType);
+                var transactionQuery = WPContext.Transactions.Where(w => w.FromWalletId == item.Id || w.ToWalletId == item.Id).Include(x => x.TransferType);
                 var transactionsForWallet = transactionQuery.ToList();
 
                 transactionResultsList.Add(transactionsForWallet);
             }
 
-            TransactionAndUserResponseResource transactionAndUserResponse = new TransactionAndUserResponseResource();
-            transactionAndUserResponse.UserDetails = UserDetails;
-            transactionAndUserResponse.Transactions = transactionResultsList.SelectMany(x => x).ToList(); ;
-
-            return transactionAndUserResponse;
+            return new TransactionAndUserResponseResource {
+                UserDetails = UserDetails,
+                Transactions = transactionResultsList.SelectMany(x => x).ToList()
+            };
         }
 
         public async Task<ApplicationUser> GetStaffPermissionsById(string userId)
         {
-            var userDetails = await WPContext.Users.Where(user => user.Id == userId)
+            return await WPContext.Users.Where(user => user.Id == userId)
                             .Include(s => s.UserDetail)
                             .FirstOrDefaultAsync();
-            
-            return userDetails;
         }
     }
 }

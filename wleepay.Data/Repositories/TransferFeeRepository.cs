@@ -27,8 +27,7 @@ namespace wleepay.Data.Repositories
 
         public async Task<TransferFee> GetTransferFeeDesc()
         {
-            var result = await  WPContext.TransferFees.OrderByDescending(x=>x.CreatedDate).FirstOrDefaultAsync();
-            return result;
+            return await  WPContext.TransferFees.OrderByDescending(x=>x.CreatedDate).FirstOrDefaultAsync();
         }
 
         public async Task<IEnumerable<TransferFee>> GetAllTransferFee()
@@ -48,9 +47,10 @@ namespace wleepay.Data.Repositories
         {
             transferFee.CreatedDate= DateTime.Now;
             transferFee.IsDeleted = false;
-            var result = await WPContext.AddAsync(transferFee);
+            await WPContext.AddAsync(transferFee);
             WPContext.SaveChanges();
-            return await WPContext.TransferFees.OrderByDescending(x => x.CreatedDate).FirstOrDefaultAsync();
+            return transferFee;
+           // return await WPContext.TransferFees.OrderByDescending(x => x.CreatedDate).FirstOrDefaultAsync();
         }
 
         public async Task<TaxRatesResponse> GetAllTransferFeeAsync(int pageIndex, int pageSize)
@@ -61,10 +61,12 @@ namespace wleepay.Data.Repositories
                 .Skip(skipCount)
                 .Take(takeCount)
                 .ToListAsync();
-            TaxRatesResponse taxRatesResponse = new TaxRatesResponse();
-            taxRatesResponse.TotalCount = await WPContext.TransferFees.CountAsync();
-            taxRatesResponse.TaxRates = result;
-            return taxRatesResponse;
+
+            return new TaxRatesResponse {
+                TotalCount = await WPContext.TransferFees.CountAsync(),
+                TaxRates = result
+            };
+
         }
     }
 }

@@ -46,8 +46,7 @@ namespace wleepay.Data.Repositories
 
         public async Task<Verification> GetVerificationByPhone(string phoneNumber)
         {
-           var verification=  await WPContext.Verification.Where(x => x.PhoneNumber == phoneNumber).FirstOrDefaultAsync();
-           return verification;
+            return await WPContext.Verification.Where(x => x.PhoneNumber == phoneNumber).FirstOrDefaultAsync();
         }
     }
 }

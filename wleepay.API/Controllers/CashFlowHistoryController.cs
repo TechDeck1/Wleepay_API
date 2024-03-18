@@ -15,6 +15,7 @@ using Twilio.TwiML.Voice;
 using System.Globalization;
 using Microsoft.AspNetCore.Authorization;
 using wleepay.API.Middleware;
+using wleepay.Data.Context;
 
 namespace wleepay.API.Controllers
 {
@@ -47,11 +48,12 @@ namespace wleepay.API.Controllers
         {
             try
             {
-                if (cashFlowHistoryResource.WalletId == null)
+                if (cashFlowHistoryResource.WalletId == null || cashFlowHistoryResource.WalletId == 0)
                 {
                     return NotFound();
                 }
                 var walletBalance =await _walletService.GetWallet((long)cashFlowHistoryResource.WalletId);
+               
                 if (cashFlowHistoryResource.DepositAmount != null) 
                 {
                     cashFlowHistoryResource.TotalAmount = cashFlowHistoryResource.DepositAmount + walletBalance.Balance;
@@ -64,6 +66,7 @@ namespace wleepay.API.Controllers
                 var cashFlowhistory = _mapper.Map<CashFlowHistoryResource, CashFlowHistory>(cashFlowHistoryResource);
                 cashFlowhistory.CurrencyId = walletBalance.CurrencyId;
                 cashFlowhistory.PreviousAmount = walletBalance.Balance;
+               
                 var cashFlow = await _cashFlowService.AddCashFlowHistoryAsync(cashFlowhistory);
                 double amount = (double)cashFlowHistoryResource.DepositAmount;
                 var currencySymbol = cashFlowhistory.CurrencyId == 1 ? "LRD" : "USD";

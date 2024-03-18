@@ -100,6 +100,10 @@ namespace wleepay.API.Controllers
                 return BadRequest(validationResult.Errors);
 
             var walletBalance = await _walletService.GetWallet(transactionRequest.FromWalletId);
+            if (walletBalance==null)
+            {
+                return NotFound();
+            }
             if (transactionRequest != null && transactionRequest.TransferTypeId == (int)TransferTypes.TopUpSystemWallet)
             {
                 CashFlowHistory cashFlow = new CashFlowHistory();

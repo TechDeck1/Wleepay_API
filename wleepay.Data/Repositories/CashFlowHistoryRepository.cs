@@ -32,13 +32,8 @@ namespace wleepay.Data.Repositories
                 {
                    
                     //create new transaction record or update cash flow historry for payment request
-                    if (cashFlowHistory.WalletId > 0)
-                    {
-                        cashFlowHistory.CreatedDate = DateTime.Now;
-                        await WPContext.CashFlowHistory.AddAsync(cashFlowHistory);
-                    }
-
-                    //await WPContext.SaveChangesAsync();
+                    cashFlowHistory.CreatedDate = DateTime.Now;
+                    await WPContext.CashFlowHistory.AddAsync(cashFlowHistory);
                   
                     //update receiver wallet balance
                     var receiverWallet = await WPContext.Wallet.Where(w => w.Id == cashFlowHistory.WalletId).FirstOrDefaultAsync();
@@ -56,27 +51,22 @@ namespace wleepay.Data.Repositories
                     throw ex;
                 }
             }
+            
+            //var newAddedCashFlowHistory = await WPContext.CashFlowHistory
+            //    .Where(w => w.Id == cashFlowHistory.Id)
+            //    .Include(w => w.toWallet)
+            //    .FirstOrDefaultAsync(); //no query
 
-            var newAddedCashFlowHistory = await WPContext.CashFlowHistory
-                .Where(w => w.Id == cashFlowHistory.Id)
-                .Include(w => w.toWallet)
-                .FirstOrDefaultAsync(); //no query
-
-            return newAddedCashFlowHistory;
+            return cashFlowHistory;
 
         }
 
         public async Task<CashFlowHistory> AddCashFlowHistoryForWithdraw(CashFlowHistory cashFlowHistory)
         {
             //create new transaction record or update cash flow historry for payment request
-            if (cashFlowHistory.WalletId > 0)
-            {
-                cashFlowHistory.CreatedDate = DateTime.Now;
-                await WPContext.CashFlowHistory.AddAsync(cashFlowHistory);
-            }
-
+            cashFlowHistory.CreatedDate = DateTime.Now;
+            await WPContext.CashFlowHistory.AddAsync(cashFlowHistory);
             await WPContext.SaveChangesAsync();
-
             return cashFlowHistory;
         }
 
@@ -98,8 +88,7 @@ namespace wleepay.Data.Repositories
 
         public async Task<CashFlowHistory> GetLatestCashFlowHistoryAsync(long walletId)
         {
-            var cashFlowHistory= await WPContext.CashFlowHistory.Where(x => x.WalletId == walletId).OrderByDescending(d=> d.CreatedDate).FirstOrDefaultAsync();
-            return cashFlowHistory;
+            return await WPContext.CashFlowHistory.Where(x => x.WalletId == walletId).OrderByDescending(d=> d.CreatedDate).FirstOrDefaultAsync();
         }
     }
 }
