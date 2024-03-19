@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using wleepay.Core.Models;
 using wleepay.Core.Repositories;
 using wleepay.Data.Context;
+using static DevExpress.Xpo.Helpers.AssociatedCollectionCriteriaHelper;
 
 namespace wleepay.Data.Repositories
 {
@@ -30,6 +31,7 @@ namespace wleepay.Data.Repositories
 
         public async Task<SystemStatus> AddUpdateSystemStatus(SystemStatus systemStatus)
         {
+            SystemStatus result = systemStatus;
             if (systemStatus.Id <= 0)
             {
                 await WPContext.SystemStatus.AddAsync(systemStatus);
@@ -37,12 +39,12 @@ namespace wleepay.Data.Repositories
             }
             else
             {
-                var result = await WPContext.SystemStatus.Where(x => x.Id == systemStatus.Id).FirstOrDefaultAsync();
+                result = await WPContext.SystemStatus.Where(x => x.Id == systemStatus.Id).FirstOrDefaultAsync();
                 result.Status = systemStatus.Status;
                 WPContext.SaveChanges();
 
             }
-            return systemStatus;
+            return result;
         }
     }
 }

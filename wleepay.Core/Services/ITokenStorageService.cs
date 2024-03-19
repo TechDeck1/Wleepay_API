@@ -8,8 +8,8 @@ namespace wleepay.Core.Services
 {
     public interface ITokenStorageService
     {
-        Task<TokenStorage> GetTokenStorageById(string userId);
-        Task<TokenStorage> UpdateToken(TokenStorage tokenStorage);
+        //Task<TokenStorage> GetTokenStorageById(string userId);
+        //Task<TokenStorage> UpdateToken(TokenStorage tokenStorage);
 
     }
 }

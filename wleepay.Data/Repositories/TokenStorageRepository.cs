@@ -20,10 +20,10 @@ namespace wleepay.Data.Repositories
             get { return Context as WPContext; }
         }
 
-        public async Task<TokenStorage> GetTokenStorageById(string userId)
-        {
-            var tokenStorage = await WPContext.TokenStorage.Where(user => user.UserId == userId).FirstOrDefaultAsync();
-            return tokenStorage;
-        }
+        //public async Task<TokenStorage> GetTokenStorageById(string userId)
+        //{
+        //    var tokenStorage = await WPContext.TokenStorage.Where(user => user.UserId == userId).FirstOrDefaultAsync();
+        //    return tokenStorage;
+        //}
     }
 }

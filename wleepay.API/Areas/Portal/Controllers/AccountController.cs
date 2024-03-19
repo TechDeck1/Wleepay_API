@@ -448,11 +448,11 @@ namespace wleepay.API.Areas.Portal.Controllers
 
                     var username = userDetails.FirstName + " " + userDetails.LastName;
 
-                    // Store token in db by userId
-                    TokenStorage tokenStorage = new TokenStorage();
-                    tokenStorage.UserId = user.Id;
-                    tokenStorage.Token = encodedToken;
-                    await _tokenStorageService.UpdateToken(tokenStorage);
+                    //// Store token in db by userId
+                    //TokenStorage tokenStorage = new TokenStorage();
+                    //tokenStorage.UserId = user.Id;
+                    //tokenStorage.Token = encodedToken;
+                    //await _tokenStorageService.UpdateToken(tokenStorage);
 
                     EmailHtmlTemplates template = new EmailHtmlTemplates();
 
@@ -496,16 +496,16 @@ namespace wleepay.API.Areas.Portal.Controllers
 
             //get user by email
             var user = await _userManager.FindByEmailAsync(decryptedEmail);
-            var tokenStorage = await _tokenStorageService.GetTokenStorageById(user.Id);
+            //var tokenStorage = await _tokenStorageService.GetTokenStorageById(user.Id);
 
-            var expiryDate = tokenStorage.ExpirationTime;
-            DateTime currentDate = DateTime.UtcNow; // Use UtcNow to compare in UTC
+            //var expiryDate = tokenStorage.ExpirationTime;
+            //DateTime currentDate = DateTime.UtcNow; // Use UtcNow to compare in UTC
 
-            TimeSpan difference = (TimeSpan)(currentDate - expiryDate);
-            int minutesDifference = (int)difference.TotalHours;
+            //TimeSpan difference = (TimeSpan)(currentDate - expiryDate);
+            //int minutesDifference = (int)difference.TotalHours;
 
-            // Check if the given date is expired (more than 2 minutes ago)
-            bool isExpired = minutesDifference >= 2;
+            //// Check if the given date is expired (more than 2 minutes ago)
+            //bool isExpired = minutesDifference >= 2;
 
             if (user == null)
                 return BadRequest(Messages.NotFound.ToDescriptionString());
@@ -513,7 +513,7 @@ namespace wleepay.API.Areas.Portal.Controllers
             var isValidToken = await _userManager.VerifyUserTokenAsync(user, _userManager.Options.Tokens.PasswordResetTokenProvider, "ResetPassword", resetPasswordDto.Token);
 
             var userDetails = await _userDetailsService.GetUserDetailsById(user.Id);
-            if (isValidToken == true && !isExpired)
+            if (isValidToken == true)
             {
                 //generate password reset token
                 var updatedDetail = await _userManager.ResetPasswordAsync(user, resetPasswordDto.Token, resetPasswordDto.ConfirmPassword.ToString());
@@ -521,7 +521,6 @@ namespace wleepay.API.Areas.Portal.Controllers
                 if (updatedDetail.Succeeded)
                 {
 
-                    var userRole = await _userManager.GetRolesAsync(user);
                     var allAdmins = await _userDetailsService.GetUserByRole((int)Role.SuperAdmin);
                     var subject = EmailSubjectEnums.PasswordChanged.ToDescriptionString();
 
@@ -559,7 +558,12 @@ namespace wleepay.API.Areas.Portal.Controllers
             }
             else
             {
-                return Unauthorized();
+                return Unauthorized(new
+                {
+                    Success = false,
+                    Message = Messages.LinkExpired.ToDescriptionString(),
+
+                });
             }
 
         }
@@ -719,16 +723,16 @@ namespace wleepay.API.Areas.Portal.Controllers
 
             //get user by email
             var user = await _userManager.FindByEmailAsync(decryptedEmail);
-            var tokenStorage = await _tokenStorageService.GetTokenStorageById(user.Id);
+            //var tokenStorage = await _tokenStorageService.GetTokenStorageById(user.Id);
 
-            var expiryDate = tokenStorage.ExpirationTime;
-            DateTime currentDate = DateTime.UtcNow; // Use UtcNow to compare in UTC
+            //var expiryDate = tokenStorage.ExpirationTime;
+            //DateTime currentDate = DateTime.UtcNow; // Use UtcNow to compare in UTC
 
-            TimeSpan difference = (TimeSpan)(currentDate - expiryDate);
-            int minutesDifference = (int)difference.TotalHours;
+            //TimeSpan difference = (TimeSpan)(currentDate - expiryDate);
+            //int minutesDifference = (int)difference.TotalHours;
 
             // Check if the given date is expired (more than 2 minutes ago)
-            bool isExpired = minutesDifference >= 2;
+            //bool isExpired = minutesDifference >= 2;
 
             if (user == null)
                 return BadRequest(Messages.NotFound.ToDescriptionString());
@@ -736,7 +740,7 @@ namespace wleepay.API.Areas.Portal.Controllers
             var isValidToken = await _userManager.VerifyUserTokenAsync(user, _userManager.Options.Tokens.PasswordResetTokenProvider, "ResetPassword", resource.Token);
 
             //return response if link is not expired
-            if (isValidToken == true && !isExpired)
+            if (isValidToken == true)
             {
 
                 return Ok(new
@@ -895,11 +899,11 @@ namespace wleepay.API.Areas.Portal.Controllers
 
                     var username = userDetails.FirstName + " " + userDetails.LastName;
 
-                    // Store token in db by userId
-                    TokenStorage tokenStorage = new TokenStorage();
-                    tokenStorage.UserId = user.Id;
-                    tokenStorage.Token = encodedToken;
-                    await _tokenStorageService.UpdateToken(tokenStorage);
+                    //// Store token in db by userId
+                    //TokenStorage tokenStorage = new TokenStorage();
+                    //tokenStorage.UserId = user.Id;
+                    //tokenStorage.Token = encodedToken;
+                    //await _tokenStorageService.UpdateToken(tokenStorage);
 
                     EmailHtmlTemplates template = new EmailHtmlTemplates();
                     var htmlTemplate = template.EmailTemplate(forgotPinResourceSystemAdmin.Email, callbackUrl, username);

@@ -465,76 +465,76 @@ namespace wleepay.API.Controllers
         [HttpPut("edit")]
         public async Task<IActionResult> EditUserDetails(EditUserDetailResource editUserDetailResource)
         {
-            if (editUserDetailResource == null)
+            try
             {
-                // The model is null
-                return BadRequest("The model is null");
-            }
+                if (string.IsNullOrEmpty(editUserDetailResource.UserId))
+                {
+                    return BadRequest(Messages.NotFound.ToString());
+                }
 
-            var applicationUser = await _userManager.FindByIdAsync(editUserDetailResource.UserId);
+                var applicationUser = await _userManager.FindByIdAsync(editUserDetailResource.UserId);
             
-            if(applicationUser == null)
-            {
-                return BadRequest(Messages.NotFound.ToDescriptionString());
-            }
-            var userDetail = await _userDetailsService.GetUserDetailsById(applicationUser.Id);
-            if (userDetail == null)
-            {
-                return BadRequest(Messages.NotFound.ToDescriptionString());
-            }
-            if(userDetail.PhoneNumber!= editUserDetailResource.PhoneNumber) 
-            {
-                var userExistWithPhone = await _userDetailsService.IsPhoneAlreadyRegistered(editUserDetailResource.PhoneNumber);
-                if (userExistWithPhone == true)
-                    return BadRequest(Messages.PhoneAlreadyUsed.ToDescriptionString());
-
-                applicationUser.PhoneNumber = editUserDetailResource.PhoneNumber;
-                applicationUser.UserName = editUserDetailResource.PhoneNumber;
-            }
-
-            var isUserUpdated = await _userManager.UpdateAsync(applicationUser);
-            if (isUserUpdated.Succeeded)
-            {
-               
-                //userDetail.FirstName = editUserDetailResource.FirstName;
-                //userDetail.LastName = editUserDetailResource.LastName;
-                //userDetail.WleePhoneNumber = editUserDetailResource.WleePhoneNumber;
-                //userDetail.PhoneNumber = editUserDetailResource.PhoneNumber;
-
-               _mapper.Map<EditUserDetailResource, UserDetail>(editUserDetailResource);
-                var combinedUserData= _mapper.Map(editUserDetailResource, userDetail);
-
-                if (!string.IsNullOrEmpty(userDetail.Image))
+                if(applicationUser == null)
                 {
-                    //var profileURL = await _storageService.UploadImageWithURL(userDetailsToInsert.Image, "user-profile-picture", newUser.Id);
-                    //var profileURL = userDetailsToInsert.Image + "";
-                    var profileURL = _storageService.UploadUserProfileImage(userDetail.Image, userDetail.UserId);
-                    userDetail.Image = profileURL;
+                    return BadRequest(Messages.NotFound.ToDescriptionString());
+                }
+                var userDetail = await _userDetailsService.GetUserDetailsById(applicationUser.Id);
+                if (userDetail == null)
+                {
+                    return BadRequest(Messages.NotFound.ToDescriptionString());
+                }
+                if(userDetail.PhoneNumber!= editUserDetailResource.PhoneNumber) 
+                {
+                    var userExistWithPhone = await _userDetailsService.IsPhoneAlreadyRegistered(editUserDetailResource.PhoneNumber);
+                    if (userExistWithPhone == true)
+                        return BadRequest(Messages.PhoneAlreadyUsed.ToDescriptionString());
+
+                    applicationUser.PhoneNumber = editUserDetailResource.PhoneNumber;
+                    applicationUser.UserName = editUserDetailResource.PhoneNumber;
                 }
 
-                if (!string.IsNullOrEmpty(userDetail.KYCDocumentImage))
+                var isUserUpdated = await _userManager.UpdateAsync(applicationUser);
+                if (isUserUpdated.Succeeded)
                 {
-                    var documentURL = _storageService.UploadKYCDocument(userDetail.KYCDocumentImage, userDetail.UserId);
-                    userDetail.KYCDocumentImage = documentURL.ToString();
+
+                   _mapper.Map<EditUserDetailResource, UserDetail>(editUserDetailResource);
+                    var combinedUserData= _mapper.Map(editUserDetailResource, userDetail);
+
+                    if (!string.IsNullOrEmpty(userDetail.Image))
+                    {
+                        var profileURL = _storageService.UploadUserProfileImage(userDetail.Image, userDetail.UserId);
+                        userDetail.Image = profileURL;
+                    }
+
+                    if (!string.IsNullOrEmpty(userDetail.KYCDocumentImage))
+                    {
+                        var documentURL = _storageService.UploadKYCDocument(userDetail.KYCDocumentImage, userDetail.UserId);
+                        userDetail.KYCDocumentImage = documentURL.ToString();
+                    }
+
+                    await _userDetailsService.AddOrUpdateUserDetails(combinedUserData);
+                    UsersStaffRole usersStaffRole = new UsersStaffRole();
+                    usersStaffRole.UserId = applicationUser.Id;
+                    usersStaffRole.UpdatedDate= DateTime.UtcNow;
+                    usersStaffRole.StaffRoleId = editUserDetailResource.StaffRoleId;
+                    await _usersStaffRoleService.UpdateUserStaffRole(usersStaffRole);
+
                 }
-                await _userDetailsService.AddOrUpdateUserDetails(combinedUserData);
-                UsersStaffRole usersStaffRole = new UsersStaffRole();
-                usersStaffRole.UserId = applicationUser.Id;
-                usersStaffRole.UpdatedDate= DateTime.UtcNow;
-                usersStaffRole.StaffRoleId = editUserDetailResource.StaffRoleId;
-                await _usersStaffRoleService.UpdateUserStaffRole(usersStaffRole);
 
+                return Ok(new
+                {
+                    Success = true,
+                    UserId = editUserDetailResource.UserId,
+                    FirstName = editUserDetailResource.FirstName,
+                    LastName = editUserDetailResource.LastName,
+                    Message = Messages.InfoUpdated.ToDescriptionString()
+
+                });
             }
-
-            return Ok(new
+            catch (Exception ex)
             {
-                Success = true,
-                UserId = editUserDetailResource.UserId,
-                FirstName = editUserDetailResource.FirstName,
-                LastName = editUserDetailResource.LastName,
-                Message = Messages.InfoUpdated.ToDescriptionString()
-
-            });
+                throw ex.InnerException;
+            }
 
         }
 

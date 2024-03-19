@@ -8,7 +8,7 @@ namespace wleepay.Core.Repositories
 {
     public interface ITokenStorageRepository :IRepository<TokenStorage>
     {
-        Task<TokenStorage> GetTokenStorageById(string userId);
+       // Task<TokenStorage> GetTokenStorageById(string userId);
 
     }
 }

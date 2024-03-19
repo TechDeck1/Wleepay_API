@@ -21,7 +21,6 @@ namespace wleepay.API.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [Authorize(AuthenticationSchemes = "Bearer")]
-    //[AllowAnonymous]
 
     public class TicketsController : Controller
     {
@@ -130,14 +129,23 @@ namespace wleepay.API.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAllCustomerTickets([FromQuery]string phoneNumber, [FromQuery] int status, [FromQuery] int pageIndex, [FromQuery] int? pageSize = 10)
         {
-            var tickets = await _customerTicketsService.GetAllCustomerTickets(phoneNumber, status, pageIndex, pageSize);
-            var customerTicketsToInsert = _mapper.Map<IEnumerable<CustomerTickets>, IEnumerable<AddCustomerTicketResponseResource>>(tickets.CustomerTickets);
-
-            return Ok(new
+            try
             {
-                totalCount = tickets.TotalCount,
-                customerTickets = customerTicketsToInsert,
-            });
+                var tickets = await _customerTicketsService.GetAllCustomerTickets(phoneNumber, status, pageIndex, pageSize);
+                var customerTicketsToInsert = _mapper.Map<IEnumerable<CustomerTickets>, IEnumerable<AddCustomerTicketResponseResource>>(tickets.CustomerTickets);
+
+                return Ok(new
+                {
+                    totalCount = tickets.TotalCount,
+                    customerTickets = customerTicketsToInsert,
+                });
+            }
+            catch (Exception ex)
+            {
+
+                throw ex.InnerException;
+            }
+           
 
         }
 
@@ -168,6 +176,8 @@ namespace wleepay.API.Controllers
         [HttpPost("reply")]
         public async Task<IActionResult> ReplyForCustomerTicket(CustomerTicketReplyResource request)
         {
+            try
+            {
             var userDetail = await _userDetailsService.GetApplicationUserById(request.UserId);
             if (userDetail == null)
             {
@@ -197,8 +207,6 @@ namespace wleepay.API.Controllers
                     message = Messages.NotFound.ToDescriptionString()
                 });
             }
-
-
 
             Notes notesToInsert = new Notes();
             notesToInsert.CustomerTicketId = request.CustomerTicketId;
@@ -233,14 +241,20 @@ namespace wleepay.API.Controllers
             }
 
             return BadRequest();
+            }
+            catch (Exception ex)
+            {
+
+                throw ex.InnerException;
+            }
         }
 
         [SystemLock]
         [HttpPost("{ticketId}/close")]
         public async Task<IActionResult> CloseCustomerTicket(int ticketId)
         {
-            
-
+            try
+            {
             var ticketToUpdated = await _customerTicketsService.GetCustomerTicketsById(ticketId);
             if (ticketToUpdated == null)
             {
@@ -294,6 +308,14 @@ namespace wleepay.API.Controllers
             }
 
             return BadRequest();
+
+            }
+            catch (Exception ex)
+            {
+
+                throw ex.InnerException;
+            }
+
         }
 
         [SystemLock]
@@ -322,7 +344,6 @@ namespace wleepay.API.Controllers
                         status = true,
                         message = "status updated!"
                     });
-
                 }
 
                 return BadRequest(new
