@@ -232,7 +232,7 @@ namespace wleepay.API.Areas.Portal.Controllers
                         await _usersStaffRoleService.AddUserStaffRole(usersStaffRole);
 
                         //generate jwt token
-                        var token = GenerateJSONWebToken(userDetailsToInsert);
+                        var token = GenerateJSONWebToken(userDetailsToInsert, roleEnumStringValue.ToString());
                         CompleteSignUpResourceModel completeSignUpResourceModel = new CompleteSignUpResourceModel();
                         completeSignUpResourceModel.Email = userDetail.EmailId;
                         completeSignUpResourceModel.PhoneNumber = userDetail.PhoneNumber;
@@ -379,7 +379,7 @@ namespace wleepay.API.Areas.Portal.Controllers
                             }
 
                             //generate jwt token
-                            var token = GenerateJSONWebToken(userDetailsToInsert);
+                            var token = GenerateJSONWebToken(userDetailsToInsert, roleEnumStringValue.ToString());
 
                             CompleteSignUpResourceModel completeSignUpResourceModel = new CompleteSignUpResourceModel();
                             completeSignUpResourceModel.Email = userDetail.EmailId;
@@ -1540,13 +1540,14 @@ namespace wleepay.API.Areas.Portal.Controllers
 
 
         #region helper methods
-        private string GenerateJSONWebToken(UserDetail userInfo, string? userRole="")
+        private string GenerateJSONWebToken(UserDetail userInfo, string userRole)
         {
             var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:Secret"]));
             var authClaims = new List<Claim>
                 {
                     new Claim(ClaimTypes.Name, userInfo.FirstName),
                     new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                    new Claim(ClaimTypes.Role, userRole), // Adding a role claim
                     new Claim(ClaimTypes.Email, userInfo.ApplicationUser.Email)
 
                 };
@@ -1554,10 +1555,11 @@ namespace wleepay.API.Areas.Portal.Controllers
             var token = new JwtSecurityToken(
                 issuer: _configuration["JWT:ValidIssuer"],
                 audience: _configuration["JWT:ValidAudience"],
-                expires: DateTime.Now.AddHours(3),
+                expires: DateTime.Now.AddMinutes(5),
                 claims: authClaims,
                 signingCredentials: new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256)
                 );
+
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
 
