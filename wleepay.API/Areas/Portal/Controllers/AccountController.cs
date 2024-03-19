@@ -448,17 +448,12 @@ namespace wleepay.API.Areas.Portal.Controllers
 
                     var username = userDetails.FirstName + " " + userDetails.LastName;
 
-                    //// Store token in db by userId
-                    //TokenStorage tokenStorage = new TokenStorage();
-                    //tokenStorage.UserId = user.Id;
-                    //tokenStorage.Token = encodedToken;
-                    //await _tokenStorageService.UpdateToken(tokenStorage);
-
                     EmailHtmlTemplates template = new EmailHtmlTemplates();
 
                     var htmlTemplate = template.EmailTemplate(forgotPasswordDto.Email, callbackUrl, username);
 
                     var subject = EmailSubjectEnums.ResetPassword.ToDescriptionString();
+                    
                     //send mail to user for forgot password link
                     await _emailSender.SendEmailAsync(forgotPasswordDto.Email, htmlTemplate, username, subject);
 
@@ -496,17 +491,6 @@ namespace wleepay.API.Areas.Portal.Controllers
 
             //get user by email
             var user = await _userManager.FindByEmailAsync(decryptedEmail);
-            //var tokenStorage = await _tokenStorageService.GetTokenStorageById(user.Id);
-
-            //var expiryDate = tokenStorage.ExpirationTime;
-            //DateTime currentDate = DateTime.UtcNow; // Use UtcNow to compare in UTC
-
-            //TimeSpan difference = (TimeSpan)(currentDate - expiryDate);
-            //int minutesDifference = (int)difference.TotalHours;
-
-            //// Check if the given date is expired (more than 2 minutes ago)
-            //bool isExpired = minutesDifference >= 2;
-
             if (user == null)
                 return BadRequest(Messages.NotFound.ToDescriptionString());
 
@@ -723,16 +707,6 @@ namespace wleepay.API.Areas.Portal.Controllers
 
             //get user by email
             var user = await _userManager.FindByEmailAsync(decryptedEmail);
-            //var tokenStorage = await _tokenStorageService.GetTokenStorageById(user.Id);
-
-            //var expiryDate = tokenStorage.ExpirationTime;
-            //DateTime currentDate = DateTime.UtcNow; // Use UtcNow to compare in UTC
-
-            //TimeSpan difference = (TimeSpan)(currentDate - expiryDate);
-            //int minutesDifference = (int)difference.TotalHours;
-
-            // Check if the given date is expired (more than 2 minutes ago)
-            //bool isExpired = minutesDifference >= 2;
 
             if (user == null)
                 return BadRequest(Messages.NotFound.ToDescriptionString());
@@ -899,12 +873,6 @@ namespace wleepay.API.Areas.Portal.Controllers
 
                     var username = userDetails.FirstName + " " + userDetails.LastName;
 
-                    //// Store token in db by userId
-                    //TokenStorage tokenStorage = new TokenStorage();
-                    //tokenStorage.UserId = user.Id;
-                    //tokenStorage.Token = encodedToken;
-                    //await _tokenStorageService.UpdateToken(tokenStorage);
-
                     EmailHtmlTemplates template = new EmailHtmlTemplates();
                     var htmlTemplate = template.EmailTemplate(forgotPinResourceSystemAdmin.Email, callbackUrl, username);
 
@@ -986,7 +954,6 @@ namespace wleepay.API.Areas.Portal.Controllers
                         var subject = EmailSubjectEnums.AccountSetupConfirmation.ToDescriptionString();
                         string htmlTemplate = template.GenerateHtml();
                         await _emailSender.SendEmailAsync(decryptedEmail, htmlTemplate, userDetails.FirstName, subject);
-                        //await _emailSender.EmailForAccountCreationToSystemAdmin(decryptedEmail, userDetails.FirstName, userDetails.PhoneNumber);
 
                         systemActivityLog.Description = GenericMessagesForSystemLogs.CompleteLoginProcess.ToDescriptionString();
                         var addLogs = await _systemActivityLogsService.AddSystemLogs(systemActivityLog);

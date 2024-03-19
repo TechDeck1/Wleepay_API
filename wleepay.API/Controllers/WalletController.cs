@@ -71,17 +71,5 @@ namespace wleepay.API.Controllers
             return Ok(walletListResource);
         }
 
-
-        //[HttpPost("setCashOnHand")]
-        //public async Task<IActionResult> SetCashOnHand(CashOnHandRequest request)
-        //{
-        //    if (request.Amount == null)
-        //        return BadRequest("Invalid Request");
-            
-        //    var walletData = await _walletService.SetCashOnHand(request.Amount, request.CurrencyTypeId, request.WalletTypeId);
-
-        //    return Ok(walletData);
-        //}
-
     }
 }

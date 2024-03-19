@@ -9,7 +9,6 @@ namespace wleepay.API.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [Authorize(AuthenticationSchemes = "Bearer")]
-    //[AllowAnonymous]
 
 
     public class IssueTypeController : Controller
