@@ -21,7 +21,6 @@ namespace wleepay.Data.Repositories
 
         public async Task<Notes> AddUpdateNotes(Notes notes)
         {
-            
             await WPContext.Notes.AddAsync(notes);
             WPContext.SaveChanges();
 

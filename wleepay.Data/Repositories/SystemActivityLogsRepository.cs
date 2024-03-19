@@ -41,19 +41,18 @@ namespace wleepay.Data.Repositories
         {
             int takeCount = size;
             int skipCount = index * size;
-            var filteredData = await WPContext.SystemActivities 
+            var filteredData = await WPContext.SystemActivities
                               .Where(entity => entity.Email.Contains(email))
                               .Skip(skipCount)
                               .Take(takeCount)
                               .ToListAsync(); //Get all the filtered records from systemActivity table
-            var TotalCount =await WPContext.SystemActivities
-                              .Where(entity => entity.Email.Contains(email)).CountAsync(); // Get the total count of filtered records
-
-            ActivityResponseResource response = new ActivityResponseResource();
-            response.ActivityLogs = filteredData;
-            response.TotalCount = TotalCount;
-
-            return response;
+           
+            return new ActivityResponseResource
+            {
+                ActivityLogs = filteredData,
+                TotalCount = await WPContext.SystemActivities
+                              .Where(entity => entity.Email.Contains(email)).CountAsync(),
+            };
 
         }
 
@@ -70,41 +69,30 @@ namespace wleepay.Data.Repositories
                                         .Skip(skipCount)
                                         .Take(takeCount)
                                         .ToListAsync();
-            var TotalCount = await WPContext.SystemActivities.Where(user => user.UserId == userId).CountAsync();
 
-            ActivityResponseResource response = new ActivityResponseResource();
-            response.ActivityLogs = logs;
-            response.TotalCount = TotalCount;
-            return response;
+            return new ActivityResponseResource 
+            { 
+                ActivityLogs = logs, 
+                TotalCount = await WPContext.SystemActivities.Where(user => user.UserId == userId).CountAsync(),
+            };
+           
         }
 
         public async Task<ActivityResponseResource> GetAllActivityLogs(int pageIndex = 0, int pageSize = 10)
         {
-            try
+            if(pageSize <= 0)
             {
-                if(pageSize <= 0)
-                {
-                    pageSize = 10;
-                }
-                int takeCount = pageSize;
-                int skipCount = pageIndex * pageSize;
-                var logs = await WPContext.SystemActivities.OrderByDescending(x => x.CreatedDate)
-                                            .Skip(skipCount)
-                                            .Take(takeCount)
-                                            .ToListAsync();
-                var TotalCount = await WPContext.SystemActivities.CountAsync();
-
-                ActivityResponseResource response = new ActivityResponseResource();
-                response.ActivityLogs = logs;
-                response.TotalCount = TotalCount;
-                return response;
-
+                pageSize = 10;
             }
-            catch (Exception ex)
-            {
+            int takeCount = pageSize;
+            int skipCount = pageIndex * pageSize;
+            var logs = await WPContext.SystemActivities.OrderByDescending(x => x.CreatedDate)
+                                        .Skip(skipCount)
+                                        .Take(takeCount)
+                                        .ToListAsync();
 
-                throw ex;
-            }
+            return new ActivityResponseResource { ActivityLogs = logs, TotalCount = await WPContext.SystemActivities.CountAsync() };
+
         }
     }
 }

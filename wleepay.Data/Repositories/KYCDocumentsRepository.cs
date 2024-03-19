@@ -16,7 +16,6 @@ namespace wleepay.Data.Repositories
         {
 
         }
-
         private WPContext WPContext
         {
             get { return Context as WPContext; }

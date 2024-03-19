@@ -31,24 +31,22 @@ namespace wleepay.Data.Repositories
             if (customerTickets.Id <= 0)
             {
                 await WPContext.CustomerTickets.AddAsync(customerTickets);
-                WPContext.SaveChanges();
 
             }
-            else
-            {
-                var tickets = await WPContext.CustomerTickets.Where(x => x.Id == customerTickets.Id)
-                                                             .Include(x => x.Notes)
-                                                             .FirstOrDefaultAsync();
-                tickets.UpdatedDate = DateTime.UtcNow;
-                await WPContext.SaveChangesAsync();
-            }
-
-           
+            await WPContext.SaveChangesAsync();
+            //else
+            //{
+            //    //var tickets = await WPContext.CustomerTickets.Where(x => x.Id == customerTickets.Id)
+            //    //                                             .Include(x => x.Notes)
+            //    //                                             .FirstOrDefaultAsync();
+            //    //tickets.UpdatedDate = DateTime.UtcNow;
+            //    //await WPContext.SaveChangesAsync();
+            //}
             return customerTickets;
 
         }
 
-        public async Task<CustomerServiceResponseResource> GetAllCustomerTickets(string phoneNumber,int status, int pageIndex, int? pageSize)
+        public async Task<CustomerServiceResponseResource> GetAllCustomerTickets(string phoneNumber, int status, int pageIndex, int? pageSize)
         {
             if (pageSize <= 0)
             {
@@ -95,21 +93,22 @@ namespace wleepay.Data.Repositories
             }
             else
             {
-                 tickets = await WPContext.CustomerTickets.Where(x => x.Status == (int)CustomerTicketStatus.Open && x.PhoneNumber.Contains(phoneNumber))
-                                                            .Include(x => x.Notes.OrderByDescending(x => x.CreatedDate))
-                                                            .Include(x => x.IssueType)
-                                                            .OrderByDescending(x => x.CreatedDate)
-                                                            .Skip(skipCount)
-                                                            .Take(takeCount)
-                                                            .ToListAsync();
-                 totalCount = await WPContext.CustomerTickets.Where(x => x.Status == (int)CustomerTicketStatus.Open && x.PhoneNumber.Contains(phoneNumber)).CountAsync();
+                tickets = await WPContext.CustomerTickets.Where(x => x.Status == (int)CustomerTicketStatus.Open && x.PhoneNumber.Contains(phoneNumber))
+                                                           .Include(x => x.Notes.OrderByDescending(x => x.CreatedDate))
+                                                           .Include(x => x.IssueType)
+                                                           .OrderByDescending(x => x.CreatedDate)
+                                                           .Skip(skipCount)
+                                                           .Take(takeCount)
+                                                           .ToListAsync();
+                totalCount = await WPContext.CustomerTickets.Where(x => x.Status == (int)CustomerTicketStatus.Open && x.PhoneNumber.Contains(phoneNumber)).CountAsync();
 
             }
-            CustomerServiceResponseResource customerServiceResponse = new CustomerServiceResponseResource();
-            customerServiceResponse.TotalCount=totalCount;
-            customerServiceResponse.CustomerTickets=tickets;
-            return customerServiceResponse;
 
+            return new CustomerServiceResponseResource
+            {
+                TotalCount = totalCount,
+                CustomerTickets = tickets
+            };
         }
 
         public async Task<CustomerServiceResponseResource> GetCustomerTicketsByPhoneNumber(string phone, int pageIndex, int pageSize)
@@ -123,36 +122,28 @@ namespace wleepay.Data.Repositories
 
             var tickets = await WPContext.CustomerTickets.Where(x => x.PhoneNumber == phone)
                                                     .Include(x => x.Notes)
-                                                    .Include(x=>x.IssueType)
+                                                    .Include(x => x.IssueType)
                                                     .OrderByDescending(x => x.CreatedDate)
                                                     .Skip(skipCount)
                                                     .Take(takeCount)
                                                     .ToListAsync();
 
-            var totalCount = await WPContext.CustomerTickets.Where(x => x.PhoneNumber == phone).CountAsync();
-
-
-            CustomerServiceResponseResource customerServiceResponse = new CustomerServiceResponseResource();
-            customerServiceResponse.TotalCount = totalCount;
-            customerServiceResponse.CustomerTickets=tickets;
-
-            return customerServiceResponse;
+            return new CustomerServiceResponseResource 
+            { 
+                TotalCount = await WPContext.CustomerTickets.Where(x => x.PhoneNumber == phone).CountAsync(),
+                CustomerTickets = tickets,
+             };
         }
 
         public async Task<CustomerTickets> GetCustomerTicketsById(int Id)
         {
-            var tickets = await WPContext.CustomerTickets.Where(x => x.Id == Id)
+            return await WPContext.CustomerTickets.Where(x => x.Id == Id)
                                                     .Include(x => x.Notes.OrderByDescending(x => x.CreatedDate))
                                                     .Include(x => x.IssueType)
                                                     .FirstOrDefaultAsync();
-
-
-            return tickets;
         }
 
 
     }
-    
-
     
 }
