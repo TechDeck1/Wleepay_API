@@ -26,7 +26,6 @@ namespace wleepay.Data.Repositories
 
         public async Task<UsersStaffRole> UpdateUserStaffRole(UsersStaffRole usersStaffRole)
         {
-            
             var result = WPContext.UsersStaffRole.Where(x => x.UserId == usersStaffRole.UserId).FirstOrDefault();
             result.UpdatedDate = DateTime.Now;
             result.StaffRoleId = usersStaffRole.StaffRoleId;

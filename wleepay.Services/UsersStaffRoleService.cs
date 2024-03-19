@@ -23,7 +23,7 @@ namespace wleepay.Services
         }
         public async Task<UsersStaffRole> UpdateUserStaffRole(UsersStaffRole usersStaffRole)
         {
-            var result = await _unitOfWork.UsersStaffRole.AddUserStaffRole(usersStaffRole);
+            var result = await _unitOfWork.UsersStaffRole.UpdateUserStaffRole(usersStaffRole);
             return result;
         }
     }

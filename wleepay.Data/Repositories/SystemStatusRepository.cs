@@ -20,14 +20,12 @@ namespace wleepay.Data.Repositories
 
         public async Task<SystemStatus> GetSystemStatus()
         {
-            var result = await WPContext.SystemStatus.OrderByDescending(x=>x.CreatedDate).FirstOrDefaultAsync();
-            return result;
+            return await WPContext.SystemStatus.OrderByDescending(x=>x.CreatedDate).FirstOrDefaultAsync();
         }
 
         public async Task<SystemStatus> GetSystemStatusById(int id)
         {
-            var result = await WPContext.SystemStatus.Where(x=> x.Id == id).FirstOrDefaultAsync();
-            return result;
+            return await WPContext.SystemStatus.Where(x=> x.Id == id).FirstOrDefaultAsync();
         }
 
         public async Task<SystemStatus> AddUpdateSystemStatus(SystemStatus systemStatus)

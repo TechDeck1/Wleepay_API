@@ -29,7 +29,6 @@ namespace wleepay.Services
         public async Task<SystemStatus> GetSystemStatus()
         {
            var result=  await _unitOfWork.SystemStatus.GetSystemStatus();
-           //await _unitOfWork.CommitAsync();
            return result;
         }
 

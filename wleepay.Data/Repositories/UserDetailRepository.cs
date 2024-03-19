@@ -76,13 +76,6 @@ namespace wleepay.Data.Repositories
                 .Take(takeCount)
                 .ToListAsync();
 
-            //var totalCount = await WPContext.Users.Where(s => s.UserRoles.FirstOrDefault().Role.Name == role.ToString()).CountAsync();
-
-            //UserDetailsResponseResource response = new UserDetailsResponseResource();
-            //response.UserDetails = result;
-            //response.TotalCount = totalCount;
-            //return response;
-
             return new UserDetailsResponseResource
             {
                 TotalCount = await WPContext.Users.Where(s => s.UserRoles.FirstOrDefault().Role.Name == role.ToString()).CountAsync(),

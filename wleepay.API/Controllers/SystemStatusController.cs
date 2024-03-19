@@ -41,41 +41,74 @@ namespace wleepay.API.Controllers
         [HttpPost]
         public async Task<IActionResult> AddSystemStatus([FromBody]SystemStatusResource systemStatusResource)
         {
-            if (systemStatusResource == null) {  return BadRequest(); }
-            var systemStatus = _mapper.Map<SystemStatusResource, SystemStatus>(systemStatusResource);
-            systemStatus.Status = systemStatusResource.Status;
-            systemStatus.CreatedDate = DateTime.Now;
-            var result = await _systemStatusService.AddUpdateSystemStatus(systemStatus);
-            return Ok(result);
+            try
+            {
+                if (systemStatusResource == null) { return BadRequest(); }
+                var systemStatus = _mapper.Map<SystemStatusResource, SystemStatus>(systemStatusResource);
+                systemStatus.Status = systemStatusResource.Status;
+                systemStatus.CreatedDate = DateTime.Now;
+                var result = await _systemStatusService.AddUpdateSystemStatus(systemStatus);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+
+                throw ex.InnerException;
+            }
+           
         }
 
         [AllowAnonymous]
         [HttpGet]
         public async Task<IActionResult> GetSystemStatus()
         {
-            var result = await _systemStatusService.GetSystemStatus();
-            statusHub.Clients.All.SendStatusToUser(result);
-            return Ok(result);
+            try
+            {
+                var result = await _systemStatusService.GetSystemStatus();
+                statusHub.Clients.All.SendStatusToUser(result);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                throw ex.InnerException;
+            }
+           
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetSystemStatusById(int id)
         {
-            var result = await _systemStatusService.GetSystemStatusById(id);
-            return Ok(result);
+            try
+            {
+                var result = await _systemStatusService.GetSystemStatusById(id);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+
+                throw ex.InnerException;
+            }
+           
         }
 
         [HttpPut]
         public async Task<IActionResult> UpdateSystemStatus([FromBody] SystemStatusResource systemStatusResource)
         {
-            if(systemStatusResource.Id <= 0)
+            try
             {
-                return BadRequest(Messages.NotUpdated.ToDescriptionString());
-
+                if (systemStatusResource.Id <= 0)
+                {
+                    return BadRequest(Messages.NotUpdated.ToDescriptionString());
+                }
+                var systemStatus = _mapper.Map<SystemStatusResource, SystemStatus>(systemStatusResource);
+                var result = await _systemStatusService.AddUpdateSystemStatus(systemStatus);
+                return Ok(result);
             }
-            var systemStatus = _mapper.Map<SystemStatusResource, SystemStatus>(systemStatusResource);
-            var result = await _systemStatusService.AddUpdateSystemStatus(systemStatus);
-            return Ok(result);
+            catch (Exception ex)
+            {
+                throw ex.InnerException;
+            }
+         
         }
     }
 }

@@ -71,9 +71,18 @@ namespace wleepay.API.Controllers
         [HttpGet("{userId}")]
         public async Task<IActionResult> GetById(string userId)
         {
-            var userDetail = await _userDetailsService.GetUserDetailsById(userId);
-            var userResource = _mapper.Map<UserDetail, UserDetailResource>(userDetail);
-            return Ok(userResource);
+            try
+            {
+                var userDetail = await _userDetailsService.GetUserDetailsById(userId);
+                var userResource = _mapper.Map<UserDetail, UserDetailResource>(userDetail);
+                return Ok(userResource);
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+            
         }
 
         [AllowAnonymous]
@@ -147,7 +156,6 @@ namespace wleepay.API.Controllers
                 });
             }
         }
-
 
         [HttpPut("phoneNumber")]
         public async Task<IActionResult> UpdatePhoneNumber([FromBody] UpdateContactResource requestResource)
@@ -391,14 +399,6 @@ namespace wleepay.API.Controllers
                 UserDetails= userListResource
             });
         }
-
-        //[HttpGet("{role}/role")]
-        //public async Task<IActionResult> GetAllUsersByRole(int role)
-        //{
-        //    var userList = await _userDetailsService.GetUserByRole(role);
-        //    var userListResource = _mapper.Map<IEnumerable<ApplicationUser>, IEnumerable<ApplicationUserResource>>(userList);
-        //    return Ok(userListResource);
-        //}
 
         [HttpGet("{phoneNumber}/VerifyAccountByPhone")]
         public async Task<IActionResult> VerifyUserAccountByPhoneAsync(string phoneNumber)
