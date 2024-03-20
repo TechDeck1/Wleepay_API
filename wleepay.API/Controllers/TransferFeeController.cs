@@ -70,79 +70,101 @@ namespace wleepay.API.Controllers
         [HttpPost("SetCashOutTaxRate")]
         public async Task<IActionResult> UpdateTaxRates([FromBody] TaxRateResourceModel taxRateResourceModel)
         {
-            //var updatedRates = await _transferFeeService.UpdateTransferFee(taxRates);
-            if (taxRateResourceModel.OrganizationFee.Equals(0)) return BadRequest(Messages.InvalidRequest.ToDescriptionString());
-
-            var taxRates = await _transferFeeService.GetTransferFeeByDesc();
-            taxRateResourceModel.AgentCommission = taxRates.AgentCommission;
-            taxRateResourceModel.OrganizationFee = taxRateResourceModel.OrganizationFee;
-            taxRateResourceModel.TaxAmount = taxRates.TaxAmount;
-            taxRateResourceModel.Description = taxRates.Description;
-
-            var updatedTaxRatesResource = _mapper.Map<TaxRateResourceModel, TransferFee>(taxRateResourceModel);
-            var updatedRates = await _transferFeeService.AddTransferFee(updatedTaxRatesResource);
-            if (updatedRates != null)
+            try
             {
-                var types = await _transferTypeService.GetTransferTypeById((int)TransferTypes.CashOut);
-                types.TransferFee = updatedRates.Id;
-                await _transferTypeService.UpdateTransferTypeById(types);
+                if (taxRateResourceModel.OrganizationFee.Equals(0)) return BadRequest(Messages.InvalidRequest.ToDescriptionString());
 
-                var allAgents = await _userDetailsService.GetUserByRole((int)Role.Agent);
-                var agentsListResource = _mapper.Map<IEnumerable<ApplicationUser>, IEnumerable<ApplicationUserResource>>(allAgents);
+                var taxRates = await _transferFeeService.GetTransferFeeByDesc();
+                taxRateResourceModel.AgentCommission = taxRates.AgentCommission;
+                taxRateResourceModel.OrganizationFee = taxRateResourceModel.OrganizationFee;
+                taxRateResourceModel.TaxAmount = taxRates.TaxAmount;
+                taxRateResourceModel.Description = taxRates.Description;
 
-                foreach (var agent in agentsListResource)
+                var updatedTaxRatesResource = _mapper.Map<TaxRateResourceModel, TransferFee>(taxRateResourceModel);
+                var updatedRates = await _transferFeeService.AddTransferFee(updatedTaxRatesResource);
+                if (updatedRates != null)
                 {
-                    var message = MessagesTemplates.TaxRateUpdateMessage(taxRateResourceModel.OrganizationFee.ToString(), agent.UserDetail.FirstName, TaxRates.CashOutFeeRate.ToDescriptionString());
+                    var types = await _transferTypeService.GetTransferTypeById((int)TransferTypes.CashOut);
+                    types.TransferFee = updatedRates.Id;
+                    await _transferTypeService.UpdateTransferTypeById(types);
 
-                    var result = _SMSService.sendMessage(message, agent.UserDetail.PhoneNumber);
+                    var allAgents = await _userDetailsService.GetUserByRole((int)Role.Agent);
+                    var agentsListResource = _mapper.Map<IEnumerable<ApplicationUser>, IEnumerable<ApplicationUserResource>>(allAgents);
+
+                    foreach (var agent in agentsListResource)
+                    {
+                        var message = MessagesTemplates.TaxRateUpdateMessage(taxRateResourceModel.OrganizationFee.ToString(), agent.UserDetail.FirstName, TaxRates.CashOutFeeRate.ToDescriptionString());
+
+                        var result = _SMSService.sendMessage(message, agent.UserDetail.PhoneNumber);
+                    }
+
                 }
 
+                return Ok(updatedRates);
             }
+            catch (Exception ex)
+            {
 
-            return Ok(updatedRates);
+                throw ex.InnerException;
+            }
         }
 
         [SystemLock]
         [HttpPost("SetAgentCommissionTaxRates")]
         public async Task<IActionResult> SetAgentCommissionTaxRates([FromBody] TaxRateResourceModel taxRateResourceModel)
         {
-
-            //var updatedRates = await _transferFeeService.UpdateTransferFee(taxRates);
-            if (taxRateResourceModel.AgentCommission.Equals(0)) return BadRequest(Messages.InvalidRequest.ToDescriptionString());
-
-            var taxRates = await _transferFeeService.GetTransferFeeByDesc();
-            taxRateResourceModel.AgentCommission = taxRateResourceModel.AgentCommission;
-            taxRateResourceModel.OrganizationFee = taxRates.OrganizationFee;
-            taxRateResourceModel.TaxAmount = taxRates.TaxAmount;
-            taxRateResourceModel.Description = taxRates.Description;
-
-            var updatedTaxRatesResource = _mapper.Map<TaxRateResourceModel, TransferFee>(taxRateResourceModel);
-            var updatedRates = await _transferFeeService.AddTransferFee(updatedTaxRatesResource);
-            if (updatedRates != null)
+            try
             {
-                var types = await _transferTypeService.GetTransferTypeById((int)TransferTypes.CashOut);
-                types.TransferFee = updatedRates.Id;
-                await _transferTypeService.UpdateTransferTypeById(types);
+                //var updatedRates = await _transferFeeService.UpdateTransferFee(taxRates);
+                if (taxRateResourceModel.AgentCommission.Equals(0)) return BadRequest(Messages.InvalidRequest.ToDescriptionString());
 
-                var allAgents = await _userDetailsService.GetUserByRole((int)Role.Agent);
-                var agentsListResource = _mapper.Map<IEnumerable<ApplicationUser>, IEnumerable<ApplicationUserResource>>(allAgents);
+                var taxRates = await _transferFeeService.GetTransferFeeByDesc();
+                taxRateResourceModel.AgentCommission = taxRateResourceModel.AgentCommission;
+                taxRateResourceModel.OrganizationFee = taxRates.OrganizationFee;
+                taxRateResourceModel.TaxAmount = taxRates.TaxAmount;
+                taxRateResourceModel.Description = taxRates.Description;
 
-                foreach (var agent in agentsListResource)
+                var updatedTaxRatesResource = _mapper.Map<TaxRateResourceModel, TransferFee>(taxRateResourceModel);
+                var updatedRates = await _transferFeeService.AddTransferFee(updatedTaxRatesResource);
+                if (updatedRates != null)
                 {
-                    var message = MessagesTemplates.TaxRateUpdateMessage(taxRateResourceModel.AgentCommission.ToString(), agent.UserDetail.FirstName, TaxRates.AgentCommisionRate.ToDescriptionString());
+                    var types = await _transferTypeService.GetTransferTypeById((int)TransferTypes.CashOut);
+                    types.TransferFee = updatedRates.Id;
+                    await _transferTypeService.UpdateTransferTypeById(types);
 
-                    var result = _SMSService.sendMessage(message, agent.UserDetail.PhoneNumber);
+                    var allAgents = await _userDetailsService.GetUserByRole((int)Role.Agent);
+                    var agentsListResource = _mapper.Map<IEnumerable<ApplicationUser>, IEnumerable<ApplicationUserResource>>(allAgents);
+
+                    foreach (var agent in agentsListResource)
+                    {
+                        var message = MessagesTemplates.TaxRateUpdateMessage(taxRateResourceModel.AgentCommission.ToString(), agent.UserDetail.FirstName, TaxRates.AgentCommisionRate.ToDescriptionString());
+
+                        var result = _SMSService.sendMessage(message, agent.UserDetail.PhoneNumber);
+                    }
                 }
+                return Ok(updatedRates);
             }
-            return Ok(updatedRates);
+            catch (Exception ex)
+            {
+
+                throw ex.InnerException;
+            }
+
         }
 
-       
+
         [HttpGet("TaxRates")]
         public async Task<IActionResult> GetAllTaxRatesHistory([FromQuery] PagingRequestForRates pagingRequestForRates)
         {
-            var transferFees = await _transferFeeService.GetAllTransferFees(pagingRequestForRates.Index, pagingRequestForRates.Size);
-            return Ok(transferFees);
+            try
+            {
+                var transferFees = await _transferFeeService.GetAllTransferFees(pagingRequestForRates.Index, pagingRequestForRates.Size);
+                return Ok(transferFees);
+            }
+            catch (Exception ex)
+            {
+                throw ex.InnerException;
+            }
         }
 
       

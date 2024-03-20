@@ -422,129 +422,145 @@ namespace wleepay.API.Areas.Portal.Controllers
         [HttpPost("ForgotPassword")]
         public async Task<IActionResult> ForgotPasswordForStaff([FromBody] ForgotPasswordResource forgotPasswordDto)
         {
-            //get user detail by email
-            var user = await _userManager.FindByEmailAsync(forgotPasswordDto.Email);
-            if (user == null)
-                return BadRequest(Messages.NotFound.ToDescriptionString());
-
-            var userDetails = await _userDetailsService.GetUserDetailsById(user.Id);
-            if (userDetails != null)
+            try
             {
-                //check if users phonenumber, email, security answer and security question matches
-                if (userDetails.PhoneNumber == forgotPasswordDto.PhoneNumber && user.Email == forgotPasswordDto.Email && userDetails.SecurityAnswerText.ToLower() == forgotPasswordDto.Answer.ToLower() && userDetails.SecurityQuestionId == forgotPasswordDto.SecurityQuestionId)
+                //get user detail by email
+                var user = await _userManager.FindByEmailAsync(forgotPasswordDto.Email);
+                if (user == null)
+                    return BadRequest(Messages.NotFound.ToDescriptionString());
+
+                var userDetails = await _userDetailsService.GetUserDetailsById(user.Id);
+                if (userDetails != null)
                 {
-                    //generated the token
-                    var token = await _userManager.GeneratePasswordResetTokenAsync(user);
-                    var secretKey = _configuration.GetSection("SecretKeyForEncryptAndDecrypt").Value; //secret key
-                    string encryptedEmail = Common.Encrypt(forgotPasswordDto.Email, secretKey);
-                    var EncodedEncryptedEmail = HttpUtility.UrlEncode(encryptedEmail);
-                    var encodedToken = HttpUtility.UrlEncode(token);
+                    //check if users phonenumber, email, security answer and security question matches
+                    if (userDetails.PhoneNumber == forgotPasswordDto.PhoneNumber && user.Email == forgotPasswordDto.Email && userDetails.SecurityAnswerText.ToLower() == forgotPasswordDto.Answer.ToLower() && userDetails.SecurityQuestionId == forgotPasswordDto.SecurityQuestionId)
+                    {
+                        //generated the token
+                        var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+                        var secretKey = _configuration.GetSection("SecretKeyForEncryptAndDecrypt").Value; //secret key
+                        string encryptedEmail = Common.Encrypt(forgotPasswordDto.Email, secretKey);
+                        var EncodedEncryptedEmail = HttpUtility.UrlEncode(encryptedEmail);
+                        var encodedToken = HttpUtility.UrlEncode(token);
 
-                    // Created callback url
-                    string callbackUrl = $"{forgotPasswordDto.ClientURI}?token={encodedToken}&email={(EncodedEncryptedEmail)}";
+                        // Created callback url
+                        string callbackUrl = $"{forgotPasswordDto.ClientURI}?token={encodedToken}&email={(EncodedEncryptedEmail)}";
 
-                    var username = userDetails.FirstName + " " + userDetails.LastName;
+                        var username = userDetails.FirstName + " " + userDetails.LastName;
 
-                    EmailHtmlTemplates template = new EmailHtmlTemplates();
+                        EmailHtmlTemplates template = new EmailHtmlTemplates();
 
-                    var htmlTemplate = template.EmailTemplate(forgotPasswordDto.Email, callbackUrl, username);
+                        var htmlTemplate = template.EmailTemplate(forgotPasswordDto.Email, callbackUrl, username);
 
-                    var subject = EmailSubjectEnums.ResetPassword.ToDescriptionString();
+                        var subject = EmailSubjectEnums.ResetPassword.ToDescriptionString();
                     
-                    //send mail to user for forgot password link
-                    await _emailSender.SendEmailAsync(forgotPasswordDto.Email, htmlTemplate, username, subject);
+                        //send mail to user for forgot password link
+                        await _emailSender.SendEmailAsync(forgotPasswordDto.Email, htmlTemplate, username, subject);
 
-                    return Ok(new
+                        return Ok(new
+                        {
+                            Success = true,
+                            Message = Messages.LinkSentForResetPassword.ToDescriptionString()
+                        });
+
+                    }
+                    else
                     {
-                        Success = true,
-                        Message = Messages.LinkSentForResetPassword.ToDescriptionString()
-                    });
+                        return Ok(new
+                        {
+                            Success = false,
+                            Message = Messages.DetailsNotCorrect.ToDescriptionString()
 
+                        });
+
+                    }
                 }
-                else
-                {
-                    return Ok(new
-                    {
-                        Success = false,
-                        Message = Messages.DetailsNotCorrect.ToDescriptionString()
-
-                    });
-
-                }
+                return BadRequest();
             }
-            return BadRequest();
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
 
         [AllowAnonymous]
         [HttpPost("ResetPassword")]
         public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordResource resetPasswordDto)
         {
-            if (string.IsNullOrEmpty(resetPasswordDto.Password) && string.IsNullOrEmpty(resetPasswordDto.ConfirmPassword))
+            try
             {
-                return BadRequest();
-            }
-            var secretKey = _configuration.GetSection("SecretKeyForEncryptAndDecrypt").Value; //secret key
-            string decryptedEmail = Common.Decrypt(resetPasswordDto.Email, secretKey); // helper function for decryption
-
-            //get user by email
-            var user = await _userManager.FindByEmailAsync(decryptedEmail);
-            if (user == null)
-                return BadRequest(Messages.NotFound.ToDescriptionString());
-
-            var isValidToken = await _userManager.VerifyUserTokenAsync(user, _userManager.Options.Tokens.PasswordResetTokenProvider, "ResetPassword", resetPasswordDto.Token);
-
-            var userDetails = await _userDetailsService.GetUserDetailsById(user.Id);
-            if (isValidToken == true)
-            {
-                //generate password reset token
-                var updatedDetail = await _userManager.ResetPasswordAsync(user, resetPasswordDto.Token, resetPasswordDto.ConfirmPassword.ToString());
-
-                if (updatedDetail.Succeeded)
+                if (string.IsNullOrEmpty(resetPasswordDto.Password) && string.IsNullOrEmpty(resetPasswordDto.ConfirmPassword))
                 {
+                    return BadRequest();
+                }
+                var secretKey = _configuration.GetSection("SecretKeyForEncryptAndDecrypt").Value; //secret key
+                string decryptedEmail = Common.Decrypt(resetPasswordDto.Email, secretKey); // helper function for decryption
 
-                    var allAdmins = await _userDetailsService.GetUserByRole((int)Role.SuperAdmin);
-                    var subject = EmailSubjectEnums.PasswordChanged.ToDescriptionString();
+                //get user by email
+                var user = await _userManager.FindByEmailAsync(decryptedEmail);
+                if (user == null)
+                    return BadRequest(Messages.NotFound.ToDescriptionString());
 
-                    // send email to staff(user) 
-                    PasswordChangeTemplateForStaff passwordChangeTemplateForStaff = new PasswordChangeTemplateForStaff
-                    {
-                        StaffEmail = decryptedEmail,
-                        StaffFirstName = userDetails.FirstName,
-                        StaffPhoneNumber = userDetails.PhoneNumber
-                    };
-                    string htmlTemplateForstaff = passwordChangeTemplateForStaff.GenerateHtml();
-                    await _emailSender.SendEmailAsync(decryptedEmail, htmlTemplateForstaff, userDetails.FirstName, subject);
+                var isValidToken = await _userManager.VerifyUserTokenAsync(user, _userManager.Options.Tokens.PasswordResetTokenProvider, "ResetPassword", resetPasswordDto.Token);
 
-                    // send email to all admins 
-                    PasswordChangeTemplateForSystemAdmin passwordChangeTemplateForSystemAdmin = new PasswordChangeTemplateForSystemAdmin
+                var userDetails = await _userDetailsService.GetUserDetailsById(user.Id);
+                if (isValidToken == true)
+                {
+                    //generate password reset token
+                    var updatedDetail = await _userManager.ResetPasswordAsync(user, resetPasswordDto.Token, resetPasswordDto.ConfirmPassword.ToString());
+
+                    if (updatedDetail.Succeeded)
                     {
-                        StaffEmail = decryptedEmail,
-                        StaffFirstName = userDetails.FirstName,
-                        StaffPhoneNumber = userDetails.PhoneNumber
-                    };
-                    string htmlTemplateForSystemAdmin = passwordChangeTemplateForSystemAdmin.GenerateHtml();
-                    foreach (var admin in allAdmins)
-                    {
-                        await _emailSender.SendEmailAsync(admin.Email, htmlTemplateForSystemAdmin, admin.UserDetail.FirstName, subject);
+
+                        var allAdmins = await _userDetailsService.GetUserByRole((int)Role.SuperAdmin);
+                        var subject = EmailSubjectEnums.PasswordChanged.ToDescriptionString();
+
+                        // send email to staff(user) 
+                        PasswordChangeTemplateForStaff passwordChangeTemplateForStaff = new PasswordChangeTemplateForStaff
+                        {
+                            StaffEmail = decryptedEmail,
+                            StaffFirstName = userDetails.FirstName,
+                            StaffPhoneNumber = userDetails.PhoneNumber
+                        };
+                        string htmlTemplateForstaff = passwordChangeTemplateForStaff.GenerateHtml();
+                        await _emailSender.SendEmailAsync(decryptedEmail, htmlTemplateForstaff, userDetails.FirstName, subject);
+
+                        // send email to all admins 
+                        PasswordChangeTemplateForSystemAdmin passwordChangeTemplateForSystemAdmin = new PasswordChangeTemplateForSystemAdmin
+                        {
+                            StaffEmail = decryptedEmail,
+                            StaffFirstName = userDetails.FirstName,
+                            StaffPhoneNumber = userDetails.PhoneNumber
+                        };
+                        string htmlTemplateForSystemAdmin = passwordChangeTemplateForSystemAdmin.GenerateHtml();
+                        foreach (var admin in allAdmins)
+                        {
+                            await _emailSender.SendEmailAsync(admin.Email, htmlTemplateForSystemAdmin, admin.UserDetail.FirstName, subject);
+                        }
+                        return Ok(new
+                        {
+                            Success = true,
+                            Message = Messages.PasswordUpdated.ToDescriptionString(),
+
+                        });
                     }
-                    return Ok(new
+                    else
+                        return BadRequest(updatedDetail.Errors.FirstOrDefault());
+                }
+                else
+                {
+                    return Unauthorized(new
                     {
-                        Success = true,
-                        Message = Messages.PasswordUpdated.ToDescriptionString(),
+                        Success = false,
+                        Message = Messages.LinkExpired.ToDescriptionString(),
 
                     });
                 }
-                else
-                    return BadRequest(updatedDetail.Errors.FirstOrDefault());
             }
-            else
+            catch (Exception ex)
             {
-                return Unauthorized(new
-                {
-                    Success = false,
-                    Message = Messages.LinkExpired.ToDescriptionString(),
 
-                });
+                throw ex.InnerException;
             }
 
         }
@@ -552,6 +568,10 @@ namespace wleepay.API.Areas.Portal.Controllers
         [HttpPost("LoginSetup")]
         public async Task<IActionResult> SetupLoginPasswordForStaff([FromBody] SetupLoginResources setupLogin)
         {
+            try
+            {
+
+           
             var secretKey = _configuration.GetSection("SecretKeyForEncryptAndDecrypt").Value; //secret key
             string decryptedEmail = Common.Decrypt(setupLogin.Email, secretKey); // helper function for decryption
 
@@ -651,12 +671,20 @@ namespace wleepay.API.Areas.Portal.Controllers
                 Success = false,
                 Message = Messages.InvalidRequest.ToDescriptionString()
             });
+            }
+            catch (Exception ex)
+            {
+
+                throw ex.InnerException;
+            }
         }
 
         [AllowAnonymous]
         [HttpPost("AccountAlreadySetup")]
         public async Task<IActionResult> CheckIfAccountAlreadySetup(AccountExistVerificationResource resource)
         {
+            try
+            {
             var secretKey = _configuration.GetSection("SecretKeyForEncryptAndDecrypt").Value; //secret key for decryption
             string decryptedEmail = Common.Decrypt(resource.Email, secretKey);
             var user = await _userManager.FindByEmailAsync(decryptedEmail); //Get user details by email
@@ -689,6 +717,12 @@ namespace wleepay.API.Areas.Portal.Controllers
                 });
 
             }
+            }
+            catch (Exception ex)
+            {
+
+                throw ex.InnerException;
+            }
 
         }
 
@@ -696,6 +730,9 @@ namespace wleepay.API.Areas.Portal.Controllers
         [HttpPost("CheckIfLinkIsExpired")]
         public async Task<IActionResult> CheckIfLinkIsExpired(CheckTokenExpirationResource resource)
         {
+            try
+            {
+
             if (!ModelState.IsValid)
                 return BadRequest();
 
@@ -727,6 +764,13 @@ namespace wleepay.API.Areas.Portal.Controllers
                     Success = false,
                     Message = Messages.LinkExpired.ToDescriptionString(),
                 });
+            }
+
+            }
+            catch (Exception ex)
+            {
+
+                throw ex.InnerException;
             }
 
         }
@@ -844,6 +888,9 @@ namespace wleepay.API.Areas.Portal.Controllers
         [HttpPost("ForgotPinSystemAdmin")]
         public async Task<IActionResult> ForgotPinSystemAdmin([FromBody] ForgotPinResourceSystemAdmin forgotPinResourceSystemAdmin)
         {
+            try
+            {
+
             //get user detail by email
             var user = await _userManager.FindByEmailAsync(forgotPinResourceSystemAdmin.Email);
             if (user == null)
@@ -897,12 +944,22 @@ namespace wleepay.API.Areas.Portal.Controllers
                 }
             }
             return BadRequest();
+
+            }
+            catch (Exception ex)
+            {
+
+                throw ex.InnerException;
+            }
         }
 
         [AllowAnonymous]
         [HttpPost("SetPin")]
         public async Task<IActionResult> SetPinForSystemAdmin([FromBody] SetPinResources setupLogin)
         {
+            try
+            {
+
             var secretKey = _configuration.GetSection("SecretKeyForEncryptAndDecrypt").Value; //secret key
             string decryptedEmail = Common.Decrypt(setupLogin.Email, secretKey); // helper function for decryption
 
@@ -981,12 +1038,22 @@ namespace wleepay.API.Areas.Portal.Controllers
                 Success = false,
                 Message = Messages.InvalidRequest.ToDescriptionString()
             });
+
+            }
+            catch (Exception ex)
+            {
+
+                throw ex.InnerException;
+            }
         }
 
         [SystemLock]
         [HttpPost("UpdatePermissions")]
         public async Task<IActionResult> UpdatePermissions([FromBody] StaffPermissionAndRoleResource staffPermissionAndRoleResource)
         {
+            try
+            {
+
             var user = await _userManager.FindByEmailAsync(staffPermissionAndRoleResource.EmailId);
             if (user == null)
             {
@@ -1031,34 +1098,69 @@ namespace wleepay.API.Areas.Portal.Controllers
             var result = await _userDetailsService.AddOrUpdateUserDetails(userDetail);
             return Ok(result);
 
+            }
+            catch (Exception ex)
+            {
+
+                throw ex.InnerException;
+            }
+
         }
 
         [HttpGet("StaffRoles")]
         public async Task<IActionResult> GetStaffRoles()
         {
-            var staffRoles = await _lookupService.GetAllStaffRoles();
-            return Ok(staffRoles);
+            try
+            {
+                var staffRoles = await _lookupService.GetAllStaffRoles();
+                return Ok(staffRoles);
+            }
+            catch (Exception ex)
+            {
+
+                throw ex.InnerException;
+            }
         }
 
         [HttpGet("StaffPermissions")]
         public async Task<IActionResult> GetStaffPermissions()
         {
-            var staffRoles = await _lookupService.GetAllStaffPermissions();
-            return Ok(staffRoles);
+            try
+            {
+                var staffRoles = await _lookupService.GetAllStaffPermissions();
+                return Ok(staffRoles);
+            }
+            catch (Exception ex)
+            {
+
+                throw ex.InnerException;
+            }
         }
 
         [AllowAnonymous]
         [HttpGet("SecurityQuestion")]
         public async Task<IActionResult> GetSecurityQuestions()
         {
-            var questions = await _lookupService.GetAllSecurityQuestions();
-            return Ok(questions);
+            try
+            {
+                var questions = await _lookupService.GetAllSecurityQuestions();
+                return Ok(questions);
+            }
+            catch (Exception ex)
+            {
+
+                throw ex.InnerException;
+            }
         }
 
         [AllowAnonymous]
         [HttpPost("Login")]
         public async Task<IActionResult> Login([FromBody] PortalLoginRequest loginRequest)
         {
+            try
+            {
+
+         
             var validator = new PortalLoginRequestValidator();
             var validationResult = await validator.ValidateAsync(loginRequest);
             if (!validationResult.IsValid)
@@ -1142,6 +1244,7 @@ namespace wleepay.API.Areas.Portal.Controllers
                     Success = false,
                     Message = Messages.AccountLocked.ToDescriptionString(),
                 });
+
             }
 
             if (result.Succeeded)
@@ -1183,11 +1286,19 @@ namespace wleepay.API.Areas.Portal.Controllers
             }
 
             return BadRequest(Messages.BadRequest.ToDescriptionString());
+            }
+            catch (Exception ex)
+            {
+                throw ex.InnerException;
+            }
         }
       
         [HttpPost("LockAccount")]
         public async Task<IActionResult> LockAccount([FromBody] LockAccount model)
         {
+            try
+            {
+
             var user = await _userManager.FindByEmailAsync(model.Email);
 
             if (user != null)
@@ -1198,12 +1309,20 @@ namespace wleepay.API.Areas.Portal.Controllers
             }
             return Ok(GenericMessagesForSystemLogs.AccountLocked.ToDescriptionString());
 
+            }
+            catch (Exception ex)
+            {
+
+                throw ex.InnerException;
+            }
         }
 
         [AllowAnonymous]
         [HttpPost("UnLockAccount")]
         public async Task<IActionResult> UnlockAccount([FromBody] LockAccount model)
         {
+            try
+            {
             var user = await _userManager.FindByEmailAsync(model.Email);
 
             if (user != null)
@@ -1215,7 +1334,12 @@ namespace wleepay.API.Areas.Portal.Controllers
 
             }
             return Ok(Messages.UnlockAccount.ToDescriptionString());
+            }
+            catch (Exception ex)
+            {
 
+                throw ex;
+            }
         }
 
         [AllowAnonymous]
@@ -1459,7 +1583,6 @@ namespace wleepay.API.Areas.Portal.Controllers
             }
             catch (Exception ex)
             {
-
                 throw ex;
             }
 
@@ -1469,6 +1592,8 @@ namespace wleepay.API.Areas.Portal.Controllers
         [HttpPost("refresh-token")]
         public async Task<IActionResult> RefreshToken(RefreshTokenModel tokenModel)
         {
+            try
+            {
             if (string.IsNullOrEmpty(tokenModel.Token))
             {
                 return BadRequest("Invalid client request");
@@ -1504,6 +1629,12 @@ namespace wleepay.API.Areas.Portal.Controllers
             {
                 accessToken = newAccessToken,
             });
+            }
+            catch (Exception ex)
+            {
+
+                throw ex.InnerException;
+            }
         }
 
 
