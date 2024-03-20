@@ -17,9 +17,9 @@ using Microsoft.AspNetCore.Authorization;
 using wleepay.API.Middleware;
 using wleepay.Data.Context;
 
-namespace wleepay.API.Controllers
+namespace wleepay.API.Areas.Portal.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/portal/[controller]")]
     [ApiController]
     [Authorize(AuthenticationSchemes = "Bearer")]
 
@@ -33,7 +33,7 @@ namespace wleepay.API.Controllers
 
 
         public CashFlowHistoryController(
-            ICashFlowService cashFlowService,IMapper mapper, IWalletService walletService, IUserDetailService userDetailService, ISMSService sMSService)
+            ICashFlowService cashFlowService, IMapper mapper, IWalletService walletService, IUserDetailService userDetailService, ISMSService sMSService)
         {
             _cashFlowService = cashFlowService;
             _mapper = mapper;
@@ -52,9 +52,9 @@ namespace wleepay.API.Controllers
                 {
                     return NotFound();
                 }
-                var walletBalance =await _walletService.GetWallet((long)cashFlowHistoryResource.WalletId);
-               
-                if (cashFlowHistoryResource.DepositAmount != null) 
+                var walletBalance = await _walletService.GetWallet((long)cashFlowHistoryResource.WalletId);
+
+                if (cashFlowHistoryResource.DepositAmount != null)
                 {
                     cashFlowHistoryResource.TotalAmount = cashFlowHistoryResource.DepositAmount + walletBalance.Balance;
                 }
@@ -66,7 +66,7 @@ namespace wleepay.API.Controllers
                 var cashFlowhistory = _mapper.Map<CashFlowHistoryResource, CashFlowHistory>(cashFlowHistoryResource);
                 cashFlowhistory.CurrencyId = walletBalance.CurrencyId;
                 cashFlowhistory.PreviousAmount = walletBalance.Balance;
-               
+
                 var cashFlow = await _cashFlowService.AddCashFlowHistoryAsync(cashFlowhistory);
                 double amount = (double)cashFlowHistoryResource.DepositAmount;
                 var currencySymbol = cashFlowhistory.CurrencyId == 1 ? "LRD" : "USD";
@@ -76,7 +76,7 @@ namespace wleepay.API.Controllers
                 var message = MessagesTemplates.PaymentReceivedInCashOnHandAccount(amount.ToString("C2", new CultureInfo("en-US")), currencySymbol, userDetail.UserDetail.FirstName);
 
                 var result = _sMSService.sendMessage(message, userDetail.PhoneNumber);
-                
+
                 return Ok(cashFlow);
 
             }
@@ -89,11 +89,11 @@ namespace wleepay.API.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetCashFlowHistoryAsync([FromQuery]PagingRequestForCashFlow pagingRequestForCashFlow )
+        public async Task<IActionResult> GetCashFlowHistoryAsync([FromQuery] PagingRequestForCashFlow pagingRequestForCashFlow)
         {
             try
             {
-               
+
                 var cashFlow = await _cashFlowService.GetAllCashFlowHistoryAsync(pagingRequestForCashFlow.CurrencyId, pagingRequestForCashFlow.Index, pagingRequestForCashFlow.Size);
                 return Ok(cashFlow);
 

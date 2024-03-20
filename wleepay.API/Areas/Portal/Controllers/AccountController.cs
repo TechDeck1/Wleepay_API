@@ -1637,6 +1637,63 @@ namespace wleepay.API.Areas.Portal.Controllers
             }
         }
 
+        [HttpGet("systemActivity")]
+        public async Task<IActionResult> GetSystemAllLogs([FromQuery] Pagination request)
+        {
+            try
+            {
+                if (!string.IsNullOrEmpty(request.Email))
+                {
+                    var logs = await _systemActivityLogsService.FilterLogsByEmail(request.Email, request.Index, request.Size);
+                    return Ok(logs);
+                }
+                else
+                {
+                    var logs = await _systemActivityLogsService.GetAllSystemLogs(request.Index, request.Size);
+                    return Ok(logs);
+                }
+            }
+            catch (System.Exception ex)
+            {
+                throw ex;
+            }
+
+        }
+
+        [HttpGet("systemActivity/{userId}")]
+        public async Task<IActionResult> GetSystemLogsById(string userId, [FromQuery] int pageIndex = 0, [FromQuery] int pageSize = 10)
+        {
+            try
+            {
+                var logs = await _systemActivityLogsService.GetAllSystemById(userId, pageIndex, pageSize);
+                return Ok(logs);
+
+            }
+            catch (System.Exception ex)
+            {
+
+                throw ex.InnerException;
+            }
+
+        }
+
+        [SystemLock]
+        [HttpDelete("systemActivity/{id}")]
+        public async Task<IActionResult> DeleteLogsById(int id)
+        {
+            try
+            {
+                var result = await _systemActivityLogsService.DeleteLogsById(id);
+                return Ok(result);
+            }
+            catch (System.Exception ex)
+            {
+
+                throw ex.InnerException;
+            }
+
+        }
+
 
         #region helper methods
         private string GenerateJSONWebToken(UserDetail userInfo, string userRole)
@@ -1740,6 +1797,8 @@ namespace wleepay.API.Areas.Portal.Controllers
             }
             return false;
         }
+
+
 
         #endregion
     }
