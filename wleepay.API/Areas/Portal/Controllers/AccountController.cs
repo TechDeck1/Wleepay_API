@@ -1798,8 +1798,6 @@ namespace wleepay.API.Areas.Portal.Controllers
             return false;
         }
 
-
-
         #endregion
     }
 }

@@ -171,7 +171,6 @@ namespace wleepay.API.Controllers
 
         }
 
-
         [SystemLock]
         [HttpPost("reply")]
         public async Task<IActionResult> ReplyForCustomerTicket(CustomerTicketReplyResource request)

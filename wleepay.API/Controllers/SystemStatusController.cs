@@ -12,13 +12,14 @@ using wleepay.API.Hub;
 using wleepay.API.Middleware;
 using wleepay.Core.Enums;
 using wleepay.Core.Common;
+using wleepay.API.Validators;
+using FluentValidation;
 
 namespace wleepay.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
     [Authorize(AuthenticationSchemes = "Bearer")]
-    //[AllowAnonymous]
 
     public class SystemStatusController : Controller
     {
@@ -43,6 +44,11 @@ namespace wleepay.API.Controllers
         {
             try
             {
+                var validator = new SystemStatusValidator();
+                var validationResult = await validator.ValidateAsync(systemStatusResource);
+                if (!validationResult.IsValid)
+                    return BadRequest(validationResult.Errors);
+
                 if (systemStatusResource == null) { return BadRequest(); }
                 var systemStatus = _mapper.Map<SystemStatusResource, SystemStatus>(systemStatusResource);
                 systemStatus.Status = systemStatusResource.Status;

@@ -17,12 +17,12 @@ namespace wleepay.API.Controllers
     [ApiController]
     [Authorize(AuthenticationSchemes = "Bearer")]
 
-    public class CountyController : Controller
+    public class CountryController : Controller
     {
         private readonly ICountyService _countyService;
         private readonly IMapper _mapper;
 
-        public CountyController(ICountyService countyService, IMapper mapper)
+        public CountryController(ICountyService countyService, IMapper mapper)
         {
             _countyService = countyService;
             _mapper = mapper;
