@@ -56,7 +56,6 @@ namespace wleepay.API.Controllers
         public readonly IHostingEnvironment _hostingEnvironment;
         private readonly IUploadDocument _documentUploaderService;
         private readonly IEmailSender _emailSender;
-        private readonly ITokenStorageService _tokenStorageService;
         private readonly ISystemActivityLogsService _systemActivityLogsService;
         private readonly IUsersStaffRoleService _usersStaffRoleService;
         private readonly IVerificationService _verificationService;
@@ -77,7 +76,6 @@ namespace wleepay.API.Controllers
             IUploadDocument uploadDocument,
             IHostingEnvironment hostingEnvironment,
             IEmailSender emailSender,
-            ITokenStorageService tokenStorageService,
             ISystemActivityLogsService systemActivityLogsService,
             IUsersStaffRoleService usersStaffRoleService,
             IVerificationService verificationService)
@@ -98,7 +96,6 @@ namespace wleepay.API.Controllers
             _hostingEnvironment = hostingEnvironment;
             _documentUploaderService = uploadDocument;
             _emailSender = emailSender;
-            _tokenStorageService = tokenStorageService;
             _systemActivityLogsService = systemActivityLogsService;
             _usersStaffRoleService = usersStaffRoleService;
             _verificationService = verificationService;

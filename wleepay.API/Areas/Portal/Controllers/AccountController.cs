@@ -59,7 +59,6 @@ namespace wleepay.API.Areas.Portal.Controllers
         public readonly IHostingEnvironment _hostingEnvironment;
         private readonly IUploadDocument _documentUploaderService;
         private readonly IEmailSender _emailSender;
-        private readonly ITokenStorageService _tokenStorageService;
         private readonly ISystemActivityLogsService _systemActivityLogsService;
         private readonly IUsersStaffRoleService _usersStaffRoleService;
         private readonly IVerificationService _verificationService;
@@ -81,7 +80,6 @@ namespace wleepay.API.Areas.Portal.Controllers
             IUploadDocument uploadDocument,
             IHostingEnvironment hostingEnvironment,
             IEmailSender emailSender,
-            ITokenStorageService tokenStorageService,
             ISystemActivityLogsService systemActivityLogsService,
             IUsersStaffRoleService usersStaffRoleService,
             IVerificationService verificationService,
@@ -103,7 +101,6 @@ namespace wleepay.API.Areas.Portal.Controllers
             _hostingEnvironment = hostingEnvironment;
             _documentUploaderService = uploadDocument;
             _emailSender = emailSender;
-            _tokenStorageService = tokenStorageService;
             _systemActivityLogsService = systemActivityLogsService;
             _usersStaffRoleService = usersStaffRoleService;
             _verificationService = verificationService;
@@ -993,12 +990,12 @@ namespace wleepay.API.Areas.Portal.Controllers
             var user = await _userManager.FindByEmailAsync(staffPermissionAndRoleResource.EmailId);
             if (user == null)
             {
-                return BadRequest();
+                return BadRequest(Messages.NotFound.ToDescriptionString());
             }
             var userDetail = await _userDetailsService.GetUserDetailsById(user.Id);
             if (userDetail == null)
             {
-                return BadRequest();
+                return BadRequest(Messages.NotFound.ToDescriptionString());
             }
 
             if (staffPermissionAndRoleResource.Permissions != null)
@@ -1069,7 +1066,7 @@ namespace wleepay.API.Areas.Portal.Controllers
 
             var user = await _userManager.FindByEmailAsync(loginRequest.Email);
             if (user == null)
-                return BadRequest(Messages.NotFound.ToDescriptionString());
+                return BadRequest(Messages.EmailNotFound.ToDescriptionString());
 
             var userDetails = await _userDetailsService.GetUserDetailsById(user.Id);
             var result = await _signInManager.PasswordSignInAsync(user, loginRequest.Password, false, lockoutOnFailure: true);

@@ -213,7 +213,7 @@ namespace wleepay.API.Controllers
             notesToInsert.Note = request.Note;
             notesToInsert.AddedBy = request.UserId;
             var notes = await _notesService.AddUpdateNotes(notesToInsert);
-
+            var smsMessageTemplate = MessagesTemplates.CustomerTicketReplyMessageSmsTemplate(memberDetails.UserDetail.FirstName, request.Note);
             var message = MessagesTemplates.CustomerTicketReplyMessage(memberDetails.UserDetail.FirstName, request.Note);
             var subject = Messages.SubjectForTicketUpdated.ToDescriptionString();
 
@@ -226,12 +226,11 @@ namespace wleepay.API.Controllers
                 }
                 if (ticket.CustomerContact == (int)CustomerServiceContactMethod.Phone)
                 {
-                    var smsMessageTemplate = MessagesTemplates.CustomerTicketReplyMessageSmsTemplate(memberDetails.UserDetail.FirstName, request.Note);
                     _sMSService.sendMessage(smsMessageTemplate, memberDetails.PhoneNumber);
                 }
                 if (ticket.CustomerContact == (int)CustomerServiceContactMethod.Whatsapp)
                 {
-                    _whatsAppService.sendMessageForCustomerTicket(message, memberDetails.PhoneNumber);
+                    _whatsAppService.sendMessageForCustomerTicket(smsMessageTemplate, memberDetails.PhoneNumber);
                 }
                 return Ok(new
                 {

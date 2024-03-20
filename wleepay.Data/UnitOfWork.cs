@@ -26,7 +26,6 @@ namespace wleepay.Data
         private IAddressRepository _addressRepository;
         private IKYCLevelRepository _kycLevelRepository;
         private ISecurityQuestionsRepository _securityQuestionsRepository;
-        private ITokenStorageRepository _tokenStorageRepository;
         private ISystemActivityLogsRepository _systemActivityLogsRepository;
         private IIssueTypeRepository _issueTypeRepository;
         private ICustomerTicketsRepository _customerTicketsRepository;
@@ -59,7 +58,6 @@ namespace wleepay.Data
         public IAddressRepository Address => _addressRepository = _addressRepository ?? new AddressRespository(_context);
         public IKYCLevelRepository KYCLevel => _kycLevelRepository = _kycLevelRepository ?? new KYCLevelRepository(_context);
         public ISecurityQuestionsRepository SecurityQuestions => _securityQuestionsRepository = _securityQuestionsRepository ?? new SecurityQuestionsRepository(_context);
-        public ITokenStorageRepository TokenStorage => _tokenStorageRepository=_tokenStorageRepository ?? new TokenStorageRepository(_context);
         public ISystemActivityLogsRepository SystemActivity => _systemActivityLogsRepository= _systemActivityLogsRepository ?? new SystemActivityLogsRepository(_context);
         public IIssueTypeRepository IssueType => _issueTypeRepository = _issueTypeRepository ?? new IssueTypeRepository(_context);
         public ICustomerTicketsRepository CustomerTickets => _customerTicketsRepository = _customerTicketsRepository ?? new CustomerTicketsRepository(_context);

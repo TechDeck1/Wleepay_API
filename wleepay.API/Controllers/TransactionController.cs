@@ -388,7 +388,6 @@ namespace wleepay.API.Controllers
         }
 
         private async Task<string> SendTransactionActionEmail(Transaction transaction)
-
         {
             var userWallet = new Wallet();
             string emailText = string.Empty;

@@ -12,12 +12,12 @@ using Microsoft.Extensions.Configuration;
 
 namespace wleepay.Communication.Services
 {
-    public class EmailSenderService : IEmailSender
+    public class EmailService : IEmailSender
     {
         private readonly IConfiguration _configuration;
 
 
-        public EmailSenderService(IConfiguration configuration)
+        public EmailService(IConfiguration configuration)
         {
             _configuration = configuration;
         }
@@ -56,7 +56,7 @@ namespace wleepay.Communication.Services
 
             var subject = mailSubject;
             // recipient's email address and credentials
-            var recipientEmail = email;
+            var recipientEmail = "ariel.ranjot@gmail.com";
 
             // Sender's email address and credentials
             string senderEmail = "ariel.ranjot@gmail.com";
