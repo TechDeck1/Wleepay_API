@@ -27,7 +27,7 @@ namespace wleepay.Communication.Services
         {
             var apiKey = _configuration.GetSection("SendGrid:WleePaySendGridApiKey").Value.ToString();
             var emailSubject = "Payment Recieved";
-            var recipientEmail = email;
+            var recipientEmail = "ariel.ranjot@gmail.com";
             string htmlTemplate = messageText;
 
             // Sender's email
