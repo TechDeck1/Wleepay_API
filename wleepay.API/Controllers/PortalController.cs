@@ -178,16 +178,10 @@ namespace wleepay.API.Controllers
             if (result.Succeeded)
             {
                 
-
                 //generate token
                 var token = GenerateJSONWebToken(userDetails, userRole?[0]);
-                
                 //updated user
                 UserDetail updatedUser = null;
-
-                systemActivityLog.Description = GenericMessagesForSystemLogs.SuccessfullyLoggedIn.ToDescriptionString();
-                
-                await _systemActivityLogsService.AddSystemLogs(systemActivityLog);
 
                 if (userRole[0] == "Staff" || userRole[0] == Role.SystemAdmin.ToDescriptionString())
                 {
@@ -198,9 +192,14 @@ namespace wleepay.API.Controllers
                         Role = userRole?[0],
                     });
                 }
+                if (userRole[0] == Role.SuperAdmin.ToDescriptionString())
+                {
+                    if (!userDetails.IsLoggedIn)
+                        updatedUser = await _userDetailsService.UpdateUserLoggedInStatus(userDetails.UserId, true);
 
-                if (!userDetails.IsLoggedIn)
-                    updatedUser = await _userDetailsService.UpdateUserLoggedInStatus(userDetails.UserId, true);
+                    systemActivityLog.Description = GenericMessagesForSystemLogs.SuccessfullyLoggedIn.ToDescriptionString();
+                    await _systemActivityLogsService.AddSystemLogs(systemActivityLog);
+                }
 
                 return Ok(new
                 {
@@ -375,6 +374,13 @@ namespace wleepay.API.Controllers
                 bool isExpired = minutesDifference >= 1;
 
                 object Data = null;
+
+                SystemActivityLog systemActivityLog = new SystemActivityLog();
+                systemActivityLog.UserId = user.Id;
+                systemActivityLog.Email = model.Email;
+                systemActivityLog.IpAddress = GetClientIpAddress();
+                systemActivityLog.Action = ActionsForSystemLogs.Login.ToDescriptionString();
+
                 if (!isExpired)
                 {
                     if (userDetails.VerificationCode == model.Code)
@@ -404,6 +410,13 @@ namespace wleepay.API.Controllers
                             userDetails.Permissions = Common.Encrypt(jsonString, secretKey).ToString();
                         }
 
+                        if (!userDetails.IsLoggedIn)
+                            updatedUser = await _userDetailsService.UpdateUserLoggedInStatus(userDetails.UserId, true);
+                        
+                        
+                        systemActivityLog.Description = GenericMessagesForSystemLogs.SuccessfullyLoggedIn.ToDescriptionString();
+                        await _systemActivityLogsService.AddSystemLogs(systemActivityLog);
+                        
                         return Ok(new
                         {
                             Data = (new
@@ -423,6 +436,8 @@ namespace wleepay.API.Controllers
                     }
                     else
                     {
+                        systemActivityLog.Description = GenericMessagesForSystemLogs.FalseLoginAttempt.ToDescriptionString();
+                        await _systemActivityLogsService.AddSystemLogs(systemActivityLog);
                         return Ok(new
                         {
                             Data,

@@ -1473,7 +1473,7 @@ namespace wleepay.API.Controllers
                     var username = userDetails.FirstName + " " + userDetails.LastName;
                     EmailHtmlTemplates template = new EmailHtmlTemplates();
 
-                    var subject = "Complete sign-up process";
+                    var subject = "Alert: Complete your Wleepay portal signup (Do not reply)";
                     var htmlTemplate = template.EmailTemplateForAccountSetup(completeSignUpResourceModel.Email, callbackUrl, username);
 
                     await _emailSender.SendEmailAsync(completeSignUpResourceModel.Email, htmlTemplate, username, subject);
