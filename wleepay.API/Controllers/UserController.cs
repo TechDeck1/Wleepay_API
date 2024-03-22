@@ -469,7 +469,7 @@ namespace wleepay.API.Controllers
             {
                 if (string.IsNullOrEmpty(editUserDetailResource.UserId))
                 {
-                    return BadRequest(Messages.NotFound.ToString());
+                    return BadRequest(Messages.NotFound.ToDescriptionString());
                 }
 
                 var applicationUser = await _userManager.FindByIdAsync(editUserDetailResource.UserId);
