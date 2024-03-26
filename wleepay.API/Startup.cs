@@ -169,7 +169,6 @@ namespace wleepay.API
             services.AddTransient<ISystemStatusService, SystemStatusService>();
 
 
-
             //swagger config
             services.AddSwaggerGen(c =>
             {

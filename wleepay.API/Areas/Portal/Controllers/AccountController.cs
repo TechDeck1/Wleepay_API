@@ -570,8 +570,6 @@ namespace wleepay.API.Areas.Portal.Controllers
         {
             try
             {
-
-           
             var secretKey = _configuration.GetSection("SecretKeyForEncryptAndDecrypt").Value; //secret key
             string decryptedEmail = Common.Decrypt(setupLogin.Email, secretKey); // helper function for decryption
 
@@ -1159,8 +1157,6 @@ namespace wleepay.API.Areas.Portal.Controllers
         {
             try
             {
-
-         
             var validator = new PortalLoginRequestValidator();
             var validationResult = await validator.ValidateAsync(loginRequest);
             if (!validationResult.IsValid)
