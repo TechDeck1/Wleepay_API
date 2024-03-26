@@ -499,6 +499,41 @@ namespace wleepay.API.Controllers
             }
             return "Unknown";
         }
+
+        private async Task<bool> GenerateLinkForComleteSignUp(CompleteSignUpResourceModel completeSignUpResourceModel)
+        {
+            var user = await _userManager.FindByEmailAsync(completeSignUpResourceModel.Email);
+            if (user == null)
+                return false;
+
+            var userDetails = await _userDetailsService.GetUserDetailsById(user.Id);
+            if (userDetails != null)
+            {
+                if (userDetails.PhoneNumber == completeSignUpResourceModel.PhoneNumber && user.Email == completeSignUpResourceModel.Email)
+                {
+                    // Your secret key for encryption (16, 24, or 32 bytes for AES)
+                    var secretKey = _configuration.GetSection("SecretKeyForEncryptAndDecrypt").Value; //secret key
+                    
+                    // Encrypt the text
+                    string encryptedText = Common.Encrypt(completeSignUpResourceModel.Email, secretKey);
+                    var token = HttpUtility.UrlEncode(encryptedText);
+                    string callbackUrl = $"{completeSignUpResourceModel.ClientURI}?email={(token)}";
+                    var username = userDetails.FirstName + " " + userDetails.LastName;
+                    EmailHtmlTemplates template = new EmailHtmlTemplates();
+
+                    var subject = "Alert: Complete your Wleepay portal signup (Do not reply)";
+                    var htmlTemplate = template.EmailTemplateForAccountSetup(completeSignUpResourceModel.Email, callbackUrl, username);
+
+                    await _emailSender.SendEmailAsync(completeSignUpResourceModel.Email, htmlTemplate, username, subject);
+
+                    return true;
+
+                }
+
+            }
+            return false;
+        }
+
         #endregion
     }
 }
