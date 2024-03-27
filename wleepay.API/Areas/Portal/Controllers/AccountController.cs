@@ -430,7 +430,7 @@ namespace wleepay.API.Areas.Portal.Controllers
                     return BadRequest(Messages.NotFound.ToDescriptionString());
 
                 var userDetails = await _userDetailsService.GetUserDetailsById(user.Id);
-                if (userDetails != null)
+                if (userDetails != null && !string.IsNullOrEmpty(userDetails.SecurityAnswerText))
                 {
                     //check if users phonenumber, email, security answer and security question matches
                     if (userDetails.PhoneNumber == forgotPasswordDto.PhoneNumber && user.Email == forgotPasswordDto.Email && userDetails.SecurityAnswerText.ToLower() == forgotPasswordDto.Answer.ToLower() && userDetails.SecurityQuestionId == forgotPasswordDto.SecurityQuestionId)
@@ -474,7 +474,12 @@ namespace wleepay.API.Areas.Portal.Controllers
 
                     }
                 }
-                return BadRequest();
+                return BadRequest(new
+                {
+                    Success = false,
+                    Message = Messages.AccountNotSetup.ToDescriptionString()
+
+                });
             }
             catch (Exception)
             {
