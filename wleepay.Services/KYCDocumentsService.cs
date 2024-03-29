@@ -19,9 +19,25 @@ namespace wleepay.Services
         public async Task<KYCdocuments> AddOrUpdateKYCDocument(KYCdocuments document)
         {
             var kycDocument = await _unitOfWork.KYCDocuments.GetKYCDocumentByUserId(document.UserId);
+            if (kycDocument == null)
+            { 
+                kycDocument = document;
+
+            }
+
+            if (kycDocument.Id <= 0)
+                await _unitOfWork.KYCDocuments.AddAsync(kycDocument);
+            
+            await _unitOfWork.CommitAsync();
+            return kycDocument;
+        }
+
+        public async Task<KYCdocuments> UpdateKYCDocument(KYCdocuments document)
+        {
+            var kycDocument = await _unitOfWork.KYCDocuments.GetKYCDocumentByUserId(document.UserId);
             if (kycDocument != null && kycDocument.Id >= 0)
             {
-                if(document.Id != kycDocument.Id)
+                if (document.Id != kycDocument.Id)
                 {
                     document.Id = kycDocument.Id;
                 }
@@ -32,10 +48,6 @@ namespace wleepay.Services
                 kycDocument.UserId = document.UserId;
                 kycDocument.Type = document.Type;
 
-            }
-            else
-            {
-                await _unitOfWork.KYCDocuments.AddAsync(kycDocument);
             }
             await _unitOfWork.CommitAsync();
             return kycDocument;

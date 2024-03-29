@@ -303,6 +303,11 @@ namespace wleepay.API.Areas.Portal.Controllers
 
                 var verificationDetails = await _verificationService.GetVerificationByPhone(userDetail.PhoneNumber);
 
+                if (verificationDetails == null)
+                {
+                    return BadRequest("please verify phone number first.");
+                }
+
                 if (userDetail.PhoneNumber == verificationDetails.PhoneNumber && userDetail.Otp == verificationDetails.VerificationCode)
                 {
                     //create new user with identity

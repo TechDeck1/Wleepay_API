@@ -519,7 +519,7 @@ namespace wleepay.API.Controllers
                         kycDetailsToAdd.UserId = combinedUserData.UserId;
                         kycDetailsToAdd.UpdatedDate = DateTime.Now;
 
-                        await _kycDocumentsService.AddOrUpdateKYCDocument(kycDetailsToAdd);
+                        await _kycDocumentsService.UpdateKYCDocument(kycDetailsToAdd);
                     }
                     await _userDetailsService.AddOrUpdateUserDetails(combinedUserData);
                     if (editUserDetailResource.StaffRoleId == (int)Role.Staff)

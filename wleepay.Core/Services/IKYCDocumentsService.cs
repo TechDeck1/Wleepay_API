@@ -10,6 +10,7 @@ namespace wleepay.Core.Services
     public interface IKYCDocumentsService
     {
         Task<KYCdocuments> AddOrUpdateKYCDocument(KYCdocuments document);
+        Task<KYCdocuments> UpdateKYCDocument(KYCdocuments document);
         Task<KYCdocuments> GetKYCDocumentByUserId(string userId);
         Task<KYCdocuments> GetKYCDocumentById(int id);
     }
