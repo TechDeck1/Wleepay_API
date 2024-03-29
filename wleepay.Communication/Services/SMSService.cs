@@ -22,20 +22,13 @@ namespace wleepay.Communication.Services
             TwilioClient.Init(accountSid, authToken);
         }
 
-        //client's to from number +12027318402
+        //client's to from number +12027318402 
         //client's From phone number +18564223507 
         //chnage both while deploying changes to live
         public string sendMessage(string message, string phoneNumber)
         {
             try
             {
-                //PhoneNumber to = new PhoneNumber($"{phoneNumber}");
-                //MessageResource messageRes = MessageResource.Create(
-                //    to,
-                //    from: new PhoneNumber(_fromNumber), //  From number, must be an SMS-enabled Twilio number ( This will send sms from ur "To" numbers ).  
-                //    body: message);
-
-                //return messageRes.Status.ToString();
                 var messageOptions = new CreateMessageOptions(
                 new PhoneNumber(phoneNumber));
                 messageOptions.From = new PhoneNumber("+18564223507");

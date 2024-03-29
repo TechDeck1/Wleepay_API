@@ -511,13 +511,25 @@ namespace wleepay.API.Controllers
                         var documentURL = _storageService.UploadKYCDocument(userDetail.KYCDocumentImage, userDetail.UserId);
                         userDetail.KYCDocumentImage = documentURL.ToString();
                     }
+                    //kyc document is optional in registration
+                    if (editUserDetailResource.DocumentTypeId.HasValue)
+                    {
+                        //insert data in kyc document
+                        var kycDetailsToAdd = _mapper.Map<EditUserDetailResource, KYCdocuments>(editUserDetailResource);
+                        kycDetailsToAdd.UserId = combinedUserData.UserId;
+                        kycDetailsToAdd.UpdatedDate = DateTime.Now;
 
+                        await _kycDocumentsService.AddOrUpdateKYCDocument(kycDetailsToAdd);
+                    }
                     await _userDetailsService.AddOrUpdateUserDetails(combinedUserData);
-                    UsersStaffRole usersStaffRole = new UsersStaffRole();
-                    usersStaffRole.UserId = applicationUser.Id;
-                    usersStaffRole.UpdatedDate= DateTime.UtcNow;
-                    usersStaffRole.StaffRoleId = editUserDetailResource.StaffRoleId;
-                    await _usersStaffRoleService.UpdateUserStaffRole(usersStaffRole);
+                    if (editUserDetailResource.StaffRoleId == (int)Role.Staff)
+                    {
+                        UsersStaffRole usersStaffRole = new UsersStaffRole();
+                        usersStaffRole.UserId = applicationUser.Id;
+                        usersStaffRole.UpdatedDate = DateTime.UtcNow;
+                        usersStaffRole.StaffRoleId = editUserDetailResource.StaffRoleId;
+                        await _usersStaffRoleService.UpdateUserStaffRole(usersStaffRole);
+                    }
 
                 }
 

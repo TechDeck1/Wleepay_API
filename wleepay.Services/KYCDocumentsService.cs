@@ -18,14 +18,25 @@ namespace wleepay.Services
 
         public async Task<KYCdocuments> AddOrUpdateKYCDocument(KYCdocuments document)
         {
-            var kycDocument = await _unitOfWork.KYCDocuments.GetKYCDocumentById(document.Id);
-            
-            if(kycDocument == null)
-                kycDocument = document;
+            var kycDocument = await _unitOfWork.KYCDocuments.GetKYCDocumentByUserId(document.UserId);
+            if (kycDocument != null && kycDocument.Id >= 0)
+            {
+                if(document.Id != kycDocument.Id)
+                {
+                    document.Id = kycDocument.Id;
+                }
+                kycDocument.DocumentNumber = document.DocumentNumber;
+                kycDocument.DocumentImage = document.DocumentImage;
+                kycDocument.DocumentType = document.DocumentType;
+                kycDocument.UpdatedDate = document.UpdatedDate;
+                kycDocument.UserId = document.UserId;
+                kycDocument.Type = document.Type;
 
-            if (kycDocument.Id <= 0)
+            }
+            else
+            {
                 await _unitOfWork.KYCDocuments.AddAsync(kycDocument);
-
+            }
             await _unitOfWork.CommitAsync();
             return kycDocument;
         }

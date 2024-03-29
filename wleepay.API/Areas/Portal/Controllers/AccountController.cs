@@ -829,6 +829,12 @@ namespace wleepay.API.Areas.Portal.Controllers
         {
             try
             {
+                var validator = new VerifyPhoneNumberValidator();
+                var validationResult = await validator.ValidateAsync(model);
+
+                if (!validationResult.IsValid)
+                    return BadRequest(validationResult.Errors);
+
                 //get verification details
                 var verificationDetails = await _verificationService.GetVerificationByPhone(model.PhoneNumber);
 
