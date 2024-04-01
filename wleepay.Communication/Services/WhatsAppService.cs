@@ -30,7 +30,7 @@ namespace wleepay.Communication.Services
                 var messageResponse = MessageResource.Create(
                     from: new Twilio.Types.PhoneNumber("whatsapp:+14155238886"),
                     body: message,
-                    to: new Twilio.Types.PhoneNumber("whatsapp:+917018519190")
+                    to: new Twilio.Types.PhoneNumber("whatsapp:"+ phoneNumber)
                 );
 
                 return messageResponse.Sid;

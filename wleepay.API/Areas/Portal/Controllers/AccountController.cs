@@ -218,6 +218,7 @@ namespace wleepay.API.Areas.Portal.Controllers
                             kycDetailsToAdd.UserId = newUser.Id;
                             kycDetailsToAdd.CreatedDate = DateTime.Now;
                             kycDetailsToAdd.UpdatedDate = DateTime.Now;
+                            kycDetailsToAdd.DocumentImage = userDetailsToInsert.KYCDocumentImage;
 
                             await _kycDocumentsService.AddOrUpdateKYCDocument(kycDetailsToAdd);
                         }

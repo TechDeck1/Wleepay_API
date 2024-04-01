@@ -49,6 +49,11 @@ namespace wleepay.Services
                 kycDocument.Type = document.Type;
 
             }
+            else
+            {
+                document.Id = 0;
+                await _unitOfWork.KYCDocuments.AddAsync(document);
+            }
             await _unitOfWork.CommitAsync();
             return kycDocument;
         }

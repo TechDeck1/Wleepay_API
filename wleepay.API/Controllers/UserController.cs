@@ -92,16 +92,22 @@ namespace wleepay.API.Controllers
             try
             {
             var userDetail = await _userDetailsService.GetApplicationUserById(userId);
-                if (System.IO.File.Exists(userDetail.UserDetail.Image))
+                if (System.IO.File.Exists(userDetail?.UserDetail?.Image))
                 {
                     userDetail.UserDetail.Image = System.Convert.ToBase64String((System.IO.File.ReadAllBytes(userDetail.UserDetail.Image)));
                 }
-                if (System.IO.File.Exists(userDetail.UserDetail.KYCDocumentImage))
+                if (System.IO.File.Exists(userDetail?.UserDetail?.KYCDocumentImage))
                 {
                     userDetail.UserDetail.KYCDocumentImage = System.Convert.ToBase64String((System.IO.File.ReadAllBytes(userDetail.UserDetail.KYCDocumentImage)));
                 }
+                if (userDetail?.KYCdocuments.Count > 0) {
+                    if (System.IO.File.Exists(userDetail?.KYCdocuments?.FirstOrDefault().DocumentImage))
+                    {
+                        userDetail.KYCdocuments.FirstOrDefault().DocumentImage = System.Convert.ToBase64String((System.IO.File.ReadAllBytes(userDetail.KYCdocuments.FirstOrDefault().DocumentImage)));
+                    }
+                }
 
-            var userResource = _mapper.Map<ApplicationUser, ApplicationUserResource>(userDetail);
+                var userResource = _mapper.Map<ApplicationUser, ApplicationUserResource>(userDetail);
             return Ok(userResource);
             }
             catch (Exception e)
@@ -518,6 +524,7 @@ namespace wleepay.API.Controllers
                         var kycDetailsToAdd = _mapper.Map<EditUserDetailResource, KYCdocuments>(editUserDetailResource);
                         kycDetailsToAdd.UserId = combinedUserData.UserId;
                         kycDetailsToAdd.UpdatedDate = DateTime.Now;
+                        kycDetailsToAdd.DocumentImage = userDetail.KYCDocumentImage;
 
                         await _kycDocumentsService.UpdateKYCDocument(kycDetailsToAdd);
                     }
