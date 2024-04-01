@@ -37,7 +37,7 @@ namespace wleepay.Communication.Services
             var client = new SendGridClient(apiKey);
             var msg = new SendGridMessage()
             {
-                From = new EmailAddress(_senderEmail, _senderName),
+                From = new EmailAddress("ariel.ranjot@gmail.com", "WleePay Team"),
                 Subject = emailSubject,
                 PlainTextContent = "",
                 HtmlContent = messageText,
@@ -52,12 +52,12 @@ namespace wleepay.Communication.Services
         public async Task<string> SendEmailAsync(string email, string template, string name, string mailSubject)
         {
 
-            var recipientEmail = "ariel.ranjot@gmail.com";
+            var recipientEmail = email;
             var apiKey = _configuration.GetSection("SendGrid:WleePaySendGridApiKey").Value.ToString();
             var client = new SendGridClient(apiKey);
             var msg = new SendGridMessage()
             {
-                From = new EmailAddress(_senderEmail, _senderName),
+                From = new EmailAddress("ariel.ranjot@gmail.com", "WleePay Team"),
                 Subject = mailSubject,
                 PlainTextContent = "",
                 HtmlContent = template
