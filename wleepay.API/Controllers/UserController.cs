@@ -517,6 +517,16 @@ namespace wleepay.API.Controllers
                         var documentURL = _storageService.UploadKYCDocument(userDetail.KYCDocumentImage, userDetail.UserId);
                         userDetail.KYCDocumentImage = documentURL.ToString();
                     }
+                    if (editUserDetailResource.City != null)
+                    {
+                        var address = await _addressService.GetAddressByUserId(userDetail.UserId);
+                        if (address != null)
+                        {
+                            address.City = editUserDetailResource.City;
+                            address.District = editUserDetailResource.District;
+                            await _addressService.AddOrUpdateAddress(address);
+                        }
+                    }
                     //kyc document is optional in registration
                     if (editUserDetailResource.DocumentTypeId.HasValue)
                     {
