@@ -32,9 +32,11 @@ namespace wleepay.Data.Repositories
             if (entityToDelete != null)
             {
                 WPContext.SystemActivities.Remove(entityToDelete); // Mark the entity for deletion
-                WPContext.SaveChanges(); // Save changes to delete the entity from the database
+                WPContext.SaveChanges();
+                return true;
+                // Save changes to delete the entity from the database
             }
-            return true;
+            else { return false;}
         }
 
         public async Task<ActivityResponseResource> FilterLogsByEmail(string email, int index, int size)

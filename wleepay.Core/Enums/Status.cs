@@ -8,6 +8,5 @@ namespace wleepay.Core.Enums
     {       
         Active = 1,
         DeActive = 0,
-        
     }
 }

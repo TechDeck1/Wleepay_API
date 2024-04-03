@@ -16,6 +16,7 @@ using System.Globalization;
 using Microsoft.AspNetCore.Authorization;
 using wleepay.API.Middleware;
 using wleepay.Data.Context;
+using wleepay.Core.Common;
 
 namespace wleepay.API.Areas.Portal.Controllers
 {
@@ -50,34 +51,36 @@ namespace wleepay.API.Areas.Portal.Controllers
             {
                 if (cashFlowHistoryResource.WalletId == null || cashFlowHistoryResource.WalletId == 0)
                 {
-                    return NotFound();
+                    return BadRequest(Messages.WalletIdNull.ToDescriptionString());
                 }
                 var walletBalance = await _walletService.GetWallet((long)cashFlowHistoryResource.WalletId);
+               
+                if(walletBalance == null)
+                {
+                    return BadRequest(Messages.InvalidRequest.ToDescriptionString());
+                }
 
-                if (cashFlowHistoryResource.DepositAmount != null)
+                if (cashFlowHistoryResource.DepositAmount != null && cashFlowHistoryResource.DepositAmount != 0)
                 {
                     cashFlowHistoryResource.TotalAmount = cashFlowHistoryResource.DepositAmount + walletBalance.Balance;
+
+                    var cashFlowhistory = _mapper.Map<CashFlowHistoryResource, CashFlowHistory>(cashFlowHistoryResource);
+                    cashFlowhistory.CurrencyId = walletBalance.CurrencyId;
+                    cashFlowhistory.PreviousAmount = walletBalance.Balance;
+
+                    var cashFlow = await _cashFlowService.AddCashFlowHistoryAsync(cashFlowhistory);
+                    double amount = (double)cashFlowHistoryResource.DepositAmount;
+                    var currencySymbol = cashFlowhistory.CurrencyId == 1 ? "LRD" : "USD";
+
+                    var userDetail = await _userDetailService.GetApplicationUserById(walletBalance.UserId);
+
+                    var message = MessagesTemplates.PaymentReceivedInCashOnHandAccount(amount.ToString("C2", new CultureInfo("en-US")), currencySymbol, userDetail?.UserDetail?.FirstName);
+
+                    var result = _sMSService.sendMessage(message, userDetail.PhoneNumber);
+
+                    return Ok(cashFlow);
                 }
-                else
-                {
-                    cashFlowHistoryResource.TotalAmount = walletBalance.Balance - cashFlowHistoryResource.WithdrawAmount;
-                }
-
-                var cashFlowhistory = _mapper.Map<CashFlowHistoryResource, CashFlowHistory>(cashFlowHistoryResource);
-                cashFlowhistory.CurrencyId = walletBalance.CurrencyId;
-                cashFlowhistory.PreviousAmount = walletBalance.Balance;
-
-                var cashFlow = await _cashFlowService.AddCashFlowHistoryAsync(cashFlowhistory);
-                double amount = (double)cashFlowHistoryResource.DepositAmount;
-                var currencySymbol = cashFlowhistory.CurrencyId == 1 ? "LRD" : "USD";
-
-                var userDetail = await _userDetailService.GetApplicationUserById(walletBalance.UserId);
-
-                var message = MessagesTemplates.PaymentReceivedInCashOnHandAccount(amount.ToString("C2", new CultureInfo("en-US")), currencySymbol, userDetail.UserDetail.FirstName);
-
-                var result = _sMSService.sendMessage(message, userDetail.PhoneNumber);
-
-                return Ok(cashFlow);
+                return BadRequest(Messages.DepositAmount.ToDescriptionString());
 
             }
             catch (System.Exception ex)
@@ -93,7 +96,10 @@ namespace wleepay.API.Areas.Portal.Controllers
         {
             try
             {
-
+                if(pagingRequestForCashFlow.CurrencyId == null || pagingRequestForCashFlow.CurrencyId > 2 || pagingRequestForCashFlow.CurrencyId < 0) 
+                {
+                    return BadRequest("currency id can only be 0 or 1 and cannot be negative");
+                }
                 var cashFlow = await _cashFlowService.GetAllCashFlowHistoryAsync(pagingRequestForCashFlow.CurrencyId, pagingRequestForCashFlow.Index, pagingRequestForCashFlow.Size);
                 return Ok(cashFlow);
 

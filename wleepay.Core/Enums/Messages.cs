@@ -10,7 +10,7 @@ namespace wleepay.Core.Enums
         [Description("User is succesfully logged in")] SuccessfullyLoggedIn,
         [Description("You have 3 failed login attemps. Your Wleepay portal account is locked. You must contact system administrator to unlock your account")] AccountLocked,
         [Description("Your Account is de-activated, please Contact to your system adminintrator.")] AccountDeActivated,
-        [Description("Invalid request")] NotFound,
+        [Description("Invalid Request")] NotFound,
         [Description("Invalid combination of email and password")] EmailNotFound,
         [Description("Invalid login request.")] BadRequest,
         [Description("Your account is unlocked by system administrator.")] UnlockAccount,
@@ -28,6 +28,8 @@ namespace wleepay.Core.Enums
         [Description("Email is not valid")] EmailNotValid,
         [Description("Please correct the entered details and try again.")] DetailsNotCorrect,
         [Description("Invalid Request")] InvalidRequest,
+        [Description("Wallet id cannot be null or 0.")] WalletIdNull,
+        [Description("Deposit amount cannot be null or 0.")] DepositAmount,
         [Description("Account is already setup")] AccountAlreadySetup,
         [Description("Account is not setup yet. please setup your account")] AccountNotAlreadySetup,
         [Description("Link is expired. Please generate new link.")] LinkExpired,
@@ -48,6 +50,7 @@ namespace wleepay.Core.Enums
         [Description("Invalid access token or refresh token.")] InvalidAccessToken,
         [Description("Phone is not verified please verify your phone number.")] PhoneNumberNotVerified,
         [Description("Cannont update status id is null.")] NotUpdated,
+        [Description("Unable to authenticate the user")] SignInResult,
 
 
 

@@ -470,7 +470,7 @@ namespace wleepay.API.Controllers
             return accountNumber;
         }
     
-        private async Task<string> uploadDocument(IFormFile file, string userId, string containerName = "kyc-document")
+        private async Task<string> UploadDocument(IFormFile file, string userId, string containerName = "kyc-document")
         {
             try
             {

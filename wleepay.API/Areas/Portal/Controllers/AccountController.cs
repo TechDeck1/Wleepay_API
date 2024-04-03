@@ -36,6 +36,7 @@ using wleepay.Services;
 using static wleepay.Communication.EmailTemplates.AccountDeactivatedTemplate;
 using static wleepay.Communication.EmailTemplates.EmailLockOutTemplate;
 using wleepay.Communication.Services;
+using FluentValidation;
 
 namespace wleepay.API.Areas.Portal.Controllers
 {
@@ -56,7 +57,7 @@ namespace wleepay.API.Areas.Portal.Controllers
         private readonly ILogger<AccountController> _logger;
         private readonly IMapper _mapper;
         private readonly IConfiguration _configuration;
-        public readonly IHostingEnvironment _hostingEnvironment;
+        public  readonly IHostingEnvironment _hostingEnvironment;
         private readonly IUploadDocument _documentUploaderService;
         private readonly IEmailSender _emailSender;
         private readonly ISystemActivityLogsService _systemActivityLogsService;
@@ -229,15 +230,17 @@ namespace wleepay.API.Areas.Portal.Controllers
                         await _usersStaffRoleService.AddUserStaffRole(usersStaffRole);
 
                         //generate jwt token
-                        var token = GenerateJSONWebToken(userDetailsToInsert, roleEnumStringValue.ToString());
+                        var token = await _userDetailsService.GenerateJSONWebToken(userDetailsToInsert, roleEnumStringValue.ToString());
                         CompleteSignUpResourceModel completeSignUpResourceModel = new CompleteSignUpResourceModel();
                         completeSignUpResourceModel.Email = userDetail.EmailId;
                         completeSignUpResourceModel.PhoneNumber = userDetail.PhoneNumber;
                         completeSignUpResourceModel.ClientURI = baseUrl + "/account-setup";
+                       
                         var result = await GenerateLinkForComleteSignUp(completeSignUpResourceModel);
 
                         //send registration sucess message on mobile number
                         _smsService.sendMessage(MessagesTemplates.RegistrationSuccessMessage(updatedDetails.AccountNumber, updatedDetails?.KYCLevelDetail?.Name), updatedDetails.PhoneNumber);
+                       
                         return Ok(new
                         {
                             Success = true,
@@ -474,7 +477,7 @@ namespace wleepay.API.Areas.Portal.Controllers
 
                     }
                 }
-                return BadRequest();
+                return BadRequest(Messages.InvalidRequest.ToDescriptionString());
             }
             catch (Exception)
             {
@@ -491,7 +494,7 @@ namespace wleepay.API.Areas.Portal.Controllers
             {
                 if (string.IsNullOrEmpty(resetPasswordDto.Password) && string.IsNullOrEmpty(resetPasswordDto.ConfirmPassword))
                 {
-                    return BadRequest();
+                    return BadRequest(Messages.InvalidRequest.ToDescriptionString());
                 }
                 var secretKey = _configuration.GetSection("SecretKeyForEncryptAndDecrypt").Value; //secret key
                 string decryptedEmail = Common.Decrypt(resetPasswordDto.Email, secretKey); // helper function for decryption
@@ -570,28 +573,26 @@ namespace wleepay.API.Areas.Portal.Controllers
         {
             try
             {
+
             var secretKey = _configuration.GetSection("SecretKeyForEncryptAndDecrypt").Value; //secret key
             string decryptedEmail = Common.Decrypt(setupLogin.Email, secretKey); // helper function for decryption
 
             var user = await _userManager.FindByEmailAsync(decryptedEmail);
+            if (user == null) //check if user is null
+            {
+                return Ok(new
+                {
+                    Success = false,
+                    Message = Messages.InvalidRequest.ToDescriptionString(),
+                });
+            }
 
-            //functionality for adding logs to the db
+
             SystemActivityLog systemActivityLog = new SystemActivityLog();
             systemActivityLog.UserId = user.Id;
             systemActivityLog.Email = decryptedEmail;
             systemActivityLog.IpAddress = GetClientIpAddress();
-            systemActivityLog.Action = ActionsForSystemLogs.CompleteLoginProcess.ToDescriptionString();
-
-            if (user == null) //check if user is null
-            {
-                systemActivityLog.Description = GenericMessagesForSystemLogs.NotExists.ToDescriptionString();
-                await _systemActivityLogsService.AddSystemLogs(systemActivityLog);
-                return Ok(new
-                {
-                    Success = false,
-                    Message = Messages.NotFound.ToDescriptionString(),
-                });
-            }
+            systemActivityLog.Action = ActionsForSystemLogs.CompleteSignUpProcess.ToDescriptionString();
 
             var userDetails = await _userDetailsService.GetUserDetailsById(user.Id);
             if (userDetails != null)
@@ -941,7 +942,7 @@ namespace wleepay.API.Areas.Portal.Controllers
 
                 }
             }
-            return BadRequest();
+            return BadRequest(Messages.InvalidRequest.ToDescriptionString());
 
             }
             catch (Exception ex)
@@ -958,30 +959,36 @@ namespace wleepay.API.Areas.Portal.Controllers
             try
             {
 
+            var validator = new SetPasswordValidators();
+            var validationResult = await validator.ValidateAsync(setupLogin);
+
+            if (!validationResult.IsValid)
+                return BadRequest(validationResult.Errors);
+
             var secretKey = _configuration.GetSection("SecretKeyForEncryptAndDecrypt").Value; //secret key
             string decryptedEmail = Common.Decrypt(setupLogin.Email, secretKey); // helper function for decryption
 
             var user = await _userManager.FindByEmailAsync(decryptedEmail);
 
             //functionality for adding logs to the db
+           
+
+            if (user == null) //check if user is null
+            {
+                return Ok(new
+                {
+                    Success = false,
+                    Message = Messages.InvalidRequest.ToDescriptionString(),
+                });
+            }
+
             SystemActivityLog systemActivityLog = new SystemActivityLog();
             systemActivityLog.UserId = user.Id;
             systemActivityLog.Email = decryptedEmail;
             systemActivityLog.IpAddress = GetClientIpAddress();
             systemActivityLog.Action = ActionsForSystemLogs.CompleteSignUpProcess.ToDescriptionString();
-
-            if (user == null) //check if user is null
-            {
-                systemActivityLog.Description = GenericMessagesForSystemLogs.NotExists.ToDescriptionString();
-                await _systemActivityLogsService.AddSystemLogs(systemActivityLog);
-                return Ok(new
-                {
-                    Success = false,
-                    Message = Messages.NotFound.ToDescriptionString(),
-                });
-            }
-
             var userDetails = await _userDetailsService.GetUserDetailsById(user.Id);
+
             if (userDetails != null)
             {
                 if (user.Email == decryptedEmail)
@@ -1086,6 +1093,11 @@ namespace wleepay.API.Areas.Portal.Controllers
                 userDetail.Permissions = permissionTypes;
             }
 
+            if(staffPermissionAndRoleResource.StaffRoleId <= 0) 
+            {
+               return BadRequest(new ArgumentOutOfRangeException("id"));
+            }
+
             UsersStaffRole usersStaffRole = new UsersStaffRole();
             usersStaffRole.UserId = user.Id;
             usersStaffRole.CreatedDate = DateTime.Now;
@@ -1094,6 +1106,7 @@ namespace wleepay.API.Areas.Portal.Controllers
 
             //add user details
             var result = await _userDetailsService.AddOrUpdateUserDetails(userDetail);
+           
             return Ok(result);
 
             }
@@ -1163,11 +1176,21 @@ namespace wleepay.API.Areas.Portal.Controllers
                 return BadRequest(validationResult.Errors);
 
             var user = await _userManager.FindByEmailAsync(loginRequest.Email);
+            
             if (user == null)
                 return BadRequest(Messages.EmailNotFound.ToDescriptionString());
 
             var userDetails = await _userDetailsService.GetUserDetailsById(user.Id);
             var result = await _signInManager.PasswordSignInAsync(user, loginRequest.Password, false, lockoutOnFailure: true);
+            if (result == null) 
+            {
+                return Ok(new
+                {
+                    UserId = string.Empty,
+                    Success = false,
+                    Message = Messages.SignInResult.ToDescriptionString(),
+                });
+            }
 
             //Get user role
             var userRole = await _userManager.GetRolesAsync(user);
@@ -1175,7 +1198,7 @@ namespace wleepay.API.Areas.Portal.Controllers
             {
                 return Ok(new
                 {
-                    //UserId = user.Id,
+                    UserId = string.Empty,
                     Success = false,
                     Message = Messages.WrongLoginPage.ToDescriptionString(),
                 });
@@ -1185,7 +1208,7 @@ namespace wleepay.API.Areas.Portal.Controllers
             SystemActivityLog systemActivityLog = new SystemActivityLog();
             systemActivityLog.UserId = user.Id;
             systemActivityLog.Email = loginRequest.Email;
-            systemActivityLog.IpAddress = GetClientIpAddress();
+            systemActivityLog.IpAddress = GetClientIpAddress()?? "";
             systemActivityLog.Action = ActionsForSystemLogs.Login.ToDescriptionString();
 
             //Status statusEnumFromDatabase = (Status)userDetails.Status;
@@ -1245,10 +1268,9 @@ namespace wleepay.API.Areas.Portal.Controllers
 
             if (result.Succeeded)
             {
-
-
                 //generate token
-                var token = GenerateJSONWebToken(userDetails, userRole?[0]);
+                //var token = GenerateJSONWebToken(userDetails, userRole?[0]);
+                var token = await _userDetailsService.GenerateJSONWebToken(userDetails, userRole?[0]);
 
                 //updated user
                 UserDetail updatedUser = null;
@@ -1282,6 +1304,7 @@ namespace wleepay.API.Areas.Portal.Controllers
             }
 
             return BadRequest(Messages.BadRequest.ToDescriptionString());
+            
             }
             catch (Exception ex)
             {
@@ -1346,21 +1369,24 @@ namespace wleepay.API.Areas.Portal.Controllers
             {
                 //get user details
                 var userDetails = await _userDetailsService.GetUserDetailsById(model.UserId);
-                string verificationCode = Common.GenerateVerificationCode(4); // Generate a 4-digit verification code
-                string message = "Your one time code is " + verificationCode;
-                var code = _SMSService.sendMessage(message, userDetails.PhoneNumber);// service for send otp
-                var PhoneNumber = Common.MaskPhoneNumber(userDetails.PhoneNumber);
-
-                if (code != null && code != " ")
+                if (userDetails != null)
                 {
-                    //update database
-                    var updateDatabase = await _userDetailsService.UpdateUserVerificationCode(model.UserId, verificationCode);
-                    return Ok(new
-                    {
-                        Phone = PhoneNumber,
-                        Sucess = true
+                    string verificationCode = Common.GenerateVerificationCode(4); // Generate a 4-digit verification code
+                    string message = "Your one time code is " + verificationCode;
+                    var code = _SMSService.sendMessage(message, userDetails.PhoneNumber);// service for send otp
+                    var PhoneNumber = Common.MaskPhoneNumber(userDetails.PhoneNumber);
 
-                    });
+                    if (!string.IsNullOrEmpty(code))
+                    {
+                        //update database
+                        var updateDatabase = await _userDetailsService.UpdateUserVerificationCode(model.UserId, verificationCode);
+                        return Ok(new
+                        {
+                            Phone = PhoneNumber,
+                            Sucess = true
+
+                        });
+                    }
                 }
                 return BadRequest();
 
@@ -1379,11 +1405,34 @@ namespace wleepay.API.Areas.Portal.Controllers
         {
             try
             {
+                object Data = null;
+
                 //get user details
                 var userDetails = await _userDetailsService.GetUserDetailsById(model.UserId);
+                if (userDetails == null)
+                {
+                    return Ok(new
+                    {
+                        Data,
+                        IsExpired = false,
+                        Success = false,
+                        Message = Messages.NotFound.ToDescriptionString(),
 
+                    });
+                }
                 var user = await _userManager.FindByEmailAsync(model.Email);
 
+                if (user == null)
+                {
+                    return Ok(new
+                    {
+                        Data,
+                        IsExpired = false,
+                        Success = false,
+                        Message = Messages.NotFound.ToDescriptionString(),
+
+                    });
+                }
                 //logic for getting time difference from expiry date and current date
                 var expiryDate = userDetails.VerificationExpiry;
                 DateTime currentDate = DateTime.UtcNow; // Use UtcNow to compare in UTC
@@ -1394,14 +1443,26 @@ namespace wleepay.API.Areas.Portal.Controllers
                 // Check if the given date is expired (more than 2 minutes ago)
                 bool isExpired = minutesDifference >= 1;
 
-                object Data = null;
                 if (!isExpired)
                 {
                     if (userDetails.VerificationCode == model.Code)
                     {
                         var userRole = await _userManager.GetRolesAsync(user);
 
-                        var token = GenerateJSONWebToken(userDetails, userRole?[0].ToString());
+                        if(userRole == null) 
+                        {
+                            return Ok(new
+                            {
+                                Data,
+                                IsExpired = false,
+                                Success = false,
+                                Message = "No role assigned to the user.",
+
+                            });
+                        }
+
+                        //var token = GenerateJSONWebToken(userDetails, userRole?[0].ToString());               
+                        var token = _userDetailsService.GenerateJSONWebToken(userDetails, userRole?[0].ToString());
 
                         //updated user
                         UserDetail updatedUser = null;
@@ -1409,9 +1470,6 @@ namespace wleepay.API.Areas.Portal.Controllers
                         //set logged in status to true if first log in
                         if (!userDetails.IsLoggedIn)
                             updatedUser = await _userDetailsService.UpdateUserLoggedInStatus(userDetails.UserId, true);
-
-                        var ipAddress = HttpContext.Connection.RemoteIpAddress.ToString();
-                        _logger.LogInformation($"Action: {ControllerContext.ActionDescriptor.ActionName}, User: {userDetails.UserId}, Timestamp: {DateTime.UtcNow}, IP: {ipAddress}");
 
                         if (!string.IsNullOrEmpty(userDetails?.Permissions))
                         {
@@ -1470,6 +1528,7 @@ namespace wleepay.API.Areas.Portal.Controllers
             catch (Exception ex)
             {
 
+                _logger.LogInformation($"Action: {ControllerContext.ActionDescriptor.ActionName}, exception: {ex.Message}");
                 throw ex;
             }
 
@@ -1554,7 +1613,7 @@ namespace wleepay.API.Areas.Portal.Controllers
                         var allSystemAdmins = await _userDetailsService.GetUserByRole((int)Role.SystemAdmin);
                         var allSystemAdminsList = _mapper.Map<IEnumerable<ApplicationUser>, IEnumerable<ApplicationUserResource>>(allSystemAdmins);
 
-                        AccountDeactivatedTemplateForSystemAdmin template = new AccountDeactivatedTemplateForSystemAdmin
+                        AccountDeactivatedTemplateForSystemAdmin template = new()
                         {
                             StaffEmail = model.EmailId,
                             StaffFirstName = userDetails.FirstName,
@@ -1590,41 +1649,46 @@ namespace wleepay.API.Areas.Portal.Controllers
         {
             try
             {
-            if (string.IsNullOrEmpty(tokenModel.Token))
-            {
-                return BadRequest("Invalid client request");
-            }
+                if (string.IsNullOrEmpty(tokenModel.Token))
+                {
+                    return BadRequest("Invalid client request");
+                }
 
-            string? accessToken = tokenModel.Token;
-            var handler = new JwtSecurityTokenHandler();
-            var jsonToken = handler.ReadToken(accessToken) as JwtSecurityToken;
-            string emailAddress = "";
-            if (jsonToken != null)
-            {
-                // Get the emailAddress claim
-                emailAddress = jsonToken.Claims.First(claim => claim.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress").Value;
-                Console.WriteLine("emailAddress: " + emailAddress);
-            }
-            else
-            {
-                return BadRequest(Messages.InvalidAccessToken.ToDescriptionString());
-            }
-            var user = await _userManager.FindByEmailAsync(emailAddress);
+                string? accessToken = tokenModel.Token;
+                var handler = new JwtSecurityTokenHandler();
+                var jsonToken = handler.ReadToken(accessToken) as JwtSecurityToken;
+                string emailAddress = "";
+                if (jsonToken != null)
+                {
+                    // Get the emailAddress claim
+                    emailAddress = jsonToken.Claims.First(claim => claim.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress").Value;
+                    Console.WriteLine("emailAddress: " + emailAddress);
+                }
+                else
+                {
+                    return BadRequest(Messages.InvalidAccessToken.ToDescriptionString());
+                }
+                var user = await _userManager.FindByEmailAsync(emailAddress);
 
-            if (user == null)
-            {
-                return BadRequest(Messages.InvalidAccessToken.ToDescriptionString());
-            }
-            var userRole = await _userManager.GetRolesAsync(user);
+                if (user == null)
+                {
+                    return BadRequest(Messages.InvalidAccessToken.ToDescriptionString());
+                }
+                var userRole = await _userManager.GetRolesAsync(user);
 
-            var userDetails = await _userDetailsService.GetUserDetailsById(user.Id);
+                var userDetails = await _userDetailsService.GetUserDetailsById(user.Id);
 
-            var newAccessToken = GenerateJSONWebToken(userDetails, userRole?[0]);
+                if (userDetails != null && userRole != null)
+                {
+                    var newAccessToken = await _userDetailsService.GenerateJSONWebToken(userDetails, userRole?[0]);
 
-            return Ok(new
-            {
-                accessToken = newAccessToken,
-            });
+                    return Ok(new
+                    {
+                        accessToken = newAccessToken,
+                    });
+                }
+
+                return BadRequest();
             }
             catch (Exception ex)
             {
@@ -1679,6 +1743,7 @@ namespace wleepay.API.Areas.Portal.Controllers
         {
             try
             {
+               if(id <= 0) return BadRequest(new ArgumentOutOfRangeException("id"));
                 var result = await _systemActivityLogsService.DeleteLogsById(id);
                 return Ok(result);
             }
@@ -1689,7 +1754,6 @@ namespace wleepay.API.Areas.Portal.Controllers
             }
 
         }
-
 
         #region helper methods
         private string GenerateJSONWebToken(UserDetail userInfo, string userRole)
@@ -1753,7 +1817,7 @@ namespace wleepay.API.Areas.Portal.Controllers
 
         private string GetClientIpAddress()
         {
-            if (HttpContext.Connection.RemoteIpAddress != null)
+            if (HttpContext?.Connection?.RemoteIpAddress != null)
             {
                 return HttpContext.Connection.RemoteIpAddress.ToString();
             }

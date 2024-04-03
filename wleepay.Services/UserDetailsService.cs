@@ -1,13 +1,20 @@
 ﻿using MailKit.Search;
+using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+//using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using wleepay.Core;
+using wleepay.Core.DTO.Request;
 using wleepay.Core.DTO.Response;
 using wleepay.Core.Models;
 using wleepay.Core.Services;
+using System.Security.Claims;
+
 
 namespace wleepay.Services
 {
@@ -15,10 +22,13 @@ namespace wleepay.Services
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly ITransactionService _transactionService;
-        public UserDetailsService(IUnitOfWork unitOfWork, ITransactionService transactionService)
+        private readonly IConfiguration _configuration;
+
+        public UserDetailsService(IUnitOfWork unitOfWork, ITransactionService transactionService, IConfiguration configuration)
         {
             this._unitOfWork = unitOfWork;
             this._transactionService = transactionService;
+            this._configuration = configuration;
         }
         public async Task<UserDetail> AddOrUpdateUserDetails(UserDetail detail)
         {
@@ -182,6 +192,32 @@ namespace wleepay.Services
         public async Task<ApplicationUser> GetStaffPermissionsById(string userId)
         {
             return await _unitOfWork.UserDetail.GetStaffPermissionsById(userId);
+        }
+
+        public async Task<string> GenerateJSONWebToken(UserDetail userInfo, string userRole)
+        {
+
+            var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:Secret"]));
+            var authClaims = new List<Claim>
+                {
+                    new Claim(ClaimTypes.Name, userInfo.FirstName),
+                    new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                    new Claim(ClaimTypes.Role, userRole), // Adding a role claim
+                    new Claim(ClaimTypes.Email, userInfo.ApplicationUser.Email)
+
+                };
+
+            var token = new JwtSecurityToken(
+                issuer: _configuration["JWT:ValidIssuer"],
+                audience: _configuration["JWT:ValidAudience"],
+                expires: DateTime.Now.AddMinutes(5),
+                claims: authClaims,
+                signingCredentials: new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256)
+                );
+
+            var resultToken = new JwtSecurityTokenHandler().WriteToken(token);
+            
+            return resultToken;
         }
     }
 }

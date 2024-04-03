@@ -33,18 +33,26 @@ namespace wleepay.API.Controllers
         [HttpPost]
         public async Task<IActionResult> AddOrUpdateWallet([FromBody] AddWalletResource walletInfo)
         {
-            var validator = new AddWalletValidator();
-            var result = validator.Validate(walletInfo);
-            if (!result.IsValid)
-                return BadRequest(result.Errors);
+            try
+            {
+                var validator = new AddWalletValidator();
+                var result = validator.Validate(walletInfo);
+                if (!result.IsValid)
+                    return BadRequest(result.Errors);
 
-            var wallet = _mapper.Map<AddWalletResource, Wallet>(walletInfo);
-            var walletData = await _walletService.AddOrUpdateWallet(wallet);
+                var wallet = _mapper.Map<AddWalletResource, Wallet>(walletInfo);
+                var walletData = await _walletService.AddOrUpdateWallet(wallet);
 
-            if (walletData == null)
-                return BadRequest("No data Added/Updated for wallet");
+                if (walletData == null)
+                    return BadRequest("No data Added/Updated for wallet");
 
-            return Ok(wallet);
+                return Ok(wallet);
+            }
+            catch (Exception ex)
+            {
+
+                throw ex.InnerException;
+            }
         }
 
         [HttpGet("{userId}")]

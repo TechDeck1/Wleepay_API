@@ -17,12 +17,12 @@ namespace wleepay.API.Validators
              .NotEmpty();
 
             RuleFor(a => a.Type)
-                .NotNull()
-                .NotEmpty();
+            .NotNull()
+            .NotEmpty();
 
             RuleFor(a => a.UserId)
-                    .NotNull()
-                    .NotEmpty();
+            .NotNull()
+            .NotEmpty();
         }
     }
 }

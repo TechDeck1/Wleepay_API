@@ -38,9 +38,10 @@ namespace wleepay.API.Controllers
                 var countyListResource = _mapper.Map<IEnumerable<wleepay.Core.Models.County>, IEnumerable<LookupResource>>(countyList).ToList();
                 countyListResource = countyListResource.OrderBy(x => x.Name).ToList();
                 return countyListResource;
-            }catch(Exception ex)
+            }
+            catch(Exception ex)
             {
-                throw;
+                throw ex;
             }
            
             
