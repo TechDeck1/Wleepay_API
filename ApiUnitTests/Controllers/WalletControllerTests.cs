@@ -180,6 +180,7 @@ namespace ApiUnitTests.Controllers
                     UpdatedDate = DateTime.Now.AddDays(-2),
                 },
             };
+            
             var walletResourceList = new List<WalletResource>
             {
                 new WalletResource
@@ -236,6 +237,89 @@ namespace ApiUnitTests.Controllers
 
             var badRequestResult = result as BadRequestObjectResult;
             Assert.AreEqual("Please select userId.", badRequestResult.Value);
+        }
+
+        [Test]
+        public async Task GetWalletByWalletTypeId_ValidId_ReturnsOk()
+        {
+            // Arrange
+            long walletTypeId = 1;
+            var walletData = new List<Wallet>
+            {
+                new Wallet
+                {
+                    Id = 1,
+                    UserId = "user1",
+                    CurrencyId = 1,
+                    Type = 1,
+                    Balance = 1000,
+                    CreatedDate = DateTime.Now.AddDays(-7),
+                    UpdatedDate = DateTime.Now.AddDays(-1),
+
+                },
+                new Wallet
+                {
+                    Id = 2,
+                    UserId = "user2",
+                    CurrencyId = 2,
+                    Type = 1,
+                    Balance = 500,
+                    CreatedDate = DateTime.Now.AddDays(-10),
+                    UpdatedDate = DateTime.Now.AddDays(-2),
+                },
+            };
+            var walletResourceList = new List<WalletResource>
+            {
+                new WalletResource
+                {
+                    Id = 1,
+                    UserId = "user1",
+                    CurrencyId = 1,
+                    Type = 1,
+                    Balance = 1000,
+                    CreatedDate = DateTime.Now.AddDays(-7),
+                    UpdatedDate = DateTime.Now.AddDays(-1),
+
+                },
+                new WalletResource
+                {
+                    Id = 2,
+                    UserId = "user2",
+                    CurrencyId = 2,
+                    Type = 1,
+                    Balance = 500,
+                    CreatedDate = DateTime.Now.AddDays(-10),
+                    UpdatedDate = DateTime.Now.AddDays(-2),
+                },
+            };
+
+            _mockWalletService.Setup(service => service.GetWalletByWalletTypeId(walletTypeId)).ReturnsAsync(walletData);
+            _mockMapper.Setup(mapper => mapper.Map<IEnumerable<Wallet>, IEnumerable<WalletResource>>(walletData)).Returns(walletResourceList);
+
+            // Act
+            var result = await _controller.GetWalletByWalletTypeId(walletTypeId);
+
+            // Assert
+            Assert.IsInstanceOf<OkObjectResult>(result);
+
+            var okResult = result as OkObjectResult;
+            Assert.AreEqual(walletResourceList, okResult.Value);
+        }
+
+        [Test]
+        public async Task GetWalletByWalletTypeId_InvalidId_ReturnsBadRequest()
+        {
+            // Arrange
+            long walletTypeId = 0;
+
+            // Act
+            var result = await _controller.GetWalletByWalletTypeId(walletTypeId);
+
+            // Assert
+            Assert.IsInstanceOf<BadRequestObjectResult>(result);
+
+            var badRequestResult = result as BadRequestObjectResult;
+            Assert.AreEqual("UserId cannot be null or 0 and negative.", badRequestResult.Value);
         }
     }
 }

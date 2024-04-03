@@ -53,6 +53,7 @@ namespace wleepay.API.Areas.Portal.Controllers
                 {
                     return BadRequest(Messages.WalletIdNull.ToDescriptionString());
                 }
+                
                 var walletBalance = await _walletService.GetWallet((long)cashFlowHistoryResource.WalletId);
                
                 if(walletBalance == null)

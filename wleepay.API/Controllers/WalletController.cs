@@ -70,13 +70,21 @@ namespace wleepay.API.Controllers
         [HttpGet("{walletTypeId}/walletType")]
         public async Task<IActionResult> GetWalletByWalletTypeId(long walletTypeId)
         {
-            if (walletTypeId == null)
-                return BadRequest("Please select userId.");
+            try
+            {
+                if (walletTypeId == null|| walletTypeId == 0 || walletTypeId < 0)
+                    return BadRequest("UserId cannot be null or 0 and negative.");
 
-            var walletData = await _walletService.GetWalletByWalletTypeId(walletTypeId);
-            var walletListResource = _mapper.Map<IEnumerable<Wallet>, IEnumerable<WalletResource>>(walletData);
+                var walletData = await _walletService.GetWalletByWalletTypeId(walletTypeId);
+                var walletListResource = _mapper.Map<IEnumerable<Wallet>, IEnumerable<WalletResource>>(walletData);
 
-            return Ok(walletListResource);
+                return Ok(walletListResource);
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
         }
 
     }

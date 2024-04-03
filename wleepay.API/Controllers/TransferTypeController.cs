@@ -30,19 +30,48 @@ namespace wleepay.API.Controllers
         [HttpGet("{fromWalletTypeId}/{toWalletTypeId}")]
         public async Task<IActionResult> GetTransferType(int fromWalletTypeId, int toWalletTypeId)
         {
-            var transferType = await _transferTypeService.GetTransferTypeForTransaction(fromWalletTypeId, toWalletTypeId);
-            var transferTypeResource = _mapper.Map<TransferType, TransferTypeResource>(transferType);
+            try
+            {
+                if(fromWalletTypeId == 0 || toWalletTypeId==0 || fromWalletTypeId < 0  || toWalletTypeId < 0) 
+                {
+                    return BadRequest("Invalid Wallet Ids.");
+                }
+                var transferType = await _transferTypeService.GetTransferTypeForTransaction(fromWalletTypeId, toWalletTypeId);
+                var transferTypeResource = _mapper.Map<TransferType, TransferTypeResource>(transferType);
+                if(transferTypeResource != null)
+                {
+                    return Ok(transferTypeResource);
+                }
+                return BadRequest("No result found");
 
-            return Ok(transferTypeResource);
+            }
+            catch (System.Exception ex)
+            {
+
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpGet("{typeId}")]
         public async Task<IActionResult> GetTransferType(int typeId)
         {
-            var transferType = await _transferTypeService.GetTransferTypeById(typeId);
-            var transferTypeResource = _mapper.Map<TransferType, TransferTypeResource>(transferType);
+            try
+            {
+                if (typeId == 0 || typeId < 0)
+                {
+                    return BadRequest("Type id cannot be 0 or null");
+                };
 
-            return Ok(transferTypeResource);
+                var transferType = await _transferTypeService.GetTransferTypeById(typeId);
+                var transferTypeResource = _mapper.Map<TransferType, TransferTypeResource>(transferType);
+
+                return Ok(transferTypeResource);
+            }
+            catch (System.Exception)
+            {
+
+                throw;
+            }
         }
 
        
