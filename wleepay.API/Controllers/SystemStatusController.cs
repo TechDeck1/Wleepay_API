@@ -14,6 +14,7 @@ using wleepay.Core.Enums;
 using wleepay.Core.Common;
 using wleepay.API.Validators;
 using FluentValidation;
+using Moq;
 
 namespace wleepay.API.Controllers
 {
@@ -26,6 +27,7 @@ namespace wleepay.API.Controllers
         private readonly ISystemStatusService _systemStatusService;
         private readonly IMapper _mapper;
         private IHubContext<StatusHubClient, IStatusHubClient> statusHub;
+
 
         public SystemStatusController(
             ISystemStatusService statusService,
@@ -46,10 +48,10 @@ namespace wleepay.API.Controllers
             {
                 var validator = new SystemStatusValidator();
                 var validationResult = await validator.ValidateAsync(systemStatusResource);
+               
                 if (!validationResult.IsValid)
                     return BadRequest(validationResult.Errors);
 
-                if (systemStatusResource == null) { return BadRequest(); }
                 var systemStatus = _mapper.Map<SystemStatusResource, SystemStatus>(systemStatusResource);
                 systemStatus.Status = systemStatusResource.Status;
                 systemStatus.CreatedDate = DateTime.Now;
@@ -86,6 +88,10 @@ namespace wleepay.API.Controllers
         {
             try
             {
+                if (id == 0 || id < 0)
+                {
+                    return BadRequest(Messages.InvalidRequest.ToDescriptionString());
+                }
                 var result = await _systemStatusService.GetSystemStatusById(id);
                 return Ok(result);
             }

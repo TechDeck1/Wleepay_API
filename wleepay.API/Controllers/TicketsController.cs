@@ -2,6 +2,8 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Routing;
+using Microsoft.SqlServer.Management.Smo.Agent;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -70,7 +72,7 @@ namespace wleepay.API.Controllers
                         message = Messages.NotFound.ToDescriptionString()
                     });
                 }
-                if (userDetail.UserDetail.PhoneNumber != customerTickets.PhoneNumber)
+                if (userDetail?.UserDetail?.PhoneNumber != customerTickets?.PhoneNumber)
                 {
                     return Ok(new
                     {
@@ -85,15 +87,25 @@ namespace wleepay.API.Controllers
 
                 customerTicketsToInsert.IsSeen = false;
                 customerTicketsToInsert.UserId = customerTickets.UserId;
-                customerTicketsToInsert.Source = userDetail.UserRoles.FirstOrDefault().Role.Name;
-
+                customerTicketsToInsert.Source = userDetail.UserRoles?.FirstOrDefault().Role?.Name;
                 customerTicketsToInsert.Notes.FirstOrDefault().AddedBy = userDetail.UserDetail.UserId;
+
                 var tickets = await _customerTicketsService.AddUpdateCustomerTickets(customerTicketsToInsert);
 
                 var ticketDetails = await _customerTicketsService.GetCustomerTicketsById(customerTicketsToInsert.Id);
+
+                if(ticketDetails == null)
+                {
+                    return BadRequest(new
+                    {
+                        status = false,
+                        message = Messages.NotFound.ToDescriptionString(),
+                    });
+                }
+                
                 if (tickets != null)
                 {
-                    var message = MessagesTemplates.CustomerTicketCreatedMessage(ticketDetails.IssueType.Type, tickets.Id);
+                    var message = MessagesTemplates.CustomerTicketCreatedMessage(ticketDetails?.IssueType?.Type, tickets.Id);
                     var subject = Messages.TicketCreated.ToDescriptionString();
                     if (tickets.CustomerContact == (int)CustomerServiceContactMethod.Email)
                     {
@@ -108,12 +120,20 @@ namespace wleepay.API.Controllers
                         _whatsAppService.sendMessageForCustomerTicket(message, userDetail.PhoneNumber);
                     }
 
+                    return Ok(new
+                    {
+                        status = true,
+                        message = Messages.CustomerTicketCreated.ToDescriptionString()
+                    });
+
                 }
-                return Ok(new
+             
+                return BadRequest(new
                 {
-                    status = true,
-                    message = Messages.CustomerTicketCreated.ToDescriptionString()
+                    status = false,
+                    message = Messages.InvalidRequest.ToDescriptionString(),
                 });
+
             }
             catch (Exception ex)
             {
@@ -132,6 +152,10 @@ namespace wleepay.API.Controllers
             try
             {
                 var tickets = await _customerTicketsService.GetAllCustomerTickets(phoneNumber, status, pageIndex, pageSize);
+                if (tickets == null)
+                {
+                    return BadRequest(Messages.InvalidRequest.ToDescriptionString());
+                }
                 var customerTicketsToInsert = _mapper.Map<IEnumerable<CustomerTickets>, IEnumerable<AddCustomerTicketResponseResource>>(tickets.CustomerTickets);
 
                 return Ok(new
@@ -361,6 +385,7 @@ namespace wleepay.API.Controllers
 
         }
 
+       
 
     }
 }

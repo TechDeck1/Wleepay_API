@@ -115,6 +115,10 @@
               "target": "Package",
               "version": "[1.10.9, )"
             },
+            "Moq": {
+              "target": "Package",
+              "version": "[4.20.70, )"
+            },
             "NLog.Web.AspNetCore": {
               "target": "Package",
               "version": "[4.13.0, )"
@@ -213,6 +217,10 @@
               "target": "Package",
               "version": "[5.0.0, )"
             },
+            "Moq": {
+              "target": "Package",
+              "version": "[4.20.70, )"
+            },
             "SendGrid": {
               "target": "Package",
               "version": "[9.29.1, )"
@@ -307,6 +315,10 @@
             "Microsoft.SqlServer.SqlManagementObjects": {
               "target": "Package",
               "version": "[170.21.0, )"
+            },
+            "Moq": {
+              "target": "Package",
+              "version": "[4.20.70, )"
             },
             "SendGrid": {
               "target": "Package",
@@ -415,6 +427,10 @@
               "target": "Package",
               "version": "[5.0.8, )"
             },
+            "Moq": {
+              "target": "Package",
+              "version": "[4.20.70, )"
+            },
             "SendGrid": {
               "target": "Package",
               "version": "[9.29.1, )"
@@ -500,6 +516,10 @@
             "Microsoft.EntityFrameworkCore": {
               "target": "Package",
               "version": "[5.0.8, )"
+            },
+            "Moq": {
+              "target": "Package",
+              "version": "[4.20.70, )"
             },
             "SendGrid": {
               "target": "Package",
@@ -591,6 +611,10 @@
             "Microsoft.Extensions.Configuration.Abstractions": {
               "target": "Package",
               "version": "[5.0.0, )"
+            },
+            "Moq": {
+              "target": "Package",
+              "version": "[4.20.70, )"
             },
             "SendGrid": {
               "target": "Package",

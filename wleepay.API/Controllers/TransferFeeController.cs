@@ -75,32 +75,45 @@ namespace wleepay.API.Controllers
                 if (taxRateResourceModel.OrganizationFee.Equals(0)) return BadRequest(Messages.InvalidRequest.ToDescriptionString());
 
                 var taxRates = await _transferFeeService.GetTransferFeeByDesc();
-                taxRateResourceModel.AgentCommission = taxRates.AgentCommission;
-                taxRateResourceModel.OrganizationFee = taxRateResourceModel.OrganizationFee;
-                taxRateResourceModel.TaxAmount = taxRates.TaxAmount;
-                taxRateResourceModel.Description = taxRates.Description;
 
-                var updatedTaxRatesResource = _mapper.Map<TaxRateResourceModel, TransferFee>(taxRateResourceModel);
-                var updatedRates = await _transferFeeService.AddTransferFee(updatedTaxRatesResource);
-                if (updatedRates != null)
+                if (taxRates != null)
                 {
-                    var types = await _transferTypeService.GetTransferTypeById((int)TransferTypes.CashOut);
-                    types.TransferFee = updatedRates.Id;
-                    await _transferTypeService.UpdateTransferTypeById(types);
+                    taxRateResourceModel.AgentCommission = taxRates.AgentCommission;
+                    taxRateResourceModel.OrganizationFee = taxRateResourceModel.OrganizationFee;
+                    taxRateResourceModel.TaxAmount = taxRates.TaxAmount;
+                    taxRateResourceModel.Description = taxRates.Description;
 
-                    var allAgents = await _userDetailsService.GetUserByRole((int)Role.Agent);
-                    var agentsListResource = _mapper.Map<IEnumerable<ApplicationUser>, IEnumerable<ApplicationUserResource>>(allAgents);
-
-                    foreach (var agent in agentsListResource)
+                    var updatedTaxRatesResource = _mapper.Map<TaxRateResourceModel, TransferFee>(taxRateResourceModel);
+                    var updatedRates = await _transferFeeService.AddTransferFee(updatedTaxRatesResource);
+                    
+                    if (updatedRates != null)
                     {
-                        var message = MessagesTemplates.TaxRateUpdateMessage(taxRateResourceModel.OrganizationFee.ToString(), agent.UserDetail.FirstName, TaxRates.CashOutFeeRate.ToDescriptionString());
+                        var types = await _transferTypeService.GetTransferTypeById((int)TransferTypes.CashOut);
+                        
+                        if(types == null)
+                        {
+                            return BadRequest(Messages.InvalidRequest.ToDescriptionString());   
+                        }
+                       
+                        types.TransferFee = updatedRates.Id;
+                        await _transferTypeService.UpdateTransferTypeById(types);
 
-                        var result = _SMSService.sendMessage(message, agent.UserDetail.PhoneNumber);
+                        var allAgents = await _userDetailsService.GetUserByRole((int)Role.Agent);
+                        var agentsListResource = _mapper.Map<IEnumerable<ApplicationUser>, IEnumerable<ApplicationUserResource>>(allAgents);
+
+                        foreach (var agent in agentsListResource)
+                        {
+                            var message = MessagesTemplates.TaxRateUpdateMessage(taxRateResourceModel.OrganizationFee.ToString(), agent.UserDetail.FirstName, TaxRates.CashOutFeeRate.ToDescriptionString());
+
+                            var result = _SMSService.sendMessage(message, agent.UserDetail.PhoneNumber);
+                        }
+
+                        return Ok(updatedRates);
                     }
 
                 }
 
-                return Ok(updatedRates);
+                return BadRequest(Messages.InvalidRequest.ToDescriptionString());
             }
             catch (Exception ex)
             {
@@ -119,30 +132,39 @@ namespace wleepay.API.Controllers
                 if (taxRateResourceModel.AgentCommission.Equals(0)) return BadRequest(Messages.InvalidRequest.ToDescriptionString());
 
                 var taxRates = await _transferFeeService.GetTransferFeeByDesc();
-                taxRateResourceModel.AgentCommission = taxRateResourceModel.AgentCommission;
-                taxRateResourceModel.OrganizationFee = taxRates.OrganizationFee;
-                taxRateResourceModel.TaxAmount = taxRates.TaxAmount;
-                taxRateResourceModel.Description = taxRates.Description;
-
-                var updatedTaxRatesResource = _mapper.Map<TaxRateResourceModel, TransferFee>(taxRateResourceModel);
-                var updatedRates = await _transferFeeService.AddTransferFee(updatedTaxRatesResource);
-                if (updatedRates != null)
+                if (taxRates != null)
                 {
-                    var types = await _transferTypeService.GetTransferTypeById((int)TransferTypes.CashOut);
-                    types.TransferFee = updatedRates.Id;
-                    await _transferTypeService.UpdateTransferTypeById(types);
+                    taxRateResourceModel.AgentCommission = taxRateResourceModel.AgentCommission;
+                    taxRateResourceModel.OrganizationFee = taxRates.OrganizationFee;
+                    taxRateResourceModel.TaxAmount = taxRates.TaxAmount;
+                    taxRateResourceModel.Description = taxRates.Description;
 
-                    var allAgents = await _userDetailsService.GetUserByRole((int)Role.Agent);
-                    var agentsListResource = _mapper.Map<IEnumerable<ApplicationUser>, IEnumerable<ApplicationUserResource>>(allAgents);
-
-                    foreach (var agent in agentsListResource)
+                    var updatedTaxRatesResource = _mapper.Map<TaxRateResourceModel, TransferFee>(taxRateResourceModel);
+                    var updatedRates = await _transferFeeService.AddTransferFee(updatedTaxRatesResource);
+                    if (updatedRates != null)
                     {
-                        var message = MessagesTemplates.TaxRateUpdateMessage(taxRateResourceModel.AgentCommission.ToString(), agent.UserDetail.FirstName, TaxRates.AgentCommisionRate.ToDescriptionString());
+                        var types = await _transferTypeService.GetTransferTypeById((int)TransferTypes.CashOut);
+                        if(types == null) 
+                        {
+                            return BadRequest(Messages.InvalidRequest.ToDescriptionString());
+                        }
+                        types.TransferFee = updatedRates.Id;
+                        await _transferTypeService.UpdateTransferTypeById(types);
 
-                        var result = _SMSService.sendMessage(message, agent.UserDetail.PhoneNumber);
+                        var allAgents = await _userDetailsService.GetUserByRole((int)Role.Agent);
+                        var agentsListResource = _mapper.Map<IEnumerable<ApplicationUser>, IEnumerable<ApplicationUserResource>>(allAgents);
+
+                        foreach (var agent in agentsListResource)
+                        {
+                            var message = MessagesTemplates.TaxRateUpdateMessage(taxRateResourceModel.AgentCommission.ToString(), agent.UserDetail.FirstName, TaxRates.AgentCommisionRate.ToDescriptionString());
+
+                            var result = _SMSService.sendMessage(message, agent.UserDetail.PhoneNumber);
+                        }
+
+                        return Ok(updatedRates);
                     }
                 }
-                return Ok(updatedRates);
+                return BadRequest(Messages.InvalidRequest.ToDescriptionString());
             }
             catch (Exception ex)
             {
@@ -151,7 +173,6 @@ namespace wleepay.API.Controllers
             }
 
         }
-
 
         [HttpGet("TaxRates")]
         public async Task<IActionResult> GetAllTaxRatesHistory([FromQuery] PagingRequestForRates pagingRequestForRates)
