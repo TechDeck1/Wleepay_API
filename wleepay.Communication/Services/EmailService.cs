@@ -37,7 +37,7 @@ namespace wleepay.Communication.Services
             var client = new SendGridClient(apiKey);
             var msg = new SendGridMessage()
             {
-                From = new EmailAddress("ariel.ranjot@gmail.com", "WleePay Team"),
+                From = new EmailAddress(_senderEmail, _senderName),
                 Subject = emailSubject,
                 PlainTextContent = "",
                 HtmlContent = messageText,
@@ -57,7 +57,7 @@ namespace wleepay.Communication.Services
             var client = new SendGridClient(apiKey);
             var msg = new SendGridMessage()
             {
-                From = new EmailAddress("ariel.ranjot@gmail.com", "WleePay Team"),
+                From = new EmailAddress(_senderEmail, _senderName),
                 Subject = mailSubject,
                 PlainTextContent = "",
                 HtmlContent = template
