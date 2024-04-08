@@ -178,6 +178,11 @@ namespace wleepay.API.Controllers
         {
             try
             {
+                if(Id == 0 || Id <= 0)
+                {
+                    return BadRequest(Messages.InvalidRequest.ToDescriptionString());
+
+                }
                 var tickets = await _customerTicketsService.GetCustomerTicketsById(Id);
                 var customerTicketsToInsert = _mapper.Map<CustomerTickets, AddCustomerTicketResponseResource>(tickets);
 
@@ -201,8 +206,19 @@ namespace wleepay.API.Controllers
         {
             try
             {
-            var userDetail = await _userDetailsService.GetApplicationUserById(request.UserId);
-            if (userDetail == null)
+            
+            //var userDetail = await _userDetailsService.GetApplicationUserById(request.UserId);
+            //if (userDetail == null)
+            //{
+            //    return Ok(new
+            //    {
+            //        status = false,
+            //        message = Messages.NotFound.ToDescriptionString()
+            //    });
+            //}
+
+            var memberDetails = await _userDetailsService.GetApplicationUserById(request.UserId);
+            if (memberDetails == null)
             {
                 return Ok(new
                 {
@@ -221,31 +237,24 @@ namespace wleepay.API.Controllers
                 });
             }
 
-            var memberDetails = await _userDetailsService.GetApplicationUserById(request.UserId);
-            if (memberDetails == null)
-            {
-                return Ok(new
-                {
-                    status = false,
-                    message = Messages.NotFound.ToDescriptionString()
-                });
-            }
-
-            Notes notesToInsert = new Notes();
-            notesToInsert.CustomerTicketId = request.CustomerTicketId;
-            notesToInsert.Note = request.Note;
-            notesToInsert.AddedBy = request.UserId;
-            var notes = await _notesService.AddUpdateNotes(notesToInsert);
-            var smsMessageTemplate = MessagesTemplates.CustomerTicketReplyMessageSmsTemplate(memberDetails.UserDetail.FirstName, request.Note);
-            var message = MessagesTemplates.CustomerTicketReplyMessage(memberDetails.UserDetail.FirstName, request.Note);
-            var subject = Messages.SubjectForTicketUpdated.ToDescriptionString();
 
             if (request.Note != null)
             {
+                Notes notesToInsert = new Notes();
+                notesToInsert.CustomerTicketId = request.CustomerTicketId;
+                notesToInsert.Note = request.Note;
+                notesToInsert.AddedBy = request.UserId;
+
+                var notes = await _notesService.AddUpdateNotes(notesToInsert);
+                
+                var smsMessageTemplate = MessagesTemplates.CustomerTicketReplyMessageSmsTemplate(memberDetails.UserDetail.FirstName, request.Note);
+                var message = MessagesTemplates.CustomerTicketReplyMessage(memberDetails.UserDetail.FirstName, request.Note);
+                var subject = Messages.SubjectForTicketUpdated.ToDescriptionString();
+
                 if (ticket.CustomerContact == (int)CustomerServiceContactMethod.Email)
                 {
                     //await _emailSender.ReplyForCustomerTicket(message, memberDetails.Email, subject);
-                    await _emailSender.SendEmailAsync(userDetail.Email, message, userDetail.UserDetail.FirstName, subject);
+                    await _emailSender.SendEmailAsync(memberDetails.Email, message, memberDetails.UserDetail.FirstName, subject);
                 }
                 if (ticket.CustomerContact == (int)CustomerServiceContactMethod.Phone)
                 {
@@ -262,7 +271,7 @@ namespace wleepay.API.Controllers
                 });
             }
 
-            return BadRequest();
+            return BadRequest(Messages.InvalidRequest.ToDescriptionString());
             }
             catch (Exception ex)
             {
@@ -303,7 +312,7 @@ namespace wleepay.API.Controllers
             if (tickets != null)
             {
 
-                var message = MessagesTemplates.CustomerTicketClosedMessage(ticketToUpdated.IssueType.Description, ticketId);
+                var message = MessagesTemplates.CustomerTicketClosedMessage(ticketToUpdated?.IssueType?.Description, ticketId);
                 var subject = Messages.SubjectForTicketClosed.ToDescriptionString();
 
                 if (tickets.CustomerContact == (int)CustomerServiceContactMethod.Email)
@@ -329,7 +338,7 @@ namespace wleepay.API.Controllers
 
             }
 
-            return BadRequest();
+            return BadRequest(Messages.InvalidRequest.ToDescriptionString());
 
             }
             catch (Exception ex)
@@ -364,14 +373,14 @@ namespace wleepay.API.Controllers
                     return Ok(new
                     {
                         status = true,
-                        message = "status updated!"
+                        message = Messages.StatusUpdated.ToDescriptionString(),
                     });
                 }
 
                 return BadRequest(new
                 {
                     status = false,
-                    message = "Error occurred while updating status"
+                    message = Messages.ErrorOccured.ToDescriptionString(),
                 });
             }
             catch (Exception ex)

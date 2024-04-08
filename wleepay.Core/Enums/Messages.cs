@@ -44,6 +44,7 @@ namespace wleepay.Core.Enums
         [Description("Ticket has been updated.")] TicketUpdated,
         [Description("OTP is sent successfully")] OTPSent,
         [Description("Ticket Closed.")] SubjectForTicketClosed,
+        [Description("status updated!")] StatusUpdated,
         [Description("Reply for Ticket.")] SubjectForTicketUpdated,
         [Description("You cannot login from this screen.")] WrongLoginPage,
         [Description("Information is succesfully updated.")] InfoUpdated,
@@ -51,6 +52,7 @@ namespace wleepay.Core.Enums
         [Description("Phone is not verified please verify your phone number.")] PhoneNumberNotVerified,
         [Description("Cannont update status id is null.")] NotUpdated,
         [Description("Unable to authenticate the user")] SignInResult,
+        [Description("Error occurred while updating status")] ErrorOccured,
 
 
 
