@@ -10,7 +10,7 @@ namespace wleepay.API.Resources
         public long Id { get; set; }
         public long ToWalletId { get; set; }
         public long FromWalletId { get; set; }
-        public float Amount { get; set; }
+        public double Amount { get; set; }
         public int TransferTypeId { get; set; }
         public string Description { get; set; }
         public DateTime CreatedDate { get; set; }

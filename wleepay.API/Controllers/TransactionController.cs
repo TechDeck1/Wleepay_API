@@ -11,6 +11,7 @@ using wleepay.API.Resources;
 using wleepay.API.Validators;
 using wleepay.Communication.Interface;
 using wleepay.Communication.Templates;
+using wleepay.Core.Common;
 using wleepay.Core.Enums;
 using wleepay.Core.Models;
 using wleepay.Core.Services;
@@ -73,6 +74,10 @@ namespace wleepay.API.Controllers
         public async Task<IActionResult> GetTrasactionById(long transactionId)
         {
             var transaction = await _transactionService.GetTransactionsById(transactionId);
+            if(transaction == null)
+            {
+               return Ok(new Transaction());
+            }
             var transactionResource = _mapper.Map<Transaction, TransactionHistoryResource>(transaction);
             return Ok(transactionResource);
         }
@@ -81,6 +86,10 @@ namespace wleepay.API.Controllers
         public async Task<IActionResult> GetTrasactionAmount(string userId, int currency, bool isMonthly)
         {
             var wallets = await _walletService.GetWalletsByUserId(userId, currency);
+            if(wallets == null)
+            {
+                return BadRequest("No Wallet found for user");
+            }
             var wallet = wallets.Where(w => w.Type == WalletTypes.MemberAccount.GetHashCode()).FirstOrDefault();
             if (wallet == null)
                 return BadRequest("No Wallet found for user");
@@ -93,45 +102,56 @@ namespace wleepay.API.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateTransaction([FromBody] CreateTransactionResource transactionRequest)
         {
-            var validator = new CreateTransactionValidator();
-            var validationResult = await validator.ValidateAsync(transactionRequest);
-
-            if (!validationResult.IsValid)
-                return BadRequest(validationResult.Errors);
-
-            var walletBalance = await _walletService.GetWallet(transactionRequest.FromWalletId);
-            if (walletBalance==null)
-            {
-                return NotFound();
-            }
-            if (transactionRequest != null && transactionRequest.TransferTypeId == (int)TransferTypes.TopUpSystemWallet)
-            {
-                CashFlowHistory cashFlow = new CashFlowHistory();
-                cashFlow.TotalAmount = walletBalance.Balance - transactionRequest.Amount;
-                cashFlow.WithdrawAmount = transactionRequest.Amount;
-                cashFlow.WalletId = transactionRequest.FromWalletId;
-                cashFlow.CurrencyId = walletBalance.CurrencyId;
-                cashFlow.PreviousAmount = walletBalance.Balance;
-
-                await _cashFlowService.AddCashFlowHistoryForWithdraw(cashFlow);
-            }
-
-            var transactionToCreate = _mapper.Map<CreateTransactionResource, Transaction>(transactionRequest);
-            var newTransaction = await _transactionService.InitiateTransaction(transactionToCreate);
-            var newTransactionResource = _mapper.Map<Transaction, TransactionResource>(newTransaction);
-
-            if (newTransactionResource != null)
+            try
             {
 
-                await SendTransactionActionSMS(newTransaction);
+                var validator = new CreateTransactionValidator();
+                var validationResult = await validator.ValidateAsync(transactionRequest);
 
-                if (transactionRequest.TransferTypeId == Core.Enums.TransferTypes.TopUpSystemWallet.GetHashCode())
+                if (!validationResult.IsValid)
+                    return BadRequest(validationResult.Errors);
+
+                var walletBalance = await _walletService.GetWallet(transactionRequest.FromWalletId);
+           
+                if (walletBalance==null)
                 {
-                    await SendTransactionActionEmail(newTransaction);
-
+                    return BadRequest(Messages.NotFound.ToDescriptionString());
                 }
+           
+                if (transactionRequest != null && transactionRequest.TransferTypeId == (int)TransferTypes.TopUpSystemWallet)
+                {
+                    CashFlowHistory cashFlow = new CashFlowHistory();
+                    cashFlow.TotalAmount = walletBalance.Balance - transactionRequest.Amount;
+                    cashFlow.WithdrawAmount = transactionRequest.Amount;
+                    cashFlow.WalletId = transactionRequest.FromWalletId;
+                    cashFlow.CurrencyId = walletBalance.CurrencyId;
+                    cashFlow.PreviousAmount = walletBalance.Balance;
+
+                    await _cashFlowService.AddCashFlowHistoryForWithdraw(cashFlow);
+                }
+
+                var transactionToCreate = _mapper.Map<CreateTransactionResource, Transaction>(transactionRequest);
+                var newTransaction = await _transactionService.InitiateTransaction(transactionToCreate);
+                var newTransactionResource = _mapper.Map<Transaction, TransactionResource>(newTransaction);
+
+                if (newTransaction != null)
+                {
+
+                    await SendTransactionActionSMS(newTransaction);
+
+                    if (transactionRequest.TransferTypeId == Core.Enums.TransferTypes.TopUpSystemWallet.GetHashCode())
+                    {
+                        await SendTransactionActionEmail(newTransaction);
+
+                    }
+                }
+                return Ok(newTransactionResource);
             }
-            return Ok(newTransactionResource);
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
         }
 
         //[HttpPost]
@@ -158,7 +178,7 @@ namespace wleepay.API.Controllers
             var newTransaction = await _transactionService.InitiateTransactionRequest(transactionToCreate);
 
             var newTransactionResource = _mapper.Map<Transaction, TransactionResource>(newTransaction);
-            if (newTransactionResource != null)
+            if (newTransaction != null)
             {
                 await SendTransactionActionSMS(newTransaction);
             }
@@ -218,6 +238,7 @@ namespace wleepay.API.Controllers
                 return BadRequest("Please enter valid payment request Id");
 
             var result = await ChangePaymentRequestStatus(paymentRequestId, Core.Enums.TransactionStatus.Cancel);
+           
             if (result == null)
                 return BadRequest("Invalid payment Id");
 
@@ -229,10 +250,11 @@ namespace wleepay.API.Controllers
         {
 
             var result = await _transactionService.GetCashoutTransactions(pageIndex, pageSize);
-            var transactionResources = result.Transactions.Select(transaction => _mapper.Map<Transaction, TransactionHistoryResource>(transaction)).ToList();
 
-            if (result == null)
+            if (result == null || result.Transactions.Count <= 0)
                 return BadRequest("Invalid UserId");
+
+            var transactionResources = result.Transactions.Select(transaction => _mapper.Map<Transaction, TransactionHistoryResource>(transaction)).ToList();
 
             return Ok(new
             {
@@ -246,10 +268,11 @@ namespace wleepay.API.Controllers
         {
 
             var result = await _transactionService.GetTopUpTransactions(pageIndex, pageSize);
-            var transactionResources = result.Transactions.Select(transaction => _mapper.Map<Transaction, TransactionHistoryResource>(transaction)).ToList();
-
-            if (result == null)
+           
+            if (result == null || result.Transactions.Count <= 0)
                 return BadRequest("Invalid UserId");
+
+            var transactionResources = result.Transactions.Select(transaction => _mapper.Map<Transaction, TransactionHistoryResource>(transaction)).ToList();
 
             return Ok(new
             {
@@ -264,10 +287,11 @@ namespace wleepay.API.Controllers
         {
 
             var result = await _transactionService.GetTransactionsByTypeAndCurrency(transferTypeId, currencyTypeId, pageIndex, pageSize);
-            var transactionResources = result.Transactions.Select(transaction => _mapper.Map<Transaction, TransactionHistoryResource>(transaction)).ToList();
-
-            if (result == null)
+            
+            if (result == null || result.Transactions.Count <= 0)
                 return BadRequest("Invalid UserId");
+
+            var transactionResources = result.Transactions.Select(transaction => _mapper.Map<Transaction, TransactionHistoryResource>(transaction)).ToList();
 
             return Ok(new
             {

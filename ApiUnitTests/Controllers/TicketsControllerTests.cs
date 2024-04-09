@@ -915,7 +915,7 @@ namespace ApiUnitTests.Controllers
         }
 
         [Test]
-        public async Task CloseCustomerTicket_ServicenotRetrivesUserDetails_ReturnsOk()
+        public async Task CloseCustomerTicket_ServicenotRetrivesUserDetails()
         {
             // Arrange
             var ticketId = 1;
@@ -964,7 +964,7 @@ namespace ApiUnitTests.Controllers
         }
 
         [Test]
-        public async Task CloseCustomerTicket_ServiceFailedToUpdateTickets_ReturnsOk()
+        public async Task CloseCustomerTicket_ServiceFailedToUpdateTickets()
         {
             // Arrange
             var ticketId = 1;
@@ -1055,7 +1055,7 @@ namespace ApiUnitTests.Controllers
         }
 
         [Test]
-        public async Task PatchReportSeenStatus_InValidInput_ServiceFailedToRetriveTicket_ReturnsOk()
+        public async Task PatchReportSeenStatus_InValidInput_ServiceFailedToRetriveTicket()
         {
             // Arrange
             var ticketId = 0;
