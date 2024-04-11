@@ -73,7 +73,14 @@ namespace wleepay.API.Controllers
         {
             try
             {
+                if(userId == null ) {
+                    return BadRequest(Messages.InvalidRequest.ToDescriptionString());
+                };
                 var userDetail = await _userDetailsService.GetUserDetailsById(userId);
+                if (userDetail == null)
+                {
+                    return BadRequest("user not exists!");
+                }
                 var userResource = _mapper.Map<UserDetail, UserDetailResource>(userDetail);
                 return Ok(userResource);
             }
@@ -91,7 +98,15 @@ namespace wleepay.API.Controllers
         {
             try
             {
-            var userDetail = await _userDetailsService.GetApplicationUserById(userId);
+                if (userId == null)
+                {
+                    return BadRequest(Messages.InvalidRequest.ToDescriptionString());
+                };
+                var userDetail = await _userDetailsService.GetApplicationUserById(userId);
+                if (userDetail == null)
+                {
+                    return BadRequest("user not exists!");
+                }
                 if (System.IO.File.Exists(userDetail.UserDetail.Image))
                 {
                     userDetail.UserDetail.Image = System.Convert.ToBase64String((System.IO.File.ReadAllBytes(userDetail.UserDetail.Image)));
@@ -114,6 +129,10 @@ namespace wleepay.API.Controllers
         [HttpPost("search")]
         public async Task<IActionResult> SearchUser([FromBody] SearchRequest request)
         {
+            if(request == null)
+            {
+                return BadRequest(Messages.InvalidRequest.ToDescriptionString());
+            }
             ApplicationUser userDetail = null;
             if (!string.IsNullOrEmpty(request.PhoneNumber))
                 userDetail = await _userDetailsService.GetUserAccountByPhone(request.PhoneNumber, request.Role.GetHashCode());

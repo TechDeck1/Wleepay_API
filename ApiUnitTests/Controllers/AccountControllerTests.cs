@@ -50,8 +50,6 @@ namespace ApiUnitTests.Controllers
         private Mock<ILookupService> _mockLookupService;
         private Mock<IValidator<AddStaffDetailsResource>> _mockValidator;
 
-
-
         [SetUp]
         public void Setup()
         {

@@ -1156,18 +1156,100 @@ namespace ApiUnitTests.Controllers
             var transactionToReject = new Transaction(); // Valid transaction to reject
             _mockTransactionService.Setup(x => x.GetTransactionsById(validPaymentRequestId)).ReturnsAsync(transactionToReject);
 
-            var expectedResult = new object(); // Example result
 
-            var transactionToApprove = new Transaction() { }; // Mocked transaction
+            var transactionToApprove = new Transaction() {
+                Id = 1,
+                ToWalletId = 123,
+                FromWalletId = 456,
+                Amount = 100.00f,
+                TransferTypeId = 1,
+                ParentId = null,
+                Description = "Payment",
+                Status = (int)wleepay.Core.Enums.TransactionStatus.Rejected
+
+            }; // Mocked transaction
             _mockTransactionService.Setup(x => x.GetTransactionsById(validPaymentRequestId)).ReturnsAsync(transactionToApprove);
 
-            var updatedTransaction = new Transaction() { }; // Mocked updated transaction
-            _mockTransactionService.Setup(x => x.UpdateTransactionStatus(validPaymentRequestId, wleepay.Core.Enums.TransactionStatus.Cancel)).ReturnsAsync(updatedTransaction);
+            var updatedTransaction = new Transaction() {
+                Id = 1,
+                ToWalletId = 123,
+                FromWalletId = 456,
+                Amount = 100.00f,
+                TransferTypeId = 1,
+                ParentId = null,
+                Description = "Payment",
+                Status = (int)wleepay.Core.Enums.TransactionStatus.Rejected
+            }; // Mocked updated transaction
 
-            var mappedTransactionResource = new TransactionResource() { }; // Mocked mapped transaction resource
+            _mockTransactionService.Setup(x => x.UpdateTransactionStatus(validPaymentRequestId, wleepay.Core.Enums.TransactionStatus.Rejected)).ReturnsAsync(updatedTransaction);
+
+            var mappedTransactionResource = new TransactionResource() {
+                Id = 1,
+                ToWalletId = 123,
+                FromWalletId = 456,
+                Amount = 100.00f,
+                TransferTypeId = 1,
+                ParentId = null,
+                Description = "Payment",
+                Status = (int)wleepay.Core.Enums.TransactionStatus.Rejected
+
+            }; // Mocked mapped transaction resource
+
+            var walletBalance = new Wallet()
+            {
+                Id = 1,
+                UserId = "user123",
+                CurrencyId = 1,
+                Type = 1,
+                Balance = 1000.00,
+                CreatedDate = DateTime.UtcNow,
+                UpdatedDate = DateTime.UtcNow,
+                TransactionFrom = new List<Transaction>
+                {
+                    new Transaction
+                    {
+                        Id = 1,
+                        ToWalletId = 1,
+                        FromWalletId = 2,
+                        Amount = 50.00,
+                        TransferTypeId = 1,
+                        Description = "Payment",
+                        CreatedDate = DateTime.UtcNow,
+                        ParentId = null,
+                        Status = 1
+                    },
+                },
+                TransactionTo = new List<Transaction>
+                {
+                     new Transaction
+                    {
+                        Id = 2,
+                        ToWalletId = 1,
+                        FromWalletId = 3,
+                        Amount = 75.00,
+                        TransferTypeId = 2,
+                        Description = "Withdrawal",
+                        CreatedDate = DateTime.UtcNow,
+                        ParentId = null,
+                        Status = 1
+                    }
+                },
+                ApplicationUser = new ApplicationUser()
+                {
+                    Email = "example@xem.com",
+                    PhoneNumber = "123467787",
+                    UserDetail = new UserDetail() { PhoneNumber = "123467787", FirstName = "john", LastName = "tom" }
+                },
+                Currency = new Currency() { Id = 1, Name = "LD", Symbol = "L$" }
+
+
+            };
+
+
+            _mockWalletService.Setup(x => x.GetUserDetailsByWalletIdAndCurrency(transactionToApprove.FromWalletId)).ReturnsAsync(walletBalance);
+            _mockWalletService.Setup(x => x.GetUserDetailsByWalletIdAndCurrency(transactionToApprove.ToWalletId)).ReturnsAsync(walletBalance);
+
             _mockMapper.Setup(x => x.Map<Transaction, TransactionResource>(updatedTransaction)).Returns(mappedTransactionResource);
-
-
 
             // Act
             var response = await _controller.RejectPaymentRequest(validPaymentRequestId);
@@ -1175,7 +1257,192 @@ namespace ApiUnitTests.Controllers
             // Assert
             var okResult = response as OkObjectResult;
             Assert.IsInstanceOf<OkObjectResult>(response);
-            Assert.AreEqual(expectedResult, okResult.Value);
+            Assert.AreEqual(mappedTransactionResource, okResult.Value);
+        }
+
+        [Test]
+        public async Task ApprovePaymentRequest_ReturnsBadRequest_WhenPaymentRequestIdIsNegative()
+        {
+            // Arrange
+            long negativePaymentRequestId = -1;
+
+            // Act
+            var result = await _controller.ApprovePaymentRequest(negativePaymentRequestId);
+
+            // Assert
+            Assert.IsInstanceOf<BadRequestObjectResult>(result);
+            var badRequestResult = result as BadRequestObjectResult;
+            Assert.AreEqual("Please enter valid payment request Id", badRequestResult.Value);
+        }
+
+        [Test]
+        public async Task ApprovePaymentRequest_ReturnsBadRequest_WhenPaymentRequestIdIsZero()
+        {
+            // Arrange
+            long zeroPaymentRequestId = 0;
+
+            // Act
+            var result = await _controller.ApprovePaymentRequest(zeroPaymentRequestId);
+
+            // Assert
+            Assert.IsInstanceOf<BadRequestObjectResult>(result);
+            var badRequestResult = result as BadRequestObjectResult;
+            Assert.AreEqual("Please enter valid payment request Id", badRequestResult.Value);
+        }
+
+        [Test]
+        public async Task ApprovePaymentRequest_ReturnsBadRequest_WhenTransactionToApproveIsNull()
+        {
+            // Arrange
+            long nonExistentPaymentRequestId = 999; // Assume this payment request id doesn't exist
+           
+            _mockTransactionService.Setup(x => x.GetTransactionsById(nonExistentPaymentRequestId)).ReturnsAsync((Transaction)null);
+
+            // Act
+            var result = await _controller.ApprovePaymentRequest(nonExistentPaymentRequestId);
+
+            // Assert
+            Assert.IsInstanceOf<BadRequestObjectResult>(result);
+            var badRequestResult = result as BadRequestObjectResult;
+            Assert.AreEqual("Invalid payment Id", badRequestResult.Value);
+        }
+
+        [Test]
+        public async Task ApprovePaymentRequest_ReturnsOkWithTransactionResource_WhenTransactionIsApproved()
+        {
+            // Arrange
+            long validPaymentRequestId = 123; // Assume this payment request id exists and is valid
+           
+            var validTransactionToApprove = new Transaction { Id = validPaymentRequestId, TransferTypeId = TransferTypes.CashOut.GetHashCode() };
+            _mockTransactionService.Setup(x => x.GetTransactionsById(validPaymentRequestId)).ReturnsAsync(validTransactionToApprove);
+
+            var approvedTransaction = new Transaction()
+            {
+                Id = 1,
+                ToWalletId = 123,
+                FromWalletId = 456,
+                Amount = 100.00f,
+                TransferTypeId = 1,
+                ParentId = null,
+                Description = "Payment",
+                Status = (int)wleepay.Core.Enums.TransactionStatus.Pending
+            }; // Assume this transaction is successfully approved
+           
+            _mockTransactionService.Setup(x => x.InitiateCashout(validTransactionToApprove)).ReturnsAsync(approvedTransaction);
+
+            var expectedTransactionResource = new TransactionResource { /* Initialize properties here */ };
+            _mockMapper.Setup(x=>x.Map<Transaction, TransactionResource>(approvedTransaction)).Returns(expectedTransactionResource);
+           
+
+            var walletBalance = new Wallet()
+            {
+                Id = 1,
+                UserId = "user123",
+                CurrencyId = 1,
+                Type = 1,
+                Balance = 1000.00,
+                CreatedDate = DateTime.UtcNow,
+                UpdatedDate = DateTime.UtcNow,
+                TransactionFrom = new List<Transaction>{  },
+                TransactionTo = new List<Transaction>{ },
+                ApplicationUser = new ApplicationUser()
+                {
+                    Email = "example@xem.com",
+                    PhoneNumber = "123467787",
+                    UserDetail = new UserDetail() { PhoneNumber = "123467787", FirstName = "john", LastName = "tom" }
+                },
+                Currency = new Currency() { Id = 1, Name = "LD", Symbol = "L$" }
+            };
+
+            _mockWalletService.Setup(x => x.GetWallet(approvedTransaction.FromWalletId)).ReturnsAsync(walletBalance);
+
+            _mockWalletService.Setup(x => x.GetUserDetailsByWalletIdAndCurrency(approvedTransaction.FromWalletId)).ReturnsAsync(walletBalance);
+            _mockWalletService.Setup(x => x.GetUserDetailsByWalletIdAndCurrency(approvedTransaction.ToWalletId)).ReturnsAsync(walletBalance);
+
+            // Act
+            var result = await _controller.ApprovePaymentRequest(validPaymentRequestId);
+
+            // Assert
+            Assert.IsInstanceOf<OkObjectResult>(result);
+            var okResult = (OkObjectResult)result;
+            Assert.AreEqual(expectedTransactionResource, okResult.Value);
+        }
+
+        [Test]
+        public async Task ApprovePaymentRequest_SendsSMSToUser_WhenTransactionResourceIsNotNull()
+        {
+            // Arrange
+            long validPaymentRequestId = 123; // Assume this payment request id exists and is valid
+            var validTransactionToApprove = new Transaction { Id = validPaymentRequestId, TransferTypeId = TransferTypes.CashOut.GetHashCode() };
+            _mockTransactionService.Setup(x => x.GetTransactionsById(validPaymentRequestId)).ReturnsAsync(validTransactionToApprove);
+
+            var approvedTransaction = new Transaction()
+            {
+                Id = 1,
+                ToWalletId = 123,
+                FromWalletId = 456,
+                Amount = 100.00f,
+                TransferTypeId = 1,
+                ParentId = null,
+                Description = "Payment",
+                Status = (int)wleepay.Core.Enums.TransactionStatus.Pending
+
+            }; // Assume this transaction is successfully approved
+            _mockTransactionService.Setup(x => x.InitiateCashout(validTransactionToApprove)).ReturnsAsync(approvedTransaction);
+
+            var expectedTransactionResource = new TransactionResource { /* Initialize properties here */ };
+            _mockMapper.Setup(x => x.Map<Transaction, TransactionResource>(approvedTransaction)).Returns(expectedTransactionResource);
+            var walletBalance = new Wallet()
+            {
+                Id = 1,
+                UserId = "user123",
+                CurrencyId = 1,
+                Type = 1,
+                Balance = 1000.00,
+                CreatedDate = DateTime.UtcNow,
+                UpdatedDate = DateTime.UtcNow,
+                TransactionFrom = new List<Transaction> { },
+                TransactionTo = new List<Transaction> { },
+                ApplicationUser = new ApplicationUser()
+                {
+                    Email = "example@xem.com",
+                    PhoneNumber = "123467787",
+                    UserDetail = new UserDetail() { PhoneNumber = "123467787", FirstName = "john", LastName = "tom" }
+                },
+                Currency = new Currency() { Id = 1, Name = "LD", Symbol = "L$" }
+            };
+
+            _mockWalletService.Setup(x => x.GetWallet(approvedTransaction.FromWalletId)).ReturnsAsync(walletBalance);
+
+            _mockWalletService.Setup(x => x.GetUserDetailsByWalletIdAndCurrency(approvedTransaction.FromWalletId)).ReturnsAsync(walletBalance);
+            _mockWalletService.Setup(x => x.GetUserDetailsByWalletIdAndCurrency(approvedTransaction.ToWalletId)).ReturnsAsync(walletBalance);
+
+            // Act
+            await _controller.ApprovePaymentRequest(validPaymentRequestId);
+
+            // Assert
+            _mockSMSService.Verify(x => x.sendMessage(It.IsAny<string>(), It.IsAny<string>()), Times.Once);
+        }
+
+        [Test]
+        public async Task ApprovePaymentRequest_DoesNotSendSMS_WhenTransactionResourceIsNull()
+        {
+            // Arrange
+            long validPaymentRequestId = 123; // Assume this payment request id exists and is valid
+            var validTransactionToApprove = new Transaction { Id = validPaymentRequestId, TransferTypeId = TransferTypes.CashOut.GetHashCode() };
+            _mockTransactionService.Setup(x => x.GetTransactionsById(validPaymentRequestId)).ReturnsAsync(validTransactionToApprove);
+
+            _mockTransactionService.Setup(x => x.InitiateCashout(validTransactionToApprove)).ReturnsAsync((Transaction)null);
+           
+            var approvedTransaction = new Transaction(); // Assume this transaction is successfully approved
+            var expectedTransactionResource = new TransactionResource { /* Initialize properties here */ };
+            _mockMapper.Setup(x => x.Map<Transaction, TransactionResource>(approvedTransaction)).Returns((TransactionResource)null);
+
+            // Act
+            await _controller.ApprovePaymentRequest(validPaymentRequestId);
+
+            // Assert
+            _mockSMSService.Verify(x => x.sendMessage(It.IsAny<string>(), It.IsAny<string>()), Times.Never);
         }
 
     }
