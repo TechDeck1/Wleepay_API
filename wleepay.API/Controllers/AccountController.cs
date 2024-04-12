@@ -211,7 +211,7 @@ namespace wleepay.API.Controllers
                         }
 
                         //generate jwt token
-                        var token = GenerateJSONWebToken(userDetailsToInsert);
+                        var token = _userDetailsService.GenerateJSONWebToken(userDetailsToInsert, roleEnumStringValue.ToString());
 
                         //send registration sucess message on mobile number
                         _smsService.sendMessage(MessagesTemplates.RegistrationSuccessMessage(updatedDetails.AccountNumber, updatedDetails?.KYCLevelDetail?.Name), updatedDetails.PhoneNumber);
@@ -246,6 +246,7 @@ namespace wleepay.API.Controllers
         {
             var validator = new LoginRequestValidator();
             var validationResult = await validator.ValidateAsync(loginRequest);
+           
             if(validationResult.Errors.Count>0)
             {
                 if (validationResult.Errors[0].ErrorMessage[3].ToString() == "m")
@@ -262,6 +263,7 @@ namespace wleepay.API.Controllers
             var user = await _userManager.FindByNameAsync(loginRequest.PhoneNo);
             if (user == null)
                 return BadRequest("Account does not exists.");
+           
             var result = await _signInManager.PasswordSignInAsync(user, loginRequest.Pin.ToString(), false, true);
             if (result.Succeeded)
             {
@@ -316,13 +318,13 @@ namespace wleepay.API.Controllers
         [HttpPost("SendOTP")]
         public async Task<IActionResult> SendOTP([FromBody] OTPRequest otpRequest)
         {
-            var validator = new LoginRequestValidator();
-            var validationResult = await validator.ValidateAsync(otpRequest);
-            if (!validationResult.IsValid)
-                return BadRequest(validationResult.Errors);
-
             try
             {
+                var validator = new LoginRequestValidator();
+                var validationResult = await validator.ValidateAsync(otpRequest);
+                if (!validationResult.IsValid)
+                    return BadRequest(validationResult.Errors);
+
                 string message = MessagesTemplates.ValidateNumberOTPMessage(otpRequest.Pin.ToString());
                 var smsStatus = _smsService.sendMessage(message, otpRequest.PhoneNo);
 
@@ -334,7 +336,7 @@ namespace wleepay.API.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex?.Message);
+                throw ex;
             }
         }
 
@@ -354,6 +356,8 @@ namespace wleepay.API.Controllers
                 if (userDetail == null)
                     return BadRequest("Account does not exist.");
                 var user = await _userManager.FindByNameAsync(userDetail.PhoneNumber);
+                if (user == null)
+                    return BadRequest("Account does not exist.");
                 //generate password reset token
                 var token = await _userManager.GeneratePasswordResetTokenAsync(user);
                 var updatedDetail = await _userManager.ResetPasswordAsync(user, token, updatePinRequest.Pin.ToString());
