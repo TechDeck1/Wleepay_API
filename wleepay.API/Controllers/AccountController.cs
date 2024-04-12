@@ -53,7 +53,7 @@ namespace wleepay.API.Controllers
         private readonly ILogger<AccountController> _logger;
         private readonly IMapper _mapper;
         private readonly IConfiguration _configuration;
-        public readonly IHostingEnvironment _hostingEnvironment;
+        public readonly  IHostingEnvironment _hostingEnvironment;
         private readonly IUploadDocument _documentUploaderService;
         private readonly IEmailSender _emailSender;
         private readonly ISystemActivityLogsService _systemActivityLogsService;

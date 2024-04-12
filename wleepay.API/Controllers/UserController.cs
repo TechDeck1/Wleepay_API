@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Microsoft.SqlServer.Management.Smo;
+using Moq;
 using System;
 using System.Collections.Generic;
 using System.Drawing.Imaging;
@@ -154,6 +155,10 @@ namespace wleepay.API.Controllers
         [HttpPost("all")]
         public async Task<IActionResult> GetUserList([FromBody] PagingRequest request)
         {
+            if (request == null)
+            {
+                return BadRequest(Messages.InvalidRequest.ToDescriptionString());
+            }
             if (!string.IsNullOrEmpty(request.SearchText))
             {
                 var result = await _userDetailsService.SearchUsersByEmail(request.SearchText, request.Role, request.Index, request.Size);
@@ -397,6 +402,11 @@ namespace wleepay.API.Controllers
         [HttpPost("paymentRequest")]
         public async Task<IActionResult> GetIncomingOutGoingTopUpRequests([FromBody] PaymentRequest paymentRequestParam)
         {
+            if (paymentRequestParam == null || string.IsNullOrEmpty(paymentRequestParam.UserId) || string.IsNullOrEmpty(paymentRequestParam.Type.ToDescriptionString())|| string.IsNullOrEmpty(paymentRequestParam.TransferStatus.ToDescriptionString()))
+            {
+                return BadRequest(Messages.InvalidRequest.ToDescriptionString());
+            }
+            
             var paymentRequest = await _userDetailsService.GetIncomingOutGoingPaymentRequest(paymentRequestParam.UserId, paymentRequestParam.Type,paymentRequestParam.TransferStatus,paymentRequestParam.PageSize,paymentRequestParam.PageIndex);
 
             if (paymentRequest == null)
@@ -409,6 +419,10 @@ namespace wleepay.API.Controllers
         [HttpGet("{userId}/createdBy")]
         public async Task<IActionResult> GetAllUsersById(string userId, int roleId , int pageIndex, int pageSize)
         {
+            if(roleId == null || roleId <= 0 || userId==null)
+            {
+                return BadRequest(Messages.InvalidRequest.ToDescriptionString());
+            }
             Role role = (Role)roleId;
             var userList = await _userDetailsService.GetAllUsersById(role, pageIndex, pageSize, userId);
             var userListResource = _mapper.Map<IEnumerable<ApplicationUser>, IEnumerable<ApplicationUserResource>>(userList.UserDetails);
@@ -423,11 +437,11 @@ namespace wleepay.API.Controllers
         public async Task<IActionResult> VerifyUserAccountByPhoneAsync(string phoneNumber)
         {
             TransactionAndUserResponseResource result = null;
-            if (!string.IsNullOrEmpty(phoneNumber))
+            object userDetails = null;
+
+            if (string.IsNullOrEmpty(phoneNumber)) { return BadRequest(Messages.InvalidRequest.ToDescriptionString()); }
                 result = await _userDetailsService.VerifyUserAccountByPhone(phoneNumber);
           
-            object userDetails = null;
-           
             if (result == null) 
             return Ok(new 
             {
@@ -455,12 +469,17 @@ namespace wleepay.API.Controllers
         {
             try
             {
+                if(userId == null)
+                {
+                    return BadRequest(Messages.InvalidRequest.ToDescriptionString());
+                }
                 var userDetail = await _userDetailsService.GetStaffPermissionsById(userId);
-                string[] deserializedNumbers = JsonSerializer.Deserialize<string[]>(userDetail?.UserDetail?.Permissions);
                 var userResource = _mapper.Map<ApplicationUser, StaffPermissionsResponseResource>(userDetail);
 
                 if (!string.IsNullOrEmpty(userDetail?.UserDetail?.Permissions))
                 {
+                    string[] deserializedNumbers = JsonSerializer.Deserialize<string[]>(userDetail?.UserDetail?.Permissions);
+
                     string jsonString = JsonSerializer.Serialize(deserializedNumbers);
 
                     var secretKey = "1234567890123456";
@@ -538,17 +557,18 @@ namespace wleepay.API.Controllers
                     usersStaffRole.StaffRoleId = editUserDetailResource.StaffRoleId;
                     await _usersStaffRoleService.UpdateUserStaffRole(usersStaffRole);
 
+                    return Ok(new
+                    {
+                        Success = true,
+                        UserId = editUserDetailResource.UserId,
+                        FirstName = editUserDetailResource.FirstName,
+                        LastName = editUserDetailResource.LastName,
+                        Message = Messages.InfoUpdated.ToDescriptionString()
+
+                    });
                 }
 
-                return Ok(new
-                {
-                    Success = true,
-                    UserId = editUserDetailResource.UserId,
-                    FirstName = editUserDetailResource.FirstName,
-                    LastName = editUserDetailResource.LastName,
-                    Message = Messages.InfoUpdated.ToDescriptionString()
-
-                });
+                return BadRequest(Messages.InvalidRequest.ToDescriptionString());
             }
             catch (Exception ex)
             {
