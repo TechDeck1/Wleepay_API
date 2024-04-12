@@ -75,6 +75,11 @@ namespace wleepay.API.Mapping
                    .ForMember(dest => dest.DocumentImage, src => src.MapFrom(x => x.KYCDocumentImage))
                    .ReverseMap();
 
+            CreateMap<EditUserDetailResource, KYCdocuments>()
+                  .ForMember(dest => dest.Type, src => src.MapFrom(x => x.DocumentTypeId))
+                  .ForMember(dest => dest.DocumentImage, src => src.MapFrom(x => x.KYCDocumentImage))
+                  .ReverseMap();
+
             CreateMap<CustomerTickets, AddCustomerTicketResponseResource>().ReverseMap();
             CreateMap<CustomerTickets, AddCustomerTicketRequestResponse>().ReverseMap();
 

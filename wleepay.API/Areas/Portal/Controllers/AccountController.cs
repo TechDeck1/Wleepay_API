@@ -219,6 +219,7 @@ namespace wleepay.API.Areas.Portal.Controllers
                             kycDetailsToAdd.UserId = newUser.Id;
                             kycDetailsToAdd.CreatedDate = DateTime.Now;
                             kycDetailsToAdd.UpdatedDate = DateTime.Now;
+                            kycDetailsToAdd.DocumentImage = userDetailsToInsert.KYCDocumentImage;
 
                             await _kycDocumentsService.AddOrUpdateKYCDocument(kycDetailsToAdd);
                         }
@@ -305,6 +306,11 @@ namespace wleepay.API.Areas.Portal.Controllers
                 }
 
                 var verificationDetails = await _verificationService.GetVerificationByPhone(userDetail.PhoneNumber);
+
+                if (verificationDetails == null)
+                {
+                    return BadRequest("please verify phone number first.");
+                }
 
                 if (userDetail.PhoneNumber == verificationDetails.PhoneNumber && userDetail.Otp == verificationDetails.VerificationCode)
                 {
@@ -433,7 +439,7 @@ namespace wleepay.API.Areas.Portal.Controllers
                     return BadRequest(Messages.NotFound.ToDescriptionString());
 
                 var userDetails = await _userDetailsService.GetUserDetailsById(user.Id);
-                if (userDetails != null)
+                if (userDetails != null && !string.IsNullOrEmpty(userDetails.SecurityAnswerText))
                 {
                     //check if users phonenumber, email, security answer and security question matches
                     if (userDetails.PhoneNumber == forgotPasswordDto.PhoneNumber && user.Email == forgotPasswordDto.Email && userDetails.SecurityAnswerText.ToLower() == forgotPasswordDto.Answer.ToLower() && userDetails.SecurityQuestionId == forgotPasswordDto.SecurityQuestionId)
@@ -477,7 +483,12 @@ namespace wleepay.API.Areas.Portal.Controllers
 
                     }
                 }
-                return BadRequest(Messages.InvalidRequest.ToDescriptionString());
+                return BadRequest(new
+                {
+                    Success = false,
+                    Message = Messages.AccountNotSetup.ToDescriptionString()
+
+                });
             }
             catch (Exception)
             {
@@ -825,6 +836,12 @@ namespace wleepay.API.Areas.Portal.Controllers
         {
             try
             {
+                var validator = new VerifyPhoneNumberValidator();
+                var validationResult = await validator.ValidateAsync(model);
+
+                if (!validationResult.IsValid)
+                    return BadRequest(validationResult.Errors);
+
                 //get verification details
                 var verificationDetails = await _verificationService.GetVerificationByPhone(model.PhoneNumber);
 

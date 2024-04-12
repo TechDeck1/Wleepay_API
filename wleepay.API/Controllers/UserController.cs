@@ -112,12 +112,18 @@ namespace wleepay.API.Controllers
                 {
                     userDetail.UserDetail.Image = System.Convert.ToBase64String((System.IO.File.ReadAllBytes(userDetail.UserDetail.Image)));
                 }
-                if (System.IO.File.Exists(userDetail.UserDetail.KYCDocumentImage))
+                if (System.IO.File.Exists(userDetail?.UserDetail?.KYCDocumentImage))
                 {
                     userDetail.UserDetail.KYCDocumentImage = System.Convert.ToBase64String((System.IO.File.ReadAllBytes(userDetail.UserDetail.KYCDocumentImage)));
                 }
+                if (userDetail?.KYCdocuments.Count > 0) {
+                    if (System.IO.File.Exists(userDetail?.KYCdocuments?.FirstOrDefault().DocumentImage))
+                    {
+                        userDetail.KYCdocuments.FirstOrDefault().DocumentImage = System.Convert.ToBase64String((System.IO.File.ReadAllBytes(userDetail.KYCdocuments.FirstOrDefault().DocumentImage)));
+                    }
+                }
 
-            var userResource = _mapper.Map<ApplicationUser, ApplicationUserResource>(userDetail);
+                var userResource = _mapper.Map<ApplicationUser, ApplicationUserResource>(userDetail);
             return Ok(userResource);
             }
             catch (Exception e)
@@ -549,13 +555,36 @@ namespace wleepay.API.Controllers
                         var documentURL = _storageService.UploadKYCDocument(userDetail.KYCDocumentImage, userDetail.UserId);
                         userDetail.KYCDocumentImage = documentURL.ToString();
                     }
+                    if (editUserDetailResource.City != null)
+                    {
+                        var address = await _addressService.GetAddressByUserId(userDetail.UserId);
+                        if (address != null)
+                        {
+                            address.City = editUserDetailResource.City;
+                            address.District = editUserDetailResource.District;
+                            await _addressService.AddOrUpdateAddress(address);
+                        }
+                    }
+                    //kyc document is optional in registration
+                    if (editUserDetailResource.DocumentTypeId.HasValue)
+                    {
+                        //insert data in kyc document
+                        var kycDetailsToAdd = _mapper.Map<EditUserDetailResource, KYCdocuments>(editUserDetailResource);
+                        kycDetailsToAdd.UserId = combinedUserData.UserId;
+                        kycDetailsToAdd.UpdatedDate = DateTime.Now;
+                        kycDetailsToAdd.DocumentImage = userDetail.KYCDocumentImage;
 
+                        await _kycDocumentsService.UpdateKYCDocument(kycDetailsToAdd);
+                    }
                     await _userDetailsService.AddOrUpdateUserDetails(combinedUserData);
-                    UsersStaffRole usersStaffRole = new UsersStaffRole();
-                    usersStaffRole.UserId = applicationUser.Id;
-                    usersStaffRole.UpdatedDate= DateTime.UtcNow;
-                    usersStaffRole.StaffRoleId = editUserDetailResource.StaffRoleId;
-                    await _usersStaffRoleService.UpdateUserStaffRole(usersStaffRole);
+                    if (editUserDetailResource.StaffRoleId == (int)Role.Staff)
+                    {
+                        UsersStaffRole usersStaffRole = new UsersStaffRole();
+                        usersStaffRole.UserId = applicationUser.Id;
+                        usersStaffRole.UpdatedDate = DateTime.UtcNow;
+                        usersStaffRole.StaffRoleId = editUserDetailResource.StaffRoleId;
+                        await _usersStaffRoleService.UpdateUserStaffRole(usersStaffRole);
+                    }
 
                     return Ok(new
                     {

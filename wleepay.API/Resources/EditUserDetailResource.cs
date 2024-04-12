@@ -22,5 +22,7 @@ namespace wleepay.API.Resources
         public string KYCDocumentImage { get; set; }
         public int SecurityQuestionId { get; set; }
         public DateTime HireDate { get; set; }
+        public string City { get; set; }
+        public string District { get; set; }
     }
 }

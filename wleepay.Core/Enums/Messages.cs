@@ -27,6 +27,7 @@ namespace wleepay.Core.Enums
         [Description("Password is successfully genrated.")] PasswordGenerated,
         [Description("Email is not valid")] EmailNotValid,
         [Description("Please correct the entered details and try again.")] DetailsNotCorrect,
+        [Description("Your account is not setup yet. Please setup your account first")] AccountNotSetup,
         [Description("Invalid Request")] InvalidRequest,
         [Description("Wallet id cannot be null or 0.")] WalletIdNull,
         [Description("Deposit amount cannot be null or 0.")] DepositAmount,

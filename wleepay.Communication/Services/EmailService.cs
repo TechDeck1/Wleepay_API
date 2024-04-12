@@ -15,11 +15,16 @@ namespace wleepay.Communication.Services
     public class EmailService : IEmailSender
     {
         private readonly IConfiguration _configuration;
+        private readonly string _senderEmail;
+        private readonly string _senderName;
 
 
         public EmailService(IConfiguration configuration)
         {
             _configuration = configuration;
+            _senderEmail = configuration.GetSection("SendGrid:SendgridSenderEmail").Value.ToString();
+            _senderName = configuration.GetSection("SendGrid:SendgridSenderName").Value.ToString();
+
         }
 
         //Change recipient email to "lionelbernard@wleepay.com" when deploy changes to live
@@ -27,26 +32,19 @@ namespace wleepay.Communication.Services
         {
             var apiKey = _configuration.GetSection("SendGrid:WleePaySendGridApiKey").Value.ToString();
             var emailSubject = "Payment Recieved";
-            var recipientEmail = "ariel.ranjot@gmail.com";
-            string htmlTemplate = messageText;
+            var recipientEmail = email;
 
-            // Sender's email
-            string senderEmail = "ariel.ranjot@gmail.com";
             var client = new SendGridClient(apiKey);
             var msg = new SendGridMessage()
             {
-                From = new EmailAddress(senderEmail, "WleePay Team"),
+                From = new EmailAddress(_senderEmail, _senderName),
                 Subject = emailSubject,
                 PlainTextContent = "",
-                HtmlContent = htmlTemplate,
+                HtmlContent = messageText,
             };
 
             msg.AddTo(new EmailAddress(recipientEmail, "user"));
             var response = await client.SendEmailAsync(msg);
-            string responseBody = await response.Body.ReadAsStringAsync();
-
-            // A success status code means SendGrid received the email request and will process it.
-            // Errors can still occur when SendGrid tries to send the email. 
             return response.IsSuccessStatusCode ? "Email queued successfully!" : "Something went wrong!";
            
         }
@@ -54,19 +52,13 @@ namespace wleepay.Communication.Services
         public async Task<string> SendEmailAsync(string email, string template, string name, string mailSubject)
         {
 
-            var subject = mailSubject;
-            // recipient's email address and credentials
-            var recipientEmail = "ariel.ranjot@gmail.com";
-
-            // Sender's email address and credentials
-            string senderEmail = "ariel.ranjot@gmail.com";
-
+            var recipientEmail = email;
             var apiKey = _configuration.GetSection("SendGrid:WleePaySendGridApiKey").Value.ToString();
             var client = new SendGridClient(apiKey);
             var msg = new SendGridMessage()
             {
-                From = new EmailAddress(senderEmail, "WleePay Team"),
-                Subject = subject,
+                From = new EmailAddress(_senderEmail, _senderName),
+                Subject = mailSubject,
                 PlainTextContent = "",
                 HtmlContent = template
 

@@ -94,6 +94,7 @@ namespace wleepay.Data.Repositories
                     .ThenInclude(s => s.KYCStatus)
                 .Include(s => s.UserDetail)
                     .ThenInclude(s => s.County)
+                .Include(s => s.Address)
                 .Include(s => s.UsersStaffRole)
                     .ThenInclude(s => s.StaffRoles)
                 .AsQueryable();
