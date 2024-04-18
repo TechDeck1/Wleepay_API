@@ -46,7 +46,6 @@ namespace ApiUnitTests.Controllers
         private Mock<ISmileIdentityService> _mockSmileIdentityService;
 
 
-
         [SetUp]
         public void Setup()
         {
@@ -417,5 +416,139 @@ namespace ApiUnitTests.Controllers
             Assert.IsInstanceOf<BadRequestObjectResult>(result);
             Assert.AreEqual("Account does not exist.", badRequestResult.Value);
         }
+
+        [Test]
+        public async Task CheckPhoneNumberExists_WithValidPhoneNumberNotRegistered_ReturnsFalse()
+        {
+            // Arrange
+            string phoneNumber = "1234567890"; // Valid phone number not registered
+            bool expectedResult = false;
+
+            _mockUserDetailsService.Setup(m => m.IsPhoneAlreadyRegistered(phoneNumber)).ReturnsAsync(expectedResult);
+
+            // Act
+            var result = await _controller.CheckPhoneNumberExists(phoneNumber);
+
+            // Assert
+            var okResult = result as OkObjectResult;
+            Assert.NotNull(okResult);
+
+            bool actualResult = (bool)okResult.Value;
+            Assert.AreEqual(expectedResult, actualResult);
+        }
+
+        [Test]
+        public async Task CheckPhoneNumberExists_WithValidPhoneNumberRegistered_ReturnsTrue()
+        {
+            // Arrange
+            string phoneNumber = "1234567890"; // Valid phone number already registered
+            bool expectedResult = true;
+
+            _mockUserDetailsService.Setup(m => m.IsPhoneAlreadyRegistered(phoneNumber)).ReturnsAsync(expectedResult);
+
+            // Act
+            var result = await _controller.CheckPhoneNumberExists(phoneNumber);
+
+            // Assert
+            var okResult = result as OkObjectResult;
+            Assert.NotNull(okResult);
+
+            bool actualResult = (bool)okResult.Value;
+            Assert.AreEqual(expectedResult, actualResult);
+        }
+
+        [Test]
+        public async Task Login_WithValidCredentials_ReturnsToken()
+        {
+            // Arrange
+            var loginRequest = new LoginRequest { PhoneNo = "1234567890", Pin = "1234" }; // Provide valid login request
+            var user = new ApplicationUser { Id = "user_id", UserName = loginRequest.PhoneNo }; // Create a mock user
+            var userDetails = new UserDetail { UserId = "user_id", IsLoggedIn = false,
+                FirstName = "John",
+                LastName = "Doe",
+                Gender = "Male",
+                PhoneNumber = "1234567890",
+                DOB = new DateTime(1990, 5, 15),
+                KYCStatusId = 1,
+                Image = "path/to/image.jpg",
+                CountyId = 1,
+                KYCLevel = 1,
+                KYCDocumentImage = "path/to/document.jpg",
+                KYCStatus = null, // Set to null if not needed
+                County = null, // Set to null if not needed
+                KYCLevelDetail = null // Set to null if not needed
+            }; // Create a mock user detail
+            var userRole = new List<string> { "Staff" }; // Mock user role
+            var wallet = new List<Wallet>(); // Mock wallet
+            var currencyId = 0;
+
+            _mockUserManager.Setup(m => m.FindByNameAsync(loginRequest.PhoneNo)).ReturnsAsync(user);
+            _mockSignInManager.Setup(m => m.PasswordSignInAsync(user, loginRequest.Pin.ToString(), false, true))
+                .ReturnsAsync(Microsoft.AspNetCore.Identity.SignInResult.Success);
+            _mockUserDetailsService.Setup(m => m.GetUserDetailsByPhone(loginRequest.PhoneNo)).ReturnsAsync(userDetails);
+            _mockUserDetailsService.Setup(m => m.UpdateUserLoggedInStatus(userDetails.UserId, true)).ReturnsAsync(userDetails);
+            _mockUserManager.Setup(m => m.GetRolesAsync(user)).ReturnsAsync(userRole);
+            _mockWalletService.Setup(m => m.GetWalletsByUserId(userDetails.UserId, currencyId)).ReturnsAsync(wallet);
+            _mockWalletService.Setup(m => m.CreateCustomerWallet(userDetails.UserId)).ReturnsAsync(wallet); // Handle scenario when wallet count is less than 1
+            _mockUserDetailsService.Setup(x => x.GenerateJSONWebToken(userDetails, userRole[0])).ReturnsAsync("token");
+
+            // Act
+            var result = await _controller.Login(loginRequest);
+
+            // Assert
+            var okResult = result as OkObjectResult;
+            Assert.NotNull(okResult);
+           
+            bool success = (bool)(okResult.Value?.GetType().GetProperty("Success")?.GetValue(okResult.Value));
+            string userId = (string)(okResult.Value?.GetType().GetProperty("UserId")?.GetValue(okResult.Value));
+            string token = (string)(okResult.Value?.GetType().GetProperty("Token")?.GetValue(okResult.Value));
+            string role = (string)(okResult.Value?.GetType().GetProperty("Role")?.GetValue(okResult.Value));
+
+            Assert.IsTrue(success);
+            Assert.AreEqual(user.Id, userId);
+            Assert.IsNotNull(token);
+            Assert.AreEqual(userRole[0], role);
+            // Add more assertions as needed
+        }
+
+        [Test]
+        public async Task Login_WithInvalidCredentials_ReturnsBadRequest()
+        {
+            // Arrange
+            var loginRequest = new LoginRequest { PhoneNo = "1234567890", Pin = "1234" }; // Provide invalid login request
+            var user = new ApplicationUser { Id = "user_id", UserName = loginRequest.PhoneNo }; // Create a mock user
+
+            _mockUserManager.Setup(m => m.FindByNameAsync(loginRequest.PhoneNo)).ReturnsAsync(user);
+            _mockSignInManager.Setup(m => m.PasswordSignInAsync(user, loginRequest.Pin.ToString(), false, true))
+                .ReturnsAsync(Microsoft.AspNetCore.Identity.SignInResult.Failed);
+
+            // Act
+            var result = await _controller.Login(loginRequest);
+
+            // Assert
+            var badRequestResult = result as BadRequestObjectResult;
+            Assert.NotNull(badRequestResult);
+            Assert.AreEqual("Invalid login request.", badRequestResult.Value);
+        }
+
+        [Test]
+        public async Task Login_WithUserNotFound_ReturnsBadRequest()
+        {
+            // Arrange
+            var loginRequest = new LoginRequest { PhoneNo = "1234567890", Pin = "1234" }; // Provide login request with user not found
+            ApplicationUser user = null;
+
+            _mockUserManager.Setup(m => m.FindByNameAsync(loginRequest.PhoneNo)).ReturnsAsync(user);
+
+            // Act
+            var result = await _controller.Login(loginRequest);
+
+            // Assert
+            var badRequestResult = result as BadRequestObjectResult;
+            Assert.NotNull(badRequestResult);
+            Assert.AreEqual("Account does not exists.", badRequestResult.Value);
+        }
+
+
     }
 }

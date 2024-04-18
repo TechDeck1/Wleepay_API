@@ -20,6 +20,7 @@ using wleepay.Core.DTO.Response;
 using wleepay.Core.Enums;
 using wleepay.Core.Models;
 using wleepay.Core.Services;
+using wleepay.Services;
 using wleepay.Storage.Interface;
 
 
@@ -95,8 +96,7 @@ namespace ApiUnitTests.Controllers
                 _mockSystemActivityLogsService.Object,
                 _mockUsersStaffRoleService.Object,
                 _mockVerificationService.Object,
-                _mockLookupService.Object,
-                _mockSMSService.Object
+                _mockLookupService.Object
             );
 
         }
@@ -152,7 +152,7 @@ namespace ApiUnitTests.Controllers
             var verificationCode = "1234"; // Provide valid verification code here
 
             _mockUserDetailsService.Setup(m => m.GetUserDetailsById(model.UserId)).ReturnsAsync(userDetails);
-            //_mockSMSService.Verify(x => x.sendMessage("message", userDetails.PhoneNumber), Times.Never);
+            _mockSMSService.Setup(x => x.sendMessage("message", userDetails.PhoneNumber)).Returns("queued");
             _mockUserDetailsService.Setup(x => x.UpdateUserVerificationCode(model.UserId, verificationCode)).ReturnsAsync(userDetails);
 
             // Act
@@ -163,8 +163,9 @@ namespace ApiUnitTests.Controllers
 
             Assert.NotNull(okResult);
             Assert.IsNotNull(okResult);
-            //Assert.IsTrue(data.Success);
-            //Assert.AreEqual("XXX-XXX-7890", data.Phone); // Adjust according to your masking logic
+            string phone = (string)(okResult.Value?.GetType().GetProperty("Phone")?.GetValue(okResult.Value));
+            bool success = (bool)(okResult.Value?.GetType().GetProperty("Sucess")?.GetValue(okResult.Value));
+            Assert.IsTrue(success);
         }
 
         [Test]
@@ -179,16 +180,19 @@ namespace ApiUnitTests.Controllers
             var model = new SendCode { UserId = "26f54dd3-c2e4-4076-9c46-de1ef9f5ec27" }; // Provide valid user id here
             var verificationCode = "1234"; // Provide valid verification code here
 
-            _mockUserDetailsService.Setup(m => m.GetUserDetailsById(model.UserId)).ReturnsAsync(userDetails);
-            _mockSMSService.Verify(x => x.sendMessage("message", userDetails.PhoneNumber), Times.Never);
+            _mockUserDetailsService.Setup(m => m.GetUserDetailsById(model.UserId)).ReturnsAsync((UserDetail)null);
             _mockUserDetailsService.Setup(x => x.UpdateUserVerificationCode(model.UserId, verificationCode)).ReturnsAsync(userDetails);
 
             // Act
             var result = await _controller.SendOTP(model);
-            var okResult = result as OkObjectResult;
+          
+            var okResult = result as BadRequestObjectResult;
 
             // Assert
-            Assert.IsNull(okResult);
+            Assert.IsNotNull(okResult);
+           
+            _mockSMSService.Verify(x => x.sendMessage("message", userDetails.PhoneNumber), Times.Never);
+
 
 
         }
@@ -1293,7 +1297,338 @@ namespace ApiUnitTests.Controllers
             // Add assertions for returned message
         }
 
-      
+        [Test]
+        public async Task RegisterSystemAdmin_ValidInput_CreatesUserAndReturnsToken()
+        {
+            // Arrange
+
+            var userDetail = new AddSystemAdminResource
+            {
+                EmailId = "test@example.com",
+                Role = Role.SystemAdmin, // Assuming role is not 0 (SuperAdmin)
+                PhoneNumber = "1234567890",
+                CountyId = 5,
+                Gender = "male",
+                FirstName = "john",
+                KYCStatusId = 1,
+                Otp = "1234"
+                // Populate other properties as needed for valid input
+            };
+            var newUser = new ApplicationUser { Id = Guid.NewGuid().ToString(), Email = "test@example.com" };
+            var userDetails = new UserDetail { UserId = newUser.Id,
+                VerificationCode = "1234"
+            };
+            UsersStaffRole usersStaffRole = new();
+            var validationResult = new ValidationResult();
+            var userDetailsToInsert = new UserDetail(); // Create an instance of UserDetail
+            var token = "token";
+            var verification = new Verification
+            {
+                Id = 1,
+                PhoneNumber = "1234567890",
+                VerificationCode = "1234",
+                VerificationExpiry = DateTime.UtcNow.AddHours(1), // Set expiry time to 1 hour from now
+                CreatedDate = DateTime.UtcNow
+            };
+
+            _mockValidator.Setup(x => x.ValidateAsync(It.IsAny<ValidationContext<AddStaffDetailsResource>>(), default))
+                .ReturnsAsync(validationResult);
+            _mockConfiguration.Setup(x => x.GetSection("BaseUrl").Value).Returns("http://example.com");
+            _mockUserManager.Setup(x => x.CreateAsync(It.IsAny<ApplicationUser>())).ReturnsAsync(IdentityResult.Success);
+            _mockUserManager.Setup(x => x.AddToRoleAsync(It.IsAny<ApplicationUser>(), It.IsAny<string>())).ReturnsAsync(IdentityResult.Success);
+            _mockUserDetailsService.Setup(x => x.AddOrUpdateUserDetails(It.IsAny<UserDetail>())).ReturnsAsync(userDetails);
+            _mockUsersStaffRoleService.Setup(x => x.AddUserStaffRole(It.IsAny<UsersStaffRole>())).ReturnsAsync(usersStaffRole);
+            _mockUserManager.Setup(x => x.FindByEmailAsync(userDetail.EmailId)).ReturnsAsync((ApplicationUser)null);
+            _mockUserDetailsService.Setup(x => x.IsPhoneAlreadyRegistered(It.IsAny<string>())).ReturnsAsync(false);
+            _mockMapper.Setup(m => m.Map<AddSystemAdminResource, UserDetail>(It.IsAny<AddSystemAdminResource>()))
+                .Returns(userDetailsToInsert);
+            _mockUserDetailsService.Setup(x => x.GenerateJSONWebToken(userDetails, userDetail.Role.ToString())).ReturnsAsync(token);
+            _mockVerificationService.Setup(x => x.GetVerificationByPhone(userDetail.PhoneNumber)).ReturnsAsync(verification);
+
+
+            // Act
+            var result = await _controller.RegisterSystemAdmin(userDetail);
+
+            // Assert
+            var okResult = result as OkObjectResult;
+            bool success = (bool)(okResult.Value?.GetType().GetProperty("Success")?.GetValue(okResult.Value));
+            //string resultedToken = (string)(okResult.Value?.GetType().GetProperty("Token")?.GetValue(okResult.Value));
+            string userId = (string)(okResult.Value?.GetType().GetProperty("UserId")?.GetValue(okResult.Value));
+
+            Assert.IsNotNull(okResult);
+            Assert.AreEqual(200, okResult.StatusCode);
+            Assert.IsTrue(success);
+            //Assert.IsNotNull(resultedToken);
+            Assert.IsNotNull(userId);
+
+        }
+
+        [Test]
+        public async Task RegisterSystemAdmin_InvalidRole_ReturnsBadRequest()
+        {
+            // Arrange
+
+            var userDetail = new AddSystemAdminResource
+            {
+                EmailId = "test@example.com",
+                Role = Role.SuperAdmin, // Assuming role is not 0 (SuperAdmin)
+                PhoneNumber = "1234567890",
+                CountyId = 5,
+                Gender = "male",
+                FirstName = "john",
+                KYCStatusId = 1
+                // Populate other properties as needed for valid input
+            };
+
+            var validationResult = new ValidationResult();
+
+            _mockValidator.Setup(x => x.ValidateAsync(It.IsAny<ValidationContext<AddStaffDetailsResource>>(), default)).ReturnsAsync(validationResult);
+            _mockConfiguration.Setup(x => x.GetSection("BaseUrl").Value).Returns("http://example.com");
+
+            // Act
+            var result = await _controller.RegisterSystemAdmin(userDetail);
+
+            // Assert
+            var badRequestResult = result as BadRequestObjectResult;
+            Assert.IsNotNull(badRequestResult);
+            Assert.AreEqual(400, badRequestResult.StatusCode);
+            Assert.AreEqual(Messages.IsSuperAdmin.ToDescriptionString(), badRequestResult.Value.ToString());
+            // Add assertions for returned message
+        }
+
+        [Test]
+        public async Task RegisterSystemAdmin_PhoneNumberAndEmailExists_ReturnsBadRequest()
+        {
+            // Arrange
+
+            var userDetail = new AddSystemAdminResource
+            {
+                EmailId = "test@example.com",
+                Role = Role.SystemAdmin, // Assuming role is not 0 (SuperAdmin)
+                PhoneNumber = "1234567890",
+                CountyId = 5,
+                Gender = "male",
+                FirstName = "john",
+                KYCStatusId = 1
+                // Populate other properties as needed for valid input
+            };
+            var validationResult = new ValidationResult();
+            var newUser = new ApplicationUser { Id = "123456", Email = "test@example.com" };
+            var userDetails = new UserDetail { UserId = newUser.Id };
+
+            _mockValidator.Setup(x => x.ValidateAsync(It.IsAny<ValidationContext<AddStaffDetailsResource>>(), default)).ReturnsAsync(validationResult);
+            _mockConfiguration.Setup(x => x.GetSection("BaseUrl").Value).Returns("http://example.com");
+            _mockUserManager.Setup(x => x.FindByEmailAsync(userDetail.EmailId)).ReturnsAsync(newUser);
+            _mockUserDetailsService.Setup(x => x.IsPhoneAlreadyRegistered(It.IsAny<string>())).ReturnsAsync(true);
+
+            // Act
+            var result = await _controller.RegisterSystemAdmin(userDetail);
+
+            // Assert
+            var badRequestResult = result as BadRequestObjectResult;
+            Assert.IsNotNull(badRequestResult);
+            Assert.AreEqual(400, badRequestResult.StatusCode);
+            Assert.AreEqual(Messages.PhoneAndEmailAlreadyUsed.ToDescriptionString(), badRequestResult.Value.ToString());
+            // Add assertions for returned message
+        }
+
+        [Test]
+        public async Task RegisterSystemAdmin_UserCreationFailed_ReturnsBadRequest()
+        {
+            // Arrange
+            var userDetail = new AddSystemAdminResource
+            {
+                EmailId = "test@example.com",
+                Role = Role.SystemAdmin, // Assuming role is not 0 (SuperAdmin)
+                PhoneNumber = "1234567890",
+                CountyId = 5,
+                Gender = "male",
+                FirstName = "john",
+                KYCStatusId = 1
+                // Populate other properties as needed for valid input
+            };
+            var validationResult = new ValidationResult();
+            var newUser = new ApplicationUser { Id = "123456", Email = "test@example.com" };
+            var userDetails = new UserDetail { UserId = newUser.Id };
+            IdentityResult identityResult = new();
+            IdentityError identityError = new IdentityError();
+
+
+            _mockUserManager.Setup(x => x.CreateAsync(It.IsAny<ApplicationUser>())).ReturnsAsync(IdentityResult.Failed(identityError));
+            _mockValidator.Setup(x => x.ValidateAsync(It.IsAny<ValidationContext<AddStaffDetailsResource>>(), default)).ReturnsAsync(validationResult);
+            _mockConfiguration.Setup(x => x.GetSection("BaseUrl").Value).Returns("http://example.com");
+            _mockUserManager.Setup(x => x.FindByEmailAsync(userDetail.EmailId)).ReturnsAsync((ApplicationUser)null);
+            _mockUserDetailsService.Setup(x => x.IsPhoneAlreadyRegistered(It.IsAny<string>())).ReturnsAsync(false);
+
+            // Act
+            var result = await _controller.RegisterSystemAdmin(userDetail);
+
+            // Assert
+            var badRequestResult = result as BadRequestObjectResult;
+            Assert.IsNotNull(badRequestResult);
+            Assert.AreEqual(400, badRequestResult.StatusCode);
+            // Add assertions for returned message
+        }
+
+        [Test]
+        public async Task CheckIfAccountAlreadySetup_UserNotFound_ReturnsNotFoundMessage()
+        {
+            // Arrange
+            var resource = new AccountExistVerificationResource { Email = "nzUAzZAabBtCpKSHb2O4CfbLo1Oq1CgsCp+orlmNCsI=" };
+
+            _mockConfiguration.Setup(x => x.GetSection("SecretKeyForEncryptAndDecrypt").Value).Returns("1234567890123456");
+            _mockUserManager.Setup(m => m.FindByEmailAsync(resource.Email)).ReturnsAsync((ApplicationUser)null);
+
+            // Act
+            var result = await _controller.CheckIfAccountAlreadySetup(resource);
+
+            // Assert
+            var okResult = result as OkObjectResult;
+            Assert.NotNull(okResult);
+
+            bool success = (bool)(okResult.Value?.GetType().GetProperty("Success")?.GetValue(okResult.Value));
+            string message = (string)(okResult.Value?.GetType().GetProperty("Message")?.GetValue(okResult.Value));
+
+            Assert.IsFalse(success);
+            Assert.AreEqual(Messages.NotFound.ToDescriptionString(), message);
+        }
+
+        [Test]
+        public async Task CheckIfAccountAlreadySetup_AccountNotSetup_ReturnsAccountNotSetupMessage()
+        {
+            // Arrange
+            var resource = new AccountExistVerificationResource { Email = "nzUAzZAabBtCpKSHb2O4CfbLo1Oq1CgsCp+orlmNCsI=" };
+
+            _mockConfiguration.Setup(x => x.GetSection("SecretKeyForEncryptAndDecrypt").Value).Returns("1234567890123456");
+             var user = new ApplicationUser() { }; // assuming user exists but has no password set
+            _mockUserManager.Setup(m => m.FindByEmailAsync("test@example.com")).ReturnsAsync(user);
+            _mockUserManager.Setup(m => m.HasPasswordAsync(user)).ReturnsAsync(false);
+
+            // Act
+            var result = await _controller.CheckIfAccountAlreadySetup(resource);
+
+            // Assert
+            var okResult = result as OkObjectResult;
+            Assert.NotNull(okResult);
+
+            bool success = (bool)(okResult.Value?.GetType().GetProperty("Success")?.GetValue(okResult.Value));
+            string message = (string)(okResult.Value?.GetType().GetProperty("Message")?.GetValue(okResult.Value));
+
+            Assert.IsTrue(success);
+            Assert.AreEqual(Messages.AccountNotAlreadySetup.ToDescriptionString(), message);
+        }
+
+        [Test]
+        public async Task CheckIfAccountAlreadySetup_AccountSetup_ReturnsAccountSetupMessage()
+        {
+            // Arrange
+            var resource = new AccountExistVerificationResource { Email = "nzUAzZAabBtCpKSHb2O4CfbLo1Oq1CgsCp+orlmNCsI=" };
+
+            _mockConfiguration.Setup(x => x.GetSection("SecretKeyForEncryptAndDecrypt").Value).Returns("1234567890123456");
+            var user = new ApplicationUser() { }; // assuming user exists but has no password set
+            _mockUserManager.Setup(m => m.FindByEmailAsync("test@example.com")).ReturnsAsync(user);
+            _mockUserManager.Setup(m => m.HasPasswordAsync(user)).ReturnsAsync(true);
+
+            // Act
+            var result = await _controller.CheckIfAccountAlreadySetup(resource);
+
+            // Assert
+            var okResult = result as OkObjectResult;
+            Assert.NotNull(okResult);
+
+            bool success = (bool)(okResult.Value?.GetType().GetProperty("Success")?.GetValue(okResult.Value));
+            string message = (string)(okResult.Value?.GetType().GetProperty("Message")?.GetValue(okResult.Value));
+
+            Assert.IsFalse(success);
+            Assert.AreEqual(Messages.AccountAlreadySetup.ToDescriptionString(), message);
+        }
+
+        [Test]
+        public async Task CheckIfLinkIsExpired_InvalidModelState_ReturnsBadRequest()
+        {
+            // Arrange           
+            var resource = new CheckTokenExpirationResource() { };
+
+            // Act
+            var result = await _controller.CheckIfLinkIsExpired(resource);
+
+            // Assert
+            Assert.IsInstanceOf<BadRequestObjectResult>(result);
+        }
+
+        [Test]
+        public async Task CheckIfLinkIsExpired_UserNotFound_ReturnsBadRequestWithNotFoundMessage()
+        {
+            // Arrange
+            var resource = new CheckTokenExpirationResource { Email = "nzUAzZAabBtCpKSHb2O4CfbLo1Oq1CgsCp+orlmNCsI=", Token = "token" };
+
+            _mockConfiguration.Setup(x => x.GetSection("SecretKeyForEncryptAndDecrypt").Value).Returns("1234567890123456");
+            _mockUserManager.Setup(m => m.FindByEmailAsync("test@example.com")).ReturnsAsync((ApplicationUser)null);
+
+            // Act
+            var result = await _controller.CheckIfLinkIsExpired(resource);
+
+            // Assert
+            var badRequestResult = result as BadRequestObjectResult;
+            Assert.NotNull(badRequestResult);
+
+            string message = (string)badRequestResult.Value;
+            Assert.AreEqual(Messages.NotFound.ToDescriptionString(), message);
+        }
+
+        [Test]
+        public async Task CheckIfLinkIsExpired_ValidToken_ReturnsResetPasswordMessage()
+        {
+            // Arrange
+            var resource = new CheckTokenExpirationResource { Email = "nzUAzZAabBtCpKSHb2O4CfbLo1Oq1CgsCp+orlmNCsI=", Token = "validToken" };
+            var user = new ApplicationUser();
+            _mockConfiguration.Setup(x => x.GetSection("SecretKeyForEncryptAndDecrypt").Value).Returns("1234567890123456");
+            _mockUserManager.Setup(m => m.FindByEmailAsync("test@example.com")).ReturnsAsync(user);
+            _mockUserManager.Setup(m => m.VerifyUserTokenAsync(user, It.IsAny<string>(), It.IsAny<string>(), resource.Token)).ReturnsAsync(true);
+
+            // Act
+            var result = await _controller.CheckIfLinkIsExpired(resource);
+
+            // Assert
+            var okResult = result as OkObjectResult;
+            Assert.NotNull(okResult);
+
+            bool success = (bool)(okResult.Value?.GetType().GetProperty("Success")?.GetValue(okResult.Value));
+            string message = (string)(okResult.Value?.GetType().GetProperty("Message")?.GetValue(okResult.Value));
+
+            Assert.IsTrue(success);
+            Assert.AreEqual(Messages.ResetPassword.ToDescriptionString(), message);
+        }
+
+        [Test]
+        public async Task CheckIfLinkIsExpired_ExpiredToken_ReturnsLinkExpiredMessage()
+        {
+            // Arrange
+            var resource = new CheckTokenExpirationResource { Email = "nzUAzZAabBtCpKSHb2O4CfbLo1Oq1CgsCp+orlmNCsI=", Token = "expiredToken" };
+            var user = new ApplicationUser();
+            _mockConfiguration.Setup(x => x.GetSection("SecretKeyForEncryptAndDecrypt").Value).Returns("1234567890123456");
+            _mockUserManager.Setup(m => m.FindByEmailAsync("test@example.com")).ReturnsAsync(user);
+            _mockUserManager.Setup(m => m.VerifyUserTokenAsync(user, It.IsAny<string>(), It.IsAny<string>(), resource.Token)).ReturnsAsync(false);
+
+            // Act
+            var result = await _controller.CheckIfLinkIsExpired(resource);
+
+            // Assert
+            var okResult = result as OkObjectResult;
+            Assert.NotNull(okResult);
+
+            bool success = (bool)(okResult.Value?.GetType().GetProperty("Success")?.GetValue(okResult.Value));
+            string message = (string)(okResult.Value?.GetType().GetProperty("Message")?.GetValue(okResult.Value));
+
+            Assert.IsFalse(success);
+            Assert.AreEqual(Messages.LinkExpired.ToDescriptionString(), message);
+        }
+
+        // Add more test cases as needed
+
+
+        // Add more test cases following a similar structure for other scenarios
+
 
     }
 }

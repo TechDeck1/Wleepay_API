@@ -64,7 +64,6 @@ namespace wleepay.API.Areas.Portal.Controllers
         private readonly IUsersStaffRoleService _usersStaffRoleService;
         private readonly IVerificationService _verificationService;
         private readonly ILookupService _lookupService;
-        private readonly ISMSService _SMSService;
 
         public AccountController(UserManager<ApplicationUser> userManager,
             RoleManager<ApplicationRole> roleManager,
@@ -84,8 +83,8 @@ namespace wleepay.API.Areas.Portal.Controllers
             ISystemActivityLogsService systemActivityLogsService,
             IUsersStaffRoleService usersStaffRoleService,
             IVerificationService verificationService,
-            ILookupService lookupService,
-            ISMSService sMSService)
+            ILookupService lookupService
+           )
         {
             _userManager = userManager;
             _roleManager = roleManager;
@@ -106,7 +105,6 @@ namespace wleepay.API.Areas.Portal.Controllers
             _usersStaffRoleService = usersStaffRoleService;
             _verificationService = verificationService;
             _lookupService = lookupService;
-            _SMSService = sMSService;
         }
 
         [SystemLock]
@@ -385,7 +383,7 @@ namespace wleepay.API.Areas.Portal.Controllers
                             }
 
                             //generate jwt token
-                            var token = GenerateJSONWebToken(userDetailsToInsert, roleEnumStringValue.ToString());
+                            var token = _userDetailsService.GenerateJSONWebToken(userDetailsToInsert, roleEnumStringValue.ToString());
 
                             CompleteSignUpResourceModel completeSignUpResourceModel = new CompleteSignUpResourceModel();
                             completeSignUpResourceModel.Email = userDetail.EmailId;
@@ -743,9 +741,10 @@ namespace wleepay.API.Areas.Portal.Controllers
             try
             {
 
-            if (!ModelState.IsValid)
-                return BadRequest();
-
+            if(string.IsNullOrEmpty(resource.Email) || string.IsNullOrEmpty(resource.Token))
+            {
+               return BadRequest(Messages.BadRequest.ToDescriptionString());
+            }
             var secretKey = _configuration.GetSection("SecretKeyForEncryptAndDecrypt").Value; //secret key
             string decryptedEmail = Common.Decrypt(resource.Email, secretKey); // helper function for decryption
 
@@ -1390,22 +1389,19 @@ namespace wleepay.API.Areas.Portal.Controllers
                 {
                     string verificationCode = Common.GenerateVerificationCode(4); // Generate a 4-digit verification code
                     string message = "Your one time code is " + verificationCode;
-                    var code = _SMSService.sendMessage(message, userDetails.PhoneNumber);// service for send otp
+                    var code = _smsService.sendMessage(message, userDetails.PhoneNumber);// service for send otp
                     var PhoneNumber = Common.MaskPhoneNumber(userDetails.PhoneNumber);
-
-                    if (!string.IsNullOrEmpty(code))
+                   
+                    var updateDatabase = await _userDetailsService.UpdateUserVerificationCode(model.UserId, verificationCode);
+                    return Ok(new
                     {
-                        //update database
-                        var updateDatabase = await _userDetailsService.UpdateUserVerificationCode(model.UserId, verificationCode);
-                        return Ok(new
-                        {
-                            Phone = PhoneNumber,
-                            Sucess = true
+                        Phone = PhoneNumber,
+                        Sucess = true
 
-                        });
-                    }
+                    });
+                    
                 }
-                return BadRequest();
+                return BadRequest(Messages.InvalidRequest.ToDescriptionString());
 
             }
             catch (Exception ex)
@@ -1613,7 +1609,7 @@ namespace wleepay.API.Areas.Portal.Controllers
                         string message = "The wleepay staff with this email " + model.EmailId + " is now deactivated";
                         systemActivityLog.Action = ActionsForSystemLogs.Deactivate.ToDescriptionString();
                         systemActivityLog.Description = GenericMessagesForSystemLogs.AccountDeActivated.ToDescriptionString();
-                        _SMSService.sendMessage(message, userDetails.PhoneNumber);
+                        _smsService.sendMessage(message, userDetails.PhoneNumber);
 
                         //send email to staff for deactivation
                         AccountDeactivatedTemplateForStaff accountDeactivatedTemplateForStaff = new AccountDeactivatedTemplateForStaff

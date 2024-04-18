@@ -269,11 +269,13 @@ namespace wleepay.API.Controllers
             {
                 //get user
                 var userDetails = await _userDetailsService.GetUserDetailsByPhone(loginRequest.PhoneNo);
-                //generate token
-                var token = GenerateJSONWebToken(userDetails);
 
                 //get role details
                 var userRole = await _userManager.GetRolesAsync(user);
+                
+                //generate token
+                var token = await _userDetailsService.GenerateJSONWebToken(userDetails, userRole[0]);
+
                 //get wallet details for user
                 var wallet = await _walletService.GetWalletsByUserId(userDetails.UserId);
 
@@ -291,15 +293,15 @@ namespace wleepay.API.Controllers
                     UserId = user.Id,
                     Success = true,
                     Token = token,
-                    IsLoggedInVerified = userDetails.IsLoggedIn,
-                    FirstName = userDetails.FirstName,
-                    LastName = userDetails.LastName,
+                    IsLoggedInVerified = userDetails?.IsLoggedIn,
+                    FirstName = userDetails?.FirstName,
+                    LastName = userDetails?.LastName,
                     //ProfilePic = System.Convert.ToBase64String((System.IO.File.ReadAllBytes(userDetails.Image))),
-                    ProfilePic = System.IO.File.Exists(userDetails.Image) ? System.Convert.ToBase64String((System.IO.File.ReadAllBytes(userDetails.Image))) : userDetails.Image,
+                    ProfilePic = System.IO.File.Exists(userDetails?.Image) ? System.Convert.ToBase64String((System.IO.File.ReadAllBytes(userDetails?.Image))) : userDetails?.Image,
                     //ProfilePic = userDetails.Image,
-                    PhoneNumber = userDetails.PhoneNumber,
-                    AccountNumber = userDetails.AccountNumber,
-                    KYCLevel = userDetails.KYCLevelDetail.Name,
+                    PhoneNumber = userDetails?.PhoneNumber,
+                    AccountNumber = userDetails?.AccountNumber,
+                    KYCLevel = userDetails?.KYCLevelDetail?.Name,
                     USDBalance = usdBalance,
                     lrdBalance = lrdBalance,
                     Role = userRole?[0]
