@@ -539,7 +539,7 @@ namespace wleepay.API.Controllers
                         await _kycDocumentsService.UpdateKYCDocument(kycDetailsToAdd);
                     }
                     await _userDetailsService.AddOrUpdateUserDetails(combinedUserData);
-                    if (editUserDetailResource.StaffRoleId == (int)Role.Staff)
+                    if (editUserDetailResource.StaffRoleId != 0 )
                     {
                         UsersStaffRole usersStaffRole = new UsersStaffRole();
                         usersStaffRole.UserId = applicationUser.Id;
