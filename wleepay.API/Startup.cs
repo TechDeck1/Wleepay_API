@@ -252,6 +252,7 @@ namespace wleepay.API
             {
                 endpoints.MapControllers();
                 endpoints.MapHub<StatusHubClient>("/status");
+                endpoints.MapHub<TicketsNotificationHubClient>("/notification");
                 endpoints.MapControllerRoute(
                        name: "areas",
                        pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}"

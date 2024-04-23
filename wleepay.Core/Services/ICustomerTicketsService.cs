@@ -13,6 +13,7 @@ namespace wleepay.Core.Services
         Task<CustomerServiceResponseResource> GetAllCustomerTickets(string phoneNumber, int status, int pageIndex, int? pageSize);
         Task<CustomerServiceResponseResource> GetCustomerTicketsByPhoneNumber(string phone, int pageIndex, int pageSize);
         Task<CustomerTickets> GetCustomerTicketsById(int Id);
+        Task<IEnumerable<CustomerTickets>> GetCustomerTicketsByUserId(string UserId);
 
 
     }

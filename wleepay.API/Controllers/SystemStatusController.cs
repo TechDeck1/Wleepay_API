@@ -71,7 +71,7 @@ namespace wleepay.API.Controllers
             try
             {
                 var result = await _systemStatusService.GetSystemStatus();
-                statusHub.Clients.All.SendStatusToUser(result);
+                //statusHub.Clients.All.SendStatusToUser(result);
                 return Ok(result);
             }
             catch (Exception ex)

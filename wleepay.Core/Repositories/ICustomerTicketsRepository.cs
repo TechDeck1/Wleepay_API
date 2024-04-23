@@ -11,11 +11,10 @@ namespace wleepay.Core.Repositories
     {
 
         Task<CustomerTickets> AddUpdateCustomerTickets(CustomerTickets customerTickets);
-        Task<CustomerServiceResponseResource> GetAllCustomerTickets(string phoneNumber,int status, int pageIndex, int? pageSize);
+        Task<CustomerServiceResponseResource> GetAllCustomerTickets(string? phoneNumber,int status, int pageIndex, int? pageSize);
+        Task<IEnumerable<CustomerTickets>> GetAllTickets();
         Task<CustomerServiceResponseResource> GetCustomerTicketsByPhoneNumber(string phone, int pageIndex, int pageSize);
         Task<CustomerTickets> GetCustomerTicketsById(int Id);
-
-
-
+        Task<IEnumerable<CustomerTickets>> GetCustomerTicketsByUserId(string userId);
     }
 }

@@ -143,7 +143,22 @@ namespace wleepay.Data.Repositories
                                                     .FirstOrDefaultAsync();
         }
 
+        public async Task<IEnumerable<CustomerTickets>> GetCustomerTicketsByUserId(string userId)
+        {
+            return await WPContext.CustomerTickets.Where(x => x.UserId == userId)
+                                                    .Include(x => x.Notes.OrderByDescending(x => x.CreatedDate))
+                                                    .Include(x => x.IssueType)
+                                                    .ToListAsync();
+        }
 
+        public async Task<IEnumerable<CustomerTickets>> GetAllTickets()
+        {
+
+            var tickets = await WPContext.CustomerTickets
+                                                 .Include(x => x.Notes.OrderByDescending(x => x.CreatedDate))
+                                                .Include(x => x.IssueType).OrderByDescending(x => x.CreatedDate).ToListAsync();
+            return tickets;
+        }
     }
-    
+
 }

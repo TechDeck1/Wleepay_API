@@ -2,10 +2,13 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using wleepay.API.Hub;
 using wleepay.API.Middleware;
 using wleepay.API.Resources;
 using wleepay.Communication.Interface;
@@ -15,6 +18,7 @@ using wleepay.Core.Enums;
 using wleepay.Core.Models;
 using wleepay.Core.Services;
 using wleepay.Services;
+using static DevExpress.Xpo.Helpers.AssociatedCollectionCriteriaHelper;
 
 namespace wleepay.API.Controllers
 {
@@ -33,6 +37,8 @@ namespace wleepay.API.Controllers
         private readonly IEmailSender _emailSender;
         private readonly INotesService _notesService;
         private readonly IWhatsAppService _whatsAppService;
+        private IHubContext<StatusHubClient, IStatusHubClient> statusHub;
+
 
         public TicketsController(
             ICustomerTicketsService customerTickets,
@@ -42,7 +48,8 @@ namespace wleepay.API.Controllers
             IUserDetailService userDetailsService,
             IEmailSender emailSender,
             INotesService notesService,
-            IWhatsAppService whatsAppService)
+            IWhatsAppService whatsAppService,
+            IHubContext<StatusHubClient, IStatusHubClient> _statusHub)
         {
 
             _customerTicketsService = customerTickets;
@@ -53,6 +60,8 @@ namespace wleepay.API.Controllers
             _emailSender = emailSender;
             _notesService = notesService;
             _whatsAppService = whatsAppService;
+             statusHub = _statusHub;
+
         }
 
         [HttpPost]
@@ -212,6 +221,11 @@ namespace wleepay.API.Controllers
             notesToInsert.Note = request.Note;
             notesToInsert.AddedBy = request.UserId;
             var notes = await _notesService.AddUpdateNotes(notesToInsert);
+           
+            ticket.Status = (int)CustomerTicketStatus.Updated;
+            ticket.UpdatedDate = DateTime.UtcNow;
+            var tickets = await _customerTicketsService.AddUpdateCustomerTickets(ticket);
+
             var smsMessageTemplate = MessagesTemplates.CustomerTicketReplyMessageSmsTemplate(memberDetails.UserDetail.FirstName, request.Note);
             var message = MessagesTemplates.CustomerTicketReplyMessage(memberDetails.UserDetail.FirstName, request.Note);
             var subject = Messages.SubjectForTicketUpdated.ToDescriptionString();
@@ -361,6 +375,27 @@ namespace wleepay.API.Controllers
 
         }
 
+        [HttpGet("{Id}/userId")]
+        public async Task<IActionResult> GetCustomerTicketsByUserId(string Id)
+        {
+            try
+            {
+                var tickets = await _customerTicketsService.GetCustomerTicketsByUserId(Id);
+                var customerTickets = _mapper.Map<IEnumerable<CustomerTickets>, IEnumerable<AddCustomerTicketResponseResource>>(tickets);
+
+                return Ok(new
+                {
+                    customerTickets = customerTickets,
+                });
+            }
+            catch (Exception ex)
+            {
+
+                throw ex.InnerException;
+            }
+
+
+        }
 
     }
 }

@@ -8,5 +8,6 @@ namespace wleepay.Core.Enums
     {
         Open = 1,
         Closed = 2,
+        Updated = 3,
     }
 }
