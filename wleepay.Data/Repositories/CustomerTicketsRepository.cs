@@ -69,14 +69,14 @@ namespace wleepay.Data.Repositories
             }
             else if (string.IsNullOrEmpty(phoneNumber) && status == (int)CustomerTicketStatus.Open)
             {
-                tickets = await WPContext.CustomerTickets.Where(x => x.Status == (int)CustomerTicketStatus.Open)
+                tickets = await WPContext.CustomerTickets.Where(x => x.Status == (int)CustomerTicketStatus.Open || x.Status == (int)CustomerTicketStatus.Updated)
                                                            .Include(x => x.Notes.OrderByDescending(x => x.CreatedDate))
                                                            .Include(x => x.IssueType)
                                                            .OrderByDescending(x => x.CreatedDate)
                                                            .Skip(skipCount)
                                                            .Take(takeCount)
                                                            .ToListAsync();
-                totalCount = await WPContext.CustomerTickets.Where(x => x.Status == (int)CustomerTicketStatus.Open).CountAsync();
+                totalCount = await WPContext.CustomerTickets.Where(x => x.Status == (int)CustomerTicketStatus.Open || x.Status == (int)CustomerTicketStatus.Updated).CountAsync();
 
             }
             else if (!string.IsNullOrEmpty(phoneNumber) && status == (int)CustomerTicketStatus.Closed)
@@ -88,19 +88,19 @@ namespace wleepay.Data.Repositories
                                                              .Skip(skipCount)
                                                              .Take(takeCount)
                                                              .ToListAsync();
-                totalCount = await WPContext.CustomerTickets.Where(x => x.Status == (int)CustomerTicketStatus.Open && x.PhoneNumber.Contains(phoneNumber)).CountAsync();
+                totalCount = await WPContext.CustomerTickets.Where(x => x.Status == (int)CustomerTicketStatus.Open && x.PhoneNumber.Contains(phoneNumber) || x.Status == (int)CustomerTicketStatus.Updated).CountAsync();
 
             }
             else
             {
-                tickets = await WPContext.CustomerTickets.Where(x => x.Status == (int)CustomerTicketStatus.Open && x.PhoneNumber.Contains(phoneNumber))
+                tickets = await WPContext.CustomerTickets.Where(x => x.Status == (int)CustomerTicketStatus.Open && x.PhoneNumber.Contains(phoneNumber) || x.Status == (int)CustomerTicketStatus.Updated)
                                                            .Include(x => x.Notes.OrderByDescending(x => x.CreatedDate))
                                                            .Include(x => x.IssueType)
                                                            .OrderByDescending(x => x.CreatedDate)
                                                            .Skip(skipCount)
                                                            .Take(takeCount)
                                                            .ToListAsync();
-                totalCount = await WPContext.CustomerTickets.Where(x => x.Status == (int)CustomerTicketStatus.Open && x.PhoneNumber.Contains(phoneNumber)).CountAsync();
+                totalCount = await WPContext.CustomerTickets.Where(x => x.Status == (int)CustomerTicketStatus.Open && x.PhoneNumber.Contains(phoneNumber) || x.Status == (int)CustomerTicketStatus.Updated).CountAsync();
 
             }
 
