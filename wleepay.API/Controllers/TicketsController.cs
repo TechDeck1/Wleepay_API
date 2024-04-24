@@ -223,8 +223,9 @@ namespace wleepay.API.Controllers
             notesToInsert.AddedBy = request.UserId;
             var notes = await _notesService.AddUpdateNotes(notesToInsert);
            
-            ticket.Status = (int)CustomerTicketStatus.Updated;
+            ticket.Status = (int)CustomerTicketStatus.Open;
             ticket.UpdatedDate = DateTime.UtcNow;
+            ticket.NotificationStatus = (int)CustomerTicketNotificationStatus.New;
             var tickets = await _customerTicketsService.AddUpdateCustomerTickets(ticket);
 
             var smsMessageTemplate = MessagesTemplates.CustomerTicketReplyMessageSmsTemplate(memberDetails.UserDetail.FirstName, request.Note);
@@ -289,7 +290,9 @@ namespace wleepay.API.Controllers
 
             ticketToUpdated.Status = (int)CustomerTicketStatus.Closed;
             ticketToUpdated.UpdatedDate = DateTime.UtcNow;
-            var tickets = await _customerTicketsService.AddUpdateCustomerTickets(ticketToUpdated);
+            ticketToUpdated.NotificationStatus = (int)CustomerTicketNotificationStatus.New;
+
+             var tickets = await _customerTicketsService.AddUpdateCustomerTickets(ticketToUpdated);
 
             if (tickets != null)
             {
