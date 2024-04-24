@@ -37,7 +37,7 @@ namespace wleepay.API.Controllers
         private readonly IEmailSender _emailSender;
         private readonly INotesService _notesService;
         private readonly IWhatsAppService _whatsAppService;
-        private IHubContext<StatusHubClient, IStatusHubClient> statusHub;
+        private IHubContext<TicketsNotificationHubClient, ITicketsNotificationHubClient> notificationHub;
 
 
         public TicketsController(
@@ -49,7 +49,7 @@ namespace wleepay.API.Controllers
             IEmailSender emailSender,
             INotesService notesService,
             IWhatsAppService whatsAppService,
-            IHubContext<StatusHubClient, IStatusHubClient> _statusHub)
+            IHubContext<TicketsNotificationHubClient, ITicketsNotificationHubClient> _notificationHub)
         {
 
             _customerTicketsService = customerTickets;
@@ -60,7 +60,7 @@ namespace wleepay.API.Controllers
             _emailSender = emailSender;
             _notesService = notesService;
             _whatsAppService = whatsAppService;
-             statusHub = _statusHub;
+             notificationHub = _notificationHub;
 
         }
 
@@ -381,6 +381,8 @@ namespace wleepay.API.Controllers
             try
             {
                 var tickets = await _customerTicketsService.GetCustomerTicketsByUserId(Id);
+                notificationHub.Clients.All.GetLatestNotificationForTickets(tickets);
+
                 var customerTickets = _mapper.Map<IEnumerable<CustomerTickets>, IEnumerable<AddCustomerTicketResponseResource>>(tickets);
 
                 return Ok(new
