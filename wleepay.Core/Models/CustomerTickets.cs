@@ -25,6 +25,7 @@ namespace wleepay.Core.Models
         public DateTime? UpdatedDate { get; set; }
         public ICollection<Notes> Notes { get; set; }
         public bool IsSeen { get; set; }
+        public int NotificationStatus { get; set; }
 
         public virtual IssueType IssueType { get; set; }
 

@@ -13,6 +13,7 @@ namespace wleepay.API.Resources
         public string UserId { get; set; }
         public DateTime CreatedDate { get; set; }
         public DateTime? UpdatedDate { get; set; }
+        public int NotificationStatus { get; set; }
         public ICollection<NotesResource> Notes { get; set; }
     }
 }
