@@ -292,7 +292,12 @@ namespace wleepay.API.Controllers
             ticketToUpdated.UpdatedDate = DateTime.UtcNow;
             ticketToUpdated.NotificationStatus = (int)CustomerTicketNotificationStatus.New;
 
-             var tickets = await _customerTicketsService.AddUpdateCustomerTickets(ticketToUpdated);
+            var tickets = await _customerTicketsService.AddUpdateCustomerTickets(ticketToUpdated);
+
+            var allTickets = await _customerTicketsService.GetCustomerTicketsByUserId(tickets.UserId);
+
+            notificationHub.Clients.All.GetLatestNotificationForTickets(allTickets);
+
 
             if (tickets != null)
             {
