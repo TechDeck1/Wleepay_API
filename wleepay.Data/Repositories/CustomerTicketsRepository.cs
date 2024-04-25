@@ -33,15 +33,15 @@ namespace wleepay.Data.Repositories
                 await WPContext.CustomerTickets.AddAsync(customerTickets);
 
             }
+            else
+            {
+                var tickets = await WPContext.CustomerTickets.Where(x => x.Id == customerTickets.Id)
+                                                             .Include(x => x.Notes)
+                                                             .FirstOrDefaultAsync();
+                tickets.UpdatedDate = DateTime.UtcNow;
+                tickets.NotificationStatus = customerTickets.NotificationStatus;
+            }
             await WPContext.SaveChangesAsync();
-            //else
-            //{
-            //    //var tickets = await WPContext.CustomerTickets.Where(x => x.Id == customerTickets.Id)
-            //    //                                             .Include(x => x.Notes)
-            //    //                                             .FirstOrDefaultAsync();
-            //    //tickets.UpdatedDate = DateTime.UtcNow;
-            //    //await WPContext.SaveChangesAsync();
-            //}
             return customerTickets;
 
         }

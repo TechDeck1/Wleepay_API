@@ -95,7 +95,7 @@ namespace wleepay.API.Controllers
                 customerTicketsToInsert.IsSeen = false;
                 customerTicketsToInsert.UserId = customerTickets.UserId;
                 customerTicketsToInsert.Source = userDetail.UserRoles.FirstOrDefault().Role.Name;
-                customerTicketsToInsert.NotificationStatus = (int)CustomerTicketNotificationStatus.New;
+                customerTicketsToInsert.NotificationStatus = customerTickets.NotificationStatus;
 
                 customerTicketsToInsert.Notes.FirstOrDefault().AddedBy = userDetail.UserDetail.UserId;
                 var tickets = await _customerTicketsService.AddUpdateCustomerTickets(customerTicketsToInsert);
@@ -143,6 +143,7 @@ namespace wleepay.API.Controllers
             {
                 var tickets = await _customerTicketsService.GetAllCustomerTickets(phoneNumber, status, pageIndex, pageSize);
                 var customerTicketsToInsert = _mapper.Map<IEnumerable<CustomerTickets>, IEnumerable<AddCustomerTicketResponseResource>>(tickets.CustomerTickets);
+                var hubtest= notificationHub.Clients.All.GetLatestNotificationForTickets(tickets.CustomerTickets);
 
                 return Ok(new
                 {
