@@ -145,7 +145,7 @@ namespace wleepay.Data.Repositories
 
         public async Task<IEnumerable<CustomerTickets>> GetCustomerTicketsByUserId(string userId)
         {
-            return await WPContext.CustomerTickets.Where(x => x.UserId == userId)
+            return await WPContext.CustomerTickets.Where(x => x.UserId == userId && x.NotificationStatus == (int)CustomerTicketNotificationStatus.New)
                                                     .Include(x => x.Notes.OrderByDescending(x => x.CreatedDate))
                                                     .Include(x => x.IssueType)
                                                     .ToListAsync();
