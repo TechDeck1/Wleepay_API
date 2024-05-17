@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,7 +22,10 @@ namespace wleepay.API.Mapping
 
 
                 .ReverseMap();
-            CreateMap<ApplicationUser, UserAccountResource>().ReverseMap();
+            CreateMap<ApplicationUser, UserAccountResource>() .ForPath(dest => dest.UserRoles.Name, src => src.MapFrom(x => x.UserRoles.FirstOrDefault().Role.Name))
+                .ForPath(dest => dest.UserRoles.Id, src => src.MapFrom(x => x.UserRoles.FirstOrDefault().Role.Id))
+                .ForPath(dest => dest.UserRoles.NormalizedName, src => src.MapFrom(x => x.UserRoles.FirstOrDefault().Role.NormalizedName))
+                .ReverseMap();
             
             CreateMap<AddUserDetailsResource, UserDetail>().ReverseMap();
             CreateMap<Address, AddressResource>().ReverseMap();

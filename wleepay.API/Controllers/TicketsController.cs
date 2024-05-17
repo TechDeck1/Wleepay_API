@@ -90,6 +90,7 @@ namespace wleepay.API.Controllers
 
                 customerTickets.Status = (int)CustomerTicketStatus.Open;
                 customerTickets.CreatedDate = DateTime.UtcNow;
+                customerTickets.UpdatedDate = DateTime.UtcNow;
                 var customerTicketsToInsert = _mapper.Map<AddCustomerTicketRequestResponse, CustomerTickets>(customerTickets);
 
                 customerTicketsToInsert.IsSeen = false;
@@ -122,7 +123,7 @@ namespace wleepay.API.Controllers
                 return Ok(new
                 {
                     status = true,
-                    message = Messages.CustomerTicketCreated.ToDescriptionString()
+                    message = tickets.Id <= 0 ? Messages.CustomerTicketCreated.ToDescriptionString() : Messages.TicketUpdated.ToDescriptionString()
                 });
             }
             catch (Exception ex)

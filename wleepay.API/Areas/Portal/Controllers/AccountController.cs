@@ -1271,9 +1271,7 @@ namespace wleepay.API.Areas.Portal.Controllers
                 UserDetail updatedUser = null;
 
                 systemActivityLog.Description = GenericMessagesForSystemLogs.SuccessfullyLoggedIn.ToDescriptionString();
-
-                await _systemActivityLogsService.AddSystemLogs(systemActivityLog);
-
+                           
                 if (userRole[0] == "Staff" || userRole[0] == Role.SystemAdmin.ToDescriptionString())
                 {
                     return Ok(new
@@ -1285,7 +1283,9 @@ namespace wleepay.API.Areas.Portal.Controllers
                 }
 
                 if (!userDetails.IsLoggedIn)
-                    updatedUser = await _userDetailsService.UpdateUserLoggedInStatus(userDetails.UserId, true);
+                     updatedUser = await _userDetailsService.UpdateUserLoggedInStatus(userDetails.UserId, true);
+                    
+                await _systemActivityLogsService.AddSystemLogs(systemActivityLog);
 
                 return Ok(new
                 {
@@ -1387,7 +1387,6 @@ namespace wleepay.API.Areas.Portal.Controllers
                 throw ex;
             }
 
-
         }
 
         [AllowAnonymous]
@@ -1440,6 +1439,15 @@ namespace wleepay.API.Areas.Portal.Controllers
 
                             userDetails.Permissions = Common.Encrypt(jsonString, secretKey).ToString();
                         }
+
+                        SystemActivityLog systemActivityLog = new SystemActivityLog();
+                        systemActivityLog.UserId = user.Id;
+                        systemActivityLog.Email = model.Email;
+                        systemActivityLog.IpAddress = GetClientIpAddress();
+                        systemActivityLog.Action = ActionsForSystemLogs.Login.ToDescriptionString();
+                        systemActivityLog.Description = GenericMessagesForSystemLogs.SuccessfullyLoggedIn.ToDescriptionString();
+
+                        await _systemActivityLogsService.AddSystemLogs(systemActivityLog);
 
                         return Ok(new
                         {

@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using DevExpress.Xpo.Logger;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -135,7 +135,9 @@ namespace wleepay.API.Controllers
         {
             var agentList = await _userDetailsService.GetUserByRole(Core.Enums.Role.Agent.GetHashCode());
             var agentListResource = _mapper.Map<IEnumerable<ApplicationUser>, IEnumerable<UserAccountResource>>(agentList);
-            return Ok(agentListResource);
+
+            var result = agentListResource.Where(agent => agent.UserDetail.Status == 1).ToArray();
+            return Ok(result);
         }
 
         [HttpPost("all")]
@@ -386,11 +388,16 @@ namespace wleepay.API.Controllers
         {
             var paymentRequest = await _userDetailsService.GetIncomingOutGoingPaymentRequest(paymentRequestParam.UserId, paymentRequestParam.Type,paymentRequestParam.TransferStatus,paymentRequestParam.PageSize,paymentRequestParam.PageIndex);
 
-            if (paymentRequest == null)
+          if (paymentRequest == null)
                 return Ok(new List<TransactionResource>());
            
             var transactionResource = _mapper.Map<IEnumerable<Transaction>, IEnumerable<TransactionHistoryResource>>(paymentRequest);
-            return Ok(transactionResource);
+          foreach (var item in transactionResource)
+          {
+             var time = Helpers.Common.ConvertISTtoLiberiaTime(item.CreatedDate);
+        item.CreatedDate = time;
+          }
+             return Ok(transactionResource);
         }
 
         [HttpGet("{userId}/createdBy")]

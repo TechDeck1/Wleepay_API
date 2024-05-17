@@ -1,4 +1,4 @@
-﻿using System.IO;
+using System.IO;
 using System.Security.Cryptography;
 using System.Text;
 using System;
@@ -95,5 +95,16 @@ namespace wleepay.API.Helpers
             }
         }
 
-    }
+        public static DateTime ConvertISTtoLiberiaTime(DateTime istTime)
+        {
+          // Liberia Time is typically 5 hours behind IST
+          TimeSpan timeDifference = TimeSpan.FromHours(5) + TimeSpan.FromMinutes(30);
+
+          // Convert the timestamp from IST to Liberia Time
+          DateTime liberiaTime = istTime.Subtract(timeDifference);
+
+          return liberiaTime;
+        }
+
+  }
 }

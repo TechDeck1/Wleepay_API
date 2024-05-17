@@ -22,9 +22,6 @@ namespace wleepay.Communication.Services
             TwilioClient.Init(accountSid, authToken);
         }
 
-        //client's to from number +12027318402 
-        //client's From phone number +18564223507 
-        //chnage both while deploying changes to live
         public string sendMessage(string message, string phoneNumber)
         {
             try
