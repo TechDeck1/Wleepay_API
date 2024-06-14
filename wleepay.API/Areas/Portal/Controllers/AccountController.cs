@@ -36,6 +36,7 @@ using wleepay.Services;
 using static wleepay.Communication.EmailTemplates.AccountDeactivatedTemplate;
 using static wleepay.Communication.EmailTemplates.EmailLockOutTemplate;
 using wleepay.Communication.Services;
+using System.Reflection;
 
 namespace wleepay.API.Areas.Portal.Controllers
 {
@@ -1298,7 +1299,7 @@ namespace wleepay.API.Areas.Portal.Controllers
 
             }
 
-            return BadRequest(Messages.BadRequest.ToDescriptionString());
+            return BadRequest(new { Message = Messages.BadRequest.ToDescriptionString() });
             }
             catch (Exception ex)
             {
@@ -1497,8 +1498,8 @@ namespace wleepay.API.Areas.Portal.Controllers
             }
             catch (Exception ex)
             {
-
-                throw ex;
+                _logger.LogError(ex, $"An error occurred in {MethodBase.GetCurrentMethod().ToString()}");
+                return BadRequest($"An error occurred while verifying user in account module");
             }
 
         }
