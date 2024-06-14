@@ -449,22 +449,22 @@ namespace wleepay.API.Controllers
         {
             try
             {
-                var userDetail = await _userDetailsService.GetStaffPermissionsById(userId);
-                string[] deserializedNumbers = JsonSerializer.Deserialize<string[]>(userDetail?.UserDetail?.Permissions);
-                var userResource = _mapper.Map<ApplicationUser, StaffPermissionsResponseResource>(userDetail);
+                var userDetail = await _userDetailsService.GetUserDetailsById(userId);
+                var userResource = _mapper.Map<UserDetail, UserDetailResource>(userDetail);
+                string[] deserializedNumbers = JsonSerializer.Deserialize<string[]>(userResource?.Permissions);
 
-                if (!string.IsNullOrEmpty(userDetail?.UserDetail?.Permissions))
+                if (!string.IsNullOrEmpty(userResource?.Permissions))
                 {
                     string jsonString = JsonSerializer.Serialize(deserializedNumbers);
 
                     var secretKey = "1234567890123456";
 
-                    userDetail.UserDetail.Permissions = Common.Encrypt(jsonString, secretKey).ToString();
+                    userResource.Permissions = Common.Encrypt(jsonString, secretKey).ToString();
                 }
                 return Ok(new
                 {
                     userResource,
-                    session = userDetail.UserDetail.Permissions
+                    session = userResource.Permissions
                 });
             }
             catch (Exception ex)

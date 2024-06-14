@@ -299,9 +299,10 @@ namespace wleepay.Data.Repositories
 
         public async Task<ApplicationUser> GetStaffPermissionsById(string userId)
         {
-            return await WPContext.Users.Where(user => user.Id == userId)
+            var permissions = await WPContext.Users.Where(user => user.Id == userId)
                             .Include(s => s.UserDetail)
                             .FirstOrDefaultAsync();
+            return permissions;
         }
     }
 }

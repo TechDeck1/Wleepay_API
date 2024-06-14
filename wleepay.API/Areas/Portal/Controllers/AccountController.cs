@@ -1398,10 +1398,13 @@ namespace wleepay.API.Areas.Portal.Controllers
                 //get user details
                 var userDetails = await _userDetailsService.GetUserDetailsById(model.UserId);
 
+                var userResource = _mapper.Map<UserDetail, UserDetailResource>(userDetails);
+
+
                 var user = await _userManager.FindByEmailAsync(model.Email);
 
                 //logic for getting time difference from expiry date and current date
-                var expiryDate = userDetails.VerificationExpiry;
+                var expiryDate = userResource.VerificationExpiry;
                 DateTime currentDate = DateTime.UtcNow; // Use UtcNow to compare in UTC
 
                 TimeSpan difference = (TimeSpan)(currentDate - expiryDate);
@@ -1413,7 +1416,7 @@ namespace wleepay.API.Areas.Portal.Controllers
                 object Data = null;
                 if (!isExpired)
                 {
-                    if (userDetails.VerificationCode == model.Code)
+                    if (userResource.VerificationCode == model.Code)
                     {
                         var userRole = await _userManager.GetRolesAsync(user);
 
@@ -1429,15 +1432,15 @@ namespace wleepay.API.Areas.Portal.Controllers
                         var ipAddress = HttpContext.Connection.RemoteIpAddress.ToString();
                         _logger.LogInformation($"Action: {ControllerContext.ActionDescriptor.ActionName}, User: {userDetails.UserId}, Timestamp: {DateTime.UtcNow}, IP: {ipAddress}");
 
-                        if (!string.IsNullOrEmpty(userDetails?.Permissions))
+                        if (!string.IsNullOrEmpty(userResource?.Permissions))
                         {
-                            string[] deserializedNumbers = JsonSerializer.Deserialize<string[]>(userDetails?.Permissions);
+                            string[] deserializedNumbers = JsonSerializer.Deserialize<string[]>(userResource?.Permissions);
 
                             string jsonString = JsonSerializer.Serialize(deserializedNumbers);
 
                             var secretKey = _configuration.GetSection("SecretKeyForEncryptAndDecrypt").Value; //secret key
 
-                            userDetails.Permissions = Common.Encrypt(jsonString, secretKey).ToString();
+                            userResource.Permissions = Common.Encrypt(jsonString, secretKey).ToString();
                         }
 
                         SystemActivityLog systemActivityLog = new SystemActivityLog();
@@ -1459,7 +1462,7 @@ namespace wleepay.API.Areas.Portal.Controllers
                                 Role = userRole?[0]
 
                             }),
-                            Session = userDetails.Permissions,
+                            Session = userResource.Permissions,
                             IsExpired = false,
                             Success = true,
                             Message = Messages.VerificationSuccessfull.ToDescriptionString()
