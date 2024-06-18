@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using wleepay.API.Helpers;
 using wleepay.API.Hub;
 using wleepay.API.Middleware;
 using wleepay.API.Resources;
@@ -335,8 +336,7 @@ namespace wleepay.API.Controllers
             }
             catch (Exception ex)
             {
-
-                throw ex.InnerException;
+                throw new CustomException("Sorry, we're having trouble in closing ticket. Please contact support.");
             }
 
         }

@@ -569,7 +569,7 @@ namespace wleepay.API.Controllers
             }
             catch (Exception ex)
             {
-                throw ex.InnerException;
+                throw new CustomException("Sorry, we're having trouble in editing info. Please contact support.");
             }
 
         }

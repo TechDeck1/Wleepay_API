@@ -261,7 +261,8 @@ namespace wleepay.API.Areas.Portal.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex.ToString());
-                throw ex.InnerException;
+                throw new CustomException("Sorry, we're having trouble in registering user. Please contact support.");
+
             }
         }
 
@@ -421,7 +422,7 @@ namespace wleepay.API.Areas.Portal.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex.ToString());
-                throw ex.InnerException;
+                throw new CustomException("Sorry, we're having trouble in registering user. Please contact support.");
             }
         }
         
@@ -491,7 +492,7 @@ namespace wleepay.API.Areas.Portal.Controllers
             catch (Exception)
             {
 
-                throw;
+                throw new CustomException("Sorry, we're having trouble sending password reset link. Please contact support.");
             }
         }
 
@@ -572,7 +573,7 @@ namespace wleepay.API.Areas.Portal.Controllers
             catch (Exception ex)
             {
 
-                throw ex.InnerException;
+                throw new CustomException("Sorry, we're having trouble reset your password. Please contact support.");
             }
 
         }
@@ -1059,7 +1060,7 @@ namespace wleepay.API.Areas.Portal.Controllers
             catch (Exception ex)
             {
 
-                throw ex.InnerException;
+                throw new CustomException("Sorry, we're having trouble in set password. Please contact support.");
             }
         }
 
@@ -1118,7 +1119,7 @@ namespace wleepay.API.Areas.Portal.Controllers
             catch (Exception ex)
             {
 
-                throw ex.InnerException;
+                throw new CustomException("Sorry, we're having trouble in updating permissions. Please contact support.");
             }
 
         }
@@ -1380,7 +1381,7 @@ namespace wleepay.API.Areas.Portal.Controllers
 
                     });
                 }
-                return BadRequest();
+                return BadRequest($"Sorry, we're having trouble sending OTP. Please contact support.");
 
             }
             catch (Exception ex)
@@ -1392,7 +1393,7 @@ namespace wleepay.API.Areas.Portal.Controllers
 
         [AllowAnonymous]
         [HttpPost("VerifyCode")]
-        public async Task<IActionResult> VerifyCode([FromBody] VerificationModel model)
+        public async Task<IActionResult> VerifyCode([FromBody] VerificationModel model) 
         {
             try
             {
@@ -1498,8 +1499,7 @@ namespace wleepay.API.Areas.Portal.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, $"An error occurred in {MethodBase.GetCurrentMethod().ToString()}");
-                return BadRequest($"An error occurred while verifying user in account module");
+                throw new CustomException("Sorry, we're having trouble verifying your account. Please contact support.");
             }
 
         }
@@ -1714,7 +1714,7 @@ namespace wleepay.API.Areas.Portal.Controllers
             catch (System.Exception ex)
             {
 
-                throw ex.InnerException;
+                throw new CustomException("Sorry, we're having trouble deleting logs. Please contact support.");
             }
 
         }
