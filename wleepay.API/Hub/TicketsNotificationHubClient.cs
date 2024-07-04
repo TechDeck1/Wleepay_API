@@ -18,7 +18,8 @@ namespace wleepay.API.Hub
             {
                 var result = await _unitOfWork.CustomerTickets.GetCustomerTicketsByUserId(userId);
                 await Clients.All.GetLatestNotificationForTickets(result);
-            }
+            
+        }
         
     }
 }

@@ -23,7 +23,8 @@ namespace wleepay.Data.Context
         public DbSet<TransferFee> TransferFees { get; set; }
         public DbSet<Address> Addresses { get; set; }
         public DbSet<SecurityQuestions> SecurityQuestions { get; set; }
-       // public DbSet<TokenStorage> TokenStorage { get; set; }
+      
+        // public DbSet<TokenStorage> TokenStorage { get; set; }
         public DbSet<SystemActivityLog> SystemActivities { get; set; }
         public DbSet<IssueType> IssueType { get; set; }
         public DbSet<CustomerTickets> CustomerTickets { get; set; }

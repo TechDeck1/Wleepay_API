@@ -33,6 +33,9 @@ using wleepay.Core.Repositories;
 using wleepay.Data.Repositories;
 using wleepay.API.Hub;
 using wleepay.API.Middleware;
+using FirebaseAdmin;
+using Google.Apis.Auth.OAuth2;
+using System.IO;
 
 namespace wleepay.API
 {
@@ -41,6 +44,11 @@ namespace wleepay.API
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
+            
+            FirebaseApp.Create(new AppOptions()
+            {
+                Credential = GoogleCredential.FromFile(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "wleepay-84b9f-firebase-adminsdk-rimd0-a5dbd3a972.json")),
+            });
         }
 
         public IConfiguration Configuration { get; }
@@ -220,6 +228,8 @@ namespace wleepay.API
             {
                 options.Filters.Add<OtpExceptionFilter>();
             });
+
+         
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

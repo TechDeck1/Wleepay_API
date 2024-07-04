@@ -38,7 +38,7 @@ namespace wleepay.API.Controllers
         private readonly IEmailSender _emailSender;
         private readonly INotesService _notesService;
         private readonly IWhatsAppService _whatsAppService;
-        private IHubContext<TicketsNotificationHubClient, ITicketsNotificationHubClient> notificationHub;
+        private IHubContext<TicketsNotificationHubClient, ITicketsNotificationHubClient> _notificationHub;
 
 
         public TicketsController(
@@ -50,7 +50,7 @@ namespace wleepay.API.Controllers
             IEmailSender emailSender,
             INotesService notesService,
             IWhatsAppService whatsAppService,
-            IHubContext<TicketsNotificationHubClient, ITicketsNotificationHubClient> _notificationHub)
+            IHubContext<TicketsNotificationHubClient, ITicketsNotificationHubClient> notificationHub)
         {
 
             _customerTicketsService = customerTickets;
@@ -61,7 +61,7 @@ namespace wleepay.API.Controllers
             _emailSender = emailSender;
             _notesService = notesService;
             _whatsAppService = whatsAppService;
-             notificationHub = _notificationHub;
+            _notificationHub = notificationHub;
 
         }
 
@@ -145,7 +145,7 @@ namespace wleepay.API.Controllers
             {
                 var tickets = await _customerTicketsService.GetAllCustomerTickets(phoneNumber, status, pageIndex, pageSize);
                 var customerTicketsToInsert = _mapper.Map<IEnumerable<CustomerTickets>, IEnumerable<AddCustomerTicketResponseResource>>(tickets.CustomerTickets);
-                var hubtest= notificationHub.Clients.All.GetLatestNotificationForTickets(tickets.CustomerTickets);
+                var hubtest= _notificationHub.Clients.All.GetLatestNotificationForTickets(tickets.CustomerTickets);
 
                 return Ok(new
                 {
@@ -299,7 +299,7 @@ namespace wleepay.API.Controllers
 
             var allTickets = await _customerTicketsService.GetCustomerTicketsByUserId(tickets.UserId);
 
-            notificationHub.Clients.All.GetLatestNotificationForTickets(allTickets);
+            _notificationHub.Clients.All.GetLatestNotificationForTickets(allTickets);
 
 
             if (tickets != null)
@@ -392,7 +392,7 @@ namespace wleepay.API.Controllers
             try
             {
                 var tickets = await _customerTicketsService.GetCustomerTicketsByUserId(Id);
-                notificationHub.Clients.All.GetLatestNotificationForTickets(tickets);
+                _notificationHub.Clients.All.GetLatestNotificationForTickets(tickets);
 
                 var customerTickets = _mapper.Map<IEnumerable<CustomerTickets>, IEnumerable<AddCustomerTicketResponseResource>>(tickets);
 
