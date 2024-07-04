@@ -304,5 +304,16 @@ namespace wleepay.Data.Repositories
                             .FirstOrDefaultAsync();
             return permissions;
         }
+
+        public async Task<UserDetail> AddDeviceIdAndToken(string deviceId, string token, string userId)
+        {
+            if(userId == null) { throw new ArgumentNullException("userId"); }
+            var userDetails = await WPContext.UserDetail.Where(user => user.UserId == userId).FirstOrDefaultAsync();
+            userDetails.DeviceId = deviceId;
+            userDetails.FcmToken = token;
+            await WPContext.SaveChangesAsync();
+            return userDetails;
+
+        }
     }
 }

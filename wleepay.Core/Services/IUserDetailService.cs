@@ -30,6 +30,7 @@ namespace wleepay.Core.Services
         Task<UserDetailsResponseResource> SearchUsersByEmail(string searchText, Core.Enums.Role role , int index, int size);
         Task<TransactionAndUserResponseResource> VerifyUserAccountByPhone(string phone);
         Task<ApplicationUser> GetStaffPermissionsById(string userId);
+        Task<UserDetail> AddDeviceIdAndToken(string deviceId, string token, string userId);
 
 
     }

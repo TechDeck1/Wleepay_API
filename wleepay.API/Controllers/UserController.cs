@@ -574,6 +574,20 @@ namespace wleepay.API.Controllers
 
         }
 
+        [HttpPut("AddDeviceId")]
+        public async Task<IActionResult> AddDeviceIdAndToken(FirebaseMessageRequest request)
+        {
+            try 
+            {
+              var response = await _userDetailsService.AddDeviceIdAndToken(request.DeviceId, request.DeviceToken, request.UserId);
+                return Ok(response);
+            }
+            catch (Exception ex) 
+            {
+                throw ex;
+            }
+        }
+
         #region helper methods
         private async Task<string> uploadDocument(IFormFile file, string userId, string containerName = "kyc-document")
         {

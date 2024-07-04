@@ -38,15 +38,16 @@ namespace wleepay.Services
             }
 
             await _unitOfWork.CommitAsync();
-            var data =await _unitOfWork.UserDetail.GetUserDetailsById(detail.UserId);
+            var data = await _unitOfWork.UserDetail.GetUserDetailsById(detail.UserId);
             return await _unitOfWork.UserDetail.GetUserDetailsById(detail.UserId);
         }
 
         public async Task<UserDetail> GetUserDetailsById(string userId)
         {
-            var userDetails= await _unitOfWork.UserDetail.GetUserDetailsById(userId);
+            var userDetails = await _unitOfWork.UserDetail.GetUserDetailsById(userId);
             return userDetails;
         }
+
         public async Task<ApplicationUser> GetApplicationUserById(string userId)
         {
             return await _unitOfWork.UserDetail.GetApplicationUser(userId, string.Empty, string.Empty, true, true);
@@ -129,17 +130,18 @@ namespace wleepay.Services
             return await _unitOfWork.UserDetail.IsAccountAlreadyExists(accountNumber);
         }
 
-        public async Task<IEnumerable<Transaction>> GetIncomingOutGoingPaymentRequest(string userId, Core.Enums.PaymentRequestType type, Core.Enums.TransactionStatus transactionStatus,int pageSize, int pageIndex) {
+        public async Task<IEnumerable<Transaction>> GetIncomingOutGoingPaymentRequest(string userId, Core.Enums.PaymentRequestType type, Core.Enums.TransactionStatus transactionStatus, int pageSize, int pageIndex)
+        {
             var user = await _unitOfWork.UserDetail.GetApplicationUser(userId, string.Empty, string.Empty, true);
             if (user == null)
                 return null;
             //get user wallets
 
-            var paymentRequest = await _transactionService.GetPaymentRequestByStatus(user.Wallets.Select(s => s.Id), type, transactionStatus,  pageSize,  pageIndex);
+            var paymentRequest = await _transactionService.GetPaymentRequestByStatus(user.Wallets.Select(s => s.Id), type, transactionStatus, pageSize, pageIndex);
 
             return paymentRequest;
         }
-      
+
         public async Task<UserDetail> UpdateUserVerificationCode(string userId, string VerificationCode)
         {
             var userToUpdate = await _unitOfWork.UserDetail.GetUserDetailsById(userId);
@@ -152,7 +154,7 @@ namespace wleepay.Services
             return userToUpdate;
         }
 
-        public async Task<UserDetail> UpdateUserStatus(string userId, int status )
+        public async Task<UserDetail> UpdateUserStatus(string userId, int status)
         {
             var userToUpdate = await _unitOfWork.UserDetail.GetUserDetailsById(userId);
             if (userToUpdate != null)
@@ -171,7 +173,7 @@ namespace wleepay.Services
 
         public async Task<UserDetailsResponseResource> SearchUsersByEmail(string searchText, Core.Enums.Role role, int index, int size)
         {
-            return await _unitOfWork.UserDetail.SearchApplicationUserByEmail(searchText, role , index, size );
+            return await _unitOfWork.UserDetail.SearchApplicationUserByEmail(searchText, role, index, size);
         }
 
         public async Task<TransactionAndUserResponseResource> VerifyUserAccountByPhone(string phone)
@@ -182,6 +184,11 @@ namespace wleepay.Services
         public async Task<ApplicationUser> GetStaffPermissionsById(string userId)
         {
             return await _unitOfWork.UserDetail.GetStaffPermissionsById(userId);
+        }
+
+        public async Task<UserDetail> AddDeviceIdAndToken(string deviceId, string token, string userId)
+        {
+            return await _unitOfWork.UserDetail.AddDeviceIdAndToken(deviceId, token,userId);
         }
     }
 }
