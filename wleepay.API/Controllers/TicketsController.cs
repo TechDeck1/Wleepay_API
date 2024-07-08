@@ -15,6 +15,7 @@ using wleepay.API.Resources;
 using wleepay.Communication.Interface;
 using wleepay.Communication.Templates;
 using wleepay.Core.Common;
+using wleepay.Core.DTO.Request;
 using wleepay.Core.Enums;
 using wleepay.Core.Models;
 using wleepay.Core.Services;
@@ -38,6 +39,7 @@ namespace wleepay.API.Controllers
         private readonly IEmailSender _emailSender;
         private readonly INotesService _notesService;
         private readonly IWhatsAppService _whatsAppService;
+        private readonly IFirebaseNotification _firebaseNotification;
         private IHubContext<TicketsNotificationHubClient, ITicketsNotificationHubClient> _notificationHub;
 
 
@@ -50,7 +52,8 @@ namespace wleepay.API.Controllers
             IEmailSender emailSender,
             INotesService notesService,
             IWhatsAppService whatsAppService,
-            IHubContext<TicketsNotificationHubClient, ITicketsNotificationHubClient> notificationHub)
+            IHubContext<TicketsNotificationHubClient, ITicketsNotificationHubClient> notificationHub,
+            IFirebaseNotification firebaseNotification)
         {
 
             _customerTicketsService = customerTickets;
@@ -62,7 +65,7 @@ namespace wleepay.API.Controllers
             _notesService = notesService;
             _whatsAppService = whatsAppService;
             _notificationHub = notificationHub;
-
+            _firebaseNotification = firebaseNotification;
         }
 
         [HttpPost]
@@ -304,7 +307,17 @@ namespace wleepay.API.Controllers
 
             if (tickets != null)
             {
-
+                FirebaseMessageRequest firebaseMessageRequest = new FirebaseMessageRequest();
+                firebaseMessageRequest.Title = "Ticket is closed";
+                firebaseMessageRequest.Body= " Ticket is closed for issue type " + ticketToUpdated.IssueType.Description;
+                firebaseMessageRequest.DeviceToken = userDetail.UserDetail.FcmToken;
+                firebaseMessageRequest.DeviceId = userDetail.UserDetail.DeviceId;
+                firebaseMessageRequest.UserId = userDetail.UserDetail.UserId;
+                firebaseMessageRequest.FirstName = userDetail.UserDetail.FirstName;
+                firebaseMessageRequest.LastName = userDetail.UserDetail.LastName;
+               
+                var sendNotification = _firebaseNotification.SendFirebaseMessageRequest(firebaseMessageRequest);
+                
                 var message = MessagesTemplates.CustomerTicketClosedMessage(ticketToUpdated.IssueType.Description, ticketId);
                 var subject = Messages.SubjectForTicketClosed.ToDescriptionString();
 
