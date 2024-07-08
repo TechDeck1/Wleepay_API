@@ -70,6 +70,7 @@ namespace wleepay.API.Controllers
 
         [HttpPost]
         [SystemLock]
+        [AllowAnonymous]
         public async Task<IActionResult> AddUpdateCustomerTickets(AddCustomerTicketRequestResponse customerTickets)
         {
             try
@@ -238,8 +239,21 @@ namespace wleepay.API.Controllers
             var message = MessagesTemplates.CustomerTicketReplyMessage(memberDetails.UserDetail.FirstName, request.Note);
             var subject = Messages.SubjectForTicketUpdated.ToDescriptionString();
 
-            if (request.Note != null)
-            {
+            FirebaseMessageRequest firebaseMessageRequest = new FirebaseMessageRequest();
+            firebaseMessageRequest.Title = "Note added";
+            firebaseMessageRequest.Body = "New note is added for ticket number "+ticket.Id;
+            firebaseMessageRequest.DeviceToken = userDetail.UserDetail.FcmToken;
+            firebaseMessageRequest.DeviceId = userDetail.UserDetail.DeviceId;
+            firebaseMessageRequest.UserId = userDetail.UserDetail.UserId;
+            firebaseMessageRequest.FirstName = userDetail.UserDetail.FirstName;
+            firebaseMessageRequest.LastName = userDetail.UserDetail.LastName;
+
+            var sendNotification = _firebaseNotification.SendFirebaseMessageRequest(firebaseMessageRequest);
+
+
+                if (request.Note != null)
+                {
+
                 if (ticket.CustomerContact == (int)CustomerServiceContactMethod.Email)
                 {
                     //await _emailSender.ReplyForCustomerTicket(message, memberDetails.Email, subject);

@@ -175,6 +175,7 @@ namespace wleepay.API
             services.AddTransient<IVerificationService, VerificationService>();
             services.AddTransient<ICashFlowService, CashFlowHistoryService>();
             services.AddTransient<ISystemStatusService, SystemStatusService>();
+            services.AddTransient<IFirebaseNotification, FirebaseMessageService>();
 
 
             //swagger config
