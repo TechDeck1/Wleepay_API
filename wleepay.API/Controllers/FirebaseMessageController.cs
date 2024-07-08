@@ -5,6 +5,7 @@ using System;
 using wleepay.API.Resources;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using wleepay.Core.DTO.Request;
 
 
 namespace wleepay.API.Controllers
@@ -18,7 +19,7 @@ namespace wleepay.API.Controllers
 
         public FirebaseMessageController() { }
 
-
+        [AllowAnonymous]
         [HttpPost]
         public async Task<IActionResult> SendMessageAsync([FromBody] FirebaseMessageRequest request)
         {

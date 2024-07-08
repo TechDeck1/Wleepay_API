@@ -18,6 +18,7 @@ using wleepay.API.Middleware;
 using wleepay.API.Resources;
 using wleepay.API.Validators;
 using wleepay.Core.Common;
+using wleepay.Core.DTO.Request;
 using wleepay.Core.DTO.Response;
 using wleepay.Core.Enums;
 using wleepay.Core.Models;
@@ -575,7 +576,7 @@ namespace wleepay.API.Controllers
         }
 
         [HttpPut("AddDeviceId")]
-        public async Task<IActionResult> AddDeviceIdAndToken(FirebaseMessageRequest request)
+        public async Task<IActionResult> AddDeviceIdAndToken(FirebaseAddDeviceRequest request)
         {
             try 
             {
