@@ -98,8 +98,9 @@ namespace wleepay.Data.Configurations
             builder.Property(u => u.Permissions);
             builder.Property(u => u.DeviceId);
             builder.Property(u => u.FcmToken);
-            builder.Property(u => u.FailedLoginAttempt);
-
+            builder.Property(u => u.FailedLoginAttempt)
+                    .IsRequired()
+                    .HasDefaultValue(0);
 
             builder
                 .HasOne(u => u.ApplicationUser)
