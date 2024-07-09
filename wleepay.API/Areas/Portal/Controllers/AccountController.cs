@@ -1285,7 +1285,7 @@ namespace wleepay.API.Areas.Portal.Controllers
                 }
 
                 if (!userDetails.IsLoggedIn)
-                     updatedUser = await _userDetailsService.UpdateUserLoggedInStatus(userDetails.UserId, true);
+                     updatedUser = await _userDetailsService.UpdateUserLoggedInStatus(userDetails.UserId, true,0);
                     
                 await _systemActivityLogsService.AddSystemLogs(systemActivityLog);
 
@@ -1429,7 +1429,7 @@ namespace wleepay.API.Areas.Portal.Controllers
 
                         //set logged in status to true if first log in
                         if (!userDetails.IsLoggedIn)
-                            updatedUser = await _userDetailsService.UpdateUserLoggedInStatus(userDetails.UserId, true);
+                            updatedUser = await _userDetailsService.UpdateUserLoggedInStatus(userDetails.UserId, true,0);
 
                         var ipAddress = HttpContext.Connection.RemoteIpAddress.ToString();
                         _logger.LogInformation($"Action: {ControllerContext.ActionDescriptor.ActionName}, User: {userDetails.UserId}, Timestamp: {DateTime.UtcNow}, IP: {ipAddress}");

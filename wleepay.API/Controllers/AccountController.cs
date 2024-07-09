@@ -33,6 +33,7 @@ using static wleepay.Communication.EmailTemplates.PasswordChangeTemplate;
 using static wleepay.Communication.EmailTemplates.AccountActivatedTemplate;
 using wleepay.API.Middleware;
 using Microsoft.SqlServer.Management.Smo;
+using ApplicationRole = wleepay.Core.Models.ApplicationRole;
 
 namespace wleepay.API.Controllers
 {
