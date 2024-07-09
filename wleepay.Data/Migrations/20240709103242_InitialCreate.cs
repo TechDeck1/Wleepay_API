@@ -431,8 +431,8 @@ namespace wleepay.Data.Migrations
                     UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Type = table.Column<int>(type: "int", nullable: false),
                     DocumentNumber = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: true),
-                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValue: new DateTime(2024, 7, 9, 11, 38, 19, 756, DateTimeKind.Local).AddTicks(3309)),
-                    UpdatedDate = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValue: new DateTime(2024, 7, 9, 11, 38, 19, 758, DateTimeKind.Local).AddTicks(4213))
+                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValue: new DateTime(2024, 7, 9, 16, 2, 41, 795, DateTimeKind.Local).AddTicks(8418)),
+                    UpdatedDate = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValue: new DateTime(2024, 7, 9, 16, 2, 41, 797, DateTimeKind.Local).AddTicks(1213))
                 },
                 constraints: table =>
                 {
@@ -603,8 +603,8 @@ namespace wleepay.Data.Migrations
                     CurrencyId = table.Column<int>(type: "int", nullable: false),
                     Type = table.Column<int>(type: "int", nullable: false),
                     Balance = table.Column<double>(type: "float", nullable: false),
-                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValue: new DateTime(2024, 7, 9, 11, 38, 19, 796, DateTimeKind.Local).AddTicks(1292)),
-                    UpdatedDate = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValue: new DateTime(2024, 7, 9, 11, 38, 19, 796, DateTimeKind.Local).AddTicks(1779))
+                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValue: new DateTime(2024, 7, 9, 16, 2, 41, 832, DateTimeKind.Local).AddTicks(3000)),
+                    UpdatedDate = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValue: new DateTime(2024, 7, 9, 16, 2, 41, 832, DateTimeKind.Local).AddTicks(3579))
                 },
                 constraints: table =>
                 {
@@ -685,7 +685,7 @@ namespace wleepay.Data.Migrations
                     Amount = table.Column<double>(type: "float", nullable: false),
                     TransferTypeId = table.Column<int>(type: "int", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValue: new DateTime(2024, 7, 9, 11, 38, 19, 787, DateTimeKind.Local).AddTicks(8876)),
+                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValue: new DateTime(2024, 7, 9, 16, 2, 41, 823, DateTimeKind.Local).AddTicks(5504)),
                     ParentId = table.Column<long>(type: "bigint", nullable: true),
                     Status = table.Column<int>(type: "int", nullable: true)
                 },
@@ -729,7 +729,7 @@ namespace wleepay.Data.Migrations
             migrationBuilder.InsertData(
                 table: "AspNetUsers",
                 columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Email", "EmailConfirmed", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
-                values: new object[] { "07ac193d-26e7-4039-9440-fbb53988b878", 0, "7382922e-5b89-4b7f-b6ec-08e404d0f498", "wleeadmin@wleepay.com", true, false, null, "WLEEADMIN@WLEEPAY.COM", "WLEEADMIN@WLEEPAY.COM", "AQAAAAEAACcQAAAAEM27FMm5Cl7o3kAUrO2fit9YClgzKK/j7wEZtppQx/Yt18PZlwGlAcPnoML/ktC2eA==", false, "c1fcc7bf-4591-43cf-bad2-c3c0521647c1", false, "wleeadmin@wleepay.com" });
+                values: new object[] { "07ac193d-26e7-4039-9440-fbb53988b878", 0, "06af0db9-2028-4e93-a017-d3ce1546dee8", "wleeadmin@wleepay.com", true, false, null, "WLEEADMIN@WLEEPAY.COM", "WLEEADMIN@WLEEPAY.COM", "AQAAAAEAACcQAAAAEF6eopBFZ+OTbMl//1Xa74iALpIQ9rhvC6XFDpamW4slVGZmGfTVyD+HgcI4eua+fw==", false, "24958fd1-2ec4-4f9e-9868-0ae6223772a1", false, "wleeadmin@wleepay.com" });
 
             migrationBuilder.InsertData(
                 table: "County",
@@ -926,19 +926,19 @@ namespace wleepay.Data.Migrations
             migrationBuilder.InsertData(
                 table: "UserDetail",
                 columns: new[] { "Id", "AccountNumber", "CountyId", "CreatedBy", "CreatedDate", "DOB", "DeviceId", "FailedLoginAttempt", "FcmToken", "FirstName", "Gender", "HireDate", "Image", "IsLoggedIn", "KYCDocumentImage", "KYCLevel", "KYCStatusId", "LastName", "Permissions", "PhoneNumber", "SecurityAnswerText", "SecurityQuestionId", "Status", "UpdatedDate", "UserId", "VerificationCode", "VerificationExpiry", "WleePhoneNumber" },
-                values: new object[] { 1, "50285368", 2, null, new DateTime(2024, 7, 9, 11, 38, 19, 781, DateTimeKind.Local).AddTicks(6499), new DateTime(1985, 9, 20, 5, 1, 50, 563, DateTimeKind.Unspecified), null, 0, null, "Admin", "Male", null, null, true, null, null, 2, "Admin", null, "+919845654543", null, 0, 0, new DateTime(2024, 7, 9, 11, 38, 19, 781, DateTimeKind.Local).AddTicks(6838), "07ac193d-26e7-4039-9440-fbb53988b878", null, null, null });
+                values: new object[] { 1, "50285368", 2, null, new DateTime(2024, 7, 9, 16, 2, 41, 817, DateTimeKind.Local).AddTicks(3008), new DateTime(1985, 9, 20, 5, 1, 50, 563, DateTimeKind.Unspecified), null, 0, null, "Admin", "Male", null, null, true, null, null, 2, "Admin", null, "+919845654543", null, 0, 0, new DateTime(2024, 7, 9, 16, 2, 41, 817, DateTimeKind.Local).AddTicks(3357), "07ac193d-26e7-4039-9440-fbb53988b878", null, null, null });
 
             migrationBuilder.InsertData(
                 table: "Wallet",
                 columns: new[] { "Id", "Balance", "CreatedDate", "CurrencyId", "Type", "UpdatedDate", "UserId" },
                 values: new object[,]
                 {
-                    { 5L, 0.0, new DateTime(2024, 7, 9, 11, 38, 19, 797, DateTimeKind.Local).AddTicks(4662), 1, 4, new DateTime(2024, 7, 9, 11, 38, 19, 797, DateTimeKind.Local).AddTicks(4663), "07ac193d-26e7-4039-9440-fbb53988b878" },
-                    { 4L, 0.0, new DateTime(2024, 7, 9, 11, 38, 19, 797, DateTimeKind.Local).AddTicks(4656), 2, 2, new DateTime(2024, 7, 9, 11, 38, 19, 797, DateTimeKind.Local).AddTicks(4658), "07ac193d-26e7-4039-9440-fbb53988b878" },
-                    { 3L, 0.0, new DateTime(2024, 7, 9, 11, 38, 19, 797, DateTimeKind.Local).AddTicks(4577), 1, 2, new DateTime(2024, 7, 9, 11, 38, 19, 797, DateTimeKind.Local).AddTicks(4578), "07ac193d-26e7-4039-9440-fbb53988b878" },
-                    { 2L, 0.0, new DateTime(2024, 7, 9, 11, 38, 19, 797, DateTimeKind.Local).AddTicks(4566), 2, 1, new DateTime(2024, 7, 9, 11, 38, 19, 797, DateTimeKind.Local).AddTicks(4570), "07ac193d-26e7-4039-9440-fbb53988b878" },
-                    { 1L, 0.0, new DateTime(2024, 7, 9, 11, 38, 19, 797, DateTimeKind.Local).AddTicks(3883), 1, 1, new DateTime(2024, 7, 9, 11, 38, 19, 797, DateTimeKind.Local).AddTicks(4184), "07ac193d-26e7-4039-9440-fbb53988b878" },
-                    { 6L, 0.0, new DateTime(2024, 7, 9, 11, 38, 19, 797, DateTimeKind.Local).AddTicks(4668), 2, 4, new DateTime(2024, 7, 9, 11, 38, 19, 797, DateTimeKind.Local).AddTicks(4669), "07ac193d-26e7-4039-9440-fbb53988b878" }
+                    { 5L, 0.0, new DateTime(2024, 7, 9, 16, 2, 41, 833, DateTimeKind.Local).AddTicks(8885), 1, 4, new DateTime(2024, 7, 9, 16, 2, 41, 833, DateTimeKind.Local).AddTicks(8887), "07ac193d-26e7-4039-9440-fbb53988b878" },
+                    { 4L, 0.0, new DateTime(2024, 7, 9, 16, 2, 41, 833, DateTimeKind.Local).AddTicks(8879), 2, 2, new DateTime(2024, 7, 9, 16, 2, 41, 833, DateTimeKind.Local).AddTicks(8880), "07ac193d-26e7-4039-9440-fbb53988b878" },
+                    { 3L, 0.0, new DateTime(2024, 7, 9, 16, 2, 41, 833, DateTimeKind.Local).AddTicks(8820), 1, 2, new DateTime(2024, 7, 9, 16, 2, 41, 833, DateTimeKind.Local).AddTicks(8821), "07ac193d-26e7-4039-9440-fbb53988b878" },
+                    { 2L, 0.0, new DateTime(2024, 7, 9, 16, 2, 41, 833, DateTimeKind.Local).AddTicks(8807), 2, 1, new DateTime(2024, 7, 9, 16, 2, 41, 833, DateTimeKind.Local).AddTicks(8811), "07ac193d-26e7-4039-9440-fbb53988b878" },
+                    { 1L, 0.0, new DateTime(2024, 7, 9, 16, 2, 41, 833, DateTimeKind.Local).AddTicks(7069), 1, 1, new DateTime(2024, 7, 9, 16, 2, 41, 833, DateTimeKind.Local).AddTicks(7855), "07ac193d-26e7-4039-9440-fbb53988b878" },
+                    { 6L, 0.0, new DateTime(2024, 7, 9, 16, 2, 41, 833, DateTimeKind.Local).AddTicks(8895), 2, 4, new DateTime(2024, 7, 9, 16, 2, 41, 833, DateTimeKind.Local).AddTicks(8896), "07ac193d-26e7-4039-9440-fbb53988b878" }
                 });
 
             migrationBuilder.InsertData(

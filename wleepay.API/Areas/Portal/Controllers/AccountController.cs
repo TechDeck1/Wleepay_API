@@ -1265,7 +1265,6 @@ namespace wleepay.API.Areas.Portal.Controllers
             if (result.Succeeded)
             {
 
-
                 //generate token
                 var token = GenerateJSONWebToken(userDetails, userRole?[0]);
 
@@ -1301,6 +1300,7 @@ namespace wleepay.API.Areas.Portal.Controllers
             }
 
             return BadRequest(new { Message = Messages.BadRequest.ToDescriptionString() });
+
             }
             catch (Exception ex)
             {

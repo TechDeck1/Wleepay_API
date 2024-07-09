@@ -318,7 +318,6 @@ namespace wleepay.API.Controllers
 
             _notificationHub.Clients.All.GetLatestNotificationForTickets(allTickets);
 
-
             if (tickets != null)
             {
                 FirebaseMessageRequest firebaseMessageRequest = new FirebaseMessageRequest();

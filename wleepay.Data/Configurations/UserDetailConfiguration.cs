@@ -95,6 +95,10 @@ namespace wleepay.Data.Configurations
                .Property(u => u.WleePhoneNumber);
 
             builder.Property(u => u.CreatedBy);
+            builder.Property(u => u.Permissions);
+            builder.Property(u => u.DeviceId);
+            builder.Property(u => u.FcmToken);
+            builder.Property(u => u.FailedLoginAttempt);
 
 
             builder

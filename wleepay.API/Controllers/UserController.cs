@@ -580,6 +580,8 @@ namespace wleepay.API.Controllers
         {
             try 
             {
+              //var deviceIds = JsonSerializer.Serialize(request.DeviceId);
+              //var deviceTokens = JsonSerializer.Serialize(request.DeviceToken);
               var response = await _userDetailsService.AddDeviceIdAndToken(request.DeviceId, request.DeviceToken, request.UserId);
                 return Ok(response);
             }
