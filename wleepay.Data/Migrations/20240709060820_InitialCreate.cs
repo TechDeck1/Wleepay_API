@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace wleepay.Data.Migrations
 {
-    public partial class InitialMigration : Migration
+    public partial class InitialCreate : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -86,12 +86,32 @@ namespace wleepay.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "IssueType",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Type = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Description = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
+                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UpdatedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_IssueType", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "KYCLevel",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false),
+                    TransactionDayLimit = table.Column<double>(type: "float", nullable: true),
+                    TransactionMonthLimit = table.Column<double>(type: "float", nullable: true),
+                    AccountBalanceLimit = table.Column<double>(type: "float", nullable: true),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
@@ -110,6 +130,79 @@ namespace wleepay.Data.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_KYCStatus", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "SecurityQuestions",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Question = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_SecurityQuestions", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "StaffPermissionType",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_StaffPermissionType", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "StaffRoles",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_StaffRoles", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "SystemActivities",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    UserId = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Email = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Action = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    IpAddress = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_SystemActivities", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "SystemStatus",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Reason = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Status = table.Column<bool>(type: "bit", nullable: false),
+                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_SystemStatus", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -134,11 +227,29 @@ namespace wleepay.Data.Migrations
                     TaxAmount = table.Column<double>(type: "float", nullable: false),
                     OrganizationFee = table.Column<double>(type: "float", nullable: false),
                     AgentCommission = table.Column<double>(type: "float", nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_TransferFee", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Verification",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    VerificationCode = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    VerificationExpiry = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Verification", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -187,6 +298,7 @@ namespace wleepay.Data.Migrations
                     AddressLine2 = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Street = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
                     City = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
+                    District = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     State = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
                     ZipCode = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: true),
                     Latitude = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: true),
@@ -257,14 +369,12 @@ namespace wleepay.Data.Migrations
                         name: "FK_AspNetUserRoles_AspNetRoles_RoleId",
                         column: x => x.RoleId,
                         principalTable: "AspNetRoles",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_AspNetUserRoles_AspNetUsers_UserId",
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -321,8 +431,8 @@ namespace wleepay.Data.Migrations
                     UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Type = table.Column<int>(type: "int", nullable: false),
                     DocumentNumber = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: true),
-                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValue: new DateTime(2021, 10, 12, 12, 29, 58, 168, DateTimeKind.Local).AddTicks(8761)),
-                    UpdatedDate = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValue: new DateTime(2021, 10, 12, 12, 29, 58, 170, DateTimeKind.Local).AddTicks(5661))
+                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValue: new DateTime(2024, 7, 9, 11, 38, 19, 756, DateTimeKind.Local).AddTicks(3309)),
+                    UpdatedDate = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValue: new DateTime(2024, 7, 9, 11, 38, 19, 758, DateTimeKind.Local).AddTicks(4213))
                 },
                 constraints: table =>
                 {
@@ -336,6 +446,33 @@ namespace wleepay.Data.Migrations
                         name: "FK_KYCDocuments_DocumentType_Type",
                         column: x => x.Type,
                         principalTable: "DocumentType",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "CustomerTickets",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    PhoneNumber = table.Column<string>(type: "nvarchar(13)", maxLength: 13, nullable: false),
+                    UserId = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    IssueTypeId = table.Column<int>(type: "int", nullable: false),
+                    Source = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CustomerContact = table.Column<int>(type: "int", nullable: false),
+                    Status = table.Column<int>(type: "int", nullable: false),
+                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UpdatedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    IsSeen = table.Column<bool>(type: "bit", nullable: false, defaultValue: false),
+                    NotificationStatus = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CustomerTickets", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_CustomerTickets_IssueType_IssueTypeId",
+                        column: x => x.IssueTypeId,
+                        principalTable: "IssueType",
                         principalColumn: "Id");
                 });
 
@@ -358,7 +495,20 @@ namespace wleepay.Data.Migrations
                     IsLoggedIn = table.Column<bool>(type: "bit", nullable: false),
                     AccountNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UpdatedDate = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    UpdatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    KYCDocumentImage = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    VerificationCode = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    VerificationExpiry = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Status = table.Column<int>(type: "int", nullable: false),
+                    WleePhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    HireDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    SecurityQuestionId = table.Column<int>(type: "int", nullable: false),
+                    SecurityAnswerText = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
+                    CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Permissions = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    DeviceId = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    FcmToken = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    FailedLoginAttempt = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -382,6 +532,32 @@ namespace wleepay.Data.Migrations
                         name: "FK_UserDetail_KYCStatus_KYCStatusId",
                         column: x => x.KYCStatusId,
                         principalTable: "KYCStatus",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "UsersStaffRole",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    StaffRoleId = table.Column<int>(type: "int", nullable: false),
+                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UpdatedDate = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UsersStaffRole", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_UsersStaffRole_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_UsersStaffRole_StaffRoles_StaffRoleId",
+                        column: x => x.StaffRoleId,
+                        principalTable: "StaffRoles",
                         principalColumn: "Id");
                 });
 
@@ -427,8 +603,8 @@ namespace wleepay.Data.Migrations
                     CurrencyId = table.Column<int>(type: "int", nullable: false),
                     Type = table.Column<int>(type: "int", nullable: false),
                     Balance = table.Column<double>(type: "float", nullable: false),
-                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValue: new DateTime(2021, 10, 12, 12, 29, 58, 189, DateTimeKind.Local).AddTicks(5948)),
-                    UpdatedDate = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValue: new DateTime(2021, 10, 12, 12, 29, 58, 189, DateTimeKind.Local).AddTicks(6267))
+                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValue: new DateTime(2024, 7, 9, 11, 38, 19, 796, DateTimeKind.Local).AddTicks(1292)),
+                    UpdatedDate = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValue: new DateTime(2024, 7, 9, 11, 38, 19, 796, DateTimeKind.Local).AddTicks(1779))
                 },
                 constraints: table =>
                 {
@@ -452,6 +628,53 @@ namespace wleepay.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Notes",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Note = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false),
+                    CustomerTicketId = table.Column<int>(type: "int", nullable: false),
+                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UpdatedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    AddedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Notes", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Notes_CustomerTickets_CustomerTicketId",
+                        column: x => x.CustomerTicketId,
+                        principalTable: "CustomerTickets",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "CashFlowHistory",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    WalletId = table.Column<long>(type: "bigint", nullable: true),
+                    TotalAmount = table.Column<double>(type: "float", nullable: false),
+                    DepositAmount = table.Column<double>(type: "float", nullable: true),
+                    WithdrawAmount = table.Column<double>(type: "float", nullable: true),
+                    PreviousAmount = table.Column<double>(type: "float", nullable: false),
+                    CurrencyId = table.Column<int>(type: "int", nullable: false),
+                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CashFlowHistory", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_CashFlowHistory_Wallet_WalletId",
+                        column: x => x.WalletId,
+                        principalTable: "Wallet",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Transaction",
                 columns: table => new
                 {
@@ -462,7 +685,7 @@ namespace wleepay.Data.Migrations
                     Amount = table.Column<double>(type: "float", nullable: false),
                     TransferTypeId = table.Column<int>(type: "int", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValue: new DateTime(2021, 10, 12, 12, 29, 58, 184, DateTimeKind.Local).AddTicks(1229)),
+                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValue: new DateTime(2024, 7, 9, 11, 38, 19, 787, DateTimeKind.Local).AddTicks(8876)),
                     ParentId = table.Column<long>(type: "bigint", nullable: true),
                     Status = table.Column<int>(type: "int", nullable: true)
                 },
@@ -490,6 +713,238 @@ namespace wleepay.Data.Migrations
                         principalTable: "Wallet",
                         principalColumn: "Id");
                 });
+
+            migrationBuilder.InsertData(
+                table: "AspNetRoles",
+                columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
+                values: new object[,]
+                {
+                    { "88b7d36f-2f30-4682-b801-fbd6b40b2af6", "0aefcb24-3cff-4c92-9bb6-18fef511f3ed", "Member", "MEMBER" },
+                    { "dbcebf6c-174e-407f-b170-136cbc68813e", "3f4da7d6-e6ae-493e-a343-07732ad7bc65", "SuperAdmin", "SUPERADMIN" },
+                    { "e4e7188b-6ecb-4278-aeee-17271f20d7ce", "64559bb4-bcea-4c00-a7c9-ac0cd7037bfd", "Agent", "AGENT" },
+                    { "F58A3546-E959-4B1D-A40C-518EAF9D9788", "71EACF2C-9A1F-4602-9D47-6DE367F4F0EF", "Staff", "STAFF" },
+                    { "fbf8256c-0824-432b-9543-95b61d993c3c", "4dcf6d38-0024-4491-8d17-3f968d22677a", "SystemAdmin", "SYSTEMADMIN" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "AspNetUsers",
+                columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Email", "EmailConfirmed", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
+                values: new object[] { "07ac193d-26e7-4039-9440-fbb53988b878", 0, "7382922e-5b89-4b7f-b6ec-08e404d0f498", "wleeadmin@wleepay.com", true, false, null, "WLEEADMIN@WLEEPAY.COM", "WLEEADMIN@WLEEPAY.COM", "AQAAAAEAACcQAAAAEM27FMm5Cl7o3kAUrO2fit9YClgzKK/j7wEZtppQx/Yt18PZlwGlAcPnoML/ktC2eA==", false, "c1fcc7bf-4591-43cf-bad2-c3c0521647c1", false, "wleeadmin@wleepay.com" });
+
+            migrationBuilder.InsertData(
+                table: "County",
+                columns: new[] { "Id", "Name" },
+                values: new object[,]
+                {
+                    { 15, "Sinoe" },
+                    { 14, "River Gee" },
+                    { 13, "River Cess" },
+                    { 11, "Grand Kru" },
+                    { 10, "Grand Gedeh" },
+                    { 9, "Lofa" },
+                    { 8, "Grant Cape Mount" },
+                    { 12, "Maryland" },
+                    { 6, "Nimba" },
+                    { 5, "Montserrado" },
+                    { 4, "Margibi" },
+                    { 3, "Grand Bassa" },
+                    { 2, "Bong" },
+                    { 1, "Bomi" },
+                    { 7, "Gbarpolu" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Currencies",
+                columns: new[] { "Id", "Name", "Symbol" },
+                values: new object[,]
+                {
+                    { 1, "Liberian Dollar", "L$" },
+                    { 2, "United State Of America Dollar", "$" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "DocumentType",
+                columns: new[] { "Id", "Name" },
+                values: new object[,]
+                {
+                    { 5, "Voter Card" },
+                    { 4, "Passport" },
+                    { 2, "National ID Card" },
+                    { 1, "Driver’s License" },
+                    { 3, "No Id" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "IssueType",
+                columns: new[] { "Id", "CreatedDate", "Description", "IsDeleted", "Type", "UpdatedDate" },
+                values: new object[,]
+                {
+                    { 11, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Crypto Wallet", false, "Crypto Wallet", null },
+                    { 18, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Report System Outage", false, "Other issue (describe)", null },
+                    { 17, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Report System Outage", false, "Report System Outage", null },
+                    { 16, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Wallet Fraud/Theft", false, "Wallet Fraud/Theft", null },
+                    { 14, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Lost/Stolen Pin", false, "Lost/Stolen Pin", null },
+                    { 13, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Payment reversal", false, "Payment reversal", null },
+                    { 12, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Agent Wallet", false, "Agent Wallet", null },
+                    { 10, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Phone Topup", false, "Phone Topup", null },
+                    { 15, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Identity Theft", false, "Identity Theft", null },
+                    { 8, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Reversal", false, "Reversal", null },
+                    { 7, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Donation", false, "Donation", null },
+                    { 6, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Payment", false, "Payment", null },
+                    { 5, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Cashout", false, "Cashout", null },
+                    { 4, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Topup", false, "Topup", null }
+                });
+
+            migrationBuilder.InsertData(
+                table: "IssueType",
+                columns: new[] { "Id", "CreatedDate", "Description", "IsDeleted", "Type", "UpdatedDate" },
+                values: new object[,]
+                {
+                    { 3, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "App Not Working", false, "App Not Working", null },
+                    { 2, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Agent Commission", false, "Agent Commission", null },
+                    { 1, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Signup/KYC", false, "Signup/KYC", null },
+                    { 9, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Bill Payment", false, "Bill Payment", null }
+                });
+
+            migrationBuilder.InsertData(
+                table: "KYCLevel",
+                columns: new[] { "Id", "AccountBalanceLimit", "Description", "Name", "TransactionDayLimit", "TransactionMonthLimit" },
+                values: new object[,]
+                {
+                    { 3, null, null, "L3", null, null },
+                    { 2, 4000.0, null, "L2", 1000.0, 8000.0 },
+                    { 1, 1000.0, null, "L1", 250.0, 2000.0 }
+                });
+
+            migrationBuilder.InsertData(
+                table: "KYCStatus",
+                columns: new[] { "Id", "Name" },
+                values: new object[,]
+                {
+                    { 1, "Pending" },
+                    { 2, "Approved" },
+                    { 3, "Rejected" },
+                    { 4, "Under Review" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "SecurityQuestions",
+                columns: new[] { "Id", "Question" },
+                values: new object[,]
+                {
+                    { 1, "What is your mother’s maiden name" },
+                    { 2, "Name of primary school attended" },
+                    { 3, "Who is your favorite musician" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "StaffPermissionType",
+                columns: new[] { "Id", "Name" },
+                values: new object[,]
+                {
+                    { 7, "System Admin" },
+                    { 6, "Compliance & Risk Management" },
+                    { 4, "Customer Service" },
+                    { 5, "Reports" },
+                    { 2, "Agent Management" },
+                    { 1, "System Wallet" },
+                    { 3, "Subscriber Management" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "StaffRoles",
+                columns: new[] { "Id", "Name" },
+                values: new object[,]
+                {
+                    { 1, "Marketing" },
+                    { 2, "HR" },
+                    { 3, "Customer Service" },
+                    { 4, "IT" },
+                    { 5, "System Wallet" },
+                    { 6, "Finance" },
+                    { 7, "System Admin" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "TransactionStatus",
+                columns: new[] { "Id", "Name" },
+                values: new object[,]
+                {
+                    { 5, "Cancel" },
+                    { 4, "Failed" },
+                    { 3, "Approved" },
+                    { 1, "Pending" },
+                    { 2, "Rejected" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "TransferFee",
+                columns: new[] { "Id", "AgentCommission", "CreatedDate", "Description", "IsDeleted", "OrganizationFee", "TaxAmount" },
+                values: new object[] { 1, 1.3500000000000001, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "CashOut Type transfer fee and taxes", false, 1.21, 0.14000000000000001 });
+
+            migrationBuilder.InsertData(
+                table: "WalletType",
+                columns: new[] { "Id", "Description", "Name" },
+                values: new object[,]
+                {
+                    { 8, "User Account", "WleePay Merchant Account" },
+                    { 1, "System Account", "Debit float N" },
+                    { 2, "System Account", "Organization P" },
+                    { 3, "System Account", "Wlee Merchant Fees" },
+                    { 4, "System Account", "WleeTax" },
+                    { 5, "User Account", "WleePay Agent Comission Account" },
+                    { 6, "User Account", "WleePay Agent Account" },
+                    { 7, "User Account", "WleePay Member Account" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "WalletType",
+                columns: new[] { "Id", "Description", "Name" },
+                values: new object[] { 9, "System Account", "System Wallet" });
+
+            migrationBuilder.InsertData(
+                table: "AspNetUserRoles",
+                columns: new[] { "RoleId", "UserId" },
+                values: new object[] { "dbcebf6c-174e-407f-b170-136cbc68813e", "07ac193d-26e7-4039-9440-fbb53988b878" });
+
+            migrationBuilder.InsertData(
+                table: "TransferType",
+                columns: new[] { "Id", "Description", "FromWalletType", "Name", "ToWalletType", "TransferFee" },
+                values: new object[,]
+                {
+                    { 5, "Transfer from wleepay member acount to other member account", 7, "Wlee Transfer", 7, null },
+                    { 4, "Transfer from member to organization account p", 7, "Cash Out Standard Fee Split", 2, null },
+                    { 3, "Transfer from member to wlee tax account", 7, "Wlee Tax Transfer", 4, null },
+                    { 2, "Transfer from memeber to agent commission account", 7, "Generated Agent Commission", 5, null },
+                    { 1, "Transfer from member a/c to agent a/c", 7, "Cash Out", 6, 1 },
+                    { 7, "Fill Agent a/c from system float n a/c", 1, "Fill Agent", 6, null },
+                    { 6, "TopUp member wallet from agent a/c", 6, "Top Up", 7, null },
+                    { 8, "Transfer from Agent Commission a/c  to system float n a/c", 5, "Cashout Agent Commission", 1, null },
+                    { 9, "Transfer from system float n a/c to sytem wallet", 1, "Top Up System Wallet", 9, null }
+                });
+
+            migrationBuilder.InsertData(
+                table: "UserDetail",
+                columns: new[] { "Id", "AccountNumber", "CountyId", "CreatedBy", "CreatedDate", "DOB", "DeviceId", "FailedLoginAttempt", "FcmToken", "FirstName", "Gender", "HireDate", "Image", "IsLoggedIn", "KYCDocumentImage", "KYCLevel", "KYCStatusId", "LastName", "Permissions", "PhoneNumber", "SecurityAnswerText", "SecurityQuestionId", "Status", "UpdatedDate", "UserId", "VerificationCode", "VerificationExpiry", "WleePhoneNumber" },
+                values: new object[] { 1, "50285368", 2, null, new DateTime(2024, 7, 9, 11, 38, 19, 781, DateTimeKind.Local).AddTicks(6499), new DateTime(1985, 9, 20, 5, 1, 50, 563, DateTimeKind.Unspecified), null, 0, null, "Admin", "Male", null, null, true, null, null, 2, "Admin", null, "+919845654543", null, 0, 0, new DateTime(2024, 7, 9, 11, 38, 19, 781, DateTimeKind.Local).AddTicks(6838), "07ac193d-26e7-4039-9440-fbb53988b878", null, null, null });
+
+            migrationBuilder.InsertData(
+                table: "Wallet",
+                columns: new[] { "Id", "Balance", "CreatedDate", "CurrencyId", "Type", "UpdatedDate", "UserId" },
+                values: new object[,]
+                {
+                    { 5L, 0.0, new DateTime(2024, 7, 9, 11, 38, 19, 797, DateTimeKind.Local).AddTicks(4662), 1, 4, new DateTime(2024, 7, 9, 11, 38, 19, 797, DateTimeKind.Local).AddTicks(4663), "07ac193d-26e7-4039-9440-fbb53988b878" },
+                    { 4L, 0.0, new DateTime(2024, 7, 9, 11, 38, 19, 797, DateTimeKind.Local).AddTicks(4656), 2, 2, new DateTime(2024, 7, 9, 11, 38, 19, 797, DateTimeKind.Local).AddTicks(4658), "07ac193d-26e7-4039-9440-fbb53988b878" },
+                    { 3L, 0.0, new DateTime(2024, 7, 9, 11, 38, 19, 797, DateTimeKind.Local).AddTicks(4577), 1, 2, new DateTime(2024, 7, 9, 11, 38, 19, 797, DateTimeKind.Local).AddTicks(4578), "07ac193d-26e7-4039-9440-fbb53988b878" },
+                    { 2L, 0.0, new DateTime(2024, 7, 9, 11, 38, 19, 797, DateTimeKind.Local).AddTicks(4566), 2, 1, new DateTime(2024, 7, 9, 11, 38, 19, 797, DateTimeKind.Local).AddTicks(4570), "07ac193d-26e7-4039-9440-fbb53988b878" },
+                    { 1L, 0.0, new DateTime(2024, 7, 9, 11, 38, 19, 797, DateTimeKind.Local).AddTicks(3883), 1, 1, new DateTime(2024, 7, 9, 11, 38, 19, 797, DateTimeKind.Local).AddTicks(4184), "07ac193d-26e7-4039-9440-fbb53988b878" },
+                    { 6L, 0.0, new DateTime(2024, 7, 9, 11, 38, 19, 797, DateTimeKind.Local).AddTicks(4668), 2, 4, new DateTime(2024, 7, 9, 11, 38, 19, 797, DateTimeKind.Local).AddTicks(4669), "07ac193d-26e7-4039-9440-fbb53988b878" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "CashFlowHistory",
+                columns: new[] { "Id", "CreatedDate", "CurrencyId", "DepositAmount", "PreviousAmount", "TotalAmount", "WalletId", "WithdrawAmount" },
+                values: new object[] { 1, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), 0, 0.0, 0.0, 0.0, 1L, 0.0 });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Address_UserId",
@@ -537,6 +992,16 @@ namespace wleepay.Data.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
+                name: "IX_CashFlowHistory_WalletId",
+                table: "CashFlowHistory",
+                column: "WalletId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CustomerTickets_IssueTypeId",
+                table: "CustomerTickets",
+                column: "IssueTypeId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_KYCDocuments_Type",
                 table: "KYCDocuments",
                 column: "Type");
@@ -545,6 +1010,11 @@ namespace wleepay.Data.Migrations
                 name: "IX_KYCDocuments_UserId",
                 table: "KYCDocuments",
                 column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Notes_CustomerTicketId",
+                table: "Notes",
+                column: "CustomerTicketId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_SmileIdentityJobs_ApplicationUserId",
@@ -608,6 +1078,16 @@ namespace wleepay.Data.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
+                name: "IX_UsersStaffRole_StaffRoleId",
+                table: "UsersStaffRole",
+                column: "StaffRoleId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UsersStaffRole_UserId",
+                table: "UsersStaffRole",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Wallet_CurrencyId",
                 table: "Wallet",
                 column: "CurrencyId");
@@ -644,10 +1124,28 @@ namespace wleepay.Data.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
+                name: "CashFlowHistory");
+
+            migrationBuilder.DropTable(
                 name: "KYCDocuments");
 
             migrationBuilder.DropTable(
+                name: "Notes");
+
+            migrationBuilder.DropTable(
+                name: "SecurityQuestions");
+
+            migrationBuilder.DropTable(
                 name: "SmileIdentityJobs");
+
+            migrationBuilder.DropTable(
+                name: "StaffPermissionType");
+
+            migrationBuilder.DropTable(
+                name: "SystemActivities");
+
+            migrationBuilder.DropTable(
+                name: "SystemStatus");
 
             migrationBuilder.DropTable(
                 name: "Transaction");
@@ -656,10 +1154,19 @@ namespace wleepay.Data.Migrations
                 name: "UserDetail");
 
             migrationBuilder.DropTable(
+                name: "UsersStaffRole");
+
+            migrationBuilder.DropTable(
+                name: "Verification");
+
+            migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
                 name: "DocumentType");
+
+            migrationBuilder.DropTable(
+                name: "CustomerTickets");
 
             migrationBuilder.DropTable(
                 name: "TransactionStatus");
@@ -678,6 +1185,12 @@ namespace wleepay.Data.Migrations
 
             migrationBuilder.DropTable(
                 name: "KYCStatus");
+
+            migrationBuilder.DropTable(
+                name: "StaffRoles");
+
+            migrationBuilder.DropTable(
+                name: "IssueType");
 
             migrationBuilder.DropTable(
                 name: "TransferFee");
