@@ -10,7 +10,7 @@ namespace wleepay.Core.Services
     public interface IUserDetailService
     {
         Task<UserDetail> AddOrUpdateUserDetails(UserDetail detail);
-        Task<UserDetail> UpdateUserLoggedInStatus(string userId, bool status);
+        Task<UserDetail> UpdateUserLoggedInStatus(string userId, bool status,int? failedLoginAttemps);
         Task<UserDetail> GetUserDetailsById(string userId);
         Task<IEnumerable<ApplicationUser>> GetUserByRole(int role);
         Task<ApplicationUser> GetApplicationUserById(string userId);

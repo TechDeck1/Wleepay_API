@@ -63,11 +63,12 @@ namespace wleepay.Services
             return await _unitOfWork.UserDetail.IsPhoneAlreadyRegistered(phone);
         }
 
-        public async Task<UserDetail> UpdateUserLoggedInStatus(string userId, bool status)
+        public async Task<UserDetail> UpdateUserLoggedInStatus(string userId, bool status, int? failedLoginAttemps)
         {
             var userToUpdate = await _unitOfWork.UserDetail.GetUserDetailsById(userId);
             if (userToUpdate != null)
             {
+                userToUpdate.FailedLoginAttempt = failedLoginAttemps ?? 0;
                 userToUpdate.UpdatedDate = DateTime.Now;
                 userToUpdate.IsLoggedIn = status;
                 await _unitOfWork.CommitAsync();

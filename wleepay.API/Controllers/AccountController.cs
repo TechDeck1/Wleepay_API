@@ -32,6 +32,7 @@ using static wleepay.Communication.EmailTemplates.EmailTemplates;
 using static wleepay.Communication.EmailTemplates.PasswordChangeTemplate;
 using static wleepay.Communication.EmailTemplates.AccountActivatedTemplate;
 using wleepay.API.Middleware;
+using Microsoft.SqlServer.Management.Smo;
 
 namespace wleepay.API.Controllers
 {
@@ -304,10 +305,28 @@ namespace wleepay.API.Controllers
                 };
                 //set logged in status to true if first log in
                 string userId = userDetails.UserId;
-                if (!userDetails.IsLoggedIn)
-                    await _userDetailsService.UpdateUserLoggedInStatus(userId, true);
+                
+                await _userDetailsService.UpdateUserLoggedInStatus(userId, true, 0);
 
                 return Ok(response);
+            }
+            else
+            {
+                if (user != null)
+                {
+                    var userDetails = await _userDetailsService.GetUserDetailsByPhone(loginRequest.PhoneNo);
+                    if (userDetails != null)
+                    {
+                        userDetails.FailedLoginAttempt++;
+                        await _userDetailsService.UpdateUserLoggedInStatus(userDetails.UserId, true, 0);
+
+                        if (userDetails.FailedLoginAttempt >= 3) // Threshold for sending SMS
+                        {
+                            var sendSms = _smsService.sendMessage("Multiple failed login attempts detected.", user.PhoneNumber);
+                        }
+                    }
+                    return BadRequest("Invalid login request.");
+                }
             }
             return BadRequest("Invalid login request.");
         }

@@ -11,6 +11,7 @@ using wleepay.API.Resources;
 using wleepay.API.Validators;
 using wleepay.Communication.Interface;
 using wleepay.Communication.Templates;
+using wleepay.Core.DTO.Request;
 using wleepay.Core.Enums;
 using wleepay.Core.Models;
 using wleepay.Core.Services;
@@ -31,8 +32,9 @@ namespace wleepay.API.Controllers
         private readonly IEmailSender _emailSender;
         private readonly ICashFlowService _cashFlowService;
         private readonly IUserDetailService _userDetailService;
+        private readonly IFirebaseNotification _firebaseNotification;
 
-        public TransactionController(ITransactionService transactionService, IWalletService walletService, ISMSService smsService, IMapper mapper, IEmailSender emailSender, ICashFlowService cashFlowService, IUserDetailService userDetailService)
+        public TransactionController(ITransactionService transactionService, IWalletService walletService, ISMSService smsService, IMapper mapper, IEmailSender emailSender, ICashFlowService cashFlowService, IUserDetailService userDetailService, IFirebaseNotification firebaseNotification)
         {
             _transactionService = transactionService;
             _walletService = walletService;
@@ -41,6 +43,7 @@ namespace wleepay.API.Controllers
             _emailSender = emailSender;
             _cashFlowService = cashFlowService;
             _userDetailService = userDetailService;
+            _firebaseNotification = firebaseNotification;
         }
 
         [HttpPost("History")]
@@ -313,10 +316,23 @@ namespace wleepay.API.Controllers
             //Get to wallet user details
             var toWalletUser = await _walletService.GetUserDetailsByWalletIdAndCurrency(transaction.ToWalletId);
 
+            FirebaseMessageRequest firebaseMessageRequest = new FirebaseMessageRequest()
+            {
+                Title = "Payment recived",
+                Body = "Payment is recived of amount $"+ transaction.Amount,
+                DeviceToken = toWalletUser.ApplicationUser.UserDetail.FcmToken,
+                DeviceId = toWalletUser.ApplicationUser.UserDetail.DeviceId,
+                UserId = toWalletUser.ApplicationUser.UserDetail.UserId,
+                FirstName = toWalletUser.ApplicationUser.UserDetail.FirstName,
+                LastName = toWalletUser.ApplicationUser.UserDetail.LastName,
+            };
+            
             //check transaction type
             if (transaction.TransferTypeId == Core.Enums.TransferTypes.TopUp.GetHashCode() ||
                 transaction.TransferTypeId == Core.Enums.TransferTypes.FillAgent.GetHashCode())
             {
+                var sendNotification = _firebaseNotification.SendFirebaseMessageRequest(firebaseMessageRequest);
+
                 userWallet = (status == Core.Enums.TransactionStatus.Pending) ? fromWalletUser : toWalletUser;
                 string name = (status == Core.Enums.TransactionStatus.Pending)
                     ? $"{toWalletUser.ApplicationUser.UserDetail.FirstName} {toWalletUser.ApplicationUser.UserDetail.LastName}"
@@ -326,6 +342,8 @@ namespace wleepay.API.Controllers
             else if (transaction.TransferTypeId == Core.Enums.TransferTypes.CashOut.GetHashCode() ||
                transaction.TransferTypeId == Core.Enums.TransferTypes.AgentCommissionCashout.GetHashCode())
             {
+                var sendNotification = _firebaseNotification.SendFirebaseMessageRequest(firebaseMessageRequest);
+
                 userWallet = (status == Core.Enums.TransactionStatus.Pending) ? toWalletUser : fromWalletUser;
                 string name = (status == Core.Enums.TransactionStatus.Pending)
                     ? $"{fromWalletUser.ApplicationUser.UserDetail.FirstName} {fromWalletUser.ApplicationUser.UserDetail.LastName}"
@@ -334,6 +352,7 @@ namespace wleepay.API.Controllers
             }
             else if (transaction.TransferTypeId == Core.Enums.TransferTypes.WleeTransfer.GetHashCode())
             {
+                var sendNotification = _firebaseNotification.SendFirebaseMessageRequest(firebaseMessageRequest);
                 userWallet = toWalletUser;
                 string name = $"{fromWalletUser.ApplicationUser.UserDetail.FirstName} {fromWalletUser.ApplicationUser.UserDetail.LastName}";
                 messageText = GenerateMessageText(transaction.Amount, userWallet.Currency, name, transaction.Id, status, transaction.TransferTypeId, true);
