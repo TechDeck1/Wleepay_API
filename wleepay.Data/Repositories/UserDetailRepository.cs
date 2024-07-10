@@ -309,8 +309,8 @@ namespace wleepay.Data.Repositories
         {
             if(userId == null) { throw new ArgumentNullException("userId"); }
             var userDetails = await WPContext.UserDetail.Where(user => user.UserId == userId).FirstOrDefaultAsync();
-            userDetails.DeviceId = deviceId;
-            userDetails.FcmToken = token;
+            //userDetails.DeviceId = deviceId;
+            //userDetails.FcmToken = token;
             await WPContext.SaveChangesAsync();
             return userDetails;
 

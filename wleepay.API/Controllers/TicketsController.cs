@@ -242,8 +242,8 @@ namespace wleepay.API.Controllers
             FirebaseMessageRequest firebaseMessageRequest = new FirebaseMessageRequest();
             firebaseMessageRequest.Title = "Note added";
             firebaseMessageRequest.Body = "New note is added for ticket number "+ticket.Id;
-            firebaseMessageRequest.DeviceToken = userDetail.UserDetail.FcmToken;
-            firebaseMessageRequest.DeviceId = userDetail.UserDetail.DeviceId;
+            firebaseMessageRequest.DeviceToken = "";
+            firebaseMessageRequest.DeviceId = "";
             firebaseMessageRequest.UserId = userDetail.UserDetail.UserId;
             firebaseMessageRequest.FirstName = userDetail.UserDetail.FirstName;
             firebaseMessageRequest.LastName = userDetail.UserDetail.LastName;
@@ -323,8 +323,8 @@ namespace wleepay.API.Controllers
                 FirebaseMessageRequest firebaseMessageRequest = new FirebaseMessageRequest();
                 firebaseMessageRequest.Title = "Ticket is closed";
                 firebaseMessageRequest.Body= " Ticket is closed for issue type " + ticketToUpdated.IssueType.Description;
-                firebaseMessageRequest.DeviceToken = userDetail.UserDetail.FcmToken;
-                firebaseMessageRequest.DeviceId = userDetail.UserDetail.DeviceId;
+                firebaseMessageRequest.DeviceToken = "";
+                firebaseMessageRequest.DeviceId = "";
                 firebaseMessageRequest.UserId = userDetail.UserDetail.UserId;
                 firebaseMessageRequest.FirstName = userDetail.UserDetail.FirstName;
                 firebaseMessageRequest.LastName = userDetail.UserDetail.LastName;

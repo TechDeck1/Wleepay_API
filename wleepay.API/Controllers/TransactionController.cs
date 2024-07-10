@@ -320,8 +320,8 @@ namespace wleepay.API.Controllers
             {
                 Title = "Payment recived",
                 Body = "Payment is recived of amount $"+ transaction.Amount,
-                DeviceToken = toWalletUser.ApplicationUser.UserDetail.FcmToken,
-                DeviceId = toWalletUser.ApplicationUser.UserDetail.DeviceId,
+                DeviceToken = "",
+                DeviceId = "",
                 UserId = toWalletUser.ApplicationUser.UserDetail.UserId,
                 FirstName = toWalletUser.ApplicationUser.UserDetail.FirstName,
                 LastName = toWalletUser.ApplicationUser.UserDetail.LastName,

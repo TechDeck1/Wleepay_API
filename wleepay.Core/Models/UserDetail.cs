@@ -35,9 +35,7 @@ namespace wleepay.Core.Models
         public int SecurityQuestionId { get; set; }
         public string SecurityAnswerText { get; set; }
         public string CreatedBy { get; set; }
-        public string Permissions { get; set; }
-        public string DeviceId { get; set; }
-        public string FcmToken { get; set; }    
+        public string Permissions { get; set; } 
         public int FailedLoginAttempt { get; set; }
         public virtual ApplicationUser ApplicationUser { get; set; }
         public virtual KYCStatus KYCStatus { get; set; }
