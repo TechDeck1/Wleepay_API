@@ -44,6 +44,7 @@ namespace wleepay.API.Controllers
         private readonly ILogger<UserController> _logger;
         private readonly IUsersStaffRoleService _usersStaffRoleService;
         private readonly IUploadDocument _storageService;
+        private readonly IUserDeviceService _userDeviceService;
 
         public UserController(UserManager<ApplicationUser> userManager,
             IUserDetailService userDetailsService,
@@ -54,7 +55,8 @@ namespace wleepay.API.Controllers
             IMapper mapper,
             ILogger<UserController> logger, 
             IUsersStaffRoleService usersStaffRoleService,
-            IUploadDocument storageService)
+            IUploadDocument storageService,
+            IUserDeviceService userDeviceService)
 
         {
             _userManager = userManager;
@@ -67,6 +69,7 @@ namespace wleepay.API.Controllers
             _logger = logger;
             _usersStaffRoleService = usersStaffRoleService;
             _storageService = storageService;
+            _userDeviceService = userDeviceService;
         }
 
         [HttpGet("{userId}")]
@@ -575,19 +578,40 @@ namespace wleepay.API.Controllers
 
         }
 
-        [HttpPut("AddDeviceId")]
+        [HttpPost("AddDevice")]
         public async Task<IActionResult> AddDeviceIdAndToken(FirebaseAddDeviceRequest request)
         {
-            try 
+            if (request.DeviceId == null || request.UserId == null)
             {
-              //var deviceIds = JsonSerializer.Serialize(request.DeviceId);
-              //var deviceTokens = JsonSerializer.Serialize(request.DeviceToken);
-              var response = await _userDetailsService.AddDeviceIdAndToken(request.DeviceId, request.DeviceToken, request.UserId);
+                return BadRequest("DeviceId and UserId are required.");
+            }
+
+            try
+            {
+                var device = await _userDeviceService.GetUserDevice(request.UserId, request.DeviceId);
+                if (device != null)
+                {
+                    device.FcmToken = request.DeviceToken;
+                }
+                else
+                {
+                    device = new UserDevices
+                    {
+                        UserId = request.UserId,
+                        DeviceId = request.DeviceId,
+                        FcmToken = request.DeviceToken,
+                        AddedDate = DateTime.UtcNow,
+                        IsActive = true,
+                    };
+                }
+
+                var response = await _userDeviceService.AddOrUpdateUserDevices(device);
                 return Ok(response);
             }
-            catch (Exception ex) 
+            catch (Exception ex)
             {
-                throw ex;
+                // Log exception (logging mechanism not shown)
+                return StatusCode(500, "Internal server error.");
             }
         }
 

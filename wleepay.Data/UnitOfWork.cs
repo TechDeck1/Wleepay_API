@@ -36,6 +36,7 @@ namespace wleepay.Data
         private IVerificationRepository _verificationRepository;
         private ICashFlowHistoryRepository _cashFlowHistoryRepository;
         private ISystemStatusRepository _systemStatusRepository;
+        private IUserDeviceRepository _userDeviceRepository;
 
 
 
@@ -68,7 +69,7 @@ namespace wleepay.Data
         public IVerificationRepository Verification => _verificationRepository = _verificationRepository ?? new VerificationRepository(_context);
         public ICashFlowHistoryRepository CashFlowHistory => _cashFlowHistoryRepository= _cashFlowHistoryRepository ?? new CashFlowHistoryRepository(_context);
         public ISystemStatusRepository SystemStatus => _systemStatusRepository= _systemStatusRepository ?? new SystemStatusRepository(_context);    
-
+        public IUserDeviceRepository UserDevice => _userDeviceRepository = _userDeviceRepository ?? new UserDeviceRepository(_context);
         public async Task<int> CommitAsync()
         {
             return await _context.SaveChangesAsync();
