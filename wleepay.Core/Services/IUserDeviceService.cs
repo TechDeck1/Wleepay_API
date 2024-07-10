@@ -10,5 +10,6 @@ namespace wleepay.Core.Services
     {
         Task<UserDevices> AddOrUpdateUserDevices(UserDevices userDevices);
         Task<UserDevices> GetUserDevice(string userId, string deviceId);
+        Task<IList<UserDevices>> GetUserDeviceByUserId(string userId);
     }
 }

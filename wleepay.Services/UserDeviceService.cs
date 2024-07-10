@@ -24,5 +24,10 @@ namespace wleepay.Services
         {
             return await _unitOfWork.UserDevice.GetUserDevice(userId, deviceId);
         }
+
+        public async Task<IList<UserDevices>> GetUserDeviceByUserId(string userId)
+        {
+            return await _unitOfWork.UserDevice.GetUserDeviceByUserId(userId);
+        }
     }
 }

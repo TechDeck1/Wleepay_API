@@ -13,7 +13,7 @@ namespace wleepay.Services
     {
         public FirebaseMessageService() { }
 
-        public async Task<string> SendFirebaseMessageRequest(FirebaseMessageRequest firebaseMessageRequest)
+        public string SendFirebaseMessageRequest(FirebaseMessageRequest firebaseMessageRequest)
         {
             try
             {
@@ -33,9 +33,9 @@ namespace wleepay.Services
                 };
 
                 var messaging = FirebaseMessaging.DefaultInstance;
-                var result = await messaging.SendAsync(message);
+                var result = messaging.SendAsync(message);
 
-                if (!string.IsNullOrEmpty(result))
+                if (!string.IsNullOrEmpty(result.Result))
                 {
                     // Message was sent successfully
                     return "Message sent successfully!";

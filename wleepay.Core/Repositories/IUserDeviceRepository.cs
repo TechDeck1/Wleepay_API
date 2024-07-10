@@ -10,5 +10,6 @@ namespace wleepay.Core.Repositories
     {
         Task<UserDevices> AddUserDeviceAsync(UserDevices usersStaffRole);
         Task<UserDevices> GetUserDevice(string UserId, string deviceId);
+        Task<IList<UserDevices>> GetUserDeviceByUserId(string UserId);
     }
 }

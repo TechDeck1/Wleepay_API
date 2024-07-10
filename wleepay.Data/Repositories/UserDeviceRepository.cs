@@ -46,5 +46,11 @@ namespace wleepay.Data.Repositories
             var userDevices = await WPContext.UserDevices.Where(x => x.UserId == UserId && x.DeviceId == deviceId).FirstOrDefaultAsync();
             return userDevices;
         }
+
+        public async Task<IList<UserDevices>> GetUserDeviceByUserId(string UserId)
+        {
+            var userDevices = await WPContext.UserDevices.Where(x => x.UserId == UserId).ToListAsync();
+            return userDevices;
+        }
     }
 }

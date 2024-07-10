@@ -9,7 +9,7 @@ namespace wleepay.Core.Services
 {
     public interface IFirebaseNotification
     {
-        Task<string> SendFirebaseMessageRequest(FirebaseMessageRequest messageRequest);
+        string SendFirebaseMessageRequest(FirebaseMessageRequest messageRequest);
 
     }
 }

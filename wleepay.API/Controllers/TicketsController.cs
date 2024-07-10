@@ -41,7 +41,7 @@ namespace wleepay.API.Controllers
         private readonly IWhatsAppService _whatsAppService;
         private readonly IFirebaseNotification _firebaseNotification;
         private IHubContext<TicketsNotificationHubClient, ITicketsNotificationHubClient> _notificationHub;
-
+        private readonly IUserDeviceService _userDeviceService;
 
         public TicketsController(
             ICustomerTicketsService customerTickets,
@@ -53,7 +53,8 @@ namespace wleepay.API.Controllers
             INotesService notesService,
             IWhatsAppService whatsAppService,
             IHubContext<TicketsNotificationHubClient, ITicketsNotificationHubClient> notificationHub,
-            IFirebaseNotification firebaseNotification)
+            IFirebaseNotification firebaseNotification,
+            IUserDeviceService userDeviceService)
         {
 
             _customerTicketsService = customerTickets;
@@ -66,6 +67,7 @@ namespace wleepay.API.Controllers
             _whatsAppService = whatsAppService;
             _notificationHub = notificationHub;
             _firebaseNotification = firebaseNotification;
+            _userDeviceService = userDeviceService;
         }
 
         [HttpPost]
@@ -239,17 +241,23 @@ namespace wleepay.API.Controllers
             var message = MessagesTemplates.CustomerTicketReplyMessage(memberDetails.UserDetail.FirstName, request.Note);
             var subject = Messages.SubjectForTicketUpdated.ToDescriptionString();
 
-            FirebaseMessageRequest firebaseMessageRequest = new FirebaseMessageRequest();
-            firebaseMessageRequest.Title = "Note added";
-            firebaseMessageRequest.Body = "New note is added for ticket number "+ticket.Id;
-            firebaseMessageRequest.DeviceToken = "";
-            firebaseMessageRequest.DeviceId = "";
-            firebaseMessageRequest.UserId = userDetail.UserDetail.UserId;
-            firebaseMessageRequest.FirstName = userDetail.UserDetail.FirstName;
-            firebaseMessageRequest.LastName = userDetail.UserDetail.LastName;
+            var device = await _userDeviceService.GetUserDeviceByUserId(request.UserId);
 
-            var sendNotification = _firebaseNotification.SendFirebaseMessageRequest(firebaseMessageRequest);
+            foreach (var item in device)
+            {
 
+
+                FirebaseMessageRequest firebaseMessageRequest = new FirebaseMessageRequest();
+                firebaseMessageRequest.Title = "Note added";
+                firebaseMessageRequest.Body = "New note is added for ticket number " + ticket.Id;
+                firebaseMessageRequest.DeviceToken = item.FcmToken;
+                firebaseMessageRequest.DeviceId = item.DeviceId;
+                firebaseMessageRequest.UserId = userDetail.UserDetail.UserId;
+                firebaseMessageRequest.FirstName = userDetail.UserDetail.FirstName;
+                firebaseMessageRequest.LastName = userDetail.UserDetail.LastName;
+
+                var sendNotification = _firebaseNotification.SendFirebaseMessageRequest(firebaseMessageRequest);
+            }
 
                 if (request.Note != null)
                 {
