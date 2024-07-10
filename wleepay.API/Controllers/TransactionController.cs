@@ -33,8 +33,9 @@ namespace wleepay.API.Controllers
         private readonly ICashFlowService _cashFlowService;
         private readonly IUserDetailService _userDetailService;
         private readonly IFirebaseNotification _firebaseNotification;
+        private readonly IUserDeviceService _userDeviceService;
 
-        public TransactionController(ITransactionService transactionService, IWalletService walletService, ISMSService smsService, IMapper mapper, IEmailSender emailSender, ICashFlowService cashFlowService, IUserDetailService userDetailService, IFirebaseNotification firebaseNotification)
+        public TransactionController(ITransactionService transactionService, IWalletService walletService, ISMSService smsService, IMapper mapper, IEmailSender emailSender, ICashFlowService cashFlowService, IUserDetailService userDetailService, IFirebaseNotification firebaseNotification, IUserDeviceService userDeviceService) 
         {
             _transactionService = transactionService;
             _walletService = walletService;
@@ -44,6 +45,7 @@ namespace wleepay.API.Controllers
             _cashFlowService = cashFlowService;
             _userDetailService = userDetailService;
             _firebaseNotification = firebaseNotification;
+            _userDeviceService = userDeviceService;
         }
 
         [HttpPost("History")]
@@ -331,8 +333,14 @@ namespace wleepay.API.Controllers
             if (transaction.TransferTypeId == Core.Enums.TransferTypes.TopUp.GetHashCode() ||
                 transaction.TransferTypeId == Core.Enums.TransferTypes.FillAgent.GetHashCode())
             {
-                var sendNotification = _firebaseNotification.SendFirebaseMessageRequest(firebaseMessageRequest);
+                var device = await _userDeviceService.GetUserDeviceByUserId(toWalletUser.ApplicationUser.UserDetail.UserId);
 
+                foreach (var item in device)
+                {
+                    firebaseMessageRequest.DeviceId = item.DeviceId;
+                    firebaseMessageRequest.DeviceToken = item.FcmToken;
+                    var sendNotification = _firebaseNotification.SendFirebaseMessageRequest(firebaseMessageRequest);
+                }
                 userWallet = (status == Core.Enums.TransactionStatus.Pending) ? fromWalletUser : toWalletUser;
                 string name = (status == Core.Enums.TransactionStatus.Pending)
                     ? $"{toWalletUser.ApplicationUser.UserDetail.FirstName} {toWalletUser.ApplicationUser.UserDetail.LastName}"
@@ -342,7 +350,14 @@ namespace wleepay.API.Controllers
             else if (transaction.TransferTypeId == Core.Enums.TransferTypes.CashOut.GetHashCode() ||
                transaction.TransferTypeId == Core.Enums.TransferTypes.AgentCommissionCashout.GetHashCode())
             {
-                var sendNotification = _firebaseNotification.SendFirebaseMessageRequest(firebaseMessageRequest);
+                var device = await _userDeviceService.GetUserDeviceByUserId(toWalletUser.ApplicationUser.UserDetail.UserId);
+
+                foreach (var item in device)
+                {
+                    firebaseMessageRequest.DeviceId = item.DeviceId;
+                    firebaseMessageRequest.DeviceToken = item.FcmToken;
+                    var sendNotification = _firebaseNotification.SendFirebaseMessageRequest(firebaseMessageRequest);
+                }
 
                 userWallet = (status == Core.Enums.TransactionStatus.Pending) ? toWalletUser : fromWalletUser;
                 string name = (status == Core.Enums.TransactionStatus.Pending)
@@ -352,7 +367,15 @@ namespace wleepay.API.Controllers
             }
             else if (transaction.TransferTypeId == Core.Enums.TransferTypes.WleeTransfer.GetHashCode())
             {
-                var sendNotification = _firebaseNotification.SendFirebaseMessageRequest(firebaseMessageRequest);
+                var device = await _userDeviceService.GetUserDeviceByUserId(toWalletUser.ApplicationUser.UserDetail.UserId);
+
+                foreach (var item in device)
+                {
+                    firebaseMessageRequest.DeviceId = item.DeviceId;
+                    firebaseMessageRequest.DeviceToken = item.FcmToken;
+                    var sendNotification = _firebaseNotification.SendFirebaseMessageRequest(firebaseMessageRequest);
+                }
+
                 userWallet = toWalletUser;
                 string name = $"{fromWalletUser.ApplicationUser.UserDetail.FirstName} {fromWalletUser.ApplicationUser.UserDetail.LastName}";
                 messageText = GenerateMessageText(transaction.Amount, userWallet.Currency, name, transaction.Id, status, transaction.TransferTypeId, true);

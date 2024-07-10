@@ -324,21 +324,25 @@ namespace wleepay.API.Controllers
 
             var allTickets = await _customerTicketsService.GetCustomerTicketsByUserId(tickets.UserId);
 
-            _notificationHub.Clients.All.GetLatestNotificationForTickets(allTickets);
+            var device = await _userDeviceService.GetUserDeviceByUserId(tickets.UserId);
 
-            if (tickets != null)
+            foreach (var item in device)
             {
+
                 FirebaseMessageRequest firebaseMessageRequest = new FirebaseMessageRequest();
                 firebaseMessageRequest.Title = "Ticket is closed";
-                firebaseMessageRequest.Body= " Ticket is closed for issue type " + ticketToUpdated.IssueType.Description;
-                firebaseMessageRequest.DeviceToken = "";
-                firebaseMessageRequest.DeviceId = "";
+                firebaseMessageRequest.Body = " Ticket is closed for issue type " + ticketToUpdated.IssueType.Description;
+                firebaseMessageRequest.DeviceToken = item.FcmToken;
+                firebaseMessageRequest.DeviceId = item.DeviceId;
                 firebaseMessageRequest.UserId = userDetail.UserDetail.UserId;
                 firebaseMessageRequest.FirstName = userDetail.UserDetail.FirstName;
                 firebaseMessageRequest.LastName = userDetail.UserDetail.LastName;
-               
+
                 var sendNotification = _firebaseNotification.SendFirebaseMessageRequest(firebaseMessageRequest);
-                
+            }
+
+            if (tickets != null)
+            {
                 var message = MessagesTemplates.CustomerTicketClosedMessage(ticketToUpdated.IssueType.Description, ticketId);
                 var subject = Messages.SubjectForTicketClosed.ToDescriptionString();
 
