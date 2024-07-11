@@ -118,9 +118,9 @@ namespace wleepay.Services
             return await _unitOfWork.Transaction.GetTransactionsByTypeAndCurrency(type, currency, pageIndex, pageSize);
         }
 
-        public async Task<TransactionResponseResource> GetTransactionsByUserId(string userId, int pageIndex = 0, int pageSize = 10)
+        public async Task<TransactionResponseResource> GetTransactionsByUserIdAndType(string userId,int transferType, int pageIndex = 0, int pageSize = 10)
         {
-            return await _unitOfWork.Transaction.GetTransactionsByUserId(userId, pageIndex, pageSize);
+            return await _unitOfWork.Transaction.GetTransactionsByUserIdAndType(userId,transferType, pageIndex, pageSize);
         }
 
 

@@ -161,7 +161,6 @@ namespace wleepay.API.Controllers
             }
             catch (Exception ex)
             {
-
                 throw ex.InnerException;
             }
            

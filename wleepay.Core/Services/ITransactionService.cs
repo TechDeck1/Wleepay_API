@@ -24,7 +24,7 @@ namespace wleepay.Core.Services
         Task<TransactionResponseResource> GetCashoutTransactions(int pageIndex, int pageSize);
         Task<TransactionResponseResource> GetTopUpTransactions(int pageIndex, int pageSize);
         Task<TransactionResponseResource> GetTransactionsByTypeAndCurrency(int type, int currencies, int pageIndex = 0, int pageSize = 10);
-        Task<TransactionResponseResource> GetTransactionsByUserId(string userId, int pageIndex = 0, int pageSize = 10);
+        Task<TransactionResponseResource> GetTransactionsByUserIdAndType(string userId,int transferType, int pageIndex = 0, int pageSize = 10);
 
 
 
