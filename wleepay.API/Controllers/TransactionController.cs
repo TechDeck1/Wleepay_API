@@ -294,6 +294,19 @@ namespace wleepay.API.Controllers
             return Ok(new List<TransactionResource>());
         }
 
+        [HttpGet("history/{userId}")]
+        public async Task<IActionResult> GetTransactionHistoryByUserId(string userId, [FromQuery] int pageIndex = 0, [FromQuery] int pageSize = 10)
+        {
+            var transactionResult = await _transactionService.GetTransactionHistoryByUserId(userId, pageIndex, pageSize);
+            if (transactionResult.Transactions.Count() > 0)
+            {
+                var transactionResourceList = _mapper.Map<IEnumerable<Transaction>, IEnumerable<TransactionHistoryResource>>(transactionResult.Transactions);
+                return Ok(new { Transactions = transactionResourceList, TotalCount = transactionResult.TotalCount });
+            }
+
+            return Ok(new List<TransactionResource>());
+        }
+
         #region Helper function
         private async Task<TransactionResource> ChangePaymentRequestStatus(long paymentRequestId, Core.Enums.TransactionStatus status)
         {

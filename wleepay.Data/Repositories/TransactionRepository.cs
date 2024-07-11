@@ -349,5 +349,30 @@ namespace wleepay.Data.Repositories
 
             return response;
         }
+
+        public async Task<TransactionResponseResource> GetTransactionsHistoryByUserId(string userId, int pageIndex = 0, int pageSize = 10)
+        {
+            int takeCount = pageSize;
+            int skipCount = pageIndex * pageSize;
+            var transactionQuery = WPContext.Transactions
+                .Where(w => w.Status != Core.Enums.TransactionStatus.Pending.GetHashCode());
+
+            if (!string.IsNullOrEmpty(userId))
+                transactionQuery = transactionQuery.Where(w => w.ToWallet.UserId == userId || w.FromWallet.UserId == userId);
+
+            TransactionResponseResource response = new TransactionResponseResource();
+            response.TotalCount = transactionQuery.Count();
+            response.Transactions = await transactionQuery
+                .OrderByDescending(w => w.CreatedDate)
+                .Skip(skipCount)
+                .Take(takeCount)
+                .Include(s => s.FromWallet.ApplicationUser.UserDetail)
+                .Include(s => s.FromWallet.Currency)
+                .Include(s => s.ToWallet.ApplicationUser.UserDetail)
+                .Include(s => s.TransferType)
+                .ToListAsync();
+
+            return response;
+        }
     }
 }

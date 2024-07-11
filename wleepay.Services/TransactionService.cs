@@ -123,6 +123,11 @@ namespace wleepay.Services
             return await _unitOfWork.Transaction.GetTransactionsByUserIdAndType(userId,transferType, pageIndex, pageSize);
         }
 
+        public async Task<TransactionResponseResource> GetTransactionHistoryByUserId(string userId, int pageIndex, int pageSize)
+        {
+            return await _unitOfWork.Transaction.GetTransactionsHistoryByUserId(userId, pageIndex, pageSize);
+        }
+
 
         #region Helper function
         private Transaction GetTaxTransaction(long fromWalletId, double amount, long parentTransactionId, int currency)
