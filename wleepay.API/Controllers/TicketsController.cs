@@ -429,8 +429,6 @@ namespace wleepay.API.Controllers
             try
             {
                 var tickets = await _customerTicketsService.GetCustomerTicketsByUserId(Id);
-                _notificationHub.Clients.All.GetLatestNotificationForTickets(tickets);
-
                 var customerTickets = _mapper.Map<IEnumerable<CustomerTickets>, IEnumerable<AddCustomerTicketResponseResource>>(tickets);
 
                 return Ok(new
