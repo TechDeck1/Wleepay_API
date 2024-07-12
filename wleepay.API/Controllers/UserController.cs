@@ -578,6 +578,7 @@ namespace wleepay.API.Controllers
 
         }
 
+        [AllowAnonymous]
         [HttpPost("AddDevice")]
         public async Task<IActionResult> AddDeviceIdAndToken(FirebaseAddDeviceRequest request)
         {
