@@ -17,6 +17,7 @@ using wleepay.API.Helpers;
 using wleepay.API.Middleware;
 using wleepay.API.Resources;
 using wleepay.API.Validators;
+using wleepay.Communication.Interface;
 using wleepay.Core.Common;
 using wleepay.Core.DTO.Request;
 using wleepay.Core.DTO.Response;
@@ -45,7 +46,7 @@ namespace wleepay.API.Controllers
         private readonly IUsersStaffRoleService _usersStaffRoleService;
         private readonly IUploadDocument _storageService;
         private readonly IUserDeviceService _userDeviceService;
-
+        private readonly ISMSService _sMSService;
         public UserController(UserManager<ApplicationUser> userManager,
             IUserDetailService userDetailsService,
             IUploadDocument uploadDocument,
@@ -56,7 +57,7 @@ namespace wleepay.API.Controllers
             ILogger<UserController> logger, 
             IUsersStaffRoleService usersStaffRoleService,
             IUploadDocument storageService,
-            IUserDeviceService userDeviceService)
+            IUserDeviceService userDeviceService, ISMSService sMSService)
 
         {
             _userManager = userManager;
@@ -70,6 +71,7 @@ namespace wleepay.API.Controllers
             _usersStaffRoleService = usersStaffRoleService;
             _storageService = storageService;
             _userDeviceService = userDeviceService;
+            _sMSService = sMSService;
         }
 
         [HttpGet("{userId}")]
@@ -615,6 +617,44 @@ namespace wleepay.API.Controllers
                 return StatusCode(500, "Internal server error.");
             }
         }
+
+        [AllowAnonymous]
+        [HttpPost("sendMessage")]
+        public async Task<IActionResult> SendSmsToUsers(SendSmsRequestModel request)
+        {
+            if (request.Note == null || request.PhoneNumber == null)
+            {
+                return BadRequest("Note and Email are required.");
+            }
+
+            try
+            {
+                var response = _sMSService.sendMessage(request.Note, request.PhoneNumber);
+                if (response == "success")
+                {
+                    return Ok(new{
+                        message="Message sent successfully!",
+                        success=true
+                    });
+                }
+                else 
+                {
+                    return BadRequest(new
+                    {
+                        message = "Something went wrong!",
+                        success = false
+                    });
+                };
+                
+            }
+            catch (Exception ex)
+            {
+                // Log exception (logging mechanism not shown)
+                return StatusCode(500, "Internal server error.");
+            }
+        }
+
+
 
         #region helper methods
         private async Task<string> uploadDocument(IFormFile file, string userId, string containerName = "kyc-document")

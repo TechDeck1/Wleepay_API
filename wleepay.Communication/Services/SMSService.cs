@@ -32,8 +32,16 @@ namespace wleepay.Communication.Services
                 messageOptions.Body = message;
 
                 var messageResponse = MessageResource.Create(messageOptions);
-                var result = messageResponse.Status.ToString();
-                return result;
+                if(messageResponse.Status.ToString() != "200")
+                {
+                    var result = messageResponse.Status.ToString();
+                    return "success";
+                }
+                else
+                {
+                    return "error";
+                }
+               
             }
             catch(Exception ex)
             {
