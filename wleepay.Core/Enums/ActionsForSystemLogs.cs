@@ -14,7 +14,9 @@ namespace wleepay.Core.Enums
         [Description("Deactivate")] Deactivate,
         [Description("Activate")] Activate,
         [Description("CompleteLogin")] CompleteLoginProcess,
-        [Description("CompleteSignUp")] CompleteSignUpProcess
+        [Description("CompleteSignUp")] CompleteSignUpProcess,
+        [Description("Suspend")] Suspend,
+        [Description("Unsuspend")] UnSuspend
 
 
     }

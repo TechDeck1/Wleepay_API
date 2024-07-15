@@ -12,6 +12,7 @@ namespace wleepay.Core.Enums
         [Description("Wleepay portal account setup/activation confirmation notice (Do not reply)")] AccountSetupConfirmation,
         [Description("Failed Login attempt")] LoginFailed,
         [Description("Alert: Wleepay portal account DeActivation notice (Do not reply)")] AccountDeactivate,
+        [Description("Alert: Wleepay portal account suspend/unsuspend notice (Do not reply)")] AccountSuspensionConfirmation,
 
     }
 }

@@ -24,10 +24,12 @@ namespace wleepay.API.Middleware
         private class SystemLockFilter : IAsyncActionFilter
         {
             private readonly ISystemStatusService _statusService;
+            private readonly IUserDetailService _userDetailService;
 
-            public SystemLockFilter(ISystemStatusService statusService)
+            public SystemLockFilter(ISystemStatusService statusService, IUserDetailService userDetailService)
             {
                 _statusService = statusService;
+                _userDetailService = userDetailService;
             }
 
             public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
@@ -47,7 +49,7 @@ namespace wleepay.API.Middleware
 
                     var systemStatus = await _statusService.GetSystemStatus(); // Retrieve system status from service
 
-                    if (systemStatus.Status)
+                    if (systemStatus.Status == true)
                     {
                         context.Result = new ContentResult
                         {

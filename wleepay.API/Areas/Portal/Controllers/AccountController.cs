@@ -37,6 +37,7 @@ using static wleepay.Communication.EmailTemplates.AccountDeactivatedTemplate;
 using static wleepay.Communication.EmailTemplates.EmailLockOutTemplate;
 using wleepay.Communication.Services;
 using System.Reflection;
+using static wleepay.Communication.EmailTemplates.AccountSuspendAndUnsuspendTemplate;
 
 namespace wleepay.API.Areas.Portal.Controllers
 {
@@ -625,11 +626,11 @@ namespace wleepay.API.Areas.Portal.Controllers
                         var subject = EmailSubjectEnums.AccountSetupConfirmation.ToDescriptionString();
 
                         //send email to user/staff
-                        AccountActivatedTemplateForStaff templateForstaff = new AccountActivatedTemplateForStaff
+                        AccountActivatedTemplateForUser templateForstaff = new AccountActivatedTemplateForUser
                         {
-                            StaffEmail = decryptedEmail,
-                            StaffFirstName = userDetails.FirstName,
-                            StaffPhoneNumber = userDetails.PhoneNumber,
+                            Email = decryptedEmail,
+                            FirstName = userDetails.FirstName,
+                            PhoneNumber = userDetails.PhoneNumber,
                         };
 
                         string htmlTemplateForStaff = templateForstaff.GenerateHtml();
@@ -1533,11 +1534,11 @@ namespace wleepay.API.Areas.Portal.Controllers
                         var subject = EmailSubjectEnums.AccountSetupConfirmation.ToDescriptionString();
 
                         //send email to staff for activation
-                        AccountActivatedTemplateForStaff templateForstaff = new AccountActivatedTemplateForStaff
+                        AccountActivatedTemplateForUser templateForstaff = new AccountActivatedTemplateForUser
                         {
-                            StaffEmail = model.EmailId,
-                            StaffFirstName = userDetails.FirstName,
-                            StaffPhoneNumber = userDetails.PhoneNumber,
+                            Email = model.EmailId,
+                            FirstName = userDetails.FirstName,
+                            PhoneNumber = userDetails.PhoneNumber,
 
                         };
 
@@ -1560,6 +1561,44 @@ namespace wleepay.API.Areas.Portal.Controllers
                         {
                             await _emailSender.SendEmailAsync(systemAdmin.Email, htmlTemplate, systemAdmin.UserDetail.FirstName, subject);
                         }
+                    }
+                    else if (model.Status == (int)Status.Suspend)
+                    {
+                        systemActivityLog.Action = ActionsForSystemLogs.Suspend.ToDescriptionString();
+                        systemActivityLog.Description = GenericMessagesForSystemLogs.AccountSuspended.ToDescriptionString();
+
+                        var subject = EmailSubjectEnums.AccountSuspensionConfirmation.ToDescriptionString();
+
+                        //send email to staff for activation
+                        AccountSuspendedTemplateForUser templateForUser = new AccountSuspendedTemplateForUser
+                        {
+                            Email = model.EmailId,
+                            FirstName = userDetails.FirstName,
+                            PhoneNumber = userDetails.PhoneNumber,
+
+                        };
+
+                        string htmlTemplateForUser = templateForUser.GenerateHtml();
+                        await _emailSender.SendEmailAsync(model.EmailId, htmlTemplateForUser, userDetails.FirstName, subject);
+                    }
+                    else if(model.Status == (int)Status.UnSuspend)
+                    {
+                        systemActivityLog.Action = ActionsForSystemLogs.UnSuspend.ToDescriptionString();
+                        systemActivityLog.Description = GenericMessagesForSystemLogs.AccountUnsuspended.ToDescriptionString();
+
+                        var subject = EmailSubjectEnums.AccountSuspensionConfirmation.ToDescriptionString();
+
+                        //send email to staff for activation
+                        AccountUnsuspendedTemplateForUser templateForUser = new AccountUnsuspendedTemplateForUser
+                        {
+                            FirstName = userDetails.FirstName,
+                            PhoneNumber = userDetails.PhoneNumber,
+                            Email = model.EmailId,
+
+                        };
+
+                        string htmlTemplateForUser = templateForUser.GenerateHtml();
+                        await _emailSender.SendEmailAsync(model.EmailId, htmlTemplateForUser, userDetails.FirstName, subject);
                     }
                     else
                     {
