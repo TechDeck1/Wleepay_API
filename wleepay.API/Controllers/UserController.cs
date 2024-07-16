@@ -392,7 +392,7 @@ namespace wleepay.API.Controllers
         [HttpPost("paymentRequest")]
         public async Task<IActionResult> GetIncomingOutGoingTopUpRequests([FromBody] PaymentRequest paymentRequestParam)
         {
-            var paymentRequest = await _userDetailsService.GetIncomingOutGoingPaymentRequest(paymentRequestParam.UserId, paymentRequestParam.Type,paymentRequestParam.TransferStatus,paymentRequestParam.PageSize,paymentRequestParam.PageIndex);
+            var paymentRequest = await _userDetailsService.GetIncomingOutGoingPaymentRequest(paymentRequestParam.UserId, paymentRequestParam.Type,paymentRequestParam.TransferStatus,paymentRequestParam.PageSize,paymentRequestParam.PageIndex, (int)paymentRequestParam.TransferType);
 
           if (paymentRequest == null)
                 return Ok(new List<TransactionResource>());
@@ -401,7 +401,7 @@ namespace wleepay.API.Controllers
           foreach (var item in transactionResource)
           {
              var time = Helpers.Common.ConvertISTtoLiberiaTime(item.CreatedDate);
-        item.CreatedDate = time;
+             item.CreatedDate = time;
           }
              return Ok(transactionResource);
         }

@@ -10,6 +10,7 @@ namespace wleepay.API.Resources
         public string UserId { get; set; }
         public Core.Enums.PaymentRequestType Type { get; set; }
         public Core.Enums.TransactionStatus TransferStatus { get; set; }
+        public int? TransferType { get; set; }
         public int PageSize { get; set; }
         public int PageIndex { get; set; }
 

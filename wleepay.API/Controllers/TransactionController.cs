@@ -109,6 +109,10 @@ namespace wleepay.API.Controllers
             {
                 return NotFound();
             }
+            if ((walletBalance.ApplicationUser.UserRoles.FirstOrDefault().Role.Name == "Agent" && walletBalance.ApplicationUser.UserDetail.Status == (int)Status.Suspend) && transactionRequest.TransferTypeId != (int)TransferTypes.AgentCommissionCashout)
+            {
+                return BadRequest("Agent cannot make transaction when account is suspended. He/she can only cashout agent comminsion and wallet balances.");
+            }
             if (transactionRequest != null && transactionRequest.TransferTypeId == (int)TransferTypes.TopUpSystemWallet)
             {
                 CashFlowHistory cashFlow = new CashFlowHistory();
@@ -354,7 +358,7 @@ namespace wleepay.API.Controllers
                     firebaseMessageRequest.DeviceToken = item.FcmToken;
                     var sendNotification = _firebaseNotification.SendFirebaseMessageRequest(firebaseMessageRequest);
                 }
-                userWallet = (status == Core.Enums.TransactionStatus.Pending) ? fromWalletUser : toWalletUser;
+                 userWallet = (status == Core.Enums.TransactionStatus.Pending) ? fromWalletUser : toWalletUser;
                 string name = (status == Core.Enums.TransactionStatus.Pending)
                     ? $"{toWalletUser.ApplicationUser.UserDetail.FirstName} {toWalletUser.ApplicationUser.UserDetail.LastName}"
                     : $"{fromWalletUser.ApplicationUser.UserDetail.FirstName} {fromWalletUser.ApplicationUser.UserDetail.LastName}";

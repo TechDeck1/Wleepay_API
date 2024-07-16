@@ -131,14 +131,14 @@ namespace wleepay.Services
             return await _unitOfWork.UserDetail.IsAccountAlreadyExists(accountNumber);
         }
 
-        public async Task<IEnumerable<Transaction>> GetIncomingOutGoingPaymentRequest(string userId, Core.Enums.PaymentRequestType type, Core.Enums.TransactionStatus transactionStatus, int pageSize, int pageIndex)
+        public async Task<IEnumerable<Transaction>> GetIncomingOutGoingPaymentRequest(string userId, Core.Enums.PaymentRequestType type, Core.Enums.TransactionStatus transactionStatus, int pageSize, int pageIndex, int transferType)
         {
             var user = await _unitOfWork.UserDetail.GetApplicationUser(userId, string.Empty, string.Empty, true);
             if (user == null)
                 return null;
             //get user wallets
 
-            var paymentRequest = await _transactionService.GetPaymentRequestByStatus(user.Wallets.Select(s => s.Id), type, transactionStatus, pageSize, pageIndex);
+            var paymentRequest = await _transactionService.GetPaymentRequestByStatus(user.Wallets.Select(s => s.Id), type, transactionStatus, pageSize, pageIndex, transferType);
 
             return paymentRequest;
         }
