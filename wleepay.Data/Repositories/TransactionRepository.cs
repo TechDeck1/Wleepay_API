@@ -171,8 +171,7 @@ namespace wleepay.Data.Repositories
             else if ((transferType == (int)TransferTypes.AgentCommissionCashout) && type == PaymentRequestType.InComing)
             {
                 transactionQuery = transactionQuery.Where(t => walletIds.Contains(t.FromWalletId)
-                                                               || (t.TransferTypeId == TransferTypes.AgentCommissionCashout.GetHashCode() 
-                                                               && walletIds.Contains(t.ToWalletId))
+                                                               || (t.TransferTypeId == TransferTypes.AgentCommissionCashout.GetHashCode() && walletIds.Contains(t.ToWalletId))
                                                                && walletIds.Contains(t.ToWalletId));
             }
             else
@@ -184,11 +183,6 @@ namespace wleepay.Data.Repositories
                                                       || (t.TransferTypeId == TransferTypes.AgentCommissionCashout.GetHashCode() && walletIds.Contains(t.ToWalletId)));
                
                 
-                //transactionQuery = transactionQuery.Where(t => (walletIds.Contains(t.ToWalletId)
-                //                                               && walletIds.Contains(t.FromWalletId))
-                //                                               || (t.TransferTypeId == TransferTypes.CashOut.GetHashCode()
-                //                                               ||  t.TransferTypeId == TransferTypes.FillAgent.GetHashCode()
-                //                                               ||  t.TransferTypeId == TransferTypes.AgentCommissionCashout.GetHashCode()));
             }
 
             return await transactionQuery.Skip(skipCount)
