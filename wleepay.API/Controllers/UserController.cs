@@ -598,6 +598,9 @@ namespace wleepay.API.Controllers
                 }
                 else
                 {
+                    var userDeatail = await _userDetailsService.GetUserDetailsById(request.UserId);
+                    var message = Messages.UserLoggedInOtherDevice.ToDescriptionString();
+                    var sendSms = _sMSService.sendMessage(message, userDeatail.PhoneNumber);
                     device = new UserDevices
                     {
                         UserId = request.UserId,
