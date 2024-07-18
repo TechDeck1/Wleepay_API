@@ -110,86 +110,31 @@ namespace wleepay.Data.Repositories
             return transactionDetail;
         }
 
-        //public async Task<IEnumerable<Transaction>> GetPaymentRequestByStatus(IEnumerable<long> walletIds, PaymentRequestType type, TransactionStatus statusType,int pageSize, int pageIndex, int transferType)
-        //{
-        //    int takeCount = pageSize;
-        //    int skipCount = pageIndex * pageSize;
-        //    var transactionQuery = WPContext.Transactions.Where(t => t.Status == statusType.GetHashCode())
-        //            .Include(s => s.FromWallet.ApplicationUser.UserDetail)
-        //            .Include(s => s.ToWallet.ApplicationUser.UserDetail)
-        //            .Include(s => s.TransferType).ToList();
-
-        //    //if(transferType > 0 && type == PaymentRequestType.InComing)
-        //    //{
-        //    transactionQuery = transactionQuery.Where(t => walletIds.Contains(t.FromWalletId)
-        //            && walletIds.Contains(t.ToWalletId)
-        //            && t.TransferTypeId == 7);
-        //    //}
-        //    //else if (type == PaymentRequestType.InComing)
-        //    //    transactionQuery = transactionQuery.Where(t => walletIds.Contains(t.FromWalletId) 
-        //    //    || (t.TransferTypeId == TransferTypes.CashOut.GetHashCode() && walletIds.Contains(t.ToWalletId)) 
-        //    //    || (t.TransferTypeId == TransferTypes.AgentCommissionCashout.GetHashCode() && walletIds.Contains(t.ToWalletId)))
-        //    //        .Include(s => s.FromWallet.ApplicationUser.UserDetail)
-        //    //        .Include(s => s.ToWallet.ApplicationUser.UserDetail)
-        //    //        .Include(s=>s.TransferType);
-        //    //else
-        //    //    transactionQuery = transactionQuery.Where(t => walletIds.Contains(t.ToWalletId) 
-        //    //    || (t.TransferTypeId == TransferTypes.CashOut.GetHashCode() && walletIds.Contains(t.FromWalletId))
-        //    //    || (t.TransferTypeId == TransferTypes.AgentCommissionCashout.GetHashCode() && walletIds.Contains(t.FromWalletId)))
-        //    //          .Include(s => s.FromWallet.ApplicationUser.UserDetail)
-        //    //          .Include(s => s.ToWallet.ApplicationUser.UserDetail)
-        //    //          .Include(s => s.TransferType);
-
-        //    return await transactionQuery.Skip(skipCount).Take(takeCount).Include(t => t.TransactionStatus).ToListAsync();
-        //}
-
         public async Task<IEnumerable<Transaction>> GetPaymentRequestByStatus(IEnumerable<long> walletIds, PaymentRequestType type, TransactionStatus statusType, int pageSize, int pageIndex, int transferType)
         {
             int takeCount = pageSize;
             int skipCount = pageIndex * pageSize;
+            var transactionQuery = WPContext.Transactions.Where(t => t.Status == statusType.GetHashCode());
 
-            var transactionQuery = WPContext.Transactions
-                .Where(t => t.Status == statusType.GetHashCode())
-                .Include(s => s.FromWallet.ApplicationUser.UserDetail)
-                .Include(s => s.ToWallet.ApplicationUser.UserDetail)
-                .Include(s => s.TransferType)
-                .AsQueryable();
-
-            // Apply additional filtering based on transferType and walletIds
-            if (transferType == (int)(TransferTypes.FillAgent) && type == PaymentRequestType.InComing)
-            {
+            if (type == PaymentRequestType.InComing)
                 transactionQuery = transactionQuery.Where(t => walletIds.Contains(t.FromWalletId)
-                                                               && walletIds.Contains(t.ToWalletId)
-                                                               && t.TransferTypeId == transferType);
-            }
-            else if ((transferType == (int)TransferTypes.CashOut) && type == PaymentRequestType.InComing)
-            {
-                transactionQuery = transactionQuery.Where(t => walletIds.Contains(t.FromWalletId)
-                                                               || (t.TransferTypeId == TransferTypes.CashOut.GetHashCode() && walletIds.Contains(t.ToWalletId))
-                                                               && walletIds.Contains(t.ToWalletId));
-            }
-            else if ((transferType == (int)TransferTypes.AgentCommissionCashout) && type == PaymentRequestType.InComing)
-            {
-                transactionQuery = transactionQuery.Where(t => walletIds.Contains(t.FromWalletId)
-                                                               || (t.TransferTypeId == TransferTypes.AgentCommissionCashout.GetHashCode() && walletIds.Contains(t.ToWalletId))
-                                                               && walletIds.Contains(t.ToWalletId));
-            }
+                || (t.TransferTypeId == TransferTypes.CashOut.GetHashCode() && walletIds.Contains(t.ToWalletId))
+                || (t.TransferTypeId == TransferTypes.AgentCommissionCashout.GetHashCode() && walletIds.Contains(t.ToWalletId))
+                || (t.TransferTypeId == TransferTypes.TopUp.GetHashCode() && walletIds.Contains(t.ToWalletId)))
+                    .Include(s => s.FromWallet.ApplicationUser.UserDetail)
+                    .Include(s => s.ToWallet.ApplicationUser.UserDetail)
+                    .Include(s => s.TransferType);
             else
-            {
+                transactionQuery = transactionQuery.Where(t => walletIds.Contains(t.ToWalletId)
+                || (t.TransferTypeId == TransferTypes.CashOut.GetHashCode() && walletIds.Contains(t.FromWalletId))
+                || (t.TransferTypeId == TransferTypes.TopUp.GetHashCode() && walletIds.Contains(t.FromWalletId))
+                || (t.TransferTypeId == TransferTypes.AgentCommissionCashout.GetHashCode() && walletIds.Contains(t.FromWalletId)))
+                      .Include(s => s.FromWallet.ApplicationUser.UserDetail)
+                      .Include(s => s.ToWallet.ApplicationUser.UserDetail)
+                      .Include(s => s.TransferType);
 
-                transactionQuery = transactionQuery.Where(t => walletIds.Contains(t.FromWalletId)
-                                                      || (t.TransferTypeId == TransferTypes.CashOut.GetHashCode() && walletIds.Contains(t.ToWalletId))
-                                                      || (t.TransferTypeId == TransferTypes.FillAgent.GetHashCode() && walletIds.Contains(t.ToWalletId))
-                                                      || (t.TransferTypeId == TransferTypes.AgentCommissionCashout.GetHashCode() && walletIds.Contains(t.ToWalletId)));
-               
-                
-            }
-
-            return await transactionQuery.Skip(skipCount)
-                                         .Take(takeCount)
-                                         .ToListAsync();
+            return await transactionQuery.Skip(skipCount).Take(takeCount).Include(t => t.TransactionStatus).ToListAsync();
         }
-
 
         public async Task<Transaction> GetTransactionDetails(long transactionId)
         {
