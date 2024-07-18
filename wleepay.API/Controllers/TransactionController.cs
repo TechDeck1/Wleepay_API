@@ -109,7 +109,9 @@ namespace wleepay.API.Controllers
             {
                 return NotFound();
             }
-            if ((walletBalance.ApplicationUser.UserRoles.FirstOrDefault().Role.Name == "Agent" && walletBalance.ApplicationUser.UserDetail.Status == (int)Status.Suspend) && transactionRequest.TransferTypeId != (int)TransferTypes.AgentCommissionCashout)
+
+            var aplicationUserDetail = await _userDetailService.GetApplicationUserById(walletBalance.UserId);
+            if ((aplicationUserDetail.UserRoles.FirstOrDefault().Role.Name == "Agent" && walletBalance.ApplicationUser.UserDetail.Status == (int)Status.Suspend) && transactionRequest.TransferTypeId != (int)TransferTypes.AgentCommissionCashout)
             {
                 return BadRequest("Agent cannot make transaction when account is suspended. He/she can only cashout agent comminsion and wallet balances.");
             }
@@ -169,7 +171,7 @@ namespace wleepay.API.Controllers
             var newTransactionResource = _mapper.Map<Transaction, TransactionResource>(newTransaction);
             if (newTransactionResource != null)
             {
-                await SendTransactionActionSMS(newTransaction);
+                await SendTransactionRequestActionSMS(newTransaction);
             }
 
             return Ok(newTransactionResource);
@@ -393,6 +395,64 @@ namespace wleepay.API.Controllers
                     var sendNotification = _firebaseNotification.SendFirebaseMessageRequest(firebaseMessageRequest);
                 }
 
+                userWallet = toWalletUser;
+                string name = $"{fromWalletUser.ApplicationUser.UserDetail.FirstName} {fromWalletUser.ApplicationUser.UserDetail.LastName}";
+                messageText = GenerateMessageText(transaction.Amount, userWallet.Currency, name, transaction.Id, status, transaction.TransferTypeId, true);
+            }
+            else if (transaction.TransferTypeId == Core.Enums.TransferTypes.TopUpSystemWallet.GetHashCode())
+            {
+                userWallet = toWalletUser;
+                string name = $"{fromWalletUser.ApplicationUser.UserDetail.FirstName} {fromWalletUser.ApplicationUser.UserDetail.LastName}";
+                messageText = GenerateMessageText(transaction.Amount, userWallet.Currency, name, transaction.Id, status, transaction.TransferTypeId, true);
+                var allAgents = await _userDetailService.GetAllUsersById(Role.Agent, 0, 0, userWallet.ApplicationUser.Id);
+                var agentsListResource = _mapper.Map<IEnumerable<ApplicationUser>, IEnumerable<ApplicationUserResource>>(allAgents.UserDetails);
+
+                foreach (var agent in agentsListResource)
+                {
+                    result = _smsService.sendMessage(messageText, agent.UserDetail.PhoneNumber);
+                }
+                return result;
+            }
+
+            if (!string.IsNullOrEmpty(messageText))
+                result = _smsService.sendMessage(messageText, userWallet.ApplicationUser.UserDetail.PhoneNumber);
+
+            return result;
+        }
+
+        private async Task<string> SendTransactionRequestActionSMS(Transaction transaction)
+        {
+            var userWallet = new Wallet();
+            string messageText = string.Empty;
+            string result = string.Empty;
+
+            var status = (Core.Enums.TransactionStatus)transaction.Status;
+            //Get from wallet user details
+            var fromWalletUser = await _walletService.GetUserDetailsByWalletIdAndCurrency(transaction.FromWalletId);
+            //Get to wallet user details
+            var toWalletUser = await _walletService.GetUserDetailsByWalletIdAndCurrency(transaction.ToWalletId);
+
+            //check transaction type
+            if (transaction.TransferTypeId == Core.Enums.TransferTypes.TopUp.GetHashCode() ||
+                transaction.TransferTypeId == Core.Enums.TransferTypes.FillAgent.GetHashCode())
+            {
+                userWallet = (status == Core.Enums.TransactionStatus.Pending) ? fromWalletUser : toWalletUser;
+                string name = (status == Core.Enums.TransactionStatus.Pending)
+                    ? $"{toWalletUser.ApplicationUser.UserDetail.FirstName} {toWalletUser.ApplicationUser.UserDetail.LastName}"
+                    : $"{fromWalletUser.ApplicationUser.UserDetail.FirstName} {fromWalletUser.ApplicationUser.UserDetail.LastName}";
+                messageText = GenerateMessageText(transaction.Amount, fromWalletUser.Currency, name, transaction.Id, status, transaction.TransferTypeId);
+            }
+            else if (transaction.TransferTypeId == Core.Enums.TransferTypes.CashOut.GetHashCode() ||
+               transaction.TransferTypeId == Core.Enums.TransferTypes.AgentCommissionCashout.GetHashCode())
+            {
+                userWallet = (status == Core.Enums.TransactionStatus.Pending) ? toWalletUser : fromWalletUser;
+                string name = (status == Core.Enums.TransactionStatus.Pending)
+                    ? $"{fromWalletUser.ApplicationUser.UserDetail.FirstName} {fromWalletUser.ApplicationUser.UserDetail.LastName}"
+                    : $"{toWalletUser.ApplicationUser.UserDetail.FirstName} {toWalletUser.ApplicationUser.UserDetail.LastName}";
+                messageText = GenerateMessageText(transaction.Amount, userWallet.Currency, name, transaction.Id, status, transaction.TransferTypeId, true);
+            }
+            else if (transaction.TransferTypeId == Core.Enums.TransferTypes.WleeTransfer.GetHashCode())
+            {
                 userWallet = toWalletUser;
                 string name = $"{fromWalletUser.ApplicationUser.UserDetail.FirstName} {fromWalletUser.ApplicationUser.UserDetail.LastName}";
                 messageText = GenerateMessageText(transaction.Amount, userWallet.Currency, name, transaction.Id, status, transaction.TransferTypeId, true);

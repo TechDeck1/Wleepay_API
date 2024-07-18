@@ -195,68 +195,67 @@ namespace wleepay.API.Controllers
         {
             try
             {
-            var userDetail = await _userDetailsService.GetApplicationUserById(request.UserId);
-            if (userDetail == null)
-            {
-                return Ok(new
+                var userDetail = await _userDetailsService.GetApplicationUserById(request.UserId);
+                if (userDetail == null)
                 {
-                    status = false,
-                    message = Messages.NotFound.ToDescriptionString()
-                });
-            }
+                    return Ok(new
+                    {
+                        status = false,
+                        message = Messages.NotFound.ToDescriptionString()
+                    });
+                }
 
-            var ticket = await _customerTicketsService.GetCustomerTicketsById(request.CustomerTicketId);
-            if (ticket == null)
-            {
-                return Ok(new
+                var ticket = await _customerTicketsService.GetCustomerTicketsById(request.CustomerTicketId);
+                if (ticket == null)
                 {
-                    status = false,
-                    message = Messages.TicketNotFound.ToDescriptionString()
-                });
-            }
+                    return Ok(new
+                    {
+                        status = false,
+                        message = Messages.TicketNotFound.ToDescriptionString()
+                    });
+                }
 
-            var memberDetails = await _userDetailsService.GetApplicationUserById(request.UserId);
-            if (memberDetails == null)
-            {
-                return Ok(new
+                var memberDetails = await _userDetailsService.GetApplicationUserById(request.UserId);
+                if (memberDetails == null)
                 {
-                    status = false,
-                    message = Messages.NotFound.ToDescriptionString()
-                });
-            }
+                    return Ok(new
+                    {
+                        status = false,
+                        message = Messages.NotFound.ToDescriptionString()
+                    });
+                }
 
-            Notes notesToInsert = new Notes();
-            notesToInsert.CustomerTicketId = request.CustomerTicketId;
-            notesToInsert.Note = request.Note;
-            notesToInsert.AddedBy = request.UserId;
-            var notes = await _notesService.AddUpdateNotes(notesToInsert);
+                Notes notesToInsert = new Notes();
+                notesToInsert.CustomerTicketId = request.CustomerTicketId;
+                notesToInsert.Note = request.Note;
+                notesToInsert.AddedBy = request.UserId;
+                var notes = await _notesService.AddUpdateNotes(notesToInsert);
            
-            ticket.Status = (int)CustomerTicketStatus.Open;
-            ticket.UpdatedDate = DateTime.UtcNow;
-            ticket.NotificationStatus = (int)CustomerTicketNotificationStatus.New;
-            var tickets = await _customerTicketsService.AddUpdateCustomerTickets(ticket);
+                ticket.Status = (int)CustomerTicketStatus.Open;
+                ticket.UpdatedDate = DateTime.UtcNow;
+                ticket.NotificationStatus = (int)CustomerTicketNotificationStatus.New;
+                var tickets = await _customerTicketsService.AddUpdateCustomerTickets(ticket);
 
-            var smsMessageTemplate = MessagesTemplates.CustomerTicketReplyMessageSmsTemplate(memberDetails.UserDetail.FirstName, request.Note);
-            var message = MessagesTemplates.CustomerTicketReplyMessage(memberDetails.UserDetail.FirstName, request.Note);
-            var subject = Messages.SubjectForTicketUpdated.ToDescriptionString();
+                var smsMessageTemplate = MessagesTemplates.CustomerTicketReplyMessageSmsTemplate(memberDetails.UserDetail.FirstName, request.Note);
+                var message = MessagesTemplates.CustomerTicketReplyMessage(memberDetails.UserDetail.FirstName, request.Note);
+                var subject = Messages.SubjectForTicketUpdated.ToDescriptionString();
 
-            var device = await _userDeviceService.GetUserDeviceByUserId(request.UserId);
+                var device = await _userDeviceService.GetUserDeviceByUserId(ticket.UserId);
 
-            foreach (var item in device)
-            {
+                foreach (var item in device)
+                {
 
+                    FirebaseMessageRequest firebaseMessageRequest = new FirebaseMessageRequest();
+                    firebaseMessageRequest.Title = "Note added";
+                    firebaseMessageRequest.Body = "New note is added for ticket number " + ticket.Id;
+                    firebaseMessageRequest.DeviceToken = item.FcmToken;
+                    firebaseMessageRequest.DeviceId = item.DeviceId;
+                    firebaseMessageRequest.UserId = userDetail.UserDetail.UserId;
+                    firebaseMessageRequest.FirstName = userDetail.UserDetail.FirstName;
+                    firebaseMessageRequest.LastName = userDetail.UserDetail.LastName;
 
-                FirebaseMessageRequest firebaseMessageRequest = new FirebaseMessageRequest();
-                firebaseMessageRequest.Title = "Note added";
-                firebaseMessageRequest.Body = "New note is added for ticket number " + ticket.Id;
-                firebaseMessageRequest.DeviceToken = item.FcmToken;
-                firebaseMessageRequest.DeviceId = item.DeviceId;
-                firebaseMessageRequest.UserId = userDetail.UserDetail.UserId;
-                firebaseMessageRequest.FirstName = userDetail.UserDetail.FirstName;
-                firebaseMessageRequest.LastName = userDetail.UserDetail.LastName;
-
-                var sendNotification = _firebaseNotification.SendFirebaseMessageRequest(firebaseMessageRequest);
-            }
+                    var sendNotification = _firebaseNotification.SendFirebaseMessageRequest(firebaseMessageRequest);
+                }
 
                 if (request.Note != null)
                 {
@@ -279,6 +278,7 @@ namespace wleepay.API.Controllers
                     status = true,
                     message = Messages.TicketUpdated.ToDescriptionString(),
                 });
+            
             }
 
             return BadRequest();
