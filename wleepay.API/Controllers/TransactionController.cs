@@ -271,7 +271,7 @@ namespace wleepay.API.Controllers
         }
 
         [HttpGet("{transferTypeId}/{currencyTypeId}")]
-        public async Task<IActionResult> GetTransactionByTypeAndCurrency(int transferTypeId,int currencyTypeId, [FromQuery] int pageIndex=0 , [FromQuery] int pageSize=10)
+        public async Task<IActionResult> GetTransactionByTypeAndCurrency(int transferTypeId,int currencyTypeId, [FromQuery] int pageIndex , [FromQuery] int pageSize)
         {
 
             var result = await _transactionService.GetTransactionsByTypeAndCurrency(transferTypeId, currencyTypeId, pageIndex, pageSize);
@@ -300,10 +300,11 @@ namespace wleepay.API.Controllers
             return Ok(new List<TransactionResource>());
         }
 
+        [AllowAnonymous]
         [HttpGet("history/{userId}")]
-        public async Task<IActionResult> GetTransactionHistoryByUserId(string userId, [FromQuery] int pageIndex = 0, [FromQuery] int pageSize = 10)
+        public async Task<IActionResult> GetTransactionHistoryByUserId(string userId, [FromQuery] int Index, [FromQuery] int Size)
         {
-            var transactionResult = await _transactionService.GetTransactionHistoryByUserId(userId, pageIndex, pageSize);
+            var transactionResult = await _transactionService.GetTransactionHistoryByUserId(userId, Index, Size);
             if (transactionResult.Transactions.Count() > 0)
             {
                 var transactionResourceList = _mapper.Map<IEnumerable<Transaction>, IEnumerable<TransactionHistoryResource>>(transactionResult.Transactions);
