@@ -21,9 +21,9 @@ namespace wleepay.Services
             this._unitOfWork = unitOfWork;
         }
 
-        public async Task<IEnumerable<Transaction>> GetPaymentRequestByStatus(IEnumerable<long> walletIds, PaymentRequestType type, TransactionStatus transactionStatus, int pageSize, int pageIndex, int transferType)
+        public async Task<IEnumerable<Transaction>> GetPaymentRequestByStatus(IEnumerable<long> walletIds, PaymentRequestType type, TransactionStatus transactionStatus, int pageSize, int pageIndex)
         {
-            return await _unitOfWork.Transaction.GetPaymentRequestByStatus(walletIds, type, transactionStatus, pageSize, pageIndex, transferType);
+            return await _unitOfWork.Transaction.GetPaymentRequestByStatus(walletIds, type, transactionStatus, pageSize, pageIndex);
         }
 
         public async Task<Transaction> GetTransactionsById(long Id)

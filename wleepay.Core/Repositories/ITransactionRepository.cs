@@ -15,7 +15,7 @@ namespace wleepay.Core.Repositories
         Task<IEnumerable<Transaction>> GetWalletsTransactions(IEnumerable<long> walletIdList);
         Task<Transaction> AddUpdateTransaction(Transaction transactionDetail);
         Task<Transaction> UpdateTransactionStatus(long transactionId, Core.Enums.TransactionStatus status);
-        Task<IEnumerable<Transaction>> GetPaymentRequestByStatus(IEnumerable<long> walletIds, Core.Enums.PaymentRequestType type, Core.Enums.TransactionStatus transferStatus, int pageSize, int pageIndex, int transferType);
+        Task<IEnumerable<Transaction>> GetPaymentRequestByStatus(IEnumerable<long> walletIds, Core.Enums.PaymentRequestType type, Core.Enums.TransactionStatus transferStatus, int pageSize, int pageIndex);
         Task<Transaction> CreatePaymentRequest(Transaction transactionDetail);
         Task<Transaction> GetTransactionDetails(long transactionId);
         Task<double> CalculateWalletTransaction(long walletId, bool isMonthly = false);

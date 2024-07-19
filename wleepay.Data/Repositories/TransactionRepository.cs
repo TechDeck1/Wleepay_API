@@ -110,7 +110,7 @@ namespace wleepay.Data.Repositories
             return transactionDetail;
         }
 
-        public async Task<IEnumerable<Transaction>> GetPaymentRequestByStatus(IEnumerable<long> walletIds, PaymentRequestType type, TransactionStatus statusType, int pageSize, int pageIndex, int transferType)
+        public async Task<IEnumerable<Transaction>> GetPaymentRequestByStatus(IEnumerable<long> walletIds, PaymentRequestType type, TransactionStatus statusType, int pageSize, int pageIndex)
         {
             int takeCount = pageSize;
             int skipCount = pageIndex * pageSize;

@@ -392,7 +392,7 @@ namespace wleepay.API.Controllers
         [HttpPost("paymentRequest")]
         public async Task<IActionResult> GetIncomingOutGoingTopUpRequests([FromBody] PaymentRequest paymentRequestParam)
         {
-            var paymentRequest = await _userDetailsService.GetIncomingOutGoingPaymentRequest(paymentRequestParam.UserId, paymentRequestParam.Type,paymentRequestParam.TransferStatus,paymentRequestParam.PageSize,paymentRequestParam.PageIndex, (int)paymentRequestParam.TransferType);
+            var paymentRequest = await _userDetailsService.GetIncomingOutGoingPaymentRequest(paymentRequestParam.UserId, paymentRequestParam.Type,paymentRequestParam.TransferStatus,paymentRequestParam.PageSize,paymentRequestParam.PageIndex);
 
           if (paymentRequest == null)
                 return Ok(new List<TransactionResource>());
