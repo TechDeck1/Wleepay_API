@@ -598,9 +598,7 @@ namespace wleepay.API.Controllers
                 }
                 else
                 {
-                    var userDeatail = await _userDetailsService.GetUserDetailsById(request.UserId);
-                    var message = Messages.UserLoggedInOtherDevice.ToDescriptionString();
-                    var sendSms = _sMSService.sendMessage(message, userDeatail.PhoneNumber);
+                    
                     device = new UserDevices
                     {
                         UserId = request.UserId,
@@ -609,6 +607,18 @@ namespace wleepay.API.Controllers
                         AddedDate = DateTime.UtcNow,
                         IsActive = true,
                     };
+
+                    var allDevices = await _userDeviceService.GetUserDeviceByUserId(request.UserId);
+                    if (allDevices.Count != 0)
+                    {
+                        var checkExistingDevice = allDevices.Contains(device);
+                        if (!checkExistingDevice)
+                        {
+                            var userDeatail = await _userDetailsService.GetUserDetailsById(request.UserId);
+                            var message = Messages.UserLoggedInOtherDevice.ToDescriptionString();
+                            var sendSms = _sMSService.sendMessage(message, userDeatail.PhoneNumber);
+                        }
+                    }
                 }
 
                 var response = await _userDeviceService.AddOrUpdateUserDevices(device);

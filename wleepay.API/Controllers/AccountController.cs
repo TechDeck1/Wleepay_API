@@ -323,7 +323,7 @@ namespace wleepay.API.Controllers
 
                         if (userDetails.FailedLoginAttempt >= 3) // Threshold for sending SMS
                         {
-                            var sendSms = _smsService.sendMessage("Multiple failed login attempts detected.", user.PhoneNumber);
+                            var sendSms = _smsService.sendMessage("Multiple failed login attempts detected.", userDetails.PhoneNumber);
                         }
                     }
                     return BadRequest("Invalid login request.");
