@@ -319,7 +319,7 @@ namespace wleepay.API.Controllers
                     if (userDetails != null)
                     {
                         userDetails.FailedLoginAttempt++;
-                        await _userDetailsService.UpdateUserLoggedInStatus(userDetails.UserId, true, 0);
+                        await _userDetailsService.UpdateUserLoggedInStatus(userDetails.UserId, true, userDetails.FailedLoginAttempt);
 
                         if (userDetails.FailedLoginAttempt >= 3) // Threshold for sending SMS
                         {

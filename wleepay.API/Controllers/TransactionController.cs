@@ -111,10 +111,10 @@ namespace wleepay.API.Controllers
             }
 
             var aplicationUserDetail = await _userDetailService.GetApplicationUserById(walletBalance.UserId);
-            if ((aplicationUserDetail.UserRoles.FirstOrDefault().Role.Name == "Agent" && walletBalance.ApplicationUser.UserDetail.Status == (int)Status.Suspend) && transactionRequest.TransferTypeId != (int)TransferTypes.AgentCommissionCashout)
-            {
-                return BadRequest("Agent cannot make transaction when account is suspended. He/she can only cashout agent comminsion and wallet balances.");
-            }
+            //if ((aplicationUserDetail.UserRoles.FirstOrDefault().Role.Name == "Agent" && walletBalance.ApplicationUser.UserDetail.Status == (int)Status.Suspend) && transactionRequest.TransferTypeId != (int)TransferTypes.AgentCommissionCashout)
+            //{
+            //    return BadRequest("Agent cannot make transaction when account is suspended. He/she can only cashout agent comminsion and wallet balances.");
+            //}
             if (transactionRequest != null && transactionRequest.TransferTypeId == (int)TransferTypes.TopUpSystemWallet)
             {
                 CashFlowHistory cashFlow = new CashFlowHistory();
