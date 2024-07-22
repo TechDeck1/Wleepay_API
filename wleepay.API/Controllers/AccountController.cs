@@ -139,16 +139,29 @@ namespace wleepay.API.Controllers
                 if (!string.IsNullOrEmpty(userDetail.EmailId))
                     newUser.Email = userDetail.EmailId;
 
-                var isUserCreated = await _userManager.CreateAsync(newUser, userDetail.Pin.ToString());
+                IdentityResult isUserCreated = new IdentityResult();
+                if (string.IsNullOrEmpty(userDetail.Pin))
+                {
+                     isUserCreated = await _userManager.CreateAsync(newUser);
+
+                }
+                else
+                {
+                     isUserCreated = await _userManager.CreateAsync(newUser, userDetail?.Pin?.ToString());
+
+                }
 
                 if (isUserCreated.Succeeded)
                 {
                     //assign role to user
                     var roleEnumStringValue = userDetail.Role.HasValue ? ((Core.Enums.Role)userDetail.Role) : ((Core.Enums.Role)Core.Enums.Role.Member);
                     await _userManager.AddToRoleAsync(newUser, roleEnumStringValue.ToString());
-                    
-                    //sign in user with identity
-                    var result = await _signInManager.PasswordSignInAsync(newUser, userDetail.Pin.ToString(), false, true);
+
+                    if (!string.IsNullOrEmpty(userDetail.Pin))
+                    {
+                        //sign in user with identity
+                        var result = await _signInManager.PasswordSignInAsync(newUser, userDetail.Pin.ToString(), false, true);
+                    }
 
                     //insert data in userdetails
                     var userDetailsToInsert = _mapper.Map<AddUserDetailsResource, UserDetail>(userDetail);

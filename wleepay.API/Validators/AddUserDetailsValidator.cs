@@ -50,15 +50,7 @@ namespace wleepay.API.Validators
                    .MaximumLength(50);
 
             }
-            else
-            {
-
-             RuleFor(a => a.Pin.ToString())
-                .NotNull()
-                .NotEmpty()
-                .MinimumLength(4);
-
-            }
+           
         }
     }
 }

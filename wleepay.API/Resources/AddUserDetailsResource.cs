@@ -33,7 +33,7 @@ namespace wleepay.API.Resources
         public AddressResource? Address { get; set; }
         public string? City { get; set; }
         public string? District { get; set; }
-        public string TraningCompletionDate { get; set; }
+        public DateTime? TraningCompletionDate { get; set; }
         public string Merchandise { get; set; }
 
     }
