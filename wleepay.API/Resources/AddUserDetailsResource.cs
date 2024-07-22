@@ -31,6 +31,10 @@ namespace wleepay.API.Resources
         public string CreatedBy { get; set; }
         public DateTime HireDate { get; set; }
         public AddressResource? Address { get; set; }
+        public string? City { get; set; }
+        public string? District { get; set; }
+        public string TrainingCompletionDate { get; set; }
+        public string Merchandise { get; set; }
 
     }
 }

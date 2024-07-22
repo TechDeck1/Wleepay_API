@@ -40,6 +40,11 @@ namespace wleepay.API.Mapping
                     .ForMember(dest => dest.DocumentImage, src => src.MapFrom(x => x.KYCDocumentImage))
                     .ReverseMap();
 
+            CreateMap<AddAgentDetailResource, KYCdocuments>()
+                    .ForMember(dest => dest.Type, src => src.MapFrom(x => x.DocumentTypeId))
+                    .ForMember(dest => dest.DocumentImage, src => src.MapFrom(x => x.KYCDocumentImage))
+                    .ReverseMap();
+
             CreateMap<KYCDocumentResource, wleepay.Core.Models.KYCdocuments>().ReverseMap();
             CreateMap<DocumentTypeResource, wleepay.Core.Models.DocumentType>().ReverseMap();
 
@@ -73,6 +78,7 @@ namespace wleepay.API.Mapping
             CreateMap<TaxRateResourceModel, TransferFee>().ReverseMap();
             CreateMap<AddStaffDetailsResource, UserDetail>().ReverseMap();
             CreateMap<AddSystemAdminResource, UserDetail>().ReverseMap();
+            CreateMap<AddAgentDetailResource, UserDetail>().ReverseMap();
             CreateMap<AddStaffDetailsResource, KYCdocuments>()
                    .ForMember(dest => dest.Type, src => src.MapFrom(x => x.DocumentTypeId))
                    .ForMember(dest => dest.DocumentImage, src => src.MapFrom(x => x.KYCDocumentImage))

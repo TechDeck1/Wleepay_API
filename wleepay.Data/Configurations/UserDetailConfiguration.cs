@@ -89,12 +89,19 @@ namespace wleepay.Data.Configurations
             builder
                .Property(u => u.HireDate);
 
+            builder
+               .Property(u => u.Merchandise);
+
+            builder
+               .Property(u => u.TraningCompletionDate);
+
             builder.Property(u => u.AccountNumber);
 
             builder
                .Property(u => u.WleePhoneNumber);
 
             builder.Property(u => u.CreatedBy);
+
             builder.Property(u => u.Permissions);
 
             builder.Property(u => u.FailedLoginAttempt)

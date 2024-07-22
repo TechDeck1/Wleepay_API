@@ -109,6 +109,7 @@ namespace wleepay.API.Controllers
         {
             try
             {
+                var baseUrl = _configuration.GetSection("BaseUrl").Value;
                 var validator = new AddUserDetailsValidator(userDetail.Role.ToString());
                 var validationResult = await validator.ValidateAsync(userDetail);
 
@@ -214,6 +215,12 @@ namespace wleepay.API.Controllers
 
                         //generate jwt token
                         var token = GenerateJSONWebToken(userDetailsToInsert);
+
+                        CompleteSignUpResourceModel completeSignUpResourceModel = new CompleteSignUpResourceModel();
+                        completeSignUpResourceModel.Email = userDetail.EmailId;
+                        completeSignUpResourceModel.PhoneNumber = userDetail.PhoneNumber;
+                        completeSignUpResourceModel.ClientURI = baseUrl + "/agent-account-setup";
+                        var sendSms = await GenerateLinkForComleteSignUp(completeSignUpResourceModel);
 
                         //send registration sucess message on mobile number
                         _smsService.sendMessage(MessagesTemplates.RegistrationSuccessMessage(updatedDetails.AccountNumber, updatedDetails?.KYCLevelDetail?.Name), updatedDetails.PhoneNumber);
@@ -538,15 +545,18 @@ namespace wleepay.API.Controllers
                     string encryptedText = Common.Encrypt(completeSignUpResourceModel.Email, secretKey);
                     var token = HttpUtility.UrlEncode(encryptedText);
                     string callbackUrl = $"{completeSignUpResourceModel.ClientURI}?email={(token)}";
-                    var username = userDetails.FirstName + " " + userDetails.LastName;
-                    EmailHtmlTemplates template = new EmailHtmlTemplates();
+                    string message = "Your account for wleepay is successfully created, To setup account please open below link and complete registration." + " " + callbackUrl;
+                   
+                    var sendText = _smsService.sendMessage(message, userDetails.PhoneNumber);
+                    if (sendText == "success")
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
 
-                    var subject = "Alert: Complete your Wleepay portal signup (Do not reply)";
-                    var htmlTemplate = template.EmailTemplateForAccountSetup(completeSignUpResourceModel.Email, callbackUrl, username);
-
-                    await _emailSender.SendEmailAsync(completeSignUpResourceModel.Email, htmlTemplate, username, subject);
-
-                    return true;
 
                 }
 
