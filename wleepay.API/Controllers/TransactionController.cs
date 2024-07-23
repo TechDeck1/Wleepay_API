@@ -15,6 +15,7 @@ using wleepay.Core.DTO.Request;
 using wleepay.Core.Enums;
 using wleepay.Core.Models;
 using wleepay.Core.Services;
+using wleepay.Services;
 
 namespace wleepay.API.Controllers
 {
@@ -34,6 +35,7 @@ namespace wleepay.API.Controllers
         private readonly IUserDetailService _userDetailService;
         private readonly IFirebaseNotification _firebaseNotification;
         private readonly IUserDeviceService _userDeviceService;
+
 
         public TransactionController(ITransactionService transactionService, IWalletService walletService, ISMSService smsService, IMapper mapper, IEmailSender emailSender, ICashFlowService cashFlowService, IUserDetailService userDetailService, IFirebaseNotification firebaseNotification, IUserDeviceService userDeviceService) 
         {
@@ -314,6 +316,22 @@ namespace wleepay.API.Controllers
             return Ok(new List<TransactionResource>());
         }
 
+        [HttpPost("agentPaymentRequest")]
+        public async Task<IActionResult> GetIncomingOutGoingTopUpRequests([FromBody] AgentPaymentRequest paymentRequestParam)
+        {
+            var paymentRequest = await _transactionService.GetPaymentRequestByStatusAndType(paymentRequestParam.Type, paymentRequestParam.TransferStatus, paymentRequestParam.TransferId ,paymentRequestParam.PageSize, paymentRequestParam.PageIndex);
+
+            if (paymentRequest == null)
+                return Ok(new List<TransactionResource>());
+
+            var transactionResource = _mapper.Map<IEnumerable<Transaction>, IEnumerable<TransactionHistoryResource>>(paymentRequest);
+            foreach (var item in transactionResource)
+            {
+                var time = Helpers.Common.ConvertISTtoLiberiaTime(item.CreatedDate);
+                item.CreatedDate = time;
+            }
+            return Ok(transactionResource);
+        }
         #region Helper function
         private async Task<TransactionResource> ChangePaymentRequestStatus(long paymentRequestId, Core.Enums.TransactionStatus status)
         {
