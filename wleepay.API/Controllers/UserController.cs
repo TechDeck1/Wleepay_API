@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Microsoft.SqlServer.Management.Smo;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Drawing.Imaging;
@@ -47,6 +48,7 @@ namespace wleepay.API.Controllers
         private readonly IUploadDocument _storageService;
         private readonly IUserDeviceService _userDeviceService;
         private readonly ISMSService _sMSService;
+        private readonly IExternalApiService _externalApiService;
         public UserController(UserManager<ApplicationUser> userManager,
             IUserDetailService userDetailsService,
             IUploadDocument uploadDocument,
@@ -57,7 +59,7 @@ namespace wleepay.API.Controllers
             ILogger<UserController> logger, 
             IUsersStaffRoleService usersStaffRoleService,
             IUploadDocument storageService,
-            IUserDeviceService userDeviceService, ISMSService sMSService)
+            IUserDeviceService userDeviceService, ISMSService sMSService, IExternalApiService externalApiService)
 
         {
             _userManager = userManager;
@@ -72,6 +74,7 @@ namespace wleepay.API.Controllers
             _storageService = storageService;
             _userDeviceService = userDeviceService;
             _sMSService = sMSService;
+            _externalApiService = externalApiService;
         }
 
         [HttpGet("{userId}")]
@@ -457,11 +460,11 @@ namespace wleepay.API.Controllers
             {
                 var userDetail = await _userDetailsService.GetUserDetailsById(userId);
                 var userResource = _mapper.Map<UserDetail, UserDetailResource>(userDetail);
-                string[] deserializedNumbers = JsonSerializer.Deserialize<string[]>(userResource?.Permissions);
+                string[] deserializedNumbers = System.Text.Json.JsonSerializer.Deserialize<string[]>(userResource?.Permissions);
 
                 if (!string.IsNullOrEmpty(userResource?.Permissions))
                 {
-                    string jsonString = JsonSerializer.Serialize(deserializedNumbers);
+                    string jsonString = System.Text.Json.JsonSerializer.Serialize(deserializedNumbers);
 
                     var secretKey = "1234567890123456";
 
@@ -667,7 +670,33 @@ namespace wleepay.API.Controllers
             }
         }
 
+        [AllowAnonymous]
+        [HttpPost]
+        [Route("sochitel")]
+        public async Task<IActionResult> GetOperators([FromBody] object data)
+        {
+            try
+            {
+                var result = await _externalApiService.PostDataAsync(data);
 
+                var products = JsonConvert.DeserializeObject<SochitelOperatorResponse>(result);
+                
+                List<Operator> operators = new List<Operator>();
+                foreach (var kvp in products.Result)
+                {
+                    var product = kvp.Value;
+                    operators.Add(product);
+                }
+
+                var newOperatorList = operators;
+
+                return Ok(newOperatorList);
+            }
+            catch
+            {
+                return StatusCode(500, "An error occurred while processing your request.");
+            }
+        }
 
         #region helper methods
         private async Task<string> uploadDocument(IFormFile file, string userId, string containerName = "kyc-document")

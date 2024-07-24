@@ -177,6 +177,8 @@ namespace wleepay.API
             services.AddTransient<ISystemStatusService, SystemStatusService>();
             services.AddTransient<IFirebaseNotification, FirebaseMessageService>();
             services.AddTransient<IUserDeviceService, UserDeviceService>();
+            services.AddTransient<IExternalApiService, ExternalApiService>();
+
 
 
             //swagger config
@@ -231,7 +233,8 @@ namespace wleepay.API
                 options.Filters.Add<OtpExceptionFilter>();
             });
 
-         
+            services.AddHttpClient();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -191,7 +191,7 @@ namespace wleepay.API.Controllers
                         }
                     }
 
-                    userDetailsToInsert.Status = (int)Status.Active;
+                    userDetailsToInsert.Status = (int)wleepay.Core.Enums.Status.Active;
                     //save data
                     var updatedDetails = await _userDetailsService.AddOrUpdateUserDetails(userDetailsToInsert);
                     if (updatedDetails.UserId != null)

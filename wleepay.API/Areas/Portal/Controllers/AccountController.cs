@@ -38,6 +38,7 @@ using static wleepay.Communication.EmailTemplates.EmailLockOutTemplate;
 using wleepay.Communication.Services;
 using System.Reflection;
 using static wleepay.Communication.EmailTemplates.AccountSuspendAndUnsuspendTemplate;
+using Status = wleepay.Core.Enums.Status;
 
 namespace wleepay.API.Areas.Portal.Controllers
 {

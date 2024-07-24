@@ -57,6 +57,12 @@ namespace wleepay.API.Controllers
             if (transactionResult.Transactions.Count() > 0)
             {
                 var transactionResourceList = _mapper.Map<IEnumerable<Transaction>, IEnumerable<TransactionHistoryResource>>(transactionResult.Transactions);
+
+                foreach (var item in transactionResourceList)
+                {
+                    var time = Helpers.Common.ConvertISTtoLiberiaTime(item.CreatedDate);
+                    item.CreatedDate = time;
+                }
                 return Ok(new { Transactions = transactionResourceList, TotalCount = transactionResult.TotalCount });
             }
 
@@ -325,6 +331,7 @@ namespace wleepay.API.Controllers
                 return Ok(new List<TransactionResource>());
 
             var transactionResource = _mapper.Map<IEnumerable<Transaction>, IEnumerable<TransactionHistoryResource>>(paymentRequest);
+           
             foreach (var item in transactionResource)
             {
                 var time = Helpers.Common.ConvertISTtoLiberiaTime(item.CreatedDate);
