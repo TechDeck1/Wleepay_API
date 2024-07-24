@@ -698,6 +698,33 @@ namespace wleepay.API.Controllers
             }
         }
 
+        [HttpPost]
+        [Route("sochitel/OperatorProducts")]
+        public async Task<IActionResult> GetOperatorProducts([FromBody] object data)
+        {
+            try
+            {
+                var result = await _externalApiService.PostDataAsync(data);
+
+                var products = JsonConvert.DeserializeObject<SochitelOperatorProductsResponse>(result);
+
+                List<Product> operatorsProduct = new List<Product>();
+               
+                foreach (var product in products.Result.Products)
+                {
+                    operatorsProduct.Add(product.Value);
+                }
+
+                var newOperatorProductList = operatorsProduct;
+
+                return Ok(newOperatorProductList);
+            }
+            catch
+            {
+                return StatusCode(500, "An error occurred while processing your request.");
+            }
+        }
+
         #region helper methods
         private async Task<string> uploadDocument(IFormFile file, string userId, string containerName = "kyc-document")
         {

@@ -64,7 +64,7 @@ namespace wleepay.API.Mapping
             
             CreateMap<WalletType, WalletTypeResource>().ReverseMap();
 
-            CreateMap<CurrencyResource, Currency>().ReverseMap();
+            CreateMap<CurrencyResource, Core.Models.Currency>().ReverseMap();
 
             CreateMap<TransferType, TransferTypeResource>().ReverseMap();
             CreateMap<Transaction, TransactionResource>()
