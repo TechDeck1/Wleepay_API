@@ -16,7 +16,6 @@ namespace wleepay.Services
             this._unitOfWork = unitOfWork;
         }
 
-
         public async Task<Notes> AddUpdateNotes(Notes notes)
         {
             notes.CreatedDate= DateTime.Now;

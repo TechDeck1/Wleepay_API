@@ -744,3 +744,4 @@ D:\Offical\Wleepay_API\wleepay.API\obj\Debug\net5.0\refint\wleepay.API.dll
 D:\Offical\Wleepay_API\wleepay.API\obj\Debug\net5.0\wleepay.API.pdb
 D:\Offical\Wleepay_API\wleepay.API\obj\Debug\net5.0\wleepay.API.genruntimeconfig.cache
 D:\Offical\Wleepay_API\wleepay.API\obj\Debug\net5.0\ref\wleepay.API.dll
+D:\Offical\Wleepay_API\wleepay.API\bin\Debug\net5.0\Stripe.net.dll
