@@ -10,15 +10,14 @@ namespace wleepay.Services
 {
     public class StripeService : IStripeService
     {
-        private readonly string _apiKey;
-
-        public StripeService(string apiKey)
+       
+        public StripeService()
         {
-            _apiKey = apiKey;
-            StripeConfiguration.ApiKey = _apiKey;
         }
-        public async Task<string> CreatePaymentLinkAsync(decimal amount, string currency = "usd")
+        public async Task<string> CreatePaymentLinkAsync(double amount, string apiKey, string currency = "usd")
         {
+            StripeConfiguration.ApiKey = apiKey;
+
             var options = new SessionCreateOptions
             {
                 PaymentMethodTypes = new List<string>
@@ -36,14 +35,14 @@ namespace wleepay.Services
                         {
                             Name = "Test Product",
                         },
-                        UnitAmountDecimal = amount * 100, // amount in cents
+                        UnitAmount = (long)amount * 100, // amount in cents
                     },
                     Quantity = 1,
                 },
             },
                 Mode = "payment",
-                SuccessUrl = "https://yourdomain.com/success",
-                CancelUrl = "https://yourdomain.com/cancel",
+                SuccessUrl = "http://localhost:4200/#/payments/BuyMobileAirtime",
+                CancelUrl = "http://localhost:4200/#/payments/BuyMobileAirtime",
             };
 
             var service = new SessionService();

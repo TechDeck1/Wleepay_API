@@ -178,6 +178,7 @@ namespace wleepay.API
             services.AddTransient<IFirebaseNotification, FirebaseMessageService>();
             services.AddTransient<IUserDeviceService, UserDeviceService>();
             services.AddTransient<IExternalApiService, ExternalApiService>();
+            services.AddTransient<IStripeService, StripeService>();
 
 
 

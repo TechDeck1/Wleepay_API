@@ -7,7 +7,7 @@ namespace wleepay.Core.Services
 {
     public interface IStripeService
     {
-        public Task<string> CreatePaymentLinkAsync(decimal amount, string currency = "usd");
+        public Task<string> CreatePaymentLinkAsync(double amount, string apiKey, string currency = "usd");
 
     }
 }

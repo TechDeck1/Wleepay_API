@@ -2,12 +2,13 @@
 using Microsoft.Extensions.Configuration;
 using Stripe;
 using System.Threading.Tasks;
+using System.Web.Http;
 using wleepay.Core.Services;
 using wleepay.Services;
 
 namespace wleepay.API.Controllers
 {
-    [Route("api/[controller]")]
+    [Microsoft.AspNetCore.Mvc.Route("api/[controller]")]
     [ApiController]
     public class StripeController : Controller
     {
@@ -21,14 +22,14 @@ namespace wleepay.API.Controllers
             _stripeService = stripeService;
         }
 
-        [HttpPost]
-        public async Task<IActionResult> Create([FromBody] PaymentRequestForStripe paymentRequest)
+        [Microsoft.AspNetCore.Mvc.HttpPost]
+        public async Task<IActionResult> Create([Microsoft.AspNetCore.Mvc.FromBody] PaymentRequestForStripe paymentRequest)
         {
             StripeConfiguration.ApiKey = _configuration["Stripe:SecretKey"];
 
             var options = new ChargeCreateOptions
             {
-                Amount = 5000, // amount in cents
+                Amount = 50, // amount in cents
                 Currency = "usd",
                 Description = "Test Charge",
                 Source = paymentRequest.Token
@@ -41,10 +42,12 @@ namespace wleepay.API.Controllers
         }
 
 
-        [HttpPost("create-payment-link")]
-        public async Task<IActionResult> CreatePaymentLink(decimal amount)
+        [Microsoft.AspNetCore.Mvc.HttpPost("createPaymentLink")]
+        [System.Web.Http.AllowAnonymous]
+        public async Task<IActionResult> CreatePaymentLink(CreatePaymentLink createPaymentLink)
         {
-            var paymentLink = await _stripeService.CreatePaymentLinkAsync(amount);
+            string apiKey = _configuration["Stripe:SecretKey"];
+            var paymentLink = await _stripeService.CreatePaymentLinkAsync(createPaymentLink.Amount, apiKey);
             return Ok(new { url = paymentLink });
         }
     }
@@ -52,6 +55,11 @@ namespace wleepay.API.Controllers
     public class PaymentRequestForStripe
     {
         public string Token { get; set; }
+    }
+
+    public class CreatePaymentLink
+    {
+        public double Amount { get; set; }
     }
 }
 
