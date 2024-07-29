@@ -17,6 +17,7 @@ using wleepay.Core.Models;
 using wleepay.Core.Services;
 using wleepay.Services;
 using Currency = wleepay.Core.Models.Currency;
+using Status = wleepay.Core.Enums.Status;
 
 namespace wleepay.API.Controllers
 {
