@@ -29,7 +29,7 @@ namespace wleepay.API.Controllers
 
             var options = new ChargeCreateOptions
             {
-                Amount = 50, // amount in cents
+                Amount = 2, // amount in cents
                 Currency = "usd",
                 Description = "Test Charge",
                 Source = paymentRequest.Token
