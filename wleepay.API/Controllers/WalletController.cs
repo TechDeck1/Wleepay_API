@@ -47,6 +47,7 @@ namespace wleepay.API.Controllers
             return Ok(wallet);
         }
 
+        [AllowAnonymous]
         [HttpGet("{userId}")]
         public async Task<IActionResult> GetUserWallet(string userId)
         {

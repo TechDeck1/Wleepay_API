@@ -15,21 +15,39 @@ namespace wleepay.API.Resources
         public string ProductId { get; set; }
         public long FromWalletId { get; set; }
         public string Currency { get; set; }
+        public string AccountId { get; set; }
+
     }
 
     public class SochitelTransactionRequest
     {
+        [JsonProperty("auth")]
         public SochitelAuth Auth { get; set; }
-        public string version { get; set; }
-        public string command { get; set; }
-       
+
+        [JsonProperty("version")]
+        public int Version { get; set; }
+
+        [JsonProperty("command")]
+        public string Command { get; set; }
+
         [JsonProperty("operator")]
         public string Operator { get; set; }
-        public string msisdn { get; set; }
-        public double amount { get; set; }
-        public string? simulate { get; set; }
-        public string? userReference { get; set; }
-        public string productId { get; set; }
+
+        [JsonProperty("msisdn")]
+        public string Msisdn { get; set; }
+
+        [JsonProperty("amount")]
+        public string Amount { get; set; }
+
+        [JsonProperty("simulate")]
+        public string Simulate { get; set; }
+
+        [JsonProperty("userReference")]
+        public string UserReference { get; set; }
+
+        [JsonProperty("productId")]
+        public string ProductId { get; set; }
     }
+
 
 }

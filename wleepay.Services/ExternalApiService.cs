@@ -36,7 +36,6 @@ namespace wleepay.Services
                 response.EnsureSuccessStatusCode();
                 var ffhg= await response.Content.ReadAsStringAsync();
                 Console.WriteLine(ffhg);
-
                 return ffhg;
             }
             catch (Exception ex)

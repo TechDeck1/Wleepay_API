@@ -138,55 +138,49 @@ namespace wleepay.API.Controllers
             {
                 if (execTransactionRequest.FromWalletId != null)
                 {
-                    var walletData = await _walletService.GetWalletByWalletTypeId((int)WalletTypes.DebitFloatN);
-                    var walletListResource = _mapper.Map<IEnumerable<Wallet>, IEnumerable<WalletResource>>(walletData);
-                    WalletResource walletResources =  new WalletResource();
-                    foreach (var walletResource in walletListResource)
+                   
+                    var exeTransactionToCreate = _mapper.Map<ExecTransactionRequest, SochitelTransactionRequest>(execTransactionRequest);
+
+                    var result = await _externalApiService.PostDataAsync<SochitelTransactionRequest>(exeTransactionToCreate);
+
+                    var transactionResponse = JsonConvert.DeserializeObject<SochitelTransactionResponse>(result);
+
+                    Result TransactionResponse = transactionResponse.Result;
+
+                    if(transactionResponse.Status.Name == "Successful")
                     {
-                        if(walletResource != null && walletResource.CurrencyId == 2)
+                        var walletData = await _walletService.GetWalletByWalletTypeId((int)WalletTypes.DebitFloatN);
+                        var walletListResource = _mapper.Map<IEnumerable<Wallet>, IEnumerable<WalletResource>>(walletData);
+                        WalletResource walletResources = new WalletResource();
+                        foreach (var walletResource in walletListResource)
                         {
-                            walletResources = walletResource;
+                            if (walletResource != null && walletResource.CurrencyId == 2)
+                            {
+                                walletResources = walletResource;
+                            }
+                            else
+                            {
+                                walletResources = null;
+                            }
                         }
-                        else
+
+                        var transactionToCreate = new Transaction()
                         {
-                            walletResources = null;
-                        }
+                            ToWalletId = (long)(walletResources?.Id),
+                            FromWalletId = execTransactionRequest.FromWalletId,
+                            Amount = (double)execTransactionRequest.Amount,
+                            TransferTypeId = (int)TransferTypes.MobileRechargeTransfer,
+                            Description = "Mobile recharge transfer to system wallet",
+                            CreatedDate = System.DateTime.UtcNow,
+                            Status = (int)wleepay.Core.Enums.TransactionStatus.Approved,
+
+                        };
+
+                        var newTransaction = await _transactionService.InitiateTransaction(transactionToCreate);
                     }
-                       
 
-                    var transactionToCreate = new Transaction()
-                    {
-                        ToWalletId = (long)(walletResources?.Id),
-                        FromWalletId = execTransactionRequest.FromWalletId,
-                        Amount = (double)execTransactionRequest.Amount,
-                        TransferTypeId = 9,
-                        Description = "",
-                        CreatedDate = System.DateTime.UtcNow,
-                        Status = (int)wleepay.Core.Enums.TransactionStatus.Approved,
-
-                    };
-
-                    var newTransaction = await _transactionService.InitiateTransaction(transactionToCreate);
-
-                    if (newTransaction != null) 
-                    {
-                        var exeTransactionToCreate = _mapper.Map<ExecTransactionRequest, SochitelTransactionRequest>(execTransactionRequest);
-
-                        var result = await _externalApiService.PostDataAsync<SochitelTransactionRequest>(exeTransactionToCreate);
-
-                        //var transactionResponse = JsonConvert.DeserializeObject<SochitelOperatorProductsResponse>(result);
-
-                        //List<Product> operatorsProduct = new List<Product>();
-
-                        //foreach (var product in transactionResponse.Result.Products)
-                        //{
-                        //    operatorsProduct.Add(product.Value);
-                        //}
-
-                        //var newOperatorProductList = operatorsProduct;
-
-                        return Ok(result);
-                    }
+                        return Ok(TransactionResponse);
+                    
                 }
 
                 return BadRequest();
