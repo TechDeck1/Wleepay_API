@@ -21,8 +21,7 @@ using wleepay.Core.DTO.Request;
 using wleepay.Core.Enums;
 using System.Linq;
 using AutoMapper.Internal;
-
-
+using System;
 
 
 namespace wleepay.API.Controllers
@@ -96,7 +95,7 @@ namespace wleepay.API.Controllers
 
                 var newOperatorList = operators;
 
-                return Ok(result);
+                return Ok(newOperatorList);
             }
             catch
             {
@@ -125,7 +124,7 @@ namespace wleepay.API.Controllers
 
                 return Ok(newOperatorProductList);
             }
-            catch
+            catch(Exception ex) 
             {
                 return StatusCode(500, "An error occurred while processing your request.");
             }
