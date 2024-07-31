@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
@@ -17,16 +18,20 @@ namespace wleepay.Services
     {
         private readonly HttpClient _httpClient;
         private readonly ILogger<ExternalApiService> _logger;
+        private readonly string _apiKey;
 
-        public ExternalApiService(HttpClient httpClient, ILogger<ExternalApiService> logger)
+        public ExternalApiService(HttpClient httpClient, ILogger<ExternalApiService> logger, IConfiguration configuration)
         {
             _httpClient = httpClient;
             _logger = logger;
+            _apiKey = configuration["exchangerateApiKey"];
         }
 
-        public async Task<decimal> GetConvertedCurrency(string apiKey, string baseCurrency, string targetCurrency, decimal amount)
+        public async Task<decimal> GetConvertedCurrency(decimal amount)
         {
-            string url = $"https://v6.exchangerate-api.com/v6/{apiKey}/latest/{baseCurrency}";
+            string baseCurrency = "USD";
+            string targetCurrency = "LRD";
+            string url = $"https://v6.exchangerate-api.com/v6/{_apiKey}/latest/{baseCurrency}";
             decimal convertedAmount = 0;
             HttpResponseMessage response = await _httpClient.GetAsync(url);
             response.EnsureSuccessStatusCode();

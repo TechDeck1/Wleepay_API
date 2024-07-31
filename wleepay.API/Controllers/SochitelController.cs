@@ -138,52 +138,88 @@ namespace wleepay.API.Controllers
             {
                 if (execTransactionRequest.FromWalletId != null)
                 {
-                   
-                    var exeTransactionToCreate = _mapper.Map<ExecTransactionRequest, SochitelTransactionRequest>(execTransactionRequest);
-
-                    var result = await _externalApiService.PostDataAsync<SochitelTransactionRequest>(exeTransactionToCreate);
-
-                    var transactionResponse = JsonConvert.DeserializeObject<SochitelTransactionResponse>(result);
-
-                    Result TransactionResponse = transactionResponse.Result;
-
-                    if(transactionResponse.Status.Name == "Successful")
+                    var fromWalletData = await _walletService.GetWallet(execTransactionRequest.FromWalletId);
+                    if (fromWalletData == null) 
                     {
-                        var walletData = await _walletService.GetWalletByWalletTypeId((int)WalletTypes.DebitFloatN);
-                        var walletListResource = _mapper.Map<IEnumerable<Wallet>, IEnumerable<WalletResource>>(walletData);
-                        WalletResource walletResources = new WalletResource();
-                        foreach (var walletResource in walletListResource)
+                        return BadRequest("Wallet not found.");
+                    }
+                    bool checkValidBalance = false;
+                    if (fromWalletData.CurrencyId == (int)Currencies.LRD)
+                    {
+                        if (fromWalletData.Balance > execTransactionRequest.AmountInLd)
                         {
-                            if (walletResource != null && walletResource.CurrencyId == 2)
-                            {
-                                walletResources = walletResource;
-                            }
-                            else
-                            {
-                                walletResources = null;
-                            }
+                            checkValidBalance = true;
+                        }
+                        else
+                        {
+                            checkValidBalance = false;
+                            return BadRequest("There is no enough balance in wallet to make transaction");
                         }
 
-                        var transactionToCreate = new Transaction()
+                    }
+                    if (fromWalletData.CurrencyId == (int)Currencies.USD)
+                    {
+
+                        if (fromWalletData.Balance > execTransactionRequest.AmountInUsd)
+                            checkValidBalance = true;
+                        else
                         {
-                            ToWalletId = (long)(walletResources?.Id),
-                            FromWalletId = execTransactionRequest.FromWalletId,
-                            Amount = (double)execTransactionRequest.AmountInUsd,
-                            TransferTypeId = (int)TransferTypes.MobileRechargeTransfer,
-                            Description = "Mobile recharge transfer to system wallet",
-                            CreatedDate = System.DateTime.UtcNow,
-                            Status = (int)wleepay.Core.Enums.TransactionStatus.Approved,
-
-                        };
-
-                        var newTransaction = await _transactionService.InitiateTransaction(transactionToCreate);
+                            checkValidBalance = false;
+                            return BadRequest("There is no enough balance in wallet to make transaction");
+                        }
                     }
 
-                        return Ok(TransactionResponse);
+                    if (checkValidBalance)
+                    {
+
+                        var exeTransactionToCreate = _mapper.Map<ExecTransactionRequest, SochitelTransactionRequest>(execTransactionRequest);
+
+                        var result = await _externalApiService.PostDataAsync<SochitelTransactionRequest>(exeTransactionToCreate);
+
+                        SochitelTransactionResponse transactionResponse = JsonConvert.DeserializeObject<SochitelTransactionResponse>(result);
+
+                        if (transactionResponse.Status.Name == "Successful")
+                        {
+                            var walletData = await _walletService.GetWalletByWalletTypeId((int)WalletTypes.DebitFloatN);
+                            var walletListResource = _mapper.Map<IEnumerable<Wallet>, IEnumerable<WalletResource>>(walletData);
+                            WalletResource walletResources = new WalletResource();
+                            foreach (var walletResource in walletListResource)
+                            {
+                                if (walletResource != null && walletResource.CurrencyId == 2)
+                                {
+                                    walletResources = walletResource;
+                                }
+                                else
+                                {
+                                    walletResources = null;
+                                }
+                            }
+
+                            var transactionToCreate = new Transaction()
+                            {
+                                ToWalletId = (long)(walletResources?.Id),
+                                FromWalletId = execTransactionRequest.FromWalletId,
+                                Amount = (double)execTransactionRequest.AmountInUsd,
+                                TransferTypeId = (int)TransferTypes.MobileRechargeTransfer,
+                                Description = "Mobile recharge transfer to system wallet",
+                                CreatedDate = System.DateTime.UtcNow,
+                                Status = (int)wleepay.Core.Enums.TransactionStatus.Approved,
+
+                            };
+
+                            var newTransaction = await _transactionService.InitiateTransaction(transactionToCreate);
+
+                            return Ok(transactionResponse);
+
+                        }
+
+                        return Ok(transactionResponse);
+                    }
+
                     
                 }
 
-                return BadRequest();
+                return BadRequest("Wallet Id should be valid");
 
             }
             catch
@@ -192,7 +228,6 @@ namespace wleepay.API.Controllers
             }
         }
 
-
         [AllowAnonymous]
         [HttpPost]
         [Route("billPaymentTransaction")]
@@ -200,15 +235,13 @@ namespace wleepay.API.Controllers
         {
             try
             {
-                string apiKey = "d30c01a0b20de3c2a9715538"; // Replace with your actual API key
-                string baseCurrency = "USD";
-                string targetCurrency = "LRD";
-                decimal amountInUSD = 1; // Amount to convert
-                decimal convertedAmount = await _externalApiService.GetConvertedCurrency(apiKey, baseCurrency, targetCurrency, amountInUSD);
                 if (execTransactionRequest.FromWalletId != null)
                 {
                     var fromWalletData = await _walletService.GetWallet(execTransactionRequest.FromWalletId);
-
+                    if (fromWalletData == null)
+                    {
+                        return BadRequest("Wallet not found.");
+                    }
                     bool checkValidBalance = false;
                     if(fromWalletData.CurrencyId == (int)Currencies.LRD) 
                     {
@@ -244,7 +277,7 @@ namespace wleepay.API.Controllers
 
                         var transactionResponse = JsonConvert.DeserializeObject<SochitelTransactionResponse>(result);
 
-                        Result TransactionResponse = transactionResponse.Result;
+                        object TransactionResponse = transactionResponse.Result;
 
                         if (transactionResponse.Status.Name == "Successful")
                         {

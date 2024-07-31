@@ -15,7 +15,6 @@ namespace wleepay.API.Resources
         public string ProductId { get; set; }
         public long FromWalletId { get; set; }
         public int Currency { get; set; }
-        public string AccountId { get; set; }
         public double? AmountInLd { get; set; }
 
     }
