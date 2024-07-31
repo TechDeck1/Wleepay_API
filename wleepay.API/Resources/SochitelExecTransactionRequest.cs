@@ -9,13 +9,14 @@ namespace wleepay.API.Resources
         public string Command { get; set; }
         public string Operator { get; set; }
         public string Msisdn { get; set; }
-        public double Amount { get; set; }
+        public double AmountInUsd { get; set; }
         public string? Simulate { get; set; }
         public string? UserReference { get; set; }
         public string ProductId { get; set; }
         public long FromWalletId { get; set; }
-        public string Currency { get; set; }
+        public int Currency { get; set; }
         public string AccountId { get; set; }
+        public double? AmountInLd { get; set; }
 
     }
 

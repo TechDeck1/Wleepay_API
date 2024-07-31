@@ -58,8 +58,6 @@ namespace wleepay.Services
             return await _unitOfWork.Wallet.GetByIdAsync(id);
         }
 
-        
-
         public async Task<IEnumerable<Wallet>> GetWalletsByUserId(string userId, int currencyId = 0)
         {
             return await _unitOfWork.Wallet.GetWalletsByUserId(userId, currencyId);

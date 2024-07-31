@@ -168,7 +168,7 @@ namespace wleepay.API.Controllers
                         {
                             ToWalletId = (long)(walletResources?.Id),
                             FromWalletId = execTransactionRequest.FromWalletId,
-                            Amount = (double)execTransactionRequest.Amount,
+                            Amount = (double)execTransactionRequest.AmountInUsd,
                             TransferTypeId = (int)TransferTypes.MobileRechargeTransfer,
                             Description = "Mobile recharge transfer to system wallet",
                             CreatedDate = System.DateTime.UtcNow,
@@ -184,6 +184,105 @@ namespace wleepay.API.Controllers
                 }
 
                 return BadRequest();
+
+            }
+            catch
+            {
+                return StatusCode(500, "An error occurred while processing your request.");
+            }
+        }
+
+
+        [AllowAnonymous]
+        [HttpPost]
+        [Route("billPaymentTransaction")]
+        public async Task<IActionResult> billPaymentTransaction([FromBody] BillPaymentTransactionRequest execTransactionRequest)
+        {
+            try
+            {
+                string apiKey = "d30c01a0b20de3c2a9715538"; // Replace with your actual API key
+                string baseCurrency = "USD";
+                string targetCurrency = "LRD";
+                decimal amountInUSD = 1; // Amount to convert
+                decimal convertedAmount = await _externalApiService.GetConvertedCurrency(apiKey, baseCurrency, targetCurrency, amountInUSD);
+                if (execTransactionRequest.FromWalletId != null)
+                {
+                    var fromWalletData = await _walletService.GetWallet(execTransactionRequest.FromWalletId);
+
+                    bool checkValidBalance = false;
+                    if(fromWalletData.CurrencyId == (int)Currencies.LRD) 
+                    {
+                        if (fromWalletData.Balance > execTransactionRequest.AmountInLd)
+                        {
+                            checkValidBalance = true;
+                        }
+                        else
+                        {
+                            checkValidBalance = false;
+                            return BadRequest("There is no enough balance in wallet to make transaction");
+                        }
+
+                    }
+                    if (fromWalletData.CurrencyId == (int)Currencies.USD)
+                    {
+
+                        if (fromWalletData.Balance > execTransactionRequest.AmountInUsd)
+                            checkValidBalance = true;
+                        else 
+                        {
+                            checkValidBalance = false;
+                            return BadRequest("There is no enough balance in wallet to make transaction");
+                        }
+                    }
+
+                    if (checkValidBalance)
+                    {
+                    
+                        var exeTransactionToCreate = _mapper.Map<BillPaymentTransactionRequest, SochitelBillPaymentTransactionRequest>(execTransactionRequest);
+
+                        var result = await _externalApiService.PostDataAsync<SochitelBillPaymentTransactionRequest>(exeTransactionToCreate);
+
+                        var transactionResponse = JsonConvert.DeserializeObject<SochitelTransactionResponse>(result);
+
+                        Result TransactionResponse = transactionResponse.Result;
+
+                        if (transactionResponse.Status.Name == "Successful")
+                        {
+                            var walletData = await _walletService.GetWalletByWalletTypeId((int)WalletTypes.DebitFloatN);
+                            var walletListResource = _mapper.Map<IEnumerable<Wallet>, IEnumerable<WalletResource>>(walletData);
+                            WalletResource walletResources = new WalletResource();
+                            foreach (var walletResource in walletListResource)
+                            {
+                                if (walletResource != null && walletResource.CurrencyId == execTransactionRequest.Currency)
+                                {
+                                    walletResources = walletResource;
+                                }
+                                else
+                                {
+                                    walletResources = null;
+                                }
+                            }
+                            var transactionToCreate = new Transaction()
+                            {
+                                ToWalletId = (long)(walletResources?.Id),
+                                FromWalletId = execTransactionRequest.FromWalletId,
+                                Amount = (double)execTransactionRequest.AmountInUsd,
+                                TransferTypeId = (int)TransferTypes.MobileRechargeTransfer,
+                                Description = "Mobile recharge transfer to system wallet",
+                                CreatedDate = System.DateTime.UtcNow,
+                                Status = (int)wleepay.Core.Enums.TransactionStatus.Approved,
+
+                            };
+
+                            var newTransaction = await _transactionService.InitiateTransaction(transactionToCreate);
+                        }
+
+                        return Ok(TransactionResponse);
+
+                    }
+                }
+
+                return BadRequest("Wallet Id should be valid");
 
             }
             catch

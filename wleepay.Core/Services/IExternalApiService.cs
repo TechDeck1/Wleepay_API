@@ -10,5 +10,6 @@ namespace wleepay.Core.Services
     public interface IExternalApiService
     {
         Task<string> PostDataAsync<T>(T data);
+        Task<decimal> GetConvertedCurrency(string apiKey, string baseCurrency, string targetCurrency, decimal amount);
     }
 }

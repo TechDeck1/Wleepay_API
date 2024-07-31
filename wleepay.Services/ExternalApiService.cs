@@ -8,6 +8,7 @@ using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 using wleepay.Core.DTO.Request;
+using wleepay.Core.DTO.Response;
 using wleepay.Core.Services;
 
 namespace wleepay.Services
@@ -22,7 +23,36 @@ namespace wleepay.Services
             _httpClient = httpClient;
             _logger = logger;
         }
-     
+
+        public async Task<decimal> GetConvertedCurrency(string apiKey, string baseCurrency, string targetCurrency, decimal amount)
+        {
+            string url = $"https://v6.exchangerate-api.com/v6/{apiKey}/latest/{baseCurrency}";
+            decimal convertedAmount = 0;
+            HttpResponseMessage response = await _httpClient.GetAsync(url);
+            response.EnsureSuccessStatusCode();
+
+            string responseBody = await response.Content.ReadAsStringAsync();
+            JObject json = JObject.Parse(responseBody);
+
+            ExchangeRateResponse rateResponse = JsonConvert.DeserializeObject<ExchangeRateResponse>(responseBody);
+
+            if (rateResponse != null)
+            {
+                foreach (var rate in rateResponse.ConversionRates)
+                {
+                    if (rate.Key == targetCurrency)
+                    {
+                        convertedAmount = amount * rate.Value;
+                        return convertedAmount;
+
+                    }
+                }
+            }
+
+            return convertedAmount;
+
+        }
+
         public async Task<string> PostDataAsync<T>(T data)
         {
             try
