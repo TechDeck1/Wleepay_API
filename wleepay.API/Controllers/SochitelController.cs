@@ -215,7 +215,6 @@ namespace wleepay.API.Controllers
 
                         return Ok(transactionResponse);
                     }
-
                     
                 }
 
@@ -275,9 +274,7 @@ namespace wleepay.API.Controllers
 
                         var result = await _externalApiService.PostDataAsync<SochitelBillPaymentTransactionRequest>(exeTransactionToCreate);
 
-                        var transactionResponse = JsonConvert.DeserializeObject<SochitelTransactionResponse>(result);
-
-                        object TransactionResponse = transactionResponse.Result;
+                        SochitelTransactionResponse transactionResponse = JsonConvert.DeserializeObject<SochitelTransactionResponse>(result);
 
                         if (transactionResponse.Status.Name == "Successful")
                         {
@@ -310,7 +307,7 @@ namespace wleepay.API.Controllers
                             var newTransaction = await _transactionService.InitiateTransaction(transactionToCreate);
                         }
 
-                        return Ok(TransactionResponse);
+                        return Ok(transactionResponse);
 
                     }
                 }
