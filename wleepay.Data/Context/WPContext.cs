@@ -36,6 +36,7 @@ namespace wleepay.Data.Context
         public DbSet<CashFlowHistory> CashFlowHistory { get; set; }
         public DbSet<SystemStatus> SystemStatus { get; set; }
         public DbSet<UserDevices> UserDevices { get; set; }
+        public DbSet<SochitelTransactions> SochitelTransactions { get; set; }
 
 
         public WPContext(DbContextOptions<WPContext> options) : base(options)
@@ -75,7 +76,7 @@ namespace wleepay.Data.Context
             builder.ApplyConfiguration(new CashFlowHistoryConfiguration());
             builder.ApplyConfiguration(new SystemStatusConfiguration());
             builder.ApplyConfiguration(new UserDevicesConfiguration());
-
+            builder.ApplyConfiguration(new SochitelTransactionConfiguration());
 
         }
     }

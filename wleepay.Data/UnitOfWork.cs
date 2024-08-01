@@ -37,6 +37,7 @@ namespace wleepay.Data
         private ICashFlowHistoryRepository _cashFlowHistoryRepository;
         private ISystemStatusRepository _systemStatusRepository;
         private IUserDeviceRepository _userDeviceRepository;
+        private ISochitelTransactionRepository _sochitelTransactionRepository;
 
 
 
@@ -70,6 +71,7 @@ namespace wleepay.Data
         public ICashFlowHistoryRepository CashFlowHistory => _cashFlowHistoryRepository= _cashFlowHistoryRepository ?? new CashFlowHistoryRepository(_context);
         public ISystemStatusRepository SystemStatus => _systemStatusRepository= _systemStatusRepository ?? new SystemStatusRepository(_context);    
         public IUserDeviceRepository UserDevice => _userDeviceRepository = _userDeviceRepository ?? new UserDeviceRepository(_context);
+        public ISochitelTransactionRepository SochitelTransaction => _sochitelTransactionRepository = _sochitelTransactionRepository ?? new SochitelTransactionRepository(_context);
         public async Task<int> CommitAsync()
         {
             return await _context.SaveChangesAsync();

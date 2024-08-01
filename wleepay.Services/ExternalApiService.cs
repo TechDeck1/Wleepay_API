@@ -19,6 +19,8 @@ namespace wleepay.Services
         private readonly HttpClient _httpClient;
         private readonly ILogger<ExternalApiService> _logger;
         private readonly string _apiKey;
+        private readonly string _exchangeRateUrl;
+        private readonly string _sochitelUrl;
 
         public ExternalApiService(HttpClient httpClient, ILogger<ExternalApiService> logger, IConfiguration configuration)
         {
