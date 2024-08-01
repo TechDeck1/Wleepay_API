@@ -45,7 +45,7 @@ namespace wleepay.API.Controllers
         private readonly ISMSService _SMSService;
         private readonly IExternalApiService _externalApiService;
         private readonly ITransactionService _transactionService;
-
+        private readonly ISochitelTransactionService _sochitelTransactionService;
 
         public SochitelController(UserManager<ApplicationUser> userManager,
             IUserDetailService userDetailsService,
@@ -59,7 +59,8 @@ namespace wleepay.API.Controllers
             ISystemActivityLogsService systemActivityLogsService,
             ISMSService sMSService,
             IExternalApiService externalApiService,
-            ITransactionService transactionService)
+            ITransactionService transactionService,
+            ISochitelTransactionService sochitelTransactionService)
         {
             _userManager = userManager;
             _userDetailsService = userDetailsService;
@@ -74,6 +75,7 @@ namespace wleepay.API.Controllers
             _SMSService = sMSService;
             _externalApiService = externalApiService;
             _transactionService = transactionService;
+            _sochitelTransactionService = sochitelTransactionService;
         }
 
         [HttpPost]
@@ -173,6 +175,8 @@ namespace wleepay.API.Controllers
                     {
 
                         var exeTransactionToCreate = _mapper.Map<ExecTransactionRequest, SochitelTransactionRequest>(execTransactionRequest);
+                        exeTransactionToCreate.Simulate = "1";
+                        exeTransactionToCreate.UserReference = execTransactionRequest.FromWalletId.ToString();
 
                         var result = await _externalApiService.PostDataAsync<SochitelTransactionRequest>(exeTransactionToCreate);
 
@@ -208,6 +212,20 @@ namespace wleepay.API.Controllers
                             };
 
                             var newTransaction = await _transactionService.InitiateTransaction(transactionToCreate);
+
+                            SochitelTransactions sochitelTransactions = new SochitelTransactions{
+                                TransactionId= transactionResponse.Result.Id,
+                                TransactionType="Mobile Recharge",
+                                TransactionAmount=newTransaction.Amount,
+                                CommissionRate=transactionResponse.Result.Balance.Commission,
+                                OperatorId= execTransactionRequest.Operator,
+                                ProductId= execTransactionRequest.ProductId,
+                                PhoneNumber= execTransactionRequest.Msisdn,
+                                UserReference= exeTransactionToCreate.UserReference,
+
+                            };
+
+                            var sTansaction = _sochitelTransactionService.AddSochitelTransactions(sochitelTransactions);
 
                             return Ok(transactionResponse);
 
@@ -271,6 +289,8 @@ namespace wleepay.API.Controllers
                     {
                     
                         var exeTransactionToCreate = _mapper.Map<BillPaymentTransactionRequest, SochitelBillPaymentTransactionRequest>(execTransactionRequest);
+                        exeTransactionToCreate.Simulate = "1";
+                        exeTransactionToCreate.UserReference = execTransactionRequest.FromWalletId.ToString();
 
                         var result = await _externalApiService.PostDataAsync<SochitelBillPaymentTransactionRequest>(exeTransactionToCreate);
 
@@ -297,7 +317,7 @@ namespace wleepay.API.Controllers
                                 ToWalletId = (long)(walletResources?.Id),
                                 FromWalletId = execTransactionRequest.FromWalletId,
                                 Amount = (double)execTransactionRequest.AmountInUsd,
-                                TransferTypeId = (int)TransferTypes.MobileRechargeTransfer,
+                                TransferTypeId = (int)TransferTypes.BillPayment,
                                 Description = "Mobile recharge transfer to system wallet",
                                 CreatedDate = System.DateTime.UtcNow,
                                 Status = (int)wleepay.Core.Enums.TransactionStatus.Approved,
@@ -305,6 +325,21 @@ namespace wleepay.API.Controllers
                             };
 
                             var newTransaction = await _transactionService.InitiateTransaction(transactionToCreate);
+                           
+                            SochitelTransactions sochitelTransactions = new SochitelTransactions
+                            {
+                                TransactionId = transactionResponse.Result.Id,
+                                TransactionType = "Bill Payment",
+                                TransactionAmount = newTransaction.Amount,
+                                CommissionRate = transactionResponse.Result.Balance.Commission,
+                                OperatorId = execTransactionRequest.Operator,
+                                ProductId = execTransactionRequest.ProductId,
+                                PhoneNumber = execTransactionRequest.Msisdn,
+                                UserReference = exeTransactionToCreate.UserReference,
+
+                            };
+
+                            var sTansaction = _sochitelTransactionService.AddSochitelTransactions(sochitelTransactions);
                         }
 
                         return Ok(transactionResponse);

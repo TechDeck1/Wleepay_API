@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using System.Collections.Generic;
+using wleepay.Core.Common;
 
 namespace wleepay.API.Resources
 {
@@ -17,8 +18,8 @@ namespace wleepay.API.Resources
         [JsonProperty("reference")]
         public string Reference { get; set; }
 
-        [JsonProperty("result")]
-        public List<object> Result { get; set; }
+        [JsonConverter(typeof(CustomJsonConverter))]
+        public Result Result { get; set; }
     }
 
     //public class Status
