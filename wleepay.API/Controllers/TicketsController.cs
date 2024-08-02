@@ -247,7 +247,7 @@ namespace wleepay.API.Controllers
 
                     FirebaseMessageRequest firebaseMessageRequest = new FirebaseMessageRequest();
                     firebaseMessageRequest.Title = "Note added";
-                    firebaseMessageRequest.Body = "New note is added for ticket number " + ticket.Id;
+                    firebaseMessageRequest.Body = "New note is added for ticket number " + ticket.Id+" Note:- "+ request.Note;
                     firebaseMessageRequest.DeviceToken = item.FcmToken;
                     firebaseMessageRequest.DeviceId = item.DeviceId;
                     firebaseMessageRequest.UserId = userDetail.UserDetail.UserId;

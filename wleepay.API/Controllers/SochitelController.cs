@@ -331,7 +331,7 @@ namespace wleepay.API.Controllers
                                 FromWalletId = execTransactionRequest.FromWalletId,
                                 Amount = (double)execTransactionRequest.AmountInUsd,
                                 TransferTypeId = (int)TransferTypes.BillPayment,
-                                Description = "Mobile recharge transfer to system wallet",
+                                Description = "bill payment transfer to system wallet",
                                 CreatedDate = System.DateTime.UtcNow,
                                 Status = (int)wleepay.Core.Enums.TransactionStatus.Approved,
 
@@ -352,7 +352,7 @@ namespace wleepay.API.Controllers
 
                             };
 
-                            _smsService.sendMessage("mobile recharge is successfully done", execTransactionRequest.Msisdn);
+                            _smsService.sendMessage("bill payment is successfully done", execTransactionRequest.Msisdn);
 
                             var sTansaction = _sochitelTransactionService.AddSochitelTransactions(sochitelTransactions);
 

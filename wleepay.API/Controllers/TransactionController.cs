@@ -368,7 +368,7 @@ namespace wleepay.API.Controllers
             FirebaseMessageRequest firebaseMessageRequest = new FirebaseMessageRequest()
             {
                 Title = "Payment recived",
-                Body = "Payment is recived of amount $"+ transaction.Amount,
+                Body = "",
                 DeviceToken = "",
                 DeviceId = "",
                 UserId = toWalletUser.ApplicationUser.UserDetail.UserId,
@@ -386,6 +386,7 @@ namespace wleepay.API.Controllers
                 {
                     firebaseMessageRequest.DeviceId = item.DeviceId;
                     firebaseMessageRequest.DeviceToken = item.FcmToken;
+                    firebaseMessageRequest.Body = "Top up request approved  for $" + transaction.Amount;
                     var sendNotification = _firebaseNotification.SendFirebaseMessageRequest(firebaseMessageRequest);
                 }
                  userWallet = (status == Core.Enums.TransactionStatus.Pending) ? fromWalletUser : toWalletUser;
@@ -403,6 +404,8 @@ namespace wleepay.API.Controllers
                 {
                     firebaseMessageRequest.DeviceId = item.DeviceId;
                     firebaseMessageRequest.DeviceToken = item.FcmToken;
+                    firebaseMessageRequest.Body = "Cash out request approved for $" + transaction.Amount;
+
                     var sendNotification = _firebaseNotification.SendFirebaseMessageRequest(firebaseMessageRequest);
                 }
 
@@ -420,6 +423,8 @@ namespace wleepay.API.Controllers
                 {
                     firebaseMessageRequest.DeviceId = item.DeviceId;
                     firebaseMessageRequest.DeviceToken = item.FcmToken;
+                    firebaseMessageRequest.Body = "Payment recived of amount $" + transaction.Amount;
+
                     var sendNotification = _firebaseNotification.SendFirebaseMessageRequest(firebaseMessageRequest);
                 }
 
