@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using System.Collections.Generic;
+using wleepay.API.Helpers;
 using wleepay.Core.Common;
 
 namespace wleepay.API.Resources
@@ -18,8 +19,9 @@ namespace wleepay.API.Resources
         [JsonProperty("reference")]
         public string Reference { get; set; }
 
-        [JsonConverter(typeof(CustomJsonConverter))]
+        [JsonConverter(typeof(CustomResultJsonConverter))]
         public Result Result { get; set; }
+
     }
 
     //public class Status
@@ -126,8 +128,17 @@ namespace wleepay.API.Resources
         [JsonProperty("msisdn")]
         public string Msisdn { get; set; }
 
-        [JsonProperty("balance")]
-        public Balance Balance { get; set; }
+        [JsonProperty("simulation")]
+        public string? Simulation { get; set; }
+
+        [JsonProperty("accountId")]
+        public string? AccountId { get; set; }
+
+
+        //[JsonProperty("balance")]
+        //public Balance Balance { get; set; }
     }
+
+
 
 }

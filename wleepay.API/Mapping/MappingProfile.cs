@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using wleepay.API.Controllers;
 using wleepay.API.Resources;
 using wleepay.Core.Models;
 
@@ -104,6 +105,8 @@ namespace wleepay.API.Mapping
             CreateMap<ExecTransactionRequest, SochitelTransactionRequest>()
                  .ForMember(dest => dest.Amount, src => src.MapFrom(x => x.AmountInUsd))
                  .ReverseMap();
+
+            CreateMap<PaymentRequestForStripe, SochitelTransactionRequest>();
 
             CreateMap<BillPaymentTransactionRequest, SochitelBillPaymentTransactionRequest>()
                  .ForMember(dest => dest.Amount, src => src.MapFrom(x => x.AmountInUsd))

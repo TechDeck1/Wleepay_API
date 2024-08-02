@@ -22,6 +22,8 @@ using wleepay.Core.Enums;
 using System.Linq;
 using AutoMapper.Internal;
 using System;
+using Microsoft.SqlServer.Management.Smo;
+using wleepay.Core.Common;
 
 
 namespace wleepay.API.Controllers
@@ -213,19 +215,30 @@ namespace wleepay.API.Controllers
 
                             var newTransaction = await _transactionService.InitiateTransaction(transactionToCreate);
 
-                            SochitelTransactions sochitelTransactions = new SochitelTransactions{
-                                TransactionId= transactionResponse.Result.Id,
-                                TransactionType="Mobile Recharge",
-                                TransactionAmount=newTransaction.Amount,
-                                CommissionRate=transactionResponse.Result.Balance.Commission,
-                                OperatorId= execTransactionRequest.Operator,
-                                ProductId= execTransactionRequest.ProductId,
-                                PhoneNumber= execTransactionRequest.Msisdn,
-                                UserReference= exeTransactionToCreate.UserReference,
+                            SochitelTransactions sochitelTransactions = new SochitelTransactions
+                            {
+                                TransactionId = "123456",
+                                TransactionType = "Mobile Recharge",
+                                TransactionAmount = newTransaction.Amount,
+                                CommissionRate = 0,
+                                OperatorId = execTransactionRequest.Operator,
+                                ProductId = execTransactionRequest.ProductId,
+                                PhoneNumber = execTransactionRequest.Msisdn,
+                                UserReference = exeTransactionToCreate.UserReference,
 
                             };
 
                             var sTansaction = _sochitelTransactionService.AddSochitelTransactions(sochitelTransactions);
+                            _smsService.sendMessage("mobile recharge is successfully done", execTransactionRequest.Msisdn);
+
+                            var userDetail = await _userDetailsService.GetUserAccountByPhone(execTransactionRequest.Msisdn);
+                            SystemActivityLog systemActivityLog = new SystemActivityLog();
+                            systemActivityLog.UserId = userDetail.Id;
+                            systemActivityLog.Email = userDetail.Email;
+                            systemActivityLog.IpAddress = GetClientIpAddress();
+                            systemActivityLog.Action = ActionsForSystemLogs.MobileRecharge.ToDescriptionString();
+                            systemActivityLog.Description = GenericMessagesForSystemLogs.MobileRecharge.ToDescriptionString();
+                            var addLogs = await _systemActivityLogsService.AddSystemLogs(systemActivityLog);
 
                             return Ok(transactionResponse);
 
@@ -325,13 +338,13 @@ namespace wleepay.API.Controllers
                             };
 
                             var newTransaction = await _transactionService.InitiateTransaction(transactionToCreate);
-                           
+
                             SochitelTransactions sochitelTransactions = new SochitelTransactions
                             {
-                                TransactionId = transactionResponse.Result.Id,
+                                TransactionId = "123456",
                                 TransactionType = "Bill Payment",
                                 TransactionAmount = newTransaction.Amount,
-                                CommissionRate = transactionResponse.Result.Balance.Commission,
+                                CommissionRate = 0,
                                 OperatorId = execTransactionRequest.Operator,
                                 ProductId = execTransactionRequest.ProductId,
                                 PhoneNumber = execTransactionRequest.Msisdn,
@@ -339,7 +352,18 @@ namespace wleepay.API.Controllers
 
                             };
 
+                            _smsService.sendMessage("mobile recharge is successfully done", execTransactionRequest.Msisdn);
+
                             var sTansaction = _sochitelTransactionService.AddSochitelTransactions(sochitelTransactions);
+
+                            var userDetail = await _userDetailsService.GetUserAccountByPhone(execTransactionRequest.Msisdn);
+                            SystemActivityLog systemActivityLog = new SystemActivityLog();
+                            systemActivityLog.UserId = userDetail.Id;
+                            systemActivityLog.Email = userDetail.Email;
+                            systemActivityLog.IpAddress = GetClientIpAddress();
+                            systemActivityLog.Action = ActionsForSystemLogs.BillPayment.ToDescriptionString();
+                            systemActivityLog.Description = GenericMessagesForSystemLogs.BillPayment.ToDescriptionString();
+                            var addLogs = await _systemActivityLogsService.AddSystemLogs(systemActivityLog);
                         }
 
                         return Ok(transactionResponse);
@@ -356,6 +380,16 @@ namespace wleepay.API.Controllers
             }
         }
 
+        #region helper methods
+        private string GetClientIpAddress()
+        {
+            if (HttpContext.Connection.RemoteIpAddress != null)
+            {
+                return HttpContext.Connection.RemoteIpAddress.ToString();
+            }
+            return "Unknown";
+        }
+        #endregion
 
     }
 }
