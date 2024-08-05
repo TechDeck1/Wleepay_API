@@ -16,6 +16,8 @@ namespace wleepay.Core.Enums
         [Description("Login process is completed.")] CompleteLoginProcess,
         [Description("Email is not exists.")] NotExists,
         [Description("process id failed.")] Failed,
-        [Description("User entered wrong otp.")] FalseLoginAttempt
+        [Description("User entered wrong otp.")] FalseLoginAttempt,
+        [Description("Bill payment is successfully done")] BillPayment,
+        [Description("Mobile recharge is successfully done")] MobileRecharge,
     }
 }
