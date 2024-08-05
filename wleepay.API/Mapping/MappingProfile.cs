@@ -106,7 +106,8 @@ namespace wleepay.API.Mapping
                  .ForMember(dest => dest.Amount, src => src.MapFrom(x => x.AmountInUsd))
                  .ReverseMap();
 
-            CreateMap<PaymentRequestForStripe, SochitelTransactionRequest>();
+            CreateMap<PaymentRequestForStripe, SochitelTransactionRequest>().ReverseMap();
+            CreateMap<PaymentRequestForStripe, SochitelBillPaymentTransactionRequest>().ReverseMap();
 
             CreateMap<BillPaymentTransactionRequest, SochitelBillPaymentTransactionRequest>()
                  .ForMember(dest => dest.Amount, src => src.MapFrom(x => x.AmountInUsd))

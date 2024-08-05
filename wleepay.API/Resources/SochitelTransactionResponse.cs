@@ -24,42 +24,6 @@ namespace wleepay.API.Resources
 
     }
 
-    //public class Status
-    //{
-    //    [JsonProperty("id")]
-    //    public int Id { get; set; }
-
-    //    [JsonProperty("name")]
-    //    public string Name { get; set; }
-
-    //    [JsonProperty("type")]
-    //    public int Type { get; set; }
-
-    //    [JsonProperty("typeName")]
-    //    public string TypeName { get; set; }
-    //}
-
-    //public class Operator
-    //{
-    //    [JsonProperty("id")]
-    //    public string Id { get; set; }
-
-    //    [JsonProperty("name")]
-    //    public string Name { get; set; }
-
-    //    [JsonProperty("reference")]
-    //    public string Reference { get; set; }
-    //}
-
-    //public class Country
-    //{
-    //    [JsonProperty("id")]
-    //    public string Id { get; set; }
-
-    //    [JsonProperty("name")]
-    //    public string Name { get; set; }
-    //}
-
     public class Amount
     {
         [JsonProperty("operator")]
@@ -68,15 +32,6 @@ namespace wleepay.API.Resources
         [JsonProperty("user")]
         public string User { get; set; }
     }
-
-    //public class Currency
-    //{
-    //    [JsonProperty("user")]
-    //    public string User { get; set; }
-
-    //    [JsonProperty("operator")]
-    //    public string Operator { get; set; }
-    //}
 
     public class Balance
     {
@@ -134,9 +89,8 @@ namespace wleepay.API.Resources
         [JsonProperty("accountId")]
         public string? AccountId { get; set; }
 
-
-        //[JsonProperty("balance")]
-        //public Balance Balance { get; set; }
+        [JsonProperty("balance")]
+        public Balance Balance { get; set; }
     }
 
 

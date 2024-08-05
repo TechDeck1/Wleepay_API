@@ -34,7 +34,7 @@ namespace wleepay.API.Controllers
         }
 
         [Microsoft.AspNetCore.Mvc.HttpPost]
-        public async Task<IActionResult> Create([Microsoft.AspNetCore.Mvc.FromBody] PaymentRequestForStripe paymentRequest)
+        public async Task<IActionResult> CreatePaymentForMobileRecharge([Microsoft.AspNetCore.Mvc.FromBody] PaymentRequestForStripe paymentRequest)
         {
             StripeConfiguration.ApiKey = _configuration["Stripe:SecretKey"];
 
@@ -84,6 +84,67 @@ namespace wleepay.API.Controllers
         }
 
 
+        [Microsoft.AspNetCore.Mvc.HttpPost("billPayment")]
+        public async Task<IActionResult> CreatePaymentForBillPayment([Microsoft.AspNetCore.Mvc.FromBody] PaymentRequestForStripe paymentRequest)
+        {
+            StripeConfiguration.ApiKey = _configuration["Stripe:SecretKey"];
+
+            var options = new ChargeCreateOptions
+            {
+                Amount = paymentRequest.Amount * 100, // amount in cents
+                Currency = "usd",
+                Description = "Test Charge",
+                Source = paymentRequest.Token
+            };
+
+            var exeTransactionToCreate = _mapper.Map<PaymentRequestForStripe, SochitelBillPaymentTransactionRequest>(paymentRequest);
+            exeTransactionToCreate.Simulate = "1";
+            exeTransactionToCreate.UserReference = "12345";
+
+            var result = await _externalApiService.PostDataAsync<SochitelBillPaymentTransactionRequest>(exeTransactionToCreate);
+
+            SochitelTransactionResponse transactionResponse = JsonConvert.DeserializeObject<SochitelTransactionResponse>(result);
+
+            if (transactionResponse.Status.Name == "Successful")
+            {
+                var service = new ChargeService();
+
+                Charge charge = await service.CreateAsync(options);
+                if (charge.Status == "succeeded")
+                {
+
+                    SochitelTransactions sochitelTransactions = new SochitelTransactions
+                    {
+                        TransactionId = "123456",
+                        TransactionType = "Bill Payment",
+                        TransactionAmount = paymentRequest.Amount,
+                        CommissionRate = 0,
+                        OperatorId = paymentRequest.Operator,
+                        ProductId = paymentRequest.ProductId,
+                        PhoneNumber = paymentRequest.Msisdn,
+                        UserReference = exeTransactionToCreate.UserReference,
+
+                    };
+
+                    var sTansaction = _sochitelTransactionService.AddSochitelTransactions(sochitelTransactions);
+
+                    return Ok(new { 
+                        success = true, 
+                        amount = charge.Amount,
+                        stripeTransactionId = charge.Id,
+                        receiptUrl=charge.ReceiptUrl,
+                        transactionResponse
+                    });
+                }
+
+                return BadRequest("Payment is failed.");
+
+            }
+            return BadRequest("payment failed");
+
+        }
+
+
         [Microsoft.AspNetCore.Mvc.HttpPost("createPaymentLink")]
         [System.Web.Http.AllowAnonymous]
         public async Task<IActionResult> CreatePaymentLink(CreatePaymentLink createPaymentLink)
@@ -104,10 +165,11 @@ namespace wleepay.API.Controllers
         public string Msisdn { get; set; }
         public string Phone { get; set; }
         public string Email { get; set; }
-        public string CountryCode { get; set; }
-        public string ReciverCountryCode { get; set; }
         public long Amount { get; set; }
         public string Token { get; set; }
+        public string AccountId {  get; set; }
+        public ExtraParameters? ExtraParameters { get; set; }
+
     }
 
     public class CreatePaymentLink
