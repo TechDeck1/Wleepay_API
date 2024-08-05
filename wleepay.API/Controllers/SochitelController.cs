@@ -25,7 +25,6 @@ using System;
 using Microsoft.SqlServer.Management.Smo;
 using wleepay.Core.Common;
 
-
 namespace wleepay.API.Controllers
 {
     [Route("api/[controller]")]
@@ -41,13 +40,15 @@ namespace wleepay.API.Controllers
         private readonly ILogger<AccountController> _logger;
         private readonly IMapper _mapper;
         private readonly IConfiguration _configuration;
-        public readonly IHostingEnvironment _hostingEnvironment;
+        public readonly  IHostingEnvironment _hostingEnvironment;
         private readonly IEmailSender _emailSender;
         private readonly ISystemActivityLogsService _systemActivityLogsService;
         private readonly ISMSService _SMSService;
         private readonly IExternalApiService _externalApiService;
         private readonly ITransactionService _transactionService;
         private readonly ISochitelTransactionService _sochitelTransactionService;
+        private readonly IFirebaseNotification _firebaseNotification;
+        private readonly IUserDeviceService _userDeviceService;
 
         public SochitelController(UserManager<ApplicationUser> userManager,
             IUserDetailService userDetailsService,
@@ -62,7 +63,9 @@ namespace wleepay.API.Controllers
             ISMSService sMSService,
             IExternalApiService externalApiService,
             ITransactionService transactionService,
-            ISochitelTransactionService sochitelTransactionService)
+            ISochitelTransactionService sochitelTransactionService,
+            IFirebaseNotification firebaseNotification,
+            IUserDeviceService userDeviceService)
         {
             _userManager = userManager;
             _userDetailsService = userDetailsService;
@@ -78,6 +81,8 @@ namespace wleepay.API.Controllers
             _externalApiService = externalApiService;
             _transactionService = transactionService;
             _sochitelTransactionService = sochitelTransactionService;
+            _firebaseNotification = firebaseNotification;
+            _userDeviceService = userDeviceService;
         }
 
         [HttpPost]
@@ -240,6 +245,21 @@ namespace wleepay.API.Controllers
                             systemActivityLog.Description = GenericMessagesForSystemLogs.MobileRecharge.ToDescriptionString();
                             var addLogs = await _systemActivityLogsService.AddSystemLogs(systemActivityLog);
 
+                            FirebaseMessageRequest firebaseMessageRequest = new FirebaseMessageRequest();
+
+                            var device = await _userDeviceService.GetUserDeviceByUserId(userDetail.Id);
+                            if (device != null)
+                            {
+                                foreach (var item in device)
+                                {
+                                    firebaseMessageRequest.DeviceId = item.DeviceId;
+                                    firebaseMessageRequest.DeviceToken = item.FcmToken;
+                                    firebaseMessageRequest.Body = "Mobile recharge approved for $" + newTransaction.Amount;
+                                    firebaseMessageRequest.Title = "Mobile Recharge";
+                                    var sendNotification = _firebaseNotification.SendFirebaseMessageRequest(firebaseMessageRequest);
+                                }
+                            }
+
                             return Ok(transactionResponse);
 
                         }
@@ -364,6 +384,22 @@ namespace wleepay.API.Controllers
                             systemActivityLog.Action = ActionsForSystemLogs.BillPayment.ToDescriptionString();
                             systemActivityLog.Description = GenericMessagesForSystemLogs.BillPayment.ToDescriptionString();
                             var addLogs = await _systemActivityLogsService.AddSystemLogs(systemActivityLog);
+
+                            FirebaseMessageRequest firebaseMessageRequest = new FirebaseMessageRequest();
+
+                            var device = await _userDeviceService.GetUserDeviceByUserId(userDetail.Id);
+                            if (device != null)
+                            {
+                                foreach (var item in device)
+                                {
+                                    firebaseMessageRequest.DeviceId = item.DeviceId;
+                                    firebaseMessageRequest.DeviceToken = item.FcmToken;
+                                    firebaseMessageRequest.Body = "Bill payment approved for $" + newTransaction.Amount;
+                                    firebaseMessageRequest.Title = "Bill Payment";
+                                    var sendNotification = _firebaseNotification.SendFirebaseMessageRequest(firebaseMessageRequest);
+                                }
+                            }
+
                         }
 
                         return Ok(transactionResponse);

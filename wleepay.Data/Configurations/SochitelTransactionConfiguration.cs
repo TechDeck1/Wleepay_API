@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using wleepay.Core.Models;
+using System.Reflection.Emit;
 
 namespace wleepay.Data.Configurations
 {
@@ -21,6 +22,12 @@ namespace wleepay.Data.Configurations
             builder
                 .Property(u => u.Id)
                 .UseIdentityColumn();
+
+            builder
+             .Property(u => u.WalletTransactionId);
+
+            builder
+             .Property(u => u.CreditCardTransactionId);
 
 
             builder
@@ -47,7 +54,22 @@ namespace wleepay.Data.Configurations
                 .Property(u => u.OperatorId);
 
             builder
+               .Property(u => u.ExtraInfo);
+
+            builder
               .Property(u => u.UserReference);
+
+            builder
+                .HasOne(k => k.Transaction)
+                .WithMany(k => k.SochitelTransactions)
+                .OnDelete(DeleteBehavior.ClientNoAction)
+                .HasForeignKey(k => k.WalletTransactionId);
+
+            builder
+                .HasOne(k => k.CreditCardTransaction)
+                .WithMany(k => k.SochitelTransactions)
+                .OnDelete(DeleteBehavior.ClientNoAction)
+                .HasForeignKey(k => k.CreditCardTransactionId);
 
         }
     }

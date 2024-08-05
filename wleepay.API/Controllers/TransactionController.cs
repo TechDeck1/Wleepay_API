@@ -371,9 +371,7 @@ namespace wleepay.API.Controllers
                 Body = "",
                 DeviceToken = "",
                 DeviceId = "",
-                UserId = toWalletUser.ApplicationUser.UserDetail.UserId,
-                FirstName = toWalletUser.ApplicationUser.UserDetail.FirstName,
-                LastName = toWalletUser.ApplicationUser.UserDetail.LastName,
+                UserId = toWalletUser.ApplicationUser.UserDetail.UserId
             };
             
             //check transaction type

@@ -37,6 +37,7 @@ namespace wleepay.Data.Context
         public DbSet<SystemStatus> SystemStatus { get; set; }
         public DbSet<UserDevices> UserDevices { get; set; }
         public DbSet<SochitelTransactions> SochitelTransactions { get; set; }
+        public DbSet<CreditCardTransactions> CreditCardTransactions { get; set; }
 
 
         public WPContext(DbContextOptions<WPContext> options) : base(options)
@@ -77,6 +78,7 @@ namespace wleepay.Data.Context
             builder.ApplyConfiguration(new SystemStatusConfiguration());
             builder.ApplyConfiguration(new UserDevicesConfiguration());
             builder.ApplyConfiguration(new SochitelTransactionConfiguration());
+            builder.ApplyConfiguration(new CreditCardTransactionConfiguration());
 
         }
     }

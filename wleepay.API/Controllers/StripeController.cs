@@ -10,6 +10,7 @@ using wleepay.API.Resources;
 using wleepay.Communication.Interface;
 using wleepay.Communication.Services;
 using wleepay.Core.Common;
+using wleepay.Core.DTO.Request;
 using wleepay.Core.Enums;
 using wleepay.Core.Models;
 using wleepay.Core.Services;
@@ -29,8 +30,10 @@ namespace wleepay.API.Controllers
         private readonly ISMSService _sMSService;
         private readonly ISystemActivityLogsService _systemActivityLogsService;
         private readonly IUserDetailService _userDetailService;
+        private readonly IUserDeviceService _userDeviceService;
+        private readonly IFirebaseNotification _firebaseNotification;
 
-        public StripeController(IConfiguration configuration, IStripeService stripeService, ISochitelTransactionService sochitelTransactionService, IMapper mapper, IExternalApiService externalApiService, ISMSService sMSService, ISystemActivityLogsService systemActivityLogsService, IUserDetailService userDetailService)
+        public StripeController(IConfiguration configuration, IStripeService stripeService, ISochitelTransactionService sochitelTransactionService, IMapper mapper, IExternalApiService externalApiService, ISMSService sMSService, ISystemActivityLogsService systemActivityLogsService, IUserDetailService userDetailService, IUserDeviceService userDeviceService, IFirebaseNotification firebaseNotification)
         {
             _configuration = configuration;
             _stripeService = stripeService;
@@ -40,6 +43,8 @@ namespace wleepay.API.Controllers
             _sMSService = sMSService;
             _systemActivityLogsService = systemActivityLogsService;
             _userDetailService = userDetailService;
+            _userDeviceService = userDeviceService;
+            _firebaseNotification = firebaseNotification;
         }
 
         [Microsoft.AspNetCore.Mvc.HttpPost]
@@ -98,6 +103,21 @@ namespace wleepay.API.Controllers
                     systemActivityLog.Action = ActionsForSystemLogs.MobileRecharge.ToDescriptionString();
                     systemActivityLog.Description = GenericMessagesForSystemLogs.MobileRecharge.ToDescriptionString();
                     var addLogs = await _systemActivityLogsService.AddSystemLogs(systemActivityLog);
+
+                    FirebaseMessageRequest firebaseMessageRequest = new FirebaseMessageRequest();
+
+                    var device = await _userDeviceService.GetUserDeviceByUserId(userDetail.Id);
+                    if (device != null)
+                    {
+                        foreach (var item in device)
+                        {
+                            firebaseMessageRequest.DeviceId = item.DeviceId;
+                            firebaseMessageRequest.DeviceToken = item.FcmToken;
+                            firebaseMessageRequest.Body = "Mobile recharge approved for $" + charge.Amount;
+                            firebaseMessageRequest.Title = "Mobile Recharge";
+                            var sendNotification = _firebaseNotification.SendFirebaseMessageRequest(firebaseMessageRequest);
+                        }
+                    }
 
                     return Ok(new
                     {
@@ -170,7 +190,21 @@ namespace wleepay.API.Controllers
                     systemActivityLog.Action = ActionsForSystemLogs.BillPayment.ToDescriptionString();
                     systemActivityLog.Description = GenericMessagesForSystemLogs.BillPayment.ToDescriptionString();
                     var addLogs = await _systemActivityLogsService.AddSystemLogs(systemActivityLog);
+                    
+                    FirebaseMessageRequest firebaseMessageRequest = new FirebaseMessageRequest();
 
+                    var device = await _userDeviceService.GetUserDeviceByUserId(userDetail.Id);
+                    if (device != null)
+                    {
+                        foreach (var item in device)
+                        {
+                            firebaseMessageRequest.DeviceId = item.DeviceId;
+                            firebaseMessageRequest.DeviceToken = item.FcmToken;
+                            firebaseMessageRequest.Body = "Bill payment approved for $" + charge.Amount;
+                            firebaseMessageRequest.Title = "Bill Payment";
+                            var sendNotification = _firebaseNotification.SendFirebaseMessageRequest(firebaseMessageRequest);
+                        }
+                    }
                     return Ok(new { 
                         success = true, 
                         amount = charge.Amount,

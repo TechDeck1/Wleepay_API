@@ -25,6 +25,7 @@ namespace wleepay.Core.Models
         public virtual Currency Currency { get; set; }
         public virtual WalletType WalletType { get; set; }
 
+
         public virtual ICollection<Transaction> TransactionTo { get; set; }
         public virtual ICollection<Transaction> TransactionFrom { get; set; }
         public virtual ICollection<CashFlowHistory> CashFlowHistory { get;}

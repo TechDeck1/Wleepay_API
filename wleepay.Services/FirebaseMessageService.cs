@@ -24,11 +24,11 @@ namespace wleepay.Services
                         Title = firebaseMessageRequest.Title,
                         Body = firebaseMessageRequest.Body,
                     },
-                    Data = new Dictionary<string, string>()
-                    {
-                        ["FirstName"] = firebaseMessageRequest.FirstName,
-                        ["LastName"] = firebaseMessageRequest.LastName
-                    },
+                    //Data = new Dictionary<string, string>()
+                    //{
+                    //    ["FirstName"] = firebaseMessageRequest.FirstName,
+                    //    ["LastName"] = firebaseMessageRequest.LastName
+                    //},
                     Token = firebaseMessageRequest.DeviceToken
                 };
 

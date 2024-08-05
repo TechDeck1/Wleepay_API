@@ -251,8 +251,6 @@ namespace wleepay.API.Controllers
                     firebaseMessageRequest.DeviceToken = item.FcmToken;
                     firebaseMessageRequest.DeviceId = item.DeviceId;
                     firebaseMessageRequest.UserId = userDetail.UserDetail.UserId;
-                    firebaseMessageRequest.FirstName = userDetail.UserDetail.FirstName;
-                    firebaseMessageRequest.LastName = userDetail.UserDetail.LastName;
 
                     var sendNotification = _firebaseNotification.SendFirebaseMessageRequest(firebaseMessageRequest);
                 }
@@ -334,8 +332,6 @@ namespace wleepay.API.Controllers
                 firebaseMessageRequest.DeviceToken = item.FcmToken;
                 firebaseMessageRequest.DeviceId = item.DeviceId;
                 firebaseMessageRequest.UserId = userDetail.UserDetail.UserId;
-                firebaseMessageRequest.FirstName = userDetail.UserDetail.FirstName;
-                firebaseMessageRequest.LastName = userDetail.UserDetail.LastName;
 
                 var sendNotification = _firebaseNotification.SendFirebaseMessageRequest(firebaseMessageRequest);
             }
