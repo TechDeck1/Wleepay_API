@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
@@ -6,6 +7,10 @@ using Stripe;
 using System.Threading.Tasks;
 using System.Web.Http;
 using wleepay.API.Resources;
+using wleepay.Communication.Interface;
+using wleepay.Communication.Services;
+using wleepay.Core.Common;
+using wleepay.Core.Enums;
 using wleepay.Core.Models;
 using wleepay.Core.Services;
 using wleepay.Services;
@@ -21,16 +26,20 @@ namespace wleepay.API.Controllers
         private readonly ISochitelTransactionService _sochitelTransactionService;
         private readonly IMapper _mapper;
         private readonly IExternalApiService _externalApiService;
+        private readonly ISMSService _sMSService;
+        private readonly ISystemActivityLogsService _systemActivityLogsService;
+        private readonly IUserDetailService _userDetailService;
 
-
-
-        public StripeController(IConfiguration configuration, IStripeService stripeService, ISochitelTransactionService sochitelTransactionService, IMapper mapper, IExternalApiService externalApiService)
+        public StripeController(IConfiguration configuration, IStripeService stripeService, ISochitelTransactionService sochitelTransactionService, IMapper mapper, IExternalApiService externalApiService, ISMSService sMSService, ISystemActivityLogsService systemActivityLogsService, IUserDetailService userDetailService)
         {
             _configuration = configuration;
             _stripeService = stripeService;
             _sochitelTransactionService = sochitelTransactionService;
             _mapper = mapper;
             _externalApiService = externalApiService;
+            _sMSService = sMSService;
+            _systemActivityLogsService = systemActivityLogsService;
+            _userDetailService = userDetailService;
         }
 
         [Microsoft.AspNetCore.Mvc.HttpPost]
@@ -42,7 +51,7 @@ namespace wleepay.API.Controllers
             {
                 Amount = paymentRequest.Amount * 100, // amount in cents
                 Currency = "usd",
-                Description = "Test Charge",
+                Description = "Mobile recharge",
                 Source = paymentRequest.Token
             };
 
@@ -60,26 +69,49 @@ namespace wleepay.API.Controllers
 
                 Charge charge = await service.CreateAsync(options);
 
-                SochitelTransactions sochitelTransactions = new SochitelTransactions
+                if (charge.Status == "succeeded")
                 {
-                    TransactionId = "123456",
-                    TransactionType = "Mobile Recharge",
-                    TransactionAmount = paymentRequest.Amount,
-                    CommissionRate = 0,
-                    OperatorId = paymentRequest.Operator,
-                    ProductId = paymentRequest.ProductId,
-                    PhoneNumber = paymentRequest.Msisdn,
-                    UserReference = exeTransactionToCreate.UserReference,
 
-                };
+                    SochitelTransactions sochitelTransactions = new SochitelTransactions
+                    {
+                        TransactionId = "123456",
+                        TransactionType = "Mobile Recharge",
+                        TransactionAmount = paymentRequest.Amount,
+                        CommissionRate = 0,
+                        OperatorId = paymentRequest.Operator,
+                        ProductId = paymentRequest.ProductId,
+                        PhoneNumber = paymentRequest.Msisdn,
+                        UserReference = exeTransactionToCreate.UserReference,
 
-                var sTansaction = _sochitelTransactionService.AddSochitelTransactions(sochitelTransactions);
+                    };
 
-             return Ok(new { success = true, charge });
+                    var sTansaction = _sochitelTransactionService.AddSochitelTransactions(sochitelTransactions);
 
+                    _sMSService.sendMessage("mobile recharge is successfully done", paymentRequest.Msisdn);
 
+                    var userDetail = await _userDetailService.GetUserAccountByPhone(paymentRequest.Msisdn);
+                   
+                    SystemActivityLog systemActivityLog = new SystemActivityLog();
+                    systemActivityLog.UserId = userDetail.Id;
+                    systemActivityLog.Email = userDetail.Email;
+                    systemActivityLog.IpAddress = GetClientIpAddress();
+                    systemActivityLog.Action = ActionsForSystemLogs.MobileRecharge.ToDescriptionString();
+                    systemActivityLog.Description = GenericMessagesForSystemLogs.MobileRecharge.ToDescriptionString();
+                    var addLogs = await _systemActivityLogsService.AddSystemLogs(systemActivityLog);
+
+                    return Ok(new
+                    {
+                        success = true,
+                        amount = charge.Amount,
+                        stripeTransactionId = charge.Id,
+                        receiptUrl = charge.ReceiptUrl,
+                        transactionResponse
+                    });
+                }
+
+                return BadRequest("payment is failed");
             }
-            return BadRequest("payment failed");
+            return Ok(transactionResponse);
 
         }
 
@@ -93,7 +125,7 @@ namespace wleepay.API.Controllers
             {
                 Amount = paymentRequest.Amount * 100, // amount in cents
                 Currency = "usd",
-                Description = "Test Charge",
+                Description = "Bill payment",
                 Source = paymentRequest.Token
             };
 
@@ -128,6 +160,17 @@ namespace wleepay.API.Controllers
 
                     var sTansaction = _sochitelTransactionService.AddSochitelTransactions(sochitelTransactions);
 
+                    _sMSService.sendMessage("bill payment is successfully done", paymentRequest.Msisdn);
+
+                    var userDetail = await _userDetailService.GetUserAccountByPhone(paymentRequest.Msisdn);
+                    SystemActivityLog systemActivityLog = new SystemActivityLog();
+                    systemActivityLog.UserId = userDetail.Id;
+                    systemActivityLog.Email = userDetail.Email;
+                    systemActivityLog.IpAddress = GetClientIpAddress();
+                    systemActivityLog.Action = ActionsForSystemLogs.BillPayment.ToDescriptionString();
+                    systemActivityLog.Description = GenericMessagesForSystemLogs.BillPayment.ToDescriptionString();
+                    var addLogs = await _systemActivityLogsService.AddSystemLogs(systemActivityLog);
+
                     return Ok(new { 
                         success = true, 
                         amount = charge.Amount,
@@ -140,7 +183,8 @@ namespace wleepay.API.Controllers
                 return BadRequest("Payment is failed.");
 
             }
-            return BadRequest("payment failed");
+            
+            return Ok(transactionResponse);
 
         }
 
@@ -153,28 +197,19 @@ namespace wleepay.API.Controllers
             var paymentLink = await _stripeService.CreatePaymentLinkAsync(createPaymentLink.Amount, apiKey);
             return Ok(new { url = paymentLink });
         }
+
+
+        #region helper methods
+        private string GetClientIpAddress()
+        {
+            if (HttpContext.Connection.RemoteIpAddress != null)
+            {
+                return HttpContext.Connection.RemoteIpAddress.ToString();
+            }
+            return "Unknown";
+        }
+        #endregion
     }
 
-    public class PaymentRequestForStripe
-    {
-        public SochitelAuth Auth { get; set; }
-        public string Version { get; set; }
-        public string Command { get; set; }
-        public string Operator { get; set; }
-        public string ProductId { get; set; }
-        public string Msisdn { get; set; }
-        public string Phone { get; set; }
-        public string Email { get; set; }
-        public long Amount { get; set; }
-        public string Token { get; set; }
-        public string AccountId {  get; set; }
-        public ExtraParameters? ExtraParameters { get; set; }
-
-    }
-
-    public class CreatePaymentLink
-    {
-        public double Amount { get; set; }
-    }
 }
 
