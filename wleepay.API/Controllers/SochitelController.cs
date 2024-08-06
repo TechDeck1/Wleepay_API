@@ -24,6 +24,7 @@ using AutoMapper.Internal;
 using System;
 using Microsoft.SqlServer.Management.Smo;
 using wleepay.Core.Common;
+using FirebaseAdmin.Messaging;
 
 namespace wleepay.API.Controllers
 {
@@ -257,7 +258,25 @@ namespace wleepay.API.Controllers
                                     firebaseMessageRequest.DeviceToken = item.FcmToken;
                                     firebaseMessageRequest.Body = "Mobile recharge approved for $" + newTransaction.Amount;
                                     firebaseMessageRequest.Title = "Mobile Recharge";
-                                    var sendNotification = _firebaseNotification.SendFirebaseMessageRequest(firebaseMessageRequest);
+                                    try
+                                    {
+                                        var sendNotification = _firebaseNotification.SendFirebaseMessageRequest(firebaseMessageRequest);
+                                    }
+                                    catch (AggregateException ex)
+                                    {
+                                        foreach (var innerEx in ex.InnerExceptions)
+                                        {
+                                            if (innerEx is FirebaseMessagingException fme)
+                                            {
+                                                // Handle Firebase specific exceptions
+                                                Console.WriteLine($"Firebase error: {fme.Message}");
+                                            }
+                                            else
+                                            {
+                                                Console.WriteLine($"General error: {innerEx.Message}");
+                                            }
+                                        }
+                                    }
                                 }
                             }
 
@@ -398,7 +417,27 @@ namespace wleepay.API.Controllers
                                     firebaseMessageRequest.DeviceToken = item.FcmToken;
                                     firebaseMessageRequest.Body = "Bill payment approved for $" + newTransaction.Amount;
                                     firebaseMessageRequest.Title = "Bill Payment";
-                                    var sendNotification = _firebaseNotification.SendFirebaseMessageRequest(firebaseMessageRequest);
+                                    //var sendNotification = _firebaseNotification.SendFirebaseMessageRequest(firebaseMessageRequest);
+
+                                    try
+                                    {
+                                        var sendNotification = _firebaseNotification.SendFirebaseMessageRequest(firebaseMessageRequest);
+                                    }
+                                    catch (AggregateException ex)
+                                    {
+                                        foreach (var innerEx in ex.InnerExceptions)
+                                        {
+                                            if (innerEx is FirebaseMessagingException fme)
+                                            {
+                                                // Handle Firebase specific exceptions
+                                                Console.WriteLine($"Firebase error: {fme.Message}");
+                                            }
+                                            else
+                                            {
+                                                Console.WriteLine($"General error: {innerEx.Message}");
+                                            }
+                                        }
+                                    }
                                 }
                             }
 
