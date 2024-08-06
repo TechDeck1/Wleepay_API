@@ -4,9 +4,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using Stripe;
+using System;
 using System.Threading.Tasks;
 using System.Web.Http;
 using wleepay.API.Resources;
+using wleepay.Communication.EmailTemplates;
 using wleepay.Communication.Interface;
 using wleepay.Communication.Services;
 using wleepay.Core.Common;
@@ -15,6 +17,7 @@ using wleepay.Core.Enums;
 using wleepay.Core.Models;
 using wleepay.Core.Services;
 using wleepay.Services;
+using static wleepay.Communication.EmailTemplates.EmailTemplates;
 
 namespace wleepay.API.Controllers
 {
@@ -32,8 +35,10 @@ namespace wleepay.API.Controllers
         private readonly IUserDetailService _userDetailService;
         private readonly IUserDeviceService _userDeviceService;
         private readonly IFirebaseNotification _firebaseNotification;
+        private readonly ICreditCardTransactionService _creditCardTransactionService;
+        private readonly IEmailSender _emailSender;
 
-        public StripeController(IConfiguration configuration, IStripeService stripeService, ISochitelTransactionService sochitelTransactionService, IMapper mapper, IExternalApiService externalApiService, ISMSService sMSService, ISystemActivityLogsService systemActivityLogsService, IUserDetailService userDetailService, IUserDeviceService userDeviceService, IFirebaseNotification firebaseNotification)
+        public StripeController(IConfiguration configuration, IStripeService stripeService, ISochitelTransactionService sochitelTransactionService, IMapper mapper, IExternalApiService externalApiService, ISMSService sMSService, ISystemActivityLogsService systemActivityLogsService, IUserDetailService userDetailService, IUserDeviceService userDeviceService, IFirebaseNotification firebaseNotification, ICreditCardTransactionService creditCardTransactionService, IEmailSender emailSender)
         {
             _configuration = configuration;
             _stripeService = stripeService;
@@ -45,6 +50,8 @@ namespace wleepay.API.Controllers
             _userDetailService = userDetailService;
             _userDeviceService = userDeviceService;
             _firebaseNotification = firebaseNotification;
+            _creditCardTransactionService = creditCardTransactionService;
+            _emailSender = emailSender;
         }
 
         [Microsoft.AspNetCore.Mvc.HttpPost]
@@ -76,11 +83,24 @@ namespace wleepay.API.Controllers
 
                 if (charge.Status == "succeeded")
                 {
+                    CreditCardTransactions creditTransactions = new CreditCardTransactions
+                    {
+                        Amount = paymentRequest.Amount,
+                        StripeTransactionId = charge.Id,
+                        Status = charge.Status,
+                        PaymentMethod = charge.PaymentMethod,
+                        BalanceTransactionId = charge.BalanceTransactionId,
+                        CreatedDate = DateTime.UtcNow,
+                        ExtraInfo = "Mobile Recharge"
+
+                    };
+                    var creditCardTransactions = await _creditCardTransactionService.AddCreditCardTransactions(creditTransactions);
 
                     SochitelTransactions sochitelTransactions = new SochitelTransactions
                     {
                         TransactionId = "123456",
                         TransactionType = "Mobile Recharge",
+                        CreditCardTransactionId = creditCardTransactions.Id,
                         TransactionAmount = paymentRequest.Amount,
                         CommissionRate = 0,
                         OperatorId = paymentRequest.Operator,
@@ -93,6 +113,11 @@ namespace wleepay.API.Controllers
                     var sTansaction = _sochitelTransactionService.AddSochitelTransactions(sochitelTransactions);
 
                     _sMSService.sendMessage("mobile recharge is successfully done", paymentRequest.Msisdn);
+
+
+                    EmailHtmlTemplates emailHtml = new EmailHtmlTemplates();
+                    var template = emailHtml.EmailTemplateForBillPaymentAndRecharge(charge.ReceiptUrl,"User");
+                    _emailSender.SendEmailAsync("ariel.ranjot@gmail.com", template, "User", "Receipt for mobile recharge");
 
                     var userDetail = await _userDetailService.GetUserAccountByPhone(paymentRequest.Msisdn);
                    
@@ -107,6 +132,7 @@ namespace wleepay.API.Controllers
                     FirebaseMessageRequest firebaseMessageRequest = new FirebaseMessageRequest();
 
                     var device = await _userDeviceService.GetUserDeviceByUserId(userDetail.Id);
+                    
                     if (device != null)
                     {
                         foreach (var item in device)
@@ -165,10 +191,25 @@ namespace wleepay.API.Controllers
                 if (charge.Status == "succeeded")
                 {
 
+                    CreditCardTransactions creditTransactions = new CreditCardTransactions
+                    {
+                        Amount = paymentRequest.Amount,
+                        StripeTransactionId = charge.Id,
+                        Status = charge.Status,
+                        PaymentMethod = charge.PaymentMethod,
+                        BalanceTransactionId = charge.BalanceTransactionId,
+                        CreatedDate = DateTime.UtcNow,
+                        ExtraInfo = "Bill Payment"
+
+                    };
+                    var creditCardTransactions = await _creditCardTransactionService.AddCreditCardTransactions(creditTransactions);
+
+
                     SochitelTransactions sochitelTransactions = new SochitelTransactions
                     {
                         TransactionId = "123456",
                         TransactionType = "Bill Payment",
+                        CreditCardTransactionId = creditCardTransactions.Id,
                         TransactionAmount = paymentRequest.Amount,
                         CommissionRate = 0,
                         OperatorId = paymentRequest.Operator,
@@ -181,6 +222,10 @@ namespace wleepay.API.Controllers
                     var sTansaction = _sochitelTransactionService.AddSochitelTransactions(sochitelTransactions);
 
                     _sMSService.sendMessage("bill payment is successfully done", paymentRequest.Msisdn);
+
+                    EmailHtmlTemplates emailHtml = new EmailHtmlTemplates();
+                    var template = emailHtml.EmailTemplateForBillPaymentAndRecharge(charge.ReceiptUrl, "User");
+                    _emailSender.SendEmailAsync("ariel.ranjot@gmail.com", template, "User", "Receipt for bill payment");
 
                     var userDetail = await _userDetailService.GetUserAccountByPhone(paymentRequest.Msisdn);
                     SystemActivityLog systemActivityLog = new SystemActivityLog();

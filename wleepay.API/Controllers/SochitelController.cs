@@ -224,6 +224,7 @@ namespace wleepay.API.Controllers
                             {
                                 TransactionId = "123456",
                                 TransactionType = "Mobile Recharge",
+                                WalletTransactionId = newTransaction.Id,
                                 TransactionAmount = newTransaction.Amount,
                                 CommissionRate = 0,
                                 OperatorId = execTransactionRequest.Operator,
@@ -363,6 +364,7 @@ namespace wleepay.API.Controllers
                             {
                                 TransactionId = "123456",
                                 TransactionType = "Bill Payment",
+                                WalletTransactionId = newTransaction.Id,
                                 TransactionAmount = newTransaction.Amount,
                                 CommissionRate = 0,
                                 OperatorId = execTransactionRequest.Operator,

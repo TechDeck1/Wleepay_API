@@ -35,6 +35,7 @@ namespace wleepay.Core
         ISystemStatusRepository SystemStatus { get; }
         IUserDeviceRepository UserDevice { get; }
         ISochitelTransactionRepository SochitelTransaction { get; }
+        ICreditCardTransactionRepository CreditCardTransaction { get; }
 
         Task<int> CommitAsync();
     }

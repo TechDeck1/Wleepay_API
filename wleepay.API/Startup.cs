@@ -180,6 +180,7 @@ namespace wleepay.API
             services.AddTransient<IExternalApiService, ExternalApiService>();
             services.AddTransient<IStripeService, StripeService>();
             services.AddTransient<ISochitelTransactionService, SochitelTransactionService>();
+            services.AddTransient<ICreditCardTransactionService, CreditCardTransactionService>();
 
 
 
