@@ -142,13 +142,13 @@ namespace wleepay.Data.Repositories
             int skipCount = pageIndex * pageSize;
             var transactionQuery = WPContext.Transactions.Where(t => t.Status == statusType.GetHashCode());
 
-            if (type == PaymentRequestType.OutGoing)
-            {
+            //if (type == PaymentRequestType.OutGoing)
+            //{
                 transactionQuery = transactionQuery.Where(t => t.TransferTypeId == transferId)
                       .Include(s => s.FromWallet.ApplicationUser.UserDetail)
                       .Include(s => s.ToWallet.ApplicationUser.UserDetail)
                       .Include(s => s.TransferType);
-            }
+            //}
 
             return await transactionQuery.Skip(skipCount).Take(takeCount).Include(t => t.TransactionStatus).ToListAsync();
         }
