@@ -146,7 +146,7 @@ namespace wleepay.API.Controllers
         [HttpGet("nearByAgent")]
         public async Task<IActionResult> GetNearByAgent()
         {
-            var agentList = await _userDetailsService.GetUserByRole(Core.Enums.Role.Agent.GetHashCode());
+            var agentList = await _userDetailsService.GetAllUsersByRole(Core.Enums.Role.Agent.GetHashCode());
             var agentListResource = _mapper.Map<IEnumerable<ApplicationUser>, IEnumerable<UserAccountResource>>(agentList);
 
             var result = agentListResource.Where(agent => agent.UserDetail.Status == 1).ToArray();

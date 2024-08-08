@@ -769,7 +769,7 @@ namespace wleepay.API.Areas.Portal.Controllers
                         await _emailSender.SendEmailAsync(decryptedEmail, htmlTemplateForStaff, userDetails.FirstName, subject);
 
                         //send email to all admins for staff's account activation
-                        var allSystemAdmins = await _userDetailsService.GetUserByRole((int)Role.SystemAdmin);
+                        var allSystemAdmins = await _userDetailsService.GetAllUsersByRole((int)Role.SystemAdmin);
                         var allSystemAdminsList = _mapper.Map<IEnumerable<ApplicationUser>, IEnumerable<ApplicationUserResource>>(allSystemAdmins);
 
                         AccountActivatedTemplateForSystemAdmin template = new AccountActivatedTemplateForSystemAdmin
@@ -1376,7 +1376,7 @@ namespace wleepay.API.Areas.Portal.Controllers
                 };
 
                 string htmlTemplateForSystemAdmin = emailLockOutTemplateForSystemAdmin.GenerateHtml();
-                var allAdmins = await _userDetailsService.GetUserByRole((int)Role.SuperAdmin);
+                var allAdmins = await _userDetailsService.GetAllUsersByRole((int)Role.SuperAdmin);
                 foreach (var admin in allAdmins)
                 {
                     await _emailSender.SendEmailAsync(admin.Email, htmlTemplateForSystemAdmin, admin.UserDetail.FirstName, subject);
@@ -1678,7 +1678,7 @@ namespace wleepay.API.Areas.Portal.Controllers
                         await _emailSender.SendEmailAsync(model.EmailId, htmlTemplateForStaff, userDetails.FirstName, subject);
 
                         //send email to all admins for activation
-                        var allSystemAdmins = await _userDetailsService.GetUserByRole((int)Role.SystemAdmin);
+                        var allSystemAdmins = await _userDetailsService.GetAllUsersByRole((int)Role.SystemAdmin);
                         var allSystemAdminsList = _mapper.Map<IEnumerable<ApplicationUser>, IEnumerable<ApplicationUserResource>>(allSystemAdmins);
                         AccountActivatedTemplateForSystemAdmin template = new AccountActivatedTemplateForSystemAdmin
                         {
@@ -1751,7 +1751,7 @@ namespace wleepay.API.Areas.Portal.Controllers
                         await _emailSender.SendEmailAsync(model.EmailId, htmlTemplateForStaff, userDetails.FirstName, subject);
 
                         //send email to all admins for deactivation
-                        var allSystemAdmins = await _userDetailsService.GetUserByRole((int)Role.SystemAdmin);
+                        var allSystemAdmins = await _userDetailsService.GetAllUsersByRole((int)Role.SystemAdmin);
                         var allSystemAdminsList = _mapper.Map<IEnumerable<ApplicationUser>, IEnumerable<ApplicationUserResource>>(allSystemAdmins);
 
                         AccountDeactivatedTemplateForSystemAdmin template = new AccountDeactivatedTemplateForSystemAdmin

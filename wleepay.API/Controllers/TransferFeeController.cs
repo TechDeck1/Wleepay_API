@@ -88,7 +88,7 @@ namespace wleepay.API.Controllers
                     types.TransferFee = updatedRates.Id;
                     await _transferTypeService.UpdateTransferTypeById(types);
 
-                    var allAgents = await _userDetailsService.GetUserByRole((int)Role.Agent);
+                    var allAgents = await _userDetailsService.GetAllUsersByRole((int)Role.Agent);
                     var agentsListResource = _mapper.Map<IEnumerable<ApplicationUser>, IEnumerable<ApplicationUserResource>>(allAgents);
 
                     foreach (var agent in agentsListResource)
@@ -132,7 +132,7 @@ namespace wleepay.API.Controllers
                     types.TransferFee = updatedRates.Id;
                     await _transferTypeService.UpdateTransferTypeById(types);
 
-                    var allAgents = await _userDetailsService.GetUserByRole((int)Role.Agent);
+                    var allAgents = await _userDetailsService.GetAllUsersByRole((int)Role.Agent);
                     var agentsListResource = _mapper.Map<IEnumerable<ApplicationUser>, IEnumerable<ApplicationUserResource>>(allAgents);
 
                     foreach (var agent in agentsListResource)
