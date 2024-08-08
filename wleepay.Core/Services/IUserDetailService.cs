@@ -12,7 +12,7 @@ namespace wleepay.Core.Services
         Task<UserDetail> AddOrUpdateUserDetails(UserDetail detail);
         Task<UserDetail> UpdateUserLoggedInStatus(string userId, bool status,int? failedLoginAttemps);
         Task<UserDetail> GetUserDetailsById(string userId);
-        Task<IEnumerable<ApplicationUser>> GetUserByRole(int role);
+        Task<IEnumerable<ApplicationUser>> GetAllUsersByRole(int role);
         Task<ApplicationUser> GetApplicationUserById(string userId);
         Task<UserDetail> GetUserDetailsByPhone(string phone);
         //Task<UserDetail> GetUserDetailsByName(string name);

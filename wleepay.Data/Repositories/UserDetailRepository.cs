@@ -36,7 +36,7 @@ namespace wleepay.Data.Repositories
             return userDetails;
         }
 
-        public async Task<IEnumerable<ApplicationUser>> GetUserDetailsByRole(int role)
+        public async Task<IEnumerable<ApplicationUser>> GetAllUsersByRole(int role)
         {
             var result = await WPContext.Users
                 .Include(s => s.UserRoles)

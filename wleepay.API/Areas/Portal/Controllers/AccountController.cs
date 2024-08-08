@@ -658,7 +658,7 @@ namespace wleepay.API.Areas.Portal.Controllers
                     if (updatedDetail.Succeeded)
                     {
 
-                        var allAdmins = await _userDetailsService.GetUserByRole((int)Role.SuperAdmin);
+                        var allAdmins = await _userDetailsService.GetAllUsersByRole((int)Role.SuperAdmin);
                         var subject = EmailSubjectEnums.PasswordChanged.ToDescriptionString();
 
                         // send email to staff(user) 

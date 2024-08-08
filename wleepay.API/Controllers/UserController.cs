@@ -18,6 +18,7 @@ using wleepay.API.Helpers;
 using wleepay.API.Middleware;
 using wleepay.API.Resources;
 using wleepay.API.Validators;
+using wleepay.Communication.EmailTemplates;
 using wleepay.Communication.Interface;
 using wleepay.Core.Common;
 using wleepay.Core.DTO.Request;
@@ -27,6 +28,7 @@ using wleepay.Core.Models;
 using wleepay.Core.Services;
 using wleepay.Storage.Interface;
 using wleepay.Storage.Services;
+using static wleepay.Communication.EmailTemplates.EmailTemplates;
 
 namespace wleepay.API.Controllers
 {
@@ -49,6 +51,7 @@ namespace wleepay.API.Controllers
         private readonly IUserDeviceService _userDeviceService;
         private readonly ISMSService _sMSService;
         private readonly IExternalApiService _externalApiService;
+        private readonly IEmailSender _emailSender;
         public UserController(UserManager<ApplicationUser> userManager,
             IUserDetailService userDetailsService,
             IUploadDocument uploadDocument,
@@ -59,7 +62,7 @@ namespace wleepay.API.Controllers
             ILogger<UserController> logger, 
             IUsersStaffRoleService usersStaffRoleService,
             IUploadDocument storageService,
-            IUserDeviceService userDeviceService, ISMSService sMSService, IExternalApiService externalApiService)
+            IUserDeviceService userDeviceService, ISMSService sMSService, IExternalApiService externalApiService, IEmailSender emailSender)
 
         {
             _userManager = userManager;
@@ -75,6 +78,7 @@ namespace wleepay.API.Controllers
             _userDeviceService = userDeviceService;
             _sMSService = sMSService;
             _externalApiService = externalApiService;
+            _emailSender = emailSender;
         }
 
         [HttpGet("{userId}")]
@@ -670,60 +674,52 @@ namespace wleepay.API.Controllers
             }
         }
 
-        //[AllowAnonymous]
-        //[HttpPost]
-        //[Route("sochitel")]
-        //public async Task<IActionResult> GetOperators([FromBody] object data)
-        //{
-        //    try
-        //    {
-        //        var result = await _externalApiService.PostDataAsync(data);
-
-        //        var products = JsonConvert.DeserializeObject<SochitelOperatorResponse>(result);
+        [AllowAnonymous]
+        [HttpPost("sendEmailSmsAlert")]
+        public async Task<IActionResult> sendMailAndSmsAlert(SendEmailSmsAlertModel request)
+        {
+            try
+            {
+                if (request.Note == null)
+                {
+                    return BadRequest("Note is required.");
+                }
+                var allAgents = await _userDetailsService.GetAllUsersByRole((int)Role.Agent);
                 
-        //        List<Operator> operators = new List<Operator>();
-        //        foreach (var kvp in products.Result)
-        //        {
-        //            var product = kvp.Value;
-        //            operators.Add(product);
-        //        }
+                string response = "";
 
-        //        var newOperatorList = operators;
+                EmailHtmlTemplates emailTemplates = new EmailHtmlTemplates();
 
-        //        return Ok(newOperatorList);
-        //    }
-        //    catch
-        //    {
-        //        return StatusCode(500, "An error occurred while processing your request.");
-        //    }
-        //}
+                if (request.AlertType == "Email")
+                {
+                    foreach (var agent in allAgents)
+                    {
+                        var template = emailTemplates.EmailTemplateForSendAlert(request.Note, agent.UserDetail.FirstName);
+                        response = await _emailSender.SendEmailAsync(agent.Email, template, agent.UserDetail.FirstName, "Email Alert");
+                    }
+                }
+                else
+                {
+                    foreach (var agent in allAgents)
+                    {
+                        response = _sMSService.sendMessage(request.Note, agent.UserDetail.PhoneNumber);
+                    }
 
-        //[HttpPost]
-        //[Route("sochitel/OperatorProducts")]
-        //public async Task<IActionResult> GetOperatorProducts([FromBody] object data)
-        //{
-        //    try
-        //    {
-        //        var result = await _externalApiService.PostDataAsync(data);
+                }
 
-        //        var products = JsonConvert.DeserializeObject<SochitelOperatorProductsResponse>(result);
+                return Ok(new
+                {
+                    message = response.ToString(),
+                    success = true
+                });
 
-        //        List<Product> operatorsProduct = new List<Product>();
-               
-        //        foreach (var product in products.Result.Products)
-        //        {
-        //            operatorsProduct.Add(product.Value);
-        //        }
-
-        //        var newOperatorProductList = operatorsProduct;
-
-        //        return Ok(newOperatorProductList);
-        //    }
-        //    catch
-        //    {
-        //        return StatusCode(500, "An error occurred while processing your request.");
-        //    }
-        //}
+            }
+            catch (Exception ex)
+            {
+                // Log exception (logging mechanism not shown)
+                return StatusCode(500, "Internal server error.");
+            }
+        }
 
         #region helper methods
         private async Task<string> uploadDocument(IFormFile file, string userId, string containerName = "kyc-document")

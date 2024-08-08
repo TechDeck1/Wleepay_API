@@ -111,9 +111,9 @@ namespace wleepay.Services
             return await _unitOfWork.UserDetail.GetApplicationUser(string.Empty, string.Empty, phone, true, false, role);
         }
 
-        public async Task<IEnumerable<ApplicationUser>> GetUserByRole(int role)
+        public async Task<IEnumerable<ApplicationUser>> GetAllUsersByRole(int role)
         {
-            return await _unitOfWork.UserDetail.GetUserDetailsByRole(role);
+            return await _unitOfWork.UserDetail.GetAllUsersByRole(role);
         }
 
         public async Task<UserDetailsResponseResource> GetUsers(Core.Enums.Role role, int pageIndex, int pageSize)
