@@ -211,6 +211,34 @@ namespace wleepay.API.Controllers
             return Ok(newTransactionResource);
         }
 
+        [HttpPut("BulkApprove")]
+        public async Task<IActionResult> ApprovePaymentRequest(List<long> paymentRequestIds)
+        {
+            TransactionResource newTransactionResource = new TransactionResource();
+            foreach (var paymentRequestId in paymentRequestIds)
+            {
+                if (paymentRequestId <= 0)
+                    return BadRequest("Please enter valid payment request Id");
+
+                var transactionToApprove = await _transactionService.GetTransactionsById(paymentRequestId);
+                if (transactionToApprove == null)
+                    return BadRequest("Invalid payment Id");
+
+                var approvedTransaction = new Transaction();
+                if (transactionToApprove.TransferTypeId == TransferTypes.CashOut.GetHashCode())
+                    approvedTransaction = await _transactionService.InitiateCashout(transactionToApprove);
+                else
+                    approvedTransaction = await _transactionService.InitiateTransaction(transactionToApprove);
+
+                   newTransactionResource = _mapper.Map<Transaction, TransactionResource>(approvedTransaction);
+                //send sms to user
+                if (newTransactionResource != null)
+                    await SendTransactionActionSMS(approvedTransaction);
+            }
+
+            return Ok(newTransactionResource);
+        }
+
         [HttpPut("reject")]
         public async Task<IActionResult> RejectPaymentRequest(long paymentRequestId)
         {
@@ -231,6 +259,33 @@ namespace wleepay.API.Controllers
 
             return Ok(result);
         }
+
+        [HttpPut("bulkReject")]
+        public async Task<IActionResult> RejectPaymentRequest(List<long> paymentRequestIds)
+        {
+            TransactionResource result = new TransactionResource();
+            foreach (var paymentRequestId in paymentRequestIds)
+            {
+
+                if (paymentRequestId <= 0)
+                    return BadRequest("Please enter valid payment request Id");
+
+                var transactionToReject = await _transactionService.GetTransactionsById(paymentRequestId);
+                if (transactionToReject == null)
+                    return BadRequest("Invalid payment Id");
+
+                result = await ChangePaymentRequestStatus(paymentRequestId, Core.Enums.TransactionStatus.Rejected);
+                if (result == null)
+                    return BadRequest("Invalid payment Id");
+
+                //send sms to user
+                if (result != null)
+                    await SendTransactionActionSMS(transactionToReject);
+            }
+
+            return Ok(result);
+        }
+
 
         [HttpPut("cancel")]
         public async Task<IActionResult> CancelPaymentRequest(long paymentRequestId)
