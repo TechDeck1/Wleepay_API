@@ -70,7 +70,7 @@ namespace wleepay.API.Controllers
 
             var exeTransactionToCreate = _mapper.Map<PaymentRequestForStripe, SochitelTransactionRequest>(paymentRequest);
             exeTransactionToCreate.Simulate = "1";
-            exeTransactionToCreate.UserReference = "12345";
+            exeTransactionToCreate.UserReference = "123456";
 
             var result = await _externalApiService.PostDataAsync<SochitelTransactionRequest>(exeTransactionToCreate);
 
@@ -99,11 +99,11 @@ namespace wleepay.API.Controllers
 
                     SochitelTransactions sochitelTransactions = new SochitelTransactions
                     {
-                        TransactionId = "123456",
+                        TransactionId = transactionResponse?.Result?.Id ?? "12345",
                         TransactionType = "Mobile Recharge",
                         CreditCardTransactionId = creditCardTransactions.Id,
                         TransactionAmount = paymentRequest.Amount,
-                        CommissionRate = 0,
+                        CommissionRate = (double)(transactionResponse?.Result?.Balance?.Commission == null ? 0 : transactionResponse?.Result?.Balance?.Commission),
                         OperatorId = paymentRequest.Operator,
                         ProductId = paymentRequest.ProductId,
                         PhoneNumber = paymentRequest.Msisdn,
@@ -118,7 +118,7 @@ namespace wleepay.API.Controllers
 
                     EmailHtmlTemplates emailHtml = new EmailHtmlTemplates();
                     var template = emailHtml.EmailTemplateForBillPaymentAndRecharge(charge.ReceiptUrl,"User");
-                    _emailSender.SendEmailAsync("ariel.ranjot@gmail.com", template, "User", "Receipt for mobile recharge");
+                    _emailSender.SendEmailAsync(paymentRequest.Email, template, "User", "Receipt for mobile recharge");
 
                     var userDetail = await _userDetailService.GetUserAccountByPhone(paymentRequest.Msisdn);
                    
@@ -196,7 +196,7 @@ namespace wleepay.API.Controllers
 
             var exeTransactionToCreate = _mapper.Map<PaymentRequestForStripe, SochitelBillPaymentTransactionRequest>(paymentRequest);
             exeTransactionToCreate.Simulate = "1";
-            exeTransactionToCreate.UserReference = "12345";
+            exeTransactionToCreate.UserReference = paymentRequest.ExtraParameters.MeterNumber.Name;
 
             var result = await _externalApiService.PostDataAsync<SochitelBillPaymentTransactionRequest>(exeTransactionToCreate);
 
@@ -226,11 +226,11 @@ namespace wleepay.API.Controllers
 
                     SochitelTransactions sochitelTransactions = new SochitelTransactions
                     {
-                        TransactionId = "123456",
+                        TransactionId = transactionResponse?.Result?.Id ?? "12345",
                         TransactionType = "Bill Payment",
                         CreditCardTransactionId = creditCardTransactions.Id,
                         TransactionAmount = paymentRequest.Amount,
-                        CommissionRate = 0,
+                        CommissionRate = (double)(transactionResponse?.Result?.Balance?.Commission == null? 0 : transactionResponse?.Result?.Balance?.Commission),
                         OperatorId = paymentRequest.Operator,
                         ProductId = paymentRequest.ProductId,
                         PhoneNumber = paymentRequest.Msisdn,
@@ -244,7 +244,8 @@ namespace wleepay.API.Controllers
 
                     EmailHtmlTemplates emailHtml = new EmailHtmlTemplates();
                     var template = emailHtml.EmailTemplateForBillPaymentAndRecharge(charge.ReceiptUrl, "User");
-                    _emailSender.SendEmailAsync("ariel.ranjot@gmail.com", template, "User", "Receipt for bill payment");
+                  
+                    _emailSender.SendEmailAsync(paymentRequest.Email, template, "User", "Receipt for bill payment");
 
                     var userDetail = await _userDetailService.GetUserAccountByPhone(paymentRequest.Msisdn);
                     SystemActivityLog systemActivityLog = new SystemActivityLog();
@@ -300,7 +301,7 @@ namespace wleepay.API.Controllers
 
             }
             
-            return Ok(transactionResponse);
+            return Ok(new {transactionResponse});
 
         }
 

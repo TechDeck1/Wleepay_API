@@ -223,11 +223,11 @@ namespace wleepay.API.Controllers
 
                             SochitelTransactions sochitelTransactions = new SochitelTransactions
                             {
-                                TransactionId = "123456",
+                                TransactionId = transactionResponse?.Result?.Id ?? "12345",
                                 TransactionType = "Mobile Recharge",
                                 WalletTransactionId = newTransaction.Id,
                                 TransactionAmount = newTransaction.Amount,
-                                CommissionRate = 0,
+                                CommissionRate = (double)(transactionResponse?.Result?.Balance?.Commission == null ? 0 : transactionResponse?.Result?.Balance?.Commission),
                                 OperatorId = execTransactionRequest.Operator,
                                 ProductId = execTransactionRequest.ProductId,
                                 PhoneNumber = execTransactionRequest.Msisdn,
@@ -381,11 +381,11 @@ namespace wleepay.API.Controllers
 
                             SochitelTransactions sochitelTransactions = new SochitelTransactions
                             {
-                                TransactionId = "123456",
+                                TransactionId = transactionResponse?.Result?.Id ?? "12345",
                                 TransactionType = "Bill Payment",
                                 WalletTransactionId = newTransaction.Id,
                                 TransactionAmount = newTransaction.Amount,
-                                CommissionRate = 0,
+                                CommissionRate = (double)(transactionResponse?.Result?.Balance?.Commission == null ? 0 : transactionResponse?.Result?.Balance?.Commission),
                                 OperatorId = execTransactionRequest.Operator,
                                 ProductId = execTransactionRequest.ProductId,
                                 PhoneNumber = execTransactionRequest.Msisdn,
@@ -417,7 +417,6 @@ namespace wleepay.API.Controllers
                                     firebaseMessageRequest.DeviceToken = item.FcmToken;
                                     firebaseMessageRequest.Body = "Bill payment approved for $" + newTransaction.Amount;
                                     firebaseMessageRequest.Title = "Bill Payment";
-                                    //var sendNotification = _firebaseNotification.SendFirebaseMessageRequest(firebaseMessageRequest);
 
                                     try
                                     {

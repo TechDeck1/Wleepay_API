@@ -71,6 +71,9 @@ namespace wleepay.API.Helpers
             writer.WritePropertyName("accountId");
             writer.WriteValue(value.AccountId);
 
+            writer.WritePropertyName("balance");
+            serializer.Serialize(writer, value.Balance);
+
             writer.WriteEndObject();
         }
     }
