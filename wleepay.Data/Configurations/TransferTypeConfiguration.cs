@@ -145,6 +145,24 @@ namespace wleepay.Data.Configurations
                 Description = "Transfer from system float n a/c to sytem wallet",
                 TransferFee = null
             });
+            builder.HasData(new TransferType
+            {
+                Id = 10,
+                Name = "Mobile Recharge Transfer",
+                FromWalletType = 7,
+                ToWalletType = 1,
+                Description = "Transfer from member a/c to system float a/c",
+                TransferFee = null
+            });
+            builder.HasData(new TransferType
+            {
+                Id = 11,
+                Name = "Bill Payment",
+                FromWalletType = 7,
+                ToWalletType = 1,
+                Description = "Transfer from member a/c to system float a/c",
+                TransferFee = null
+            });
         }
     }
 }
