@@ -69,7 +69,7 @@ namespace wleepay.API.Controllers
             };
 
             var exeTransactionToCreate = _mapper.Map<PaymentRequestForStripe, SochitelTransactionRequest>(paymentRequest);
-            exeTransactionToCreate.Simulate = "1";
+            exeTransactionToCreate.Simulate = "0";
             exeTransactionToCreate.UserReference = "123456";
 
             var result = await _externalApiService.PostDataAsync<SochitelTransactionRequest>(exeTransactionToCreate);
@@ -176,7 +176,7 @@ namespace wleepay.API.Controllers
 
                 return BadRequest("payment is failed");
             }
-            return Ok(transactionResponse);
+            return Ok(new { transactionResponse });
 
         }
 
@@ -195,7 +195,7 @@ namespace wleepay.API.Controllers
             };
 
             var exeTransactionToCreate = _mapper.Map<PaymentRequestForStripe, SochitelBillPaymentTransactionRequest>(paymentRequest);
-            exeTransactionToCreate.Simulate = "1";
+            exeTransactionToCreate.Simulate = "0";
             exeTransactionToCreate.UserReference = paymentRequest.ExtraParameters.MeterNumber.Name;
 
             var result = await _externalApiService.PostDataAsync<SochitelBillPaymentTransactionRequest>(exeTransactionToCreate);
