@@ -13,7 +13,6 @@ namespace wleepay.API.Resources
         public int PageSize { get; set; }
         public int PageIndex { get; set; }
 
-        //index current,page size
     }
 
     public class AgentPaymentRequest
