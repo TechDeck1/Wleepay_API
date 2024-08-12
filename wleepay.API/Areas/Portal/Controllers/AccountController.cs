@@ -1999,30 +1999,24 @@ namespace wleepay.API.Areas.Portal.Controllers
                     string encryptedText = Common.Encrypt(completeSignUpResourceModel.Email, secretKey);
                     var token = HttpUtility.UrlEncode(encryptedText);
                     string callbackUrl = $"{completeSignUpResourceModel.ClientURI}?email={(token)}";
-
-                    var username = userDetails.FirstName + " " + userDetails.LastName;
-                    EmailHtmlTemplates template = new EmailHtmlTemplates();
-                    var subject = "Complete sign-up process";
-                    var htmlTemplate = template.EmailTemplateForAccountSetup(completeSignUpResourceModel.Email, callbackUrl, username);
-
-                    await _emailSender.SendEmailAsync(completeSignUpResourceModel.Email, htmlTemplate, username, subject);
-
-                    return true;
-
-                }
-                else
-                {
-                    var secretKey = _configuration.GetSection("SecretKeyForEncryptAndDecrypt").Value; //secret key
-
-                    // Encrypt the text
-                    string encryptedText = Common.Encrypt(completeSignUpResourceModel.Email, secretKey);
-                    var token = HttpUtility.UrlEncode(encryptedText);
-                    string callbackUrl = $"{completeSignUpResourceModel.ClientURI}?email={(token)}";
                     var username = userDetails.FirstName + " " + userDetails.LastName;
 
-                    var message = "Hi" + username + "Please open the link to complete the sign-up process" + callbackUrl;
+                    if (role != Role.Agent.ToDescriptionString())
+                    {
+                        EmailHtmlTemplates template = new EmailHtmlTemplates();
+                        var subject = "Complete sign-up process";
+                        var htmlTemplate = template.EmailTemplateForAccountSetup(completeSignUpResourceModel.Email, callbackUrl, username);
 
-                    _smsService.sendMessage(message,completeSignUpResourceModel.PhoneNumber);
+                        await _emailSender.SendEmailAsync(completeSignUpResourceModel.Email, htmlTemplate, username, subject);
+
+                        return true;
+                    }
+                    else
+                    {
+                        var message = "Hi" + username + "Please open the link to complete the sign-up process" + callbackUrl;
+
+                        _smsService.sendMessage(message, completeSignUpResourceModel.PhoneNumber);
+                    }
 
                 }
 
