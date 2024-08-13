@@ -47,10 +47,27 @@ namespace wleepay.Data.Repositories
             return userDevices;
         }
 
+
         public async Task<IList<UserDevices>> GetUserDeviceByUserId(string UserId)
         {
             var userDevices = await WPContext.UserDevices.Where(x => x.UserId == UserId).ToListAsync();
             return userDevices;
+        }
+
+        public async Task<bool> DeleteUserDevice(string UserId, string deviceId)
+        {
+            var userDevices = await WPContext.UserDevices.Where(x => x.UserId == UserId && x.DeviceId == deviceId).FirstOrDefaultAsync();
+            if (userDevices != null)
+            {
+                WPContext.UserDevices.Remove(userDevices); // Mark the entity for deletion
+                WPContext.SaveChanges(); // Save changes to delete the entity from the database
+                return true;
+
+            }
+            else
+            {
+                return false;
+            }
         }
     }
 }

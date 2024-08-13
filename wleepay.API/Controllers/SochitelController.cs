@@ -456,6 +456,24 @@ namespace wleepay.API.Controllers
             }
         }
 
+        [HttpPost]
+        [Route("getBalance")]
+        public async Task<IActionResult> GetBalance([FromBody] SochitelGetBalanceRequest sochitelGetBalanceRequest)
+        {
+            try
+            {
+                var result = await _externalApiService.PostDataAsync<SochitelGetBalanceRequest>(sochitelGetBalanceRequest);
+
+                var balanceResponse = JsonConvert.DeserializeObject<SochitelBalanceResponse>(result);
+
+                return Ok(balanceResponse);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "An error occurred while processing your request.");
+            }
+        }
+
         #region helper methods
         private string GetClientIpAddress()
         {

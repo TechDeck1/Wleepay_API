@@ -13,4 +13,12 @@ namespace wleepay.API.Resources
         public string productType { get; set; }
     }
 
+    public class SochitelGetBalanceRequest
+    {
+        public SochitelAuth auth { get; set; }
+        public string version { get; set; }
+        public string command { get; set; }
+      
+    }
+
 }

@@ -20,6 +20,11 @@ namespace wleepay.Services
 			return await _unitOfWork.UserDevice.AddUserDeviceAsync(userDevices);
         }
 
+        public async Task<bool> DeleteUserDevice(string userId, string deviceId)
+        {
+            return await _unitOfWork.UserDevice.DeleteUserDevice(userId, deviceId);
+        }
+
         public async Task<UserDevices> GetUserDevice(string userId, string deviceId)
         {
             return await _unitOfWork.UserDevice.GetUserDevice(userId, deviceId);
