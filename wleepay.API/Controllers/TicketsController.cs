@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using FirebaseAdmin.Messaging;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -252,7 +253,29 @@ namespace wleepay.API.Controllers
                     firebaseMessageRequest.DeviceId = item.DeviceId;
                     firebaseMessageRequest.UserId = userDetail.UserDetail.UserId;
 
-                    var sendNotification = _firebaseNotification.SendFirebaseMessageRequest(firebaseMessageRequest);
+                    //var sendNotification = _firebaseNotification.SendFirebaseMessageRequest(firebaseMessageRequest);
+
+                    try
+                    {
+                        var sendNotification = _firebaseNotification.SendFirebaseMessageRequest(firebaseMessageRequest);
+                    }
+                    catch (AggregateException ex)
+                    {
+                        foreach (var innerEx in ex.InnerExceptions)
+                        {
+                            if (innerEx is FirebaseMessagingException fme)
+                            {
+                                // Handle Firebase specific exceptions
+                                Console.WriteLine($"Firebase error: {fme.Message}");
+                            }
+                            else
+                            {
+                                Console.WriteLine($"General error: {innerEx.Message}");
+                            }
+                        }
+                    }
+
+
                 }
 
                 if (request.Note != null)
@@ -333,8 +356,27 @@ namespace wleepay.API.Controllers
                 firebaseMessageRequest.DeviceId = item.DeviceId;
                 firebaseMessageRequest.UserId = userDetail.UserDetail.UserId;
 
-                var sendNotification = _firebaseNotification.SendFirebaseMessageRequest(firebaseMessageRequest);
-            }
+                //var sendNotification = _firebaseNotification.SendFirebaseMessageRequest(firebaseMessageRequest);
+                try
+                {
+                    var sendNotification = _firebaseNotification.SendFirebaseMessageRequest(firebaseMessageRequest);
+                }
+                catch (AggregateException ex)
+                {
+                    foreach (var innerEx in ex.InnerExceptions)
+                    {
+                        if (innerEx is FirebaseMessagingException fme)
+                        {
+                            // Handle Firebase specific exceptions
+                            Console.WriteLine($"Firebase error: {fme.Message}");
+                        }
+                        else
+                        {
+                            Console.WriteLine($"General error: {innerEx.Message}");
+                        }
+                    }
+                }
+                }
 
             if (tickets != null)
             {
