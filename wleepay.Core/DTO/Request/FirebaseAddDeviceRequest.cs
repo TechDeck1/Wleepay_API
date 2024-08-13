@@ -10,4 +10,10 @@ namespace wleepay.Core.DTO.Request
         public string DeviceId { get; set; }
         public string UserId { get; set; }
     }
+
+    public class FirebaseDeleteDeviceRequest
+    {
+        public string DeviceId { get; set; }
+        public string UserId { get; set; }
+    }
 }

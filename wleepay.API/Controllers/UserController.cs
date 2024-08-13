@@ -638,6 +638,30 @@ namespace wleepay.API.Controllers
             }
         }
 
+
+        [AllowAnonymous]
+        [HttpPost("DeleteDevice")]
+        public async Task<IActionResult> DeleteDeviceIdAndToken(FirebaseAddDeviceRequest request)
+        {
+            if (request.DeviceId == null || request.UserId == null)
+            {
+                return BadRequest("DeviceId and UserId are required.");
+            }
+
+            try
+            {
+                var device = await _userDeviceService.DeleteUserDevice(request.UserId, request.DeviceId);
+               
+
+                return Ok(new { status = device});
+            }
+            catch (Exception ex)
+            {
+                // Log exception (logging mechanism not shown)
+                return StatusCode(500, "Internal server error.");
+            }
+        }
+
         [AllowAnonymous]
         [HttpPost("sendMessage")]
         public async Task<IActionResult> SendSmsToUsers(SendSmsRequestModel request)
