@@ -70,7 +70,7 @@ namespace wleepay.API.Controllers
 
             var exeTransactionToCreate = _mapper.Map<PaymentRequestForStripe, SochitelTransactionRequest>(paymentRequest);
             exeTransactionToCreate.Simulate = "0";
-            exeTransactionToCreate.UserReference = "9876543";
+            //exeTransactionToCreate.UserReference = "9876543";
 
             var result = await _externalApiService.PostDataAsync<SochitelTransactionRequest>(exeTransactionToCreate);
 
@@ -196,7 +196,7 @@ namespace wleepay.API.Controllers
 
             var exeTransactionToCreate = _mapper.Map<PaymentRequestForStripe, SochitelBillPaymentTransactionRequest>(paymentRequest);
             exeTransactionToCreate.Simulate = "0";
-            exeTransactionToCreate.UserReference = paymentRequest.ExtraParameters.MeterNumber.Name;
+            //exeTransactionToCreate.UserReference = paymentRequest.ExtraParameters.MeterNumber.Name;
 
             var result = await _externalApiService.PostDataAsync<SochitelBillPaymentTransactionRequest>(exeTransactionToCreate);
 

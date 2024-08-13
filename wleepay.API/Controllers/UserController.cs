@@ -638,10 +638,9 @@ namespace wleepay.API.Controllers
             }
         }
 
-
         [AllowAnonymous]
         [HttpPost("DeleteDevice")]
-        public async Task<IActionResult> DeleteDeviceIdAndToken(FirebaseAddDeviceRequest request)
+        public async Task<IActionResult> DeleteDeviceIdAndToken(FirebaseDeleteDeviceRequest request)
         {
             if (request.DeviceId == null || request.UserId == null)
             {
@@ -651,8 +650,6 @@ namespace wleepay.API.Controllers
             try
             {
                 var device = await _userDeviceService.DeleteUserDevice(request.UserId, request.DeviceId);
-               
-
                 return Ok(new { status = device});
             }
             catch (Exception ex)
