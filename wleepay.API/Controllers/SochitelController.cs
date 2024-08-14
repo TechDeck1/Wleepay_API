@@ -105,7 +105,18 @@ namespace wleepay.API.Controllers
 
                 var newOperatorList = operators;
 
-                return Ok(newOperatorList);
+                return Ok(new {
+                    status = new { 
+                        id=products.Status.Id,
+                        type = products.Status.Type,
+                        typeName = products.Status.TypeName,
+                        name = products.Status.Name,    
+                    },
+                    command = products.Command,
+                    timestamp = products.Timestamp,
+                    reference = products.Reference,
+                    result= newOperatorList
+                });
             }
             catch
             {
@@ -132,7 +143,20 @@ namespace wleepay.API.Controllers
 
                 var newOperatorProductList = operatorsProduct;
 
-                return Ok(newOperatorProductList);
+                return Ok(new
+                {
+                    status = new
+                    {
+                        id = products.Status.Id,
+                        type = products.Status.Type,
+                        typeName = products.Status.TypeName,
+                        name = products.Status.Name,
+                    },
+                    command = products.Command,
+                    timestamp = products.Timestamp,
+                    reference = products.Reference,
+                    result = newOperatorProductList
+                });
             }
             catch(Exception ex) 
             {
