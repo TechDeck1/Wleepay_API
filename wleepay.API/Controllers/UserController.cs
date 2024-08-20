@@ -742,6 +742,28 @@ namespace wleepay.API.Controllers
             }
         }
 
+        [AllowAnonymous]
+        [HttpPost("agentPaymentRequest")]
+        public async Task<IActionResult> GetIncomingOutGoingAgentRequests([FromBody] AgentPaymentRequest paymentRequestParam)
+        {
+            var paymentRequest = await _userDetailsService.GetIncomingOutGoingAgentPaymentRequest(paymentRequestParam.UserId, paymentRequestParam.Type, paymentRequestParam.TransferStatus,paymentRequestParam.TransferId, paymentRequestParam.PageSize, paymentRequestParam.PageIndex);
+
+            if (paymentRequest == null)
+                return Ok(new List<TransactionResource>());
+
+            var transactionResource = _mapper.Map<IEnumerable<Transaction>, IEnumerable<TransactionHistoryResource>>(paymentRequest.Transactions);
+            foreach (var item in transactionResource)
+            {
+                var time = Helpers.Common.ConvertISTtoLiberiaTime(item.CreatedDate);
+                item.CreatedDate = time;
+            }
+            return Ok(new 
+            {
+                transactionResource=transactionResource,
+                totalCount=paymentRequest.TotalCount
+            });
+        }
+
         #region helper methods
         private async Task<string> uploadDocument(IFormFile file, string userId, string containerName = "kyc-document")
         {

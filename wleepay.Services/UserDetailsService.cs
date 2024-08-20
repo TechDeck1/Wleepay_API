@@ -143,6 +143,18 @@ namespace wleepay.Services
             return paymentRequest;
         }
 
+        public async Task<TransactionResponseResource> GetIncomingOutGoingAgentPaymentRequest(string userId, Core.Enums.PaymentRequestType type, Core.Enums.TransactionStatus transactionStatus,int transferTypeId, int pageSize, int pageIndex)
+        {
+            var user = await _unitOfWork.UserDetail.GetApplicationUser(userId, string.Empty, string.Empty, true);
+            if (user == null)
+                return null;
+            //get user wallets
+
+            var paymentRequest = await _transactionService.GetIncomingOutgoingPaymentRequest(user.Wallets.Select(s => s.Id), type, transactionStatus, transferTypeId, pageSize, pageIndex);
+
+            return paymentRequest;
+        }
+
         public async Task<UserDetail> UpdateUserVerificationCode(string userId, string VerificationCode)
         {
             var userToUpdate = await _unitOfWork.UserDetail.GetUserDetailsById(userId);
@@ -191,5 +203,7 @@ namespace wleepay.Services
         {
             return await _unitOfWork.UserDetail.AddDeviceIdAndToken(deviceId, token,userId);
         }
+
+       
     }
 }

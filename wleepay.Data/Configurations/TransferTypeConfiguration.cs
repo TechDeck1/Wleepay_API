@@ -163,6 +163,15 @@ namespace wleepay.Data.Configurations
                 Description = "Transfer from member a/c to system float a/c",
                 TransferFee = null
             });
+            builder.HasData(new TransferType
+            {
+                Id = 12,
+                Name = "On Hand Agent Cashout",
+                FromWalletType = 6,
+                ToWalletType = 1,
+                Description = "Transfer from agent a/c to general cash account float a/c",
+                TransferFee = null
+            });
         }
     }
 }

@@ -11,6 +11,7 @@ using wleepay.Core.Models;
 using wleepay.Core.Repositories;
 using wleepay.Core.Services;
 using wleepay.Data.Context;
+using static DevExpress.Xpo.Helpers.AssociatedCollectionCriteriaHelper;
 using TransactionStatus = wleepay.Core.Enums.TransactionStatus;
 
 namespace wleepay.Data.Repositories
@@ -392,5 +393,38 @@ namespace wleepay.Data.Repositories
 
             return response;
         }
+
+        public async Task<TransactionResponseResource> GetIncomingOutgoingPaymentRequest(IEnumerable<long> walletIds, PaymentRequestType type, TransactionStatus statusType, int transferTypeId, int pageSize, int pageIndex)
+        {
+            int takeCount = pageSize;
+            int skipCount = pageIndex * pageSize;
+            var transactionQuery = WPContext.Transactions.Where(t => t.Status == statusType.GetHashCode());
+
+            if (type == PaymentRequestType.InComing)
+                transactionQuery = transactionQuery.Where(t => walletIds.Contains(t.FromWalletId)
+                && (t.TransferTypeId == transferTypeId && walletIds.Contains(t.FromWalletId))
+                //|| (t.TransferTypeId == TransferTypes.AgentCommissionCashout.GetHashCode() && walletIds.Contains(t.FromWalletId)) 
+                //|| (t.TransferTypeId == TransferTypes.TopUp.GetHashCode() && walletIds.Contains(t.FromWalletId))
+                )
+                    .Include(s => s.FromWallet.ApplicationUser.UserDetail)
+                    .Include(s => s.ToWallet.ApplicationUser.UserDetail)
+                    .Include(s => s.TransferType);
+            else
+                transactionQuery = transactionQuery.Where(t => walletIds.Contains(t.ToWalletId)
+                //|| (t.TransferTypeId == TransferTypes.CashOut.GetHashCode() && walletIds.Contains(t.ToWalletId)) 
+                //|| (t.TransferTypeId == TransferTypes.TopUp.GetHashCode() && walletIds.Contains(t.ToWalletId)) 
+                && (t.TransferTypeId == transferTypeId && walletIds.Contains(t.ToWalletId)))
+                      .Include(s => s.FromWallet.ApplicationUser.UserDetail)
+                      .Include(s => s.ToWallet.ApplicationUser.UserDetail)
+                      .Include(s => s.TransferType);
+
+            //return await new ({transactionQuery.Skip(skipCount).Take(takeCount).Include(t => t.TransactionStatus).ToListAsync())};
+            return new TransactionResponseResource
+            {
+                TotalCount = await transactionQuery.CountAsync(),
+                Transactions = await transactionQuery.Skip(skipCount).Take(takeCount).Include(t => t.TransactionStatus).ToListAsync()
+            };
+        }
+
     }
 }
