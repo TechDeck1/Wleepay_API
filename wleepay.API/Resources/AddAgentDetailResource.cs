@@ -23,8 +23,8 @@ namespace wleepay.API.Resources
         public string Otp { get; set; }
         public string City { get; set; }
         public string District { get; set; }
-        public string TrainingCompletionDate { get; set; }
-        public string Merchandise {  get; set; }
+        public string? TrainingCompletionDate { get; set; }
+        public string? Merchandise {  get; set; }
 
     }
 }

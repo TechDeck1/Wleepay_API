@@ -424,8 +424,8 @@ namespace wleepay.API.Areas.Portal.Controllers
         }
 
         [SystemLock]
-        [HttpPost("RegisterAgent")]
-        public async Task<IActionResult> RegisterAgent([FromBody] AddAgentDetailResource userDetail)
+        [HttpPost("RegisterAgentAndMember")]
+        public async Task<IActionResult> RegisterAgentAndMember([FromBody] AddAgentDetailResource userDetail)
         {
             try
             {
