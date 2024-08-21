@@ -2001,7 +2001,7 @@ namespace wleepay.API.Areas.Portal.Controllers
                     string callbackUrl = $"{completeSignUpResourceModel.ClientURI}?email={(token)}";
                     var username = userDetails.FirstName + " " + userDetails.LastName;
 
-                    if (role != Role.Agent.ToDescriptionString())
+                    if (role != Role.Agent.ToDescriptionString() || role != Role.Member.ToDescriptionString())
                     {
                         EmailHtmlTemplates template = new EmailHtmlTemplates();
                         var subject = "Complete sign-up process";
