@@ -706,33 +706,65 @@ namespace wleepay.API.Controllers
                     return BadRequest("Note is required.");
                 }
                 var allAgents = await _userDetailsService.GetAllUsersByRole((int)Role.Agent);
-                
+                var allMembers = await _userDetailsService.GetAllUsersByRole((int)Role.Member);
+
+
                 string response = "";
 
                 EmailHtmlTemplates emailTemplates = new EmailHtmlTemplates();
-
-                if (request.AlertType == "Email")
+                if (request.SendTo == "Agent")
                 {
-                    foreach (var agent in allAgents)
+
+
+                    if (request.AlertType == "Email")
                     {
-                        var template = emailTemplates.EmailTemplateForSendAlert(request.Note, agent.UserDetail.FirstName);
-                        response = await _emailSender.SendEmailAsync(agent.Email, template, agent.UserDetail.FirstName, "Email Alert");
+                        foreach (var agent in allAgents)
+                        {
+                            var template = emailTemplates.EmailTemplateForSendAlert(request.Note, agent.UserDetail.FirstName);
+                            response = await _emailSender.SendEmailAsync(agent.Email, template, agent.UserDetail.FirstName, "Email Alert");
+                        }
                     }
+                    else
+                    {
+                        foreach (var agent in allAgents)
+                        {
+                            response = _sMSService.sendMessage(request.Note, agent.UserDetail.PhoneNumber);
+                        }
+
+                    }
+
+                    return Ok(new
+                    {
+                        message = response.ToString(),
+                        success = true
+                    });
                 }
                 else
                 {
-                    foreach (var agent in allAgents)
+                    if (request.AlertType == "Email")
                     {
-                        response = _sMSService.sendMessage(request.Note, agent.UserDetail.PhoneNumber);
+                        foreach (var member in allMembers)
+                        {
+                            var template = emailTemplates.EmailTemplateForSendAlert(request.Note, member.UserDetail.FirstName);
+                            response = await _emailSender.SendEmailAsync(member.Email, template, member.UserDetail.FirstName, "Email Alert");
+                        }
+                    }
+                    else
+                    {
+                        foreach (var member in allMembers)
+                        {
+                            response = _sMSService.sendMessage(request.Note, member.UserDetail.PhoneNumber);
+                        }
+
                     }
 
-                }
+                    return Ok(new
+                    {
+                        message = response.ToString(),
+                        success = true
+                    });
 
-                return Ok(new
-                {
-                    message = response.ToString(),
-                    success = true
-                });
+                }
 
             }
             catch (Exception ex)

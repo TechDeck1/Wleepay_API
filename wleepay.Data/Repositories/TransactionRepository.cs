@@ -149,7 +149,6 @@ namespace wleepay.Data.Repositories
                       .Include(s => s.ToWallet.ApplicationUser.UserDetail)
                       .Include(s => s.TransferType);
             
-
             return await transactionQuery.Skip(skipCount).Take(takeCount).Include(t => t.TransactionStatus).ToListAsync();
         }
 

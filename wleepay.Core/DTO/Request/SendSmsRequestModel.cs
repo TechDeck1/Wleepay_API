@@ -14,5 +14,6 @@ namespace wleepay.Core.DTO.Request
     {
         public string Note { get; set; }
         public string AlertType { get; set; }
+        public string SendTo { get; set; }
     }
 }
