@@ -482,7 +482,6 @@ namespace wleepay.API.Controllers
             }
             catch (Exception ex)
             {
-
                 throw ex;
             }
         }
@@ -697,7 +696,7 @@ namespace wleepay.API.Controllers
 
         [AllowAnonymous]
         [HttpPost("sendEmailSmsAlert")]
-        public async Task<IActionResult> sendMailAndSmsAlert(SendEmailSmsAlertModel request)
+        public async Task<IActionResult> sendMailAndSmsAlertToAll(SendEmailSmsAlertModel request)
         {
             try
             {

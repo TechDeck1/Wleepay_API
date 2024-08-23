@@ -31,7 +31,7 @@ namespace wleepay.Services
             return await _unitOfWork.Transaction.GetIncomingOutgoingPaymentRequest(walletIds, type, transactionStatus, transferTypeId, pageSize, pageIndex);
         }
 
-        public async Task<IEnumerable<Transaction>> GetPaymentRequestByStatusAndType(PaymentRequestType type, TransactionStatus transactionStatus,int transferId, int pageSize, int pageIndex)
+        public async Task<TransactionResponseResource> GetPaymentRequestByStatusAndType(PaymentRequestType type, TransactionStatus transactionStatus,int transferId, int pageSize, int pageIndex)
         {
             return await _unitOfWork.Transaction.GetPaymentRequestByStatusAndType(type, transactionStatus, transferId, pageSize, pageIndex);
         }

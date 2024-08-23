@@ -388,14 +388,19 @@ namespace wleepay.API.Controllers
             if (paymentRequest == null)
                 return Ok(new List<TransactionResource>());
 
-            var transactionResource = _mapper.Map<IEnumerable<Transaction>, IEnumerable<TransactionHistoryResource>>(paymentRequest);
+            var transactionResource = _mapper.Map<IEnumerable<Transaction>, IEnumerable<TransactionHistoryResource>>(paymentRequest.Transactions);
            
             foreach (var item in transactionResource)
             {
                 var time = Helpers.Common.ConvertISTtoLiberiaTime(item.CreatedDate);
                 item.CreatedDate = time;
             }
-            return Ok(transactionResource);
+
+            return Ok(new
+            {
+                transactionResource = transactionResource,
+                totalCount = paymentRequest.TotalCount
+            });
         }
         #region Helper function
         private async Task<TransactionResource> ChangePaymentRequestStatus(long paymentRequestId, Core.Enums.TransactionStatus status)
