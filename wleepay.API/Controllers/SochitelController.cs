@@ -25,6 +25,7 @@ using System;
 using Microsoft.SqlServer.Management.Smo;
 using wleepay.Core.Common;
 using FirebaseAdmin.Messaging;
+using wleepay.Communication.Templates;
 
 namespace wleepay.API.Controllers
 {
@@ -260,7 +261,9 @@ namespace wleepay.API.Controllers
                             };
 
                             var sTansaction = _sochitelTransactionService.AddSochitelTransactions(sochitelTransactions);
-                            _smsService.sendMessage("mobile recharge is successfully done", execTransactionRequest.Msisdn);
+                            var message = MessagesTemplates.AirtimeAndLecPaymentTemplate(transactionResponse.Result.Id, transactionResponse.Reference.ToString());
+
+                            _smsService.sendMessage(message, execTransactionRequest.Msisdn);
 
                             var userDetail = await _userDetailsService.GetUserAccountByPhone(execTransactionRequest.Msisdn);
                             SystemActivityLog systemActivityLog = new SystemActivityLog();
@@ -416,8 +419,9 @@ namespace wleepay.API.Controllers
                                 UserReference = exeTransactionToCreate.UserReference,
 
                             };
+                            var message = MessagesTemplates.LecPaymentTemplate(transactionResponse.Result.Id, transactionResponse.Reference.ToString());
 
-                            _smsService.sendMessage("bill payment is successfully done", execTransactionRequest.Msisdn);
+                            _smsService.sendMessage(message, execTransactionRequest.Msisdn);
 
                             var sTansaction = _sochitelTransactionService.AddSochitelTransactions(sochitelTransactions);
 

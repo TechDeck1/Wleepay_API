@@ -78,7 +78,7 @@ namespace wleepay.Communication.EmailTemplates
 
             }
 
-            public string EmailTemplateForBillPaymentAndRecharge(string uri, string username)
+            public string EmailTemplateForBillPaymentAndRecharge(string uri, string username, string transactionId , string ReferenceNo)
             {
                 return $@"
                     <html>
@@ -102,6 +102,9 @@ namespace wleepay.Communication.EmailTemplates
                     <body>
                         <div class='container'>
                             <p>Dear {username},</p>
+                             <p>Below is your bill payment or recharge details</p>
+                             <p>Transaction Id: {transactionId}</p>
+                             <p>Reference Id: {ReferenceNo}</p>
                             <p>Please click the following link to view your payment receipt</p>
                             <p><a href={uri}>click here</a></p>
                             <p>Thank you.</p>
