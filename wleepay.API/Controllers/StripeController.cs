@@ -102,8 +102,8 @@ namespace wleepay.API.Controllers
                         TransactionId = transactionResponse?.Result?.Id ?? "12345",
                         TransactionType = "Mobile Recharge",
                         CreditCardTransactionId = creditCardTransactions.Id,
-                        TransactionAmount = paymentRequest.Amount,
-                        CommissionRate = (double)(transactionResponse?.Result?.Balance?.Commission == null ? 0 : transactionResponse?.Result?.Balance?.Commission),
+                        TransactionAmount = paymentRequest.Amount.ToString(),
+                        CommissionRate = (transactionResponse?.Result?.Balance?.Commission == null ? "0" : transactionResponse?.Result?.Balance?.Commission),
                         OperatorId = paymentRequest.Operator,
                         ProductId = paymentRequest.ProductId,
                         PhoneNumber = paymentRequest.Msisdn,
@@ -121,48 +121,48 @@ namespace wleepay.API.Controllers
                     _emailSender.SendEmailAsync(paymentRequest.Email, template, "User", "Receipt for mobile recharge");
 
                     var userDetail = await _userDetailService.GetUserAccountByPhone(paymentRequest.Msisdn);
-                   
-                    SystemActivityLog systemActivityLog = new SystemActivityLog();
-                    systemActivityLog.UserId = userDetail.Id;
-                    systemActivityLog.Email = userDetail.Email;
-                    systemActivityLog.IpAddress = GetClientIpAddress();
-                    systemActivityLog.Action = ActionsForSystemLogs.MobileRecharge.ToDescriptionString();
-                    systemActivityLog.Description = GenericMessagesForSystemLogs.MobileRecharge.ToDescriptionString();
-                    var addLogs = await _systemActivityLogsService.AddSystemLogs(systemActivityLog);
+
+                    //SystemActivityLog systemActivityLog = new SystemActivityLog();
+                    //systemActivityLog.UserId = userDetail.Id;
+                    //systemActivityLog.Email = userDetail.Email;
+                    //systemActivityLog.IpAddress = GetClientIpAddress();
+                    //systemActivityLog.Action = ActionsForSystemLogs.MobileRecharge.ToDescriptionString();
+                    //systemActivityLog.Description = GenericMessagesForSystemLogs.MobileRecharge.ToDescriptionString();
+                    //var addLogs = await _systemActivityLogsService.AddSystemLogs(systemActivityLog);
 
                     FirebaseMessageRequest firebaseMessageRequest = new FirebaseMessageRequest();
 
-                    var device = await _userDeviceService.GetUserDeviceByUserId(userDetail.Id);
+                    //var device = await _userDeviceService.GetUserDeviceByUserId(userDetail.Id);
                     
-                    if (device != null)
-                    {
-                        foreach (var item in device)
-                        {
-                            firebaseMessageRequest.DeviceId = item.DeviceId;
-                            firebaseMessageRequest.DeviceToken = item.FcmToken;
-                            firebaseMessageRequest.Body = "Mobile recharge approved for $" + charge.Amount;
-                            firebaseMessageRequest.Title = "Mobile Recharge";
-                            try
-                            {
-                                var sendNotification = _firebaseNotification.SendFirebaseMessageRequest(firebaseMessageRequest);
-                            }
-                            catch (AggregateException ex)
-                            {
-                                foreach (var innerEx in ex.InnerExceptions)
-                                {
-                                    if (innerEx is FirebaseMessagingException fme)
-                                    {
-                                        // Handle Firebase specific exceptions
-                                        Console.WriteLine($"Firebase error: {fme.Message}");
-                                    }
-                                    else
-                                    {
-                                        Console.WriteLine($"General error: {innerEx.Message}");
-                                    }
-                                }
-                            }
-                        }
-                    }
+                    //if (device != null)
+                    //{
+                    //    foreach (var item in device)
+                    //    {
+                    //        firebaseMessageRequest.DeviceId = item.DeviceId;
+                    //        firebaseMessageRequest.DeviceToken = item.FcmToken;
+                    //        firebaseMessageRequest.Body = "Mobile recharge approved for $" + charge.Amount;
+                    //        firebaseMessageRequest.Title = "Mobile Recharge";
+                    //        try
+                    //        {
+                    //            var sendNotification = _firebaseNotification.SendFirebaseMessageRequest(firebaseMessageRequest);
+                    //        }
+                    //        catch (AggregateException ex)
+                    //        {
+                    //            foreach (var innerEx in ex.InnerExceptions)
+                    //            {
+                    //                if (innerEx is FirebaseMessagingException fme)
+                    //                {
+                    //                    // Handle Firebase specific exceptions
+                    //                    Console.WriteLine($"Firebase error: {fme.Message}");
+                    //                }
+                    //                else
+                    //                {
+                    //                    Console.WriteLine($"General error: {innerEx.Message}");
+                    //                }
+                    //            }
+                    //        }
+                    //    }
+                    //}
 
                     return Ok(new
                     {
@@ -229,8 +229,8 @@ namespace wleepay.API.Controllers
                         TransactionId = transactionResponse?.Result?.Id ?? "12345",
                         TransactionType = "Bill Payment",
                         CreditCardTransactionId = creditCardTransactions.Id,
-                        TransactionAmount = paymentRequest.Amount,
-                        CommissionRate = (double)(transactionResponse?.Result?.Balance?.Commission == null? 0 : transactionResponse?.Result?.Balance?.Commission),
+                        TransactionAmount = paymentRequest.Amount.ToString(),
+                        CommissionRate = (transactionResponse?.Result?.Balance?.Commission == null? "0" : transactionResponse?.Result?.Balance?.Commission),
                         OperatorId = paymentRequest.Operator,
                         ProductId = paymentRequest.ProductId,
                         PhoneNumber = paymentRequest.Msisdn,

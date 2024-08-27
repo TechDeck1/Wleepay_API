@@ -287,7 +287,6 @@ namespace wleepay.API.Controllers
             return Ok(result);
         }
 
-
         [HttpPut("cancel")]
         public async Task<IActionResult> CancelPaymentRequest(long paymentRequestId)
         {

@@ -42,10 +42,10 @@ namespace wleepay.API.Resources
         public string Transaction { get; set; }
 
         [JsonProperty("commission")]
-        public int Commission { get; set; }
+        public string Commission { get; set; }  // Changed to string
 
         [JsonProperty("commissionPercentage")]
-        public int CommissionPercentage { get; set; }
+        public string CommissionPercentage { get; set; }
 
         [JsonProperty("final")]
         public string Final { get; set; }
@@ -53,6 +53,7 @@ namespace wleepay.API.Resources
         [JsonProperty("currency")]
         public string Currency { get; set; }
     }
+
 
     public class Result
     {
