@@ -2021,7 +2021,7 @@ namespace wleepay.API.Areas.Portal.Controllers
                         var htmlTemplate = template.EmailTemplateForAccountSetup(completeSignUpResourceModel.Email, callbackUrl, username);
                         await _emailSender.SendEmailAsync(completeSignUpResourceModel.Email, htmlTemplate, username, subject);
 
-                        var message = "Hi" + username + "Please open the link to complete the sign-up process" + callbackUrl;
+                        var message = "Hi " + username + "Please open the link to complete the sign-up process:  " + callbackUrl;
                         _smsService.sendMessage(message, completeSignUpResourceModel.PhoneNumber);
                     }
 
