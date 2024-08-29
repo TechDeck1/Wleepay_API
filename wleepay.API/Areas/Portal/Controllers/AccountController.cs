@@ -1180,6 +1180,9 @@ namespace wleepay.API.Areas.Portal.Controllers
                         string htmlTemplate = template.GenerateHtml();
                         await _emailSender.SendEmailAsync(decryptedEmail, htmlTemplate, userDetails.FirstName, subject);
 
+                        _smsService.sendMessage(MessagesTemplates.RegistrationSuccessMessage(userDetails.AccountNumber, userDetails?.KYCLevelDetail?.Name), userDetails.PhoneNumber);
+
+
                         systemActivityLog.Description = GenericMessagesForSystemLogs.CompleteLoginProcess.ToDescriptionString();
                         var addLogs = await _systemActivityLogsService.AddSystemLogs(systemActivityLog);
 
@@ -2001,7 +2004,7 @@ namespace wleepay.API.Areas.Portal.Controllers
                     string callbackUrl = $"{completeSignUpResourceModel.ClientURI}?email={(token)}";
                     var username = userDetails.FirstName + " " + userDetails.LastName;
 
-                    if (role != Role.Agent.ToDescriptionString() || role != Role.Member.ToDescriptionString())
+                    if (role != Role.Agent.ToDescriptionString() && role != Role.Member.ToDescriptionString())
                     {
                         EmailHtmlTemplates template = new EmailHtmlTemplates();
                         var subject = "Complete sign-up process";
@@ -2013,8 +2016,12 @@ namespace wleepay.API.Areas.Portal.Controllers
                     }
                     else
                     {
-                        var message = "Hi" + username + "Please open the link to complete the sign-up process" + callbackUrl;
+                        EmailHtmlTemplates template = new EmailHtmlTemplates();
+                        var subject = "Complete sign-up process";
+                        var htmlTemplate = template.EmailTemplateForAccountSetup(completeSignUpResourceModel.Email, callbackUrl, username);
+                        await _emailSender.SendEmailAsync(completeSignUpResourceModel.Email, htmlTemplate, username, subject);
 
+                        var message = "Hi" + username + "Please open the link to complete the sign-up process" + callbackUrl;
                         _smsService.sendMessage(message, completeSignUpResourceModel.PhoneNumber);
                     }
 
