@@ -9,6 +9,8 @@ using System.Linq;
 using wleepay.Core.Enums;
 using TransactionStatus = wleepay.Core.Enums.TransactionStatus;
 using wleepay.Core.DTO.Response;
+using Microsoft.SqlServer.Management.Smo;
+using static DevExpress.XtraPrinting.Native.PageSizeInfo;
 
 namespace wleepay.Services
 {
@@ -138,6 +140,17 @@ namespace wleepay.Services
             return await _unitOfWork.Transaction.GetTransactionsHistoryByUserId(userId, pageIndex, pageSize);
         }
 
+        public async Task<IList<TransactionAmountBasedOnMonthsResponseModel>> GetTransactionAmountByMonth()
+        {
+            return await _unitOfWork.Transaction.GetTransactionAmountByMonth();
+
+        }
+
+        public async Task<IList<TransactionCountByTypeResponseModel>> GetTransactionCounttByType()
+        {
+            return await _unitOfWork.Transaction.GetTransactionCounttByType();
+
+        }
         #region Helper function
         private Transaction GetTaxTransaction(long fromWalletId, double amount, long parentTransactionId, int currency)
         {

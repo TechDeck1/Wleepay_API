@@ -401,6 +401,25 @@ namespace wleepay.API.Controllers
                 totalCount = paymentRequest.TotalCount
             });
         }
+
+        [AllowAnonymous]
+        [HttpGet("TransactionAmountByMonth")]
+        public async Task<IActionResult> GetTransactionAmountByMonth()
+        {
+            var transactionRequest = await _transactionService.GetTransactionAmountByMonth();
+            return Ok(transactionRequest);
+
+        }
+
+        [AllowAnonymous]
+        [HttpGet("TransactionCountByType")]
+        public async Task<IActionResult> GetTransactionCounttByType()
+        {
+            var transactionRequest = await _transactionService.GetTransactionCounttByType();
+            return Ok(transactionRequest);
+
+        }
+
         #region Helper function
         private async Task<TransactionResource> ChangePaymentRequestStatus(long paymentRequestId, Core.Enums.TransactionStatus status)
         {

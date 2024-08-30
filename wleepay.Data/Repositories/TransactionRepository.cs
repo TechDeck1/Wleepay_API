@@ -1,7 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using DevExpress.Data.Linq.Helpers;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
+using Microsoft.SqlServer.Management.Smo;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -455,5 +458,54 @@ namespace wleepay.Data.Repositories
             };
         }
 
+        public async Task<IList<TransactionAmountBasedOnMonthsResponseModel>> GetTransactionAmountByMonth()
+        {
+
+            // Fetch the relevant data first
+            var transactions = WPContext.Transactions
+                .Include(t => t.ToWallet)
+                .Where(t => t.Status == 3 && t.CreatedDate >= DateTime.Now.AddMonths(-3).Date)
+                .ToList();  // Fetch data into memory
+
+            // Perform grouping and conditional sum in memory
+            var finalResult = transactions
+                .GroupBy(x => new
+                {
+                    x.CreatedDate.Year,
+                    x.CreatedDate.Month
+                })
+                .Select(g => new TransactionAmountBasedOnMonthsResponseModel
+                {
+                    MonthName = new DateTime(g.Key.Year, g.Key.Month, 1).ToString("MMMM yyyy"), // Format after grouping
+                    TotalAmount_LD = g.Sum(x => x.ToWallet.CurrencyId == 1 ? x.Amount : 0),  // LD sum
+                    TotalAmount_USD = g.Sum(x => x.ToWallet.CurrencyId == 2 ? x.Amount : 0),  // USD sum
+                    TotalCount = g.Count()
+                })
+                .OrderByDescending(g => g.MonthName)
+                .ToList();
+
+          
+
+            return finalResult;
+
+        }
+
+        public async Task<IList<TransactionCountByTypeResponseModel>> GetTransactionCounttByType()
+        {
+
+            var transactionCountsByType = WPContext.Transactions.Include(t => t.TransferType).Where(t => t.Status == 3)
+            .GroupBy(t => t.TransferType.Name)  // Grouping by transaction type
+            .Select(g => new TransactionCountByTypeResponseModel
+            {
+                Type = g.Key,  // The type of the transaction
+                TotalCount = g.Count(),  // Count of transactions for this type
+                //Percentage = (double)g.Count() / WPContext.Transactions.Count() * 100
+            })
+            .OrderByDescending(g => g.TotalCount)
+            .ToList();
+
+            return transactionCountsByType;
+
+        }
     }
 }

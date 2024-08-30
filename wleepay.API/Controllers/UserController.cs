@@ -795,6 +795,8 @@ namespace wleepay.API.Controllers
             });
         }
 
+        [AllowAnonymous]
+        [HttpGet("GetUsersCount")]
         public async Task<IActionResult> GetActiveAgentsAndSubscribersCount()
         {
             var agentMemberCount = await _userDetailsService.GetActiveAgentsAndSubscribersCount();
