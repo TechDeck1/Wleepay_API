@@ -32,6 +32,7 @@ namespace wleepay.Core.Services
         Task<TransactionAndUserResponseResource> VerifyUserAccountByPhone(string phone);
         Task<ApplicationUser> GetStaffPermissionsById(string userId);
         Task<UserDetail> AddDeviceIdAndToken(string deviceId, string token, string userId);
+        Task<AgentSubscribersCountResponseModel> GetActiveAgentsAndSubscribersCount();
 
 
     }

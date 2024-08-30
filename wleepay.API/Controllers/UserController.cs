@@ -795,6 +795,11 @@ namespace wleepay.API.Controllers
             });
         }
 
+        public async Task<IActionResult> GetActiveAgentsAndSubscribersCount()
+        {
+            var agentMemberCount = await _userDetailsService.GetActiveAgentsAndSubscribersCount();
+            return Ok(agentMemberCount);
+        }
         #region helper methods
         private async Task<string> uploadDocument(IFormFile file, string userId, string containerName = "kyc-document")
         {

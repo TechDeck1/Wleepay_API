@@ -1,4 +1,5 @@
 ﻿using MailKit.Search;
+using Microsoft.SqlServer.Management.Smo;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -204,6 +205,11 @@ namespace wleepay.Services
             return await _unitOfWork.UserDetail.AddDeviceIdAndToken(deviceId, token,userId);
         }
 
-       
+        public async Task<AgentSubscribersCountResponseModel> GetActiveAgentsAndSubscribersCount()
+        {
+            return await _unitOfWork.UserDetail.GetActiveAgentsAndSubscribersCount();
+
+        }
+
     }
 }

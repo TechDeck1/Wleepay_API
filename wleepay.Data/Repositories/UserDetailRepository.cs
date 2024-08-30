@@ -6,6 +6,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using wleepay.Core.Common;
 using wleepay.Core.DTO.Response;
 using wleepay.Core.Enums;
 using wleepay.Core.Models;
@@ -315,5 +316,15 @@ namespace wleepay.Data.Repositories
             return userDetails;
 
         }
+
+        public async Task<AgentSubscribersCountResponseModel> GetActiveAgentsAndSubscribersCount()
+        {
+            var agentCount = await WPContext.Users.Include(x => x.UserDetail).Where(s => s.UserRoles.FirstOrDefault().Role.Name == Role.Agent.ToDescriptionString() && s.UserDetail.Status == Status.Active.GetHashCode()).CountAsync();
+            var subscriberCount = await WPContext.Users.Include(x => x.UserDetail).Where(s => s.UserRoles.FirstOrDefault().Role.Name == Role.Member.ToDescriptionString() && s.UserDetail.Status == Status.Active.GetHashCode()).CountAsync();
+
+            return new AgentSubscribersCountResponseModel { AgentCount = agentCount, SubscribersCount = subscriberCount };
+
+        }
+
     }
 }
