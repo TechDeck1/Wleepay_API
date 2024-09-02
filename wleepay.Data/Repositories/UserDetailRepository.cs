@@ -326,5 +326,42 @@ namespace wleepay.Data.Repositories
 
         }
 
+        public async Task<IList<CountByMonths>> GetActiveAgentsByMonth()
+        {
+            var sixMonthsAgo = DateTime.Now.AddMonths(-6);
+            var activeAgentsByMonth = WPContext.Users.Include(u => u.UserDetail).Include(r => r.UserRoles)
+                .Where(s => s.UserDetail.Status == Status.Active.GetHashCode() && s.UserDetail.CreatedDate >= sixMonthsAgo && s.UserRoles.FirstOrDefault().Role.Name == Role.Agent.ToDescriptionString()).ToList();
+
+            var x = activeAgentsByMonth.GroupBy(s => new  { Year = s.UserDetail.CreatedDate.Year, Month = s.UserDetail.CreatedDate.Month })
+                .Select(g => new CountByMonths
+                {
+                    Name = new DateTime(g.Key.Year, g.Key.Month, 1).ToString("MMMM yyyy"), // Format after grouping
+                    Value = g.Count()
+                })
+                .OrderByDescending(g => g.Name)
+                .ToList();
+
+            return x;
+        }
+
+        public async Task<IList<CountByMonths>> GetActiveSubscribersByMonth()
+        {
+            var sixMonthsAgo = DateTime.Now.AddMonths(-6);
+            var activeSubscribersByMonth = WPContext.Users.Include(u => u.UserDetail).Include(r => r.UserRoles)
+                .Where(s => s.UserDetail.Status == Status.Active.GetHashCode() && s.UserDetail.CreatedDate >= sixMonthsAgo && s.UserRoles.FirstOrDefault().Role.Name == Role.Member.ToDescriptionString()).ToList();
+
+
+            var x = activeSubscribersByMonth.GroupBy(s => new { year = s.UserDetail.CreatedDate.Year, month = s.UserDetail.CreatedDate.Month })
+                .Select(g => new CountByMonths
+                {
+                    Name = new DateTime(g.Key.year, g.Key.month, 1).ToString("MMMM yyyy"), // Format after grouping
+                    Value = g.Count()
+                })
+                .OrderBy(g => g.Name)
+                .ToList();
+
+            return x;
+        }
+
     }
 }

@@ -802,6 +802,18 @@ namespace wleepay.API.Controllers
             var agentMemberCount = await _userDetailsService.GetActiveAgentsAndSubscribersCount();
             return Ok(agentMemberCount);
         }
+
+        [AllowAnonymous]
+        [HttpGet("SubscribersAndAgentsOnBoardByMonth")]
+        public async Task<IActionResult> activeAgentsSubscribersByMonth()
+        {
+            var activeAgentsByMonth = await _userDetailsService.GetActiveAgentsByMonth();
+            var activeSubscribersByMonth = await _userDetailsService.GetActiveSubscribersByMonth();
+            return Ok(new{
+                activeAgentsByMonth,
+                activeSubscribersByMonth
+            });
+        }
         #region helper methods
         private async Task<string> uploadDocument(IFormFile file, string userId, string containerName = "kyc-document")
         {

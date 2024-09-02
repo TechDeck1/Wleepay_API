@@ -33,6 +33,8 @@ namespace wleepay.Core.Services
         Task<ApplicationUser> GetStaffPermissionsById(string userId);
         Task<UserDetail> AddDeviceIdAndToken(string deviceId, string token, string userId);
         Task<AgentSubscribersCountResponseModel> GetActiveAgentsAndSubscribersCount();
+        Task<IList<CountByMonths>> GetActiveAgentsByMonth();
+        Task<IList<CountByMonths>> GetActiveSubscribersByMonth();
 
 
     }

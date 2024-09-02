@@ -10,4 +10,10 @@ namespace wleepay.Core.DTO.Response
         public int SubscribersCount { get; set; }
 
     }
+
+    public class CountByMonths
+    {
+        public string Name { get; set; }
+        public int Value { get; set; }
+    }
 }

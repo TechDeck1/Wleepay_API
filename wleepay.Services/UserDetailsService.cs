@@ -211,5 +211,14 @@ namespace wleepay.Services
 
         }
 
+        public async Task<IList<CountByMonths>> GetActiveAgentsByMonth()
+        {
+            return await _unitOfWork.UserDetail.GetActiveAgentsByMonth();
+        }
+
+        public async Task<IList<CountByMonths>> GetActiveSubscribersByMonth()
+        {
+            return await _unitOfWork.UserDetail.GetActiveSubscribersByMonth();
+        }
     }
 }
