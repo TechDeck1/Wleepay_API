@@ -412,10 +412,19 @@ namespace wleepay.API.Controllers
         }
 
         [AllowAnonymous]
-        [HttpGet("TransactionCountByType")]
-        public async Task<IActionResult> GetTransactionCounttByType()
+        [HttpGet("TransactionCountByTypeLD")]
+        public async Task<IActionResult> GetTransactionCounttByTypeLD()
         {
-            var transactionRequest = await _transactionService.GetTransactionCounttByType();
+            var transactionRequest = await _transactionService.GetTransactionCounttByTypeLD();
+            return Ok(transactionRequest);
+
+        }
+
+        [AllowAnonymous]
+        [HttpGet("TransactionCountByTypeUSD")]
+        public async Task<IActionResult> GetTransactionCounttByTypeUSD()
+        {
+            var transactionRequest = await _transactionService.GetTransactionCounttByTypeUSD();
             return Ok(transactionRequest);
 
         }

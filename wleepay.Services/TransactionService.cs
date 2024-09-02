@@ -146,9 +146,14 @@ namespace wleepay.Services
 
         }
 
-        public async Task<IList<TransactionCountByTypeResponseModel>> GetTransactionCounttByType()
+        public async Task<IList<TransactionCountByTypeResponseModel>> GetTransactionCounttByTypeLD()
         {
-            return await _unitOfWork.Transaction.GetTransactionCounttByType();
+            return await _unitOfWork.Transaction.GetTransactionCounttByTypeLD();
+
+        }
+        public async Task<IList<TransactionCountByTypeResponseModel>> GetTransactionCounttByTypeUSD()
+        {
+            return await _unitOfWork.Transaction.GetTransactionCounttByTypeUSD();
 
         }
         #region Helper function

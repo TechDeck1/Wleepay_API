@@ -319,8 +319,8 @@ namespace wleepay.Data.Repositories
 
         public async Task<AgentSubscribersCountResponseModel> GetActiveAgentsAndSubscribersCount()
         {
-            var agentCount = await WPContext.Users.Include(x => x.UserDetail).Where(s => s.UserRoles.FirstOrDefault().Role.Name == Role.Agent.ToDescriptionString() && s.UserDetail.Status == Status.Active.GetHashCode()).CountAsync();
-            var subscriberCount = await WPContext.Users.Include(x => x.UserDetail).Where(s => s.UserRoles.FirstOrDefault().Role.Name == Role.Member.ToDescriptionString() && s.UserDetail.Status == Status.Active.GetHashCode()).CountAsync();
+            var agentCount = await WPContext.Users.Include(x => x.UserDetail).Include(r=>r.UserRoles).Where(s => s.UserRoles.FirstOrDefault().Role.Name == Role.Agent.ToDescriptionString() && s.UserDetail.Status == Status.Active.GetHashCode()).CountAsync();
+            var subscriberCount = await WPContext.Users.Include(x => x.UserDetail).Include(r => r.UserRoles).Where(s => s.UserRoles.FirstOrDefault().Role.Name == Role.Member.ToDescriptionString() && s.UserDetail.Status == Status.Active.GetHashCode()).CountAsync();
 
             return new AgentSubscribersCountResponseModel { AgentCount = agentCount, SubscribersCount = subscriberCount };
 

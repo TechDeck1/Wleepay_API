@@ -27,7 +27,8 @@ namespace wleepay.Core.Repositories
         Task<TransactionResponseResource> GetTransactionsByUserIdAndType(string userId,int transeferType, int pageIndex = 0, int pageSize = 10);
         Task<TransactionResponseResource> GetTransactionsHistoryByUserId(string userId, int pageIndex = 0, int pageSize = 10);
         Task<IList<TransactionAmountBasedOnMonthsResponseModel>> GetTransactionAmountByMonth();
-        Task<IList<TransactionCountByTypeResponseModel>> GetTransactionCounttByType();
+        Task<IList<TransactionCountByTypeResponseModel>> GetTransactionCounttByTypeLD();
+        Task<IList<TransactionCountByTypeResponseModel>> GetTransactionCounttByTypeUSD();
 
 
 

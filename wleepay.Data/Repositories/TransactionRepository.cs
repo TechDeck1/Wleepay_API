@@ -490,19 +490,45 @@ namespace wleepay.Data.Repositories
 
         }
 
-        public async Task<IList<TransactionCountByTypeResponseModel>> GetTransactionCounttByType()
+        public async Task<IList<TransactionCountByTypeResponseModel>> GetTransactionCounttByTypeLD()
         {
 
-            var transactionCountsByType = WPContext.Transactions.Include(t => t.TransferType).Where(t => t.Status == 3)
+            var transactionCountsByType = WPContext.Transactions.Include(w=>w.ToWallet).Include(t => t.TransferType).Where(t => t.Status == 3 && t.FromWallet.CurrencyId == Currencies.LRD.GetHashCode())
             .GroupBy(t => t.TransferType.Name)  // Grouping by transaction type
             .Select(g => new TransactionCountByTypeResponseModel
             {
-                Type = g.Key,  // The type of the transaction
-                TotalCount = g.Count(),  // Count of transactions for this type
-                //Percentage = (double)g.Count() / WPContext.Transactions.Count() * 100
+                Name = g.Key,  // The type of the transaction
+                Value = g.Count(),  // Count of transactions for this type
+                TotalAmount =Math.Round( g.Sum(t => t.Amount) , 2) // Sum of transaction amounts for this type
             })
-            .OrderByDescending(g => g.TotalCount)
+            .OrderByDescending(g => g.Name)
             .ToList();
+
+            return transactionCountsByType;
+
+        }
+
+        public async Task<IList<TransactionCountByTypeResponseModel>> GetTransactionCounttByTypeUSD()
+        {
+
+            var transactionCountsByType = WPContext.Transactions.Include(w => w.ToWallet).Include(t => t.TransferType).Where(t => t.Status == 3 && t.FromWallet.CurrencyId == Currencies.USD.GetHashCode())
+            .GroupBy(t => t.TransferType.Name)  // Grouping by transaction type
+            .Select(g => new TransactionCountByTypeResponseModel
+            {
+                Name = g.Key,  // The type of the transaction
+                Value = g.Count(),  // Count of transactions for this type
+                TotalAmount = Math.Round(g.Sum(t => t.Amount), 2)
+            })
+            .OrderByDescending(g => g.Name)
+            .ToList();
+
+            //var formattedTransactionCountsByType = transactionCountsByType.Select(t => new TransactionCountByTypeResponseModel
+            //{
+            //    Name = t.Name,
+            //    Value = t.Value,
+            //    TotalAmount = t.TotalAmount,
+            //    FormatedTotalAmount = t.TotalAmount.ToString("N2")  // Apply the formatting here
+            //}).ToList();
 
             return transactionCountsByType;
 
