@@ -209,7 +209,6 @@ namespace wleepay.API.Controllers
 
                         var exeTransactionToCreate = _mapper.Map<ExecTransactionRequest, SochitelTransactionRequest>(execTransactionRequest);
                         exeTransactionToCreate.Simulate = "0";
-                        exeTransactionToCreate.UserReference = "098TYU";
 
                         var result = await _externalApiService.PostDataAsync<SochitelTransactionRequest>(exeTransactionToCreate);
 
