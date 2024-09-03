@@ -1,4 +1,6 @@
-﻿namespace wleepay.Core.Models
+﻿using System;
+
+namespace wleepay.Core.Models
 {
     public class SochitelTransactions
     {
@@ -14,6 +16,7 @@
         public string ProductId { get; set; }
         public string ExtraInfo { get; set; }
         public string UserReference { get; set; }
+        public DateTime? CreatedDate { get; set; } = DateTime.UtcNow;
 
         public virtual Transaction Transaction { get; set; }
         public virtual CreditCardTransactions CreditCardTransaction { get; set; }

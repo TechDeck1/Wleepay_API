@@ -15,7 +15,10 @@ namespace wleepay.Core.DTO.Response
 
     public class TransactionCountByTypeResponseModel
     {
-        public string Type { get; set; }
-        public int TotalCount { get; set; }
+        public string Name { get; set; }
+        public int Value { get; set; }
+        public double? TotalAmount { get; set; }  // Total transaction amount for this type
+        public string? FormatedTotalAmount { get; set; }  // Total transaction amount for this type
+
     }
 }
