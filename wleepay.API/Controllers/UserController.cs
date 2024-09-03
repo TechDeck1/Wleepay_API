@@ -809,9 +809,11 @@ namespace wleepay.API.Controllers
         {
             var activeAgentsByMonth = await _userDetailsService.GetActiveAgentsByMonth();
             var activeSubscribersByMonth = await _userDetailsService.GetActiveSubscribersByMonth();
+            var activeSubscribersByType = await _userDetailsService.GetActiveSubscribersByType();
             return Ok(new{
                 activeAgentsByMonth,
-                activeSubscribersByMonth
+                activeSubscribersByMonth,
+                activeSubscribersByType
             });
         }
         #region helper methods

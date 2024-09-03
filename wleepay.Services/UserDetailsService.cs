@@ -220,5 +220,9 @@ namespace wleepay.Services
         {
             return await _unitOfWork.UserDetail.GetActiveSubscribersByMonth();
         }
+        public async Task<IList<subscribersByType>> GetActiveSubscribersByType()
+        {
+            return await _unitOfWork.UserDetail.GetActiveSubscribersByType();
+        }
     }
 }

@@ -24,6 +24,7 @@ namespace wleepay.Core.Repositories
         Task<AgentSubscribersCountResponseModel> GetActiveAgentsAndSubscribersCount();
         Task<IList<CountByMonths>> GetActiveAgentsByMonth();
         Task<IList<CountByMonths>> GetActiveSubscribersByMonth();
+        Task<IList<subscribersByType>> GetActiveSubscribersByType();
 
 
 

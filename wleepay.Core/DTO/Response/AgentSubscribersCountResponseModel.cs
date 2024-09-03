@@ -16,4 +16,10 @@ namespace wleepay.Core.DTO.Response
         public string Name { get; set; }
         public int Value { get; set; }
     }
+
+    public class subscribersByType
+    {
+        public string Name { get; set; }
+        public int Value { get; set; }
+    }
 }

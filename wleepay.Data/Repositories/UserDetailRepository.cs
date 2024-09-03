@@ -362,6 +362,24 @@ namespace wleepay.Data.Repositories
 
             return x;
         }
+        public async Task<IList<subscribersByType>> GetActiveSubscribersByType()
+        {
+            var activeSubscribersByMonth = WPContext.Users.Include(u => u.UserDetail).Include(r => r.UserRoles)
+                .Where(s => s.UserDetail.Status == Status.Active.GetHashCode() && s.UserRoles.FirstOrDefault().Role.Name == Role.Member.ToDescriptionString()).ToList();
+
+
+            var x = activeSubscribersByMonth
+                .GroupBy(t => t.UserDetail.KYCLevel)  // Grouping by transaction type
+                .Select(g => new subscribersByType
+                {
+                    Name = "Level"+" "+g.Key.ToString(),
+                    Value = g.Count()
+                })
+                .OrderBy(g => g.Name)
+                .ToList();
+
+            return x;
+        }
 
     }
 }
