@@ -29,6 +29,7 @@ namespace wleepay.Core.Repositories
         Task<IList<TransactionAmountBasedOnMonthsResponseModel>> GetTransactionAmountByMonth();
         Task<IList<TransactionCountByTypeResponseModel>> GetTransactionCounttByTypeLD();
         Task<IList<TransactionCountByTypeResponseModel>> GetTransactionCounttByTypeUSD();
+        Task<IList<TransactionSummaryResponseModel>> GetTransactionData();
 
 
 

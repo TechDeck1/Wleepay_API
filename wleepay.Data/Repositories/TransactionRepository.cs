@@ -471,17 +471,17 @@ namespace wleepay.Data.Repositories
             var finalResult = transactions
                 .GroupBy(x => new
                 {
-                    x.CreatedDate.Year,
-                    x.CreatedDate.Month
+                    Year = x.CreatedDate.Year,
+                    Month = x.CreatedDate.Month
                 })
                 .Select(g => new TransactionAmountBasedOnMonthsResponseModel
                 {
-                    MonthName = new DateTime(g.Key.Year, g.Key.Month, 1).ToString("MMMM yyyy"), // Format after grouping
+                    Name = new DateTime(g.Key.Year, g.Key.Month, 1).ToString("MMMM yyyy"), // Format after grouping
+                    Value = g.Count(),
                     TotalAmount_LD = g.Sum(x => x.ToWallet.CurrencyId == 1 ? x.Amount : 0),  // LD sum
                     TotalAmount_USD = g.Sum(x => x.ToWallet.CurrencyId == 2 ? x.Amount : 0),  // USD sum
-                    TotalCount = g.Count()
                 })
-                .OrderByDescending(g => g.MonthName)
+                .OrderBy(g => g.Name)
                 .ToList();
 
           
@@ -522,16 +522,48 @@ namespace wleepay.Data.Repositories
             .OrderByDescending(g => g.Name)
             .ToList();
 
-            //var formattedTransactionCountsByType = transactionCountsByType.Select(t => new TransactionCountByTypeResponseModel
-            //{
-            //    Name = t.Name,
-            //    Value = t.Value,
-            //    TotalAmount = t.TotalAmount,
-            //    FormatedTotalAmount = t.TotalAmount.ToString("N2")  // Apply the formatting here
-            //}).ToList();
-
             return transactionCountsByType;
 
+        } 
+        
+        public async Task<IList<TransactionSummaryResponseModel>> GetTransactionData()
+        {
+
+            //var transactionCountsByType = WPContext.Transactions.Include(w => w.ToWallet).Include(t => t.TransferType).Where(t => t.Status == 3 && t.FromWallet.CurrencyId == Currencies.USD.GetHashCode())
+            //.GroupBy(t => t.TransferType.Name)  // Grouping by transaction type
+            //.Select(g => new TransactionSummaryResponseModel
+            //{
+            //    Name = g.Key,  // The type of the transaction
+            //    Value = g.Count(),  // Count of transactions for this type
+            //    TotalAmount = Math.Round(g.Sum(t => t.Amount), 2)
+            //})
+            //.OrderByDescending(g => g.Name)
+            //.ToList();
+
+
+            var currentDate = DateTime.Now;
+            var threeMonthsAgo = currentDate.AddMonths(-2);
+
+            var transactions = WPContext.Transactions.Include(w => w.ToWallet).Include(t => t.TransferType)
+                .Where(t => t.Status == 3 && t.CreatedDate >= threeMonthsAgo).ToList();
+
+             var x = transactions.GroupBy(t => new { Month = t.CreatedDate.Month, Year = t.CreatedDate.Year, Currency = t.ToWallet.CurrencyId})
+                .Select(g => new TransactionSummaryResponseModel
+                {
+                    Month = g.Key.Month,
+                    Year = g.Key.Year,
+                    Currency = g.Key.Currency,
+                    SubscriberTopUps = g.Where(t => t.TransferTypeId == TransferTypes.TopUp.GetHashCode()).Sum(t => t.Amount),
+                    SubscriberCashouts = g.Where(t => t.TransferTypeId == TransferTypes.CashOut.GetHashCode()).Sum(t => t.Amount),
+                    AgentWalletTopup = g.Where(t => t.TransferTypeId == TransferTypes.FillAgent.GetHashCode()).Sum(t => t.Amount),
+                    AgentCommissionCashout = g.Where(t => t.TransferTypeId == TransferTypes.AgentCommissionCashout.GetHashCode()).Sum(t => t.Amount),
+                    PhoneCreditPurchased = g.Where(t => t.TransferTypeId == TransferTypes.MobileRechargeTransfer.GetHashCode()).Sum(t => t.Amount),
+                    LECCreditPurchased = g.Where(t => t.TransferTypeId == TransferTypes.BillPayment.GetHashCode()).Sum(t => t.Amount),
+                    TotalTransactionCount = g.Count()
+                })
+                .ToList();
+
+            return (x);
         }
     }
 }

@@ -155,6 +155,12 @@ namespace wleepay.Services
         {
             return await _unitOfWork.Transaction.GetTransactionCounttByTypeUSD();
 
+        } 
+        
+        public async Task<IList<TransactionSummaryResponseModel>> GetTransactionData()
+        {
+            return await _unitOfWork.Transaction.GetTransactionData();
+
         }
         #region Helper function
         private Transaction GetTaxTransaction(long fromWalletId, double amount, long parentTransactionId, int currency)

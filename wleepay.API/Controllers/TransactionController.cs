@@ -407,7 +407,8 @@ namespace wleepay.API.Controllers
         public async Task<IActionResult> GetTransactionAmountByMonth()
         {
             var transactionRequest = await _transactionService.GetTransactionAmountByMonth();
-            return Ok(transactionRequest);
+            var transactionData = await _transactionService.GetTransactionData();
+            return Ok(new { transactionRequest, transactionData });
 
         }
 
