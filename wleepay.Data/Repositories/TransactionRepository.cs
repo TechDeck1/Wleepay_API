@@ -484,8 +484,6 @@ namespace wleepay.Data.Repositories
                 .OrderBy(g => g.Name)
                 .ToList();
 
-          
-
             return finalResult;
 
         }
@@ -529,25 +527,13 @@ namespace wleepay.Data.Repositories
         public async Task<IList<TransactionSummaryResponseModel>> GetTransactionData()
         {
 
-            //var transactionCountsByType = WPContext.Transactions.Include(w => w.ToWallet).Include(t => t.TransferType).Where(t => t.Status == 3 && t.FromWallet.CurrencyId == Currencies.USD.GetHashCode())
-            //.GroupBy(t => t.TransferType.Name)  // Grouping by transaction type
-            //.Select(g => new TransactionSummaryResponseModel
-            //{
-            //    Name = g.Key,  // The type of the transaction
-            //    Value = g.Count(),  // Count of transactions for this type
-            //    TotalAmount = Math.Round(g.Sum(t => t.Amount), 2)
-            //})
-            //.OrderByDescending(g => g.Name)
-            //.ToList();
-
-
             var currentDate = DateTime.Now;
             var threeMonthsAgo = currentDate.AddMonths(-2);
 
             var transactions = WPContext.Transactions.Include(w => w.ToWallet).Include(t => t.TransferType)
                 .Where(t => t.Status == 3 && t.CreatedDate >= threeMonthsAgo).ToList();
 
-             var x = transactions.GroupBy(t => new { Month = t.CreatedDate.Month, Year = t.CreatedDate.Year, Currency = t.ToWallet.CurrencyId})
+            var finalTransactions = transactions.GroupBy(t => new { Month = t.CreatedDate.Month, Year = t.CreatedDate.Year, Currency = t.ToWallet.CurrencyId})
                 .Select(g => new TransactionSummaryResponseModel
                 {
                     Month = g.Key.Month,
@@ -563,7 +549,7 @@ namespace wleepay.Data.Repositories
                 })
                 .ToList();
 
-            return (x);
+            return (finalTransactions);
         }
     }
 }
