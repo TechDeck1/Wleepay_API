@@ -2,6 +2,7 @@ using System.IO;
 using System.Security.Cryptography;
 using System.Text;
 using System;
+using wleepay.API.Resources;
 
 namespace wleepay.API.Helpers
 {
@@ -106,5 +107,40 @@ namespace wleepay.API.Helpers
           return liberiaTime;
         }
 
-  }
+        public static InstructionDetails DeserializeInstructions(string instructions)
+        {
+            var instructionDetails = new InstructionDetails();
+            var lines = instructions.Split(new[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries);
+
+            foreach (var line in lines)
+            {
+                if (line.StartsWith("Amount:"))
+                    instructionDetails.Amount = decimal.Parse(line.Split(':')[1].Trim());
+                else if (line.StartsWith("Date:"))
+                    instructionDetails.Date = DateTime.Parse(line.Split(':')[1].Trim());
+                else if (line.StartsWith("Description:"))
+                {
+                    instructionDetails.Description = line;
+                }
+                else if (line.StartsWith("Units:"))
+                    instructionDetails.Units = decimal.Parse(line.Split(':')[1].Trim());
+                else if (line.StartsWith("Tax:"))
+                    instructionDetails.Tax = decimal.Parse(line.Split(':')[1].Trim());
+                else if (line.StartsWith("Receipt Number:"))
+                    instructionDetails.ReceiptNumber = line.Split(':')[1].Trim();
+                else if (line.StartsWith("Account Number:"))
+                    instructionDetails.AccountNumber = line.Split(':')[1].Trim();
+                else if (line.StartsWith("Customer Name:"))
+                    instructionDetails.CustomerName = line.Split(':')[1].Trim();
+                else if (line.StartsWith("Token Type:"))
+                    instructionDetails.TokenType = line.Split(':')[1].Trim();
+                else if (line.StartsWith("Token:"))
+                    instructionDetails.Token = line.Split(':')[1].Trim();
+            }
+
+            return instructionDetails;
+        }
+
+
+    }
 }

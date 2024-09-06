@@ -74,6 +74,9 @@ namespace wleepay.API.Helpers
             writer.WritePropertyName("balance");
             serializer.Serialize(writer, value.Balance);
 
+            writer.WritePropertyName("instructions");
+            writer.WriteValue(value.Instructions);
+
             writer.WriteEndObject();
         }
     }

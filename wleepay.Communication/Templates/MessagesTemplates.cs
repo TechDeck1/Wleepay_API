@@ -136,9 +136,14 @@ namespace wleepay.Communication.Templates
             return $" Dear User, \n\n mobile recharge is successfully done. Your token (Transaction Id) for recharge is:\n\n Transaction Id :{transactionId} \n\n Reference Id: {referenceId}";
         }
 
-        public static string LecPaymentTemplate(string transactionId, string referenceId)
+        public static string LecPaymentTemplate(string units, string cost, string token, string accountNumber, string momoTxnId, string date)
         {
-            return $" Dear User, \n\n Bill payment is successfully done. Your token (Transaction Id) for recharge is:\n\n Transaction Id :{transactionId} \n\n Reference Id: {referenceId}";
+            return $"Dear User,\n\n" +
+                   $"You have paid for {units} kWh units of electricity at a cost of USD {cost}.\n\n" +
+                   $"Token(s): {token}\n" +
+                   $"Account: {accountNumber}\n" +
+                   $"Txn id: {momoTxnId}\n" +
+                   $"Date: {date}";
         }
     }
 }

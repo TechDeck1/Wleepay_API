@@ -26,6 +26,9 @@ using Microsoft.SqlServer.Management.Smo;
 using wleepay.Core.Common;
 using FirebaseAdmin.Messaging;
 using wleepay.Communication.Templates;
+using Microsoft.IdentityModel.Tokens;
+using wleepay.Communication.Services;
+using wleepay.API.Helpers;
 
 namespace wleepay.API.Controllers
 {
@@ -256,6 +259,8 @@ namespace wleepay.API.Controllers
                                 ProductId = execTransactionRequest.ProductId,
                                 PhoneNumber = execTransactionRequest.Msisdn,
                                 UserReference = exeTransactionToCreate.UserReference,
+                                CreatedDate = DateTime.UtcNow
+
 
                             };
 
@@ -415,14 +420,23 @@ namespace wleepay.API.Controllers
                                 OperatorId = execTransactionRequest.Operator,
                                 ProductId = execTransactionRequest.ProductId,
                                 PhoneNumber = execTransactionRequest.Msisdn,
-                                UserReference = exeTransactionToCreate.UserReference,
+                                UserReference = transactionResponse.Reference,
+                                CreatedDate = DateTime.UtcNow,
+                                ExtraInfo = transactionResponse.Result.Instructions,
+
 
                             };
-                            var message = MessagesTemplates.LecPaymentTemplate(transactionResponse.Result.Id, transactionResponse.Reference.ToString());
 
+                            InstructionDetails instructionDetails = new InstructionDetails();
+                            if (!transactionResponse.Result.Instructions.IsNullOrEmpty())
+                            {
+                                instructionDetails = Common.DeserializeInstructions(transactionResponse.Result.Instructions);
+                            }
+
+                            var message = MessagesTemplates.LecPaymentTemplate(instructionDetails.Units.ToString(), instructionDetails.Amount.ToString(), instructionDetails.Token, instructionDetails.AccountNumber, transactionResponse.Result.Id, DateTime.UtcNow.ToString());
                             _smsService.sendMessage(message, execTransactionRequest.Msisdn);
-
                             var sTansaction = _sochitelTransactionService.AddSochitelTransactions(sochitelTransactions);
+
 
                             var userDetail = await _userDetailsService.GetUserAccountByPhone(execTransactionRequest.Msisdn);
                             SystemActivityLog systemActivityLog = new SystemActivityLog();

@@ -1,13 +1,16 @@
 ﻿using AutoMapper;
 using FirebaseAdmin.Messaging;
+using Google.Apis.Util;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 using Stripe;
 using System;
 using System.Threading.Tasks;
 using System.Web.Http;
+using wleepay.API.Helpers;
 using wleepay.API.Resources;
 using wleepay.Communication.Interface;
 using wleepay.Communication.Templates;
@@ -106,6 +109,8 @@ namespace wleepay.API.Controllers
                         ProductId = paymentRequest.ProductId,
                         PhoneNumber = paymentRequest.Msisdn,
                         UserReference = exeTransactionToCreate.UserReference,
+                        CreatedDate = DateTime.UtcNow
+
 
                     };
 
@@ -223,6 +228,7 @@ namespace wleepay.API.Controllers
                     };
                     var creditCardTransactions = await _creditCardTransactionService.AddCreditCardTransactions(creditTransactions);
 
+                   
 
                     SochitelTransactions sochitelTransactions = new SochitelTransactions
                     {
@@ -234,19 +240,26 @@ namespace wleepay.API.Controllers
                         OperatorId = paymentRequest.Operator,
                         ProductId = paymentRequest.ProductId,
                         PhoneNumber = paymentRequest.Msisdn,
-                        UserReference = exeTransactionToCreate.UserReference,
+                        UserReference = transactionResponse.Reference,
+                        CreatedDate = DateTime.UtcNow,
+                        ExtraInfo = transactionResponse.Result.Instructions
 
                     };
-
+                   
                     var sTansaction = _sochitelTransactionService.AddSochitelTransactions(sochitelTransactions);
 
-                    var message = MessagesTemplates.LecPaymentTemplate(transactionResponse.Result.Id, transactionResponse.Reference.ToString());
 
+                    InstructionDetails instructionDetails = new InstructionDetails();
+                    if (!transactionResponse.Result.Instructions.IsNullOrEmpty())
+                    {
+                        instructionDetails = Common.DeserializeInstructions(transactionResponse.Result.Instructions);
+                    }
+
+                    var message = MessagesTemplates.LecPaymentTemplate(instructionDetails?.Units.ToString(), instructionDetails?.Amount.ToString(), instructionDetails?.Token, instructionDetails?.AccountNumber, transactionResponse?.Result?.Id, DateTime.UtcNow.ToString());
                     _sMSService.sendMessage(message, paymentRequest.Msisdn);
 
                     EmailHtmlTemplates emailHtml = new EmailHtmlTemplates();
-                    var template = emailHtml.EmailTemplateForBillPaymentAndRecharge(charge.ReceiptUrl, "User", transactionResponse.Result.Id, transactionResponse.Reference);
-
+                    var template = emailHtml.EmailTemplateForBillPayment("User", instructionDetails?.Units.ToString(), instructionDetails?.Amount.ToString(), instructionDetails?.Token, instructionDetails?.AccountNumber, transactionResponse?.Result?.Id, DateTime.UtcNow.ToString(), charge.ReceiptUrl);
                     _emailSender.SendEmailAsync(paymentRequest.Email, template, "User", "Receipt for bill payment");
 
                     var userDetail = await _userDetailService.GetUserAccountByPhone(paymentRequest.Msisdn);
@@ -294,7 +307,8 @@ namespace wleepay.API.Controllers
                         success = true, 
                         amount = charge.Amount,
                         stripeTransactionId = charge.Id,
-                        receiptUrl=charge.ReceiptUrl,
+                        receiptUrl = charge.ReceiptUrl,
+                        Token = instructionDetails?.Token ?? "",
                         transactionResponse
                     });
                 }

@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using wleepay.API.Helpers;
 using wleepay.Core.Common;
@@ -92,6 +93,27 @@ namespace wleepay.API.Resources
 
         [JsonProperty("balance")]
         public Balance Balance { get; set; }
+        
+        [JsonProperty("instructions")]
+        public string? Instructions { get; set; }
+    }
+
+    public class InstructionDetails
+    {
+        public decimal Amount { get; set; }
+        public DateTime Date { get; set; }
+        public string Description { get; set; }
+        public decimal? TotalPayment { get; set; }
+        public decimal? DebtPayment { get; set; }
+        public decimal? UnitsPayment { get; set; }
+        public decimal? Units { get; set; }
+        public decimal? AccountBalance { get; set; }
+        public decimal Tax { get; set; }
+        public string ReceiptNumber { get; set; }
+        public string AccountNumber { get; set; }
+        public string CustomerName { get; set; }
+        public string TokenType { get; set; }
+        public string Token { get; set; }
     }
 
 
