@@ -140,9 +140,15 @@ namespace wleepay.Services
             return await _unitOfWork.Transaction.GetTransactionsHistoryByUserId(userId, pageIndex, pageSize);
         }
 
-        public async Task<IList<TransactionAmountBasedOnMonthsResponseModel>> GetTransactionAmountByMonth()
+        public async Task<IList<TransactionAmountBasedOnMonthsResponseModel>> GetTransactionAmountByMonthLD()
         {
-            return await _unitOfWork.Transaction.GetTransactionAmountByMonth();
+            return await _unitOfWork.Transaction.GetTransactionAmountByMonthLD();
+
+        }
+
+        public async Task<IList<TransactionAmountBasedOnMonthsResponseModel>> GetTransactionAmountByMonthUSD()
+        {
+            return await _unitOfWork.Transaction.GetTransactionAmountByMonthUSD();
 
         }
 
@@ -157,9 +163,9 @@ namespace wleepay.Services
 
         } 
         
-        public async Task<IList<TransactionSummaryResponseModel>> GetTransactionData()
+        public async Task<IList<TransactionSummaryResponseModel>> GetTransactionData(int monthId)
         {
-            return await _unitOfWork.Transaction.GetTransactionData();
+            return await _unitOfWork.Transaction.GetTransactionData(monthId);
 
         }
         #region Helper function

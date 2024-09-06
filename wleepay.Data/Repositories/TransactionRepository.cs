@@ -458,13 +458,43 @@ namespace wleepay.Data.Repositories
             };
         }
 
-        public async Task<IList<TransactionAmountBasedOnMonthsResponseModel>> GetTransactionAmountByMonth()
+        public async Task<IList<TransactionAmountBasedOnMonthsResponseModel>> GetTransactionAmountByMonthLD()
         {
 
             // Fetch the relevant data first
             var transactions = WPContext.Transactions
                 .Include(t => t.ToWallet)
-                .Where(t => t.Status == 3 && t.CreatedDate >= DateTime.Now.AddMonths(-3).Date)
+                .Where(t => t.Status == 3 && t.CreatedDate >= DateTime.Now.AddMonths(-3).Date && t.ToWallet.CurrencyId == 1)
+                .ToList();  // Fetch data into memory
+
+            // Perform grouping and conditional sum in memory
+            var finalResult = transactions
+                .GroupBy(x => new
+                {
+                    Year = x.CreatedDate.Year,
+                    Month = x.CreatedDate.Month
+                })
+                .Select(g => new TransactionAmountBasedOnMonthsResponseModel
+                {
+                    Name = new DateTime(g.Key.Year, g.Key.Month, 1).ToString("MMMM yyyy"), // Format after grouping
+                    Value = g.Count(),
+                    TotalAmount_LD = g.Sum(x => x.ToWallet.CurrencyId == 1 ? x.Amount : 0),  // LD sum
+                    TotalAmount_USD = g.Sum(x => x.ToWallet.CurrencyId == 2 ? x.Amount : 0),  // USD sum
+                })
+                .OrderBy(g => g.Name)
+                .ToList();
+
+            return finalResult;
+
+        }
+
+        public async Task<IList<TransactionAmountBasedOnMonthsResponseModel>> GetTransactionAmountByMonthUSD()
+        {
+
+            // Fetch the relevant data first
+            var transactions = WPContext.Transactions
+                .Include(t => t.ToWallet)
+                .Where(t => t.Status == 3 && t.CreatedDate >= DateTime.Now.AddMonths(-3).Date && t.ToWallet.CurrencyId == 2)
                 .ToList();  // Fetch data into memory
 
             // Perform grouping and conditional sum in memory
@@ -524,14 +554,14 @@ namespace wleepay.Data.Repositories
 
         } 
         
-        public async Task<IList<TransactionSummaryResponseModel>> GetTransactionData()
+        public async Task<IList<TransactionSummaryResponseModel>> GetTransactionData(int monthId)
         {
 
             var currentDate = DateTime.Now;
             var threeMonthsAgo = currentDate.AddMonths(-2);
 
             var transactions = WPContext.Transactions.Include(w => w.ToWallet).Include(t => t.TransferType)
-                .Where(t => t.Status == 3 && t.CreatedDate >= threeMonthsAgo).ToList();
+                .Where(t => t.Status == 3 && t.CreatedDate >= threeMonthsAgo && t.FromWallet.CurrencyId == Currencies.USD.GetHashCode()).ToList();
 
             var finalTransactions = transactions.GroupBy(t => new { Month = t.CreatedDate.Month, Year = t.CreatedDate.Year, Currency = t.ToWallet.CurrencyId})
                 .Select(g => new TransactionSummaryResponseModel

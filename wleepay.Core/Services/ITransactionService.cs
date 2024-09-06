@@ -29,8 +29,9 @@ namespace wleepay.Core.Services
         Task<TransactionResponseResource> GetTransactionsByUserIdAndType(string userId,int transferType, int pageIndex = 0, int pageSize = 10);
         Task<TransactionResponseResource> GetTransactionHistoryByUserId(string userId, int pageIndex, int pageSize);
 
-        Task<IList<TransactionAmountBasedOnMonthsResponseModel>> GetTransactionAmountByMonth();
-        Task<IList<TransactionSummaryResponseModel>> GetTransactionData();
+        Task<IList<TransactionAmountBasedOnMonthsResponseModel>> GetTransactionAmountByMonthLD();
+        Task<IList<TransactionAmountBasedOnMonthsResponseModel>> GetTransactionAmountByMonthUSD();
+        Task<IList<TransactionSummaryResponseModel>> GetTransactionData(int monthId);
         Task<IList<TransactionCountByTypeResponseModel>> GetTransactionCounttByTypeLD();
         Task<IList<TransactionCountByTypeResponseModel>> GetTransactionCounttByTypeUSD();
 

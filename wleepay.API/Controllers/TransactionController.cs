@@ -2,6 +2,7 @@
 using FirebaseAdmin.Messaging;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.SqlServer.Management.Smo;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -404,11 +405,16 @@ namespace wleepay.API.Controllers
 
         [AllowAnonymous]
         [HttpGet("TransactionAmountByMonth")]
-        public async Task<IActionResult> GetTransactionAmountByMonth()
+        public async Task<IActionResult> GetTransactionAmountByMonth([FromQuery]int? monthId )
         {
-            var transactionRequest = await _transactionService.GetTransactionAmountByMonth();
-            var transactionData = await _transactionService.GetTransactionData();
-            return Ok(new { transactionRequest, transactionData });
+            if(monthId == null && monthId == 0)
+            {
+                monthId = 3;
+            }
+            var transactionRequestLD = await _transactionService.GetTransactionAmountByMonthLD();
+            var transactionRequestUSD = await _transactionService.GetTransactionAmountByMonthUSD();
+            var transactionData = await _transactionService.GetTransactionData((int)monthId);
+            return Ok(new { transactionRequestLD, transactionRequestUSD,transactionData });
 
         }
 

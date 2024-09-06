@@ -50,6 +50,8 @@ namespace wleepay.Core.Enums
         [Description("Phone is not verified please verify your phone number.")] PhoneNumberNotVerified,
         [Description("Cannont update status id is null.")] NotUpdated,
         [Description("Your account is logged in on other device.")] UserLoggedInOtherDevice,
+        [Description("Meter number is incorrect.")] MeterNumberIncorrect,
+        [Description("Payment is failed.")] PaymentFailed,
 
 
 

@@ -65,7 +65,7 @@ namespace wleepay.API.Controllers
             {
                 Amount = paymentRequest.Amount * 100, // amount in cents
                 Currency = "usd",
-                Description = "Mobile recharge",
+                Description = MessagesForAirtimeLEC.MobileRecharge.ToDescriptionString(),
                 Source = paymentRequest.Token
             };
 
@@ -77,13 +77,13 @@ namespace wleepay.API.Controllers
 
             SochitelTransactionResponse transactionResponse = JsonConvert.DeserializeObject<SochitelTransactionResponse>(result);
 
-            if (transactionResponse.Status.Name == "Successful")
+            if (transactionResponse.Status.Name == ResponseStatusForSochitel.Successful.ToDescriptionString())
             {
                 var service = new ChargeService();
 
                 Charge charge = await service.CreateAsync(options);
 
-                if (charge.Status == "succeeded")
+                if (charge.Status == ResponseStatusForSochitel.Succeeded.ToDescriptionString())
                 {
                     CreditCardTransactions creditTransactions = new CreditCardTransactions
                     {
@@ -93,15 +93,15 @@ namespace wleepay.API.Controllers
                         PaymentMethod = charge.PaymentMethod,
                         BalanceTransactionId = charge.BalanceTransactionId,
                         CreatedDate = DateTime.UtcNow,
-                        ExtraInfo = "Mobile Recharge"
+                        ExtraInfo = MessagesForAirtimeLEC.MobileRecharge.ToDescriptionString()
 
                     };
                     var creditCardTransactions = await _creditCardTransactionService.AddCreditCardTransactions(creditTransactions);
 
                     SochitelTransactions sochitelTransactions = new SochitelTransactions
                     {
-                        TransactionId = transactionResponse?.Result?.Id ?? "12345",
-                        TransactionType = "Mobile Recharge",
+                        TransactionId = transactionResponse?.Result?.Id,
+                        TransactionType = MessagesForAirtimeLEC.MobileRecharge.ToDescriptionString(),
                         CreditCardTransactionId = creditCardTransactions.Id,
                         TransactionAmount = paymentRequest.Amount.ToString(),
                         CommissionRate = (transactionResponse?.Result?.Balance?.Commission == null ? "0" : transactionResponse?.Result?.Balance?.Commission),
@@ -179,7 +179,7 @@ namespace wleepay.API.Controllers
                     });
                 }
 
-                return BadRequest("payment is failed");
+                return BadRequest(Messages.PaymentFailed.ToDescriptionString());
             }
             return Ok(new { transactionResponse });
 
@@ -207,7 +207,7 @@ namespace wleepay.API.Controllers
 
             SochitelTransactionResponse transactionResponse = JsonConvert.DeserializeObject<SochitelTransactionResponse>(result);
 
-            if (transactionResponse.Status.Name == "Successful")
+            if (transactionResponse.Status.Name == ResponseStatusForSochitel.Successful.ToDescriptionString())
             {
                 var service = new ChargeService();
 
@@ -316,7 +316,12 @@ namespace wleepay.API.Controllers
                 return BadRequest("Payment is failed.");
 
             }
-            
+
+            if (transactionResponse.Status.Name == ResponseStatusForSochitel.InvalidDestination.ToDescriptionString())
+            {
+                transactionResponse.Status.Name = Messages.MeterNumberIncorrect.ToDescriptionString();
+                return Ok(transactionResponse);
+            }
             return Ok(new {transactionResponse});
 
         }

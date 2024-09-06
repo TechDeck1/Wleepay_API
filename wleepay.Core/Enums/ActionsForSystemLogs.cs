@@ -23,4 +23,17 @@ namespace wleepay.Core.Enums
 
     }
 
+    public enum ResponseStatusForSochitel
+    {
+        [Description("Successful")] Successful,
+        [Description("Invalid destination")] InvalidDestination,
+        [Description("succeeded")] Succeeded,
+    }
+
+    public enum MessagesForAirtimeLEC
+    {
+        [Description("Mobile Recharge")] MobileRecharge,
+        [Description("Bill Payment")] BillPayment,
+    }
+
 }

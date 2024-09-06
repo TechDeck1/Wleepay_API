@@ -380,7 +380,7 @@ namespace wleepay.API.Controllers
 
                         SochitelTransactionResponse transactionResponse = JsonConvert.DeserializeObject<SochitelTransactionResponse>(result);
 
-                        if (transactionResponse.Status.Name == "Successful")
+                        if (transactionResponse.Status.Name == ResponseStatusForSochitel.Successful.ToDescriptionString())
                         {
                             var walletData = await _walletService.GetWalletByWalletTypeId((int)WalletTypes.DebitFloatN);
                             var walletListResource = _mapper.Map<IEnumerable<Wallet>, IEnumerable<WalletResource>>(walletData);
@@ -483,8 +483,13 @@ namespace wleepay.API.Controllers
 
                         }
 
-                        return Ok(transactionResponse);
+                        if(transactionResponse.Status.Name == ResponseStatusForSochitel.InvalidDestination.ToDescriptionString())
+                        {
+                            transactionResponse.Status.Name = Messages.MeterNumberIncorrect.ToDescriptionString();
+                            return Ok(transactionResponse);
+                        }
 
+                        return Ok(transactionResponse);
                     }
                 }
 
