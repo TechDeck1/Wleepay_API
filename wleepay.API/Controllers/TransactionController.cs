@@ -415,22 +415,24 @@ namespace wleepay.API.Controllers
         }
 
         [AllowAnonymous]
-        [HttpGet("TransactionCountByTypeLD")]
+        [HttpGet("TransactionCountByType")]
         public async Task<IActionResult> GetTransactionCounttByTypeLD()
         {
-            var transactionRequest = await _transactionService.GetTransactionCounttByTypeLD();
-            return Ok(transactionRequest);
+            var transactionRequestLD = await _transactionService.GetTransactionCounttByTypeLD();
+            var transactionRequestUSD = await _transactionService.GetTransactionCounttByTypeUSD();
+
+            return Ok(new { transactionRequestLD, transactionRequestUSD });
 
         }
 
-        [AllowAnonymous]
-        [HttpGet("TransactionCountByTypeUSD")]
-        public async Task<IActionResult> GetTransactionCounttByTypeUSD()
-        {
-            var transactionRequest = await _transactionService.GetTransactionCounttByTypeUSD();
-            return Ok(transactionRequest);
+        //[AllowAnonymous]
+        //[HttpGet("TransactionCountByTypeUSD")]
+        //public async Task<IActionResult> GetTransactionCounttByTypeUSD()
+        //{
+        //    var transactionRequest = await _transactionService.GetTransactionCounttByTypeUSD();
+        //    return Ok(transactionRequest);
 
-        }
+        //}
 
         #region Helper function
         private async Task<TransactionResource> ChangePaymentRequestStatus(long paymentRequestId, Core.Enums.TransactionStatus status)
