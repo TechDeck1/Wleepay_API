@@ -163,9 +163,9 @@ namespace wleepay.Services
 
         } 
         
-        public async Task<IList<TransactionSummaryResponseModel>> GetTransactionData(int monthId)
+        public async Task<IList<TransactionSummaryResponseModel>> GetTransactionData(int monthId, int currencyId)
         {
-            return await _unitOfWork.Transaction.GetTransactionData(monthId);
+            return await _unitOfWork.Transaction.GetTransactionData(monthId, currencyId);
 
         }
         #region Helper function

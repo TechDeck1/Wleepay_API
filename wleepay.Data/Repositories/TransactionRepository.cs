@@ -554,32 +554,25 @@ namespace wleepay.Data.Repositories
 
         } 
         
-        public async Task<IList<TransactionSummaryResponseModel>> GetTransactionData(int monthId)
+        public async Task<IList<TransactionSummaryResponseModel>> GetTransactionData(int monthId, int currencyId)
         {
 
             var currentDate = DateTime.Now;
-            var threeMonthsAgo = currentDate.AddMonths(-2);
+            var MonthsAgo = currentDate.AddMonths(-monthId);
+            var excludedTypes = new List<string> { "Top Up System Wallet", "Wlee Tax Transfer", "Cash Out Standard Fee Split", "On Hand Agent Cashout", "Generated Agent Commission" };
 
-            var transactions = WPContext.Transactions.Include(w => w.ToWallet).Include(t => t.TransferType)
-                .Where(t => t.Status == 3 && t.CreatedDate >= threeMonthsAgo && t.FromWallet.CurrencyId == Currencies.USD.GetHashCode()).ToList();
+            var seperateTransactionCountsByMonth = WPContext.Transactions.Include(w => w.ToWallet).Include(t => t.TransferType).Where(t => t.Status == 3 && !excludedTypes.Contains(t.TransferType.Name) && t.CreatedDate >= MonthsAgo && t.FromWallet.CurrencyId == currencyId)
+            .GroupBy(t => t.TransferType.Name)  // Grouping by transaction type
+            .Select(g => new TransactionSummaryResponseModel
+            {
+                Name = g.Key,  // The type of the transaction
+                Value = g.Count(),  // Count of transactions for this type
+                TotalAmount = Math.Round(g.Sum(t => t.Amount), 2)
+            })
+            .OrderByDescending(g => g.Name)
+            .ToList();
 
-            var finalTransactions = transactions.GroupBy(t => new { Month = t.CreatedDate.Month, Year = t.CreatedDate.Year, Currency = t.ToWallet.CurrencyId})
-                .Select(g => new TransactionSummaryResponseModel
-                {
-                    Month = g.Key.Month,
-                    Year = g.Key.Year,
-                    Currency = g.Key.Currency,
-                    SubscriberTopUps = g.Where(t => t.TransferTypeId == TransferTypes.TopUp.GetHashCode()).Sum(t => t.Amount),
-                    SubscriberCashouts = g.Where(t => t.TransferTypeId == TransferTypes.CashOut.GetHashCode()).Sum(t => t.Amount),
-                    AgentWalletTopup = g.Where(t => t.TransferTypeId == TransferTypes.FillAgent.GetHashCode()).Sum(t => t.Amount),
-                    AgentCommissionCashout = g.Where(t => t.TransferTypeId == TransferTypes.AgentCommissionCashout.GetHashCode()).Sum(t => t.Amount),
-                    PhoneCreditPurchased = g.Where(t => t.TransferTypeId == TransferTypes.MobileRechargeTransfer.GetHashCode()).Sum(t => t.Amount),
-                    LECCreditPurchased = g.Where(t => t.TransferTypeId == TransferTypes.BillPayment.GetHashCode()).Sum(t => t.Amount),
-                    TotalTransactionCount = g.Count()
-                })
-                .ToList();
-
-            return (finalTransactions);
+            return (seperateTransactionCountsByMonth);
         }
     }
 }
