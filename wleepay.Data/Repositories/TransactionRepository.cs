@@ -520,8 +520,9 @@ namespace wleepay.Data.Repositories
 
         public async Task<IList<TransactionCountByTypeResponseModel>> GetTransactionCounttByTypeLD()
         {
+            var excludedTypes = new List<string> { "Top Up System Wallet", "Wlee Tax Transfer", "Cash Out Standard Fee Split", "On Hand Agent Cashout", "Generated Agent Commission" };
 
-            var transactionCountsByType = WPContext.Transactions.Include(w=>w.ToWallet).Include(t => t.TransferType).Where(t => t.Status == 3 && t.FromWallet.CurrencyId == Currencies.LRD.GetHashCode())
+            var transactionCountsByType = WPContext.Transactions.Include(w=>w.ToWallet).Include(t => t.TransferType).Where(t => t.Status == 3 && !excludedTypes.Contains(t.TransferType.Name) && t.FromWallet.CurrencyId == Currencies.LRD.GetHashCode())
             .GroupBy(t => t.TransferType.Name)  // Grouping by transaction type
             .Select(g => new TransactionCountByTypeResponseModel
             {
@@ -529,7 +530,7 @@ namespace wleepay.Data.Repositories
                 Value = g.Count(),  // Count of transactions for this type
                 TotalAmount =Math.Round( g.Sum(t => t.Amount) , 2) // Sum of transaction amounts for this type
             })
-            .OrderByDescending(g => g.Name)
+            .OrderByDescending(g => g.Value)
             .ToList();
 
             return transactionCountsByType;
@@ -538,8 +539,9 @@ namespace wleepay.Data.Repositories
 
         public async Task<IList<TransactionCountByTypeResponseModel>> GetTransactionCounttByTypeUSD()
         {
+            var excludedTypes = new List<string> { "Top Up System Wallet", "Wlee Tax Transfer", "Cash Out Standard Fee Split", "On Hand Agent Cashout", "Generated Agent Commission" };
 
-            var transactionCountsByType = WPContext.Transactions.Include(w => w.ToWallet).Include(t => t.TransferType).Where(t => t.Status == 3 && t.FromWallet.CurrencyId == Currencies.USD.GetHashCode())
+            var transactionCountsByType = WPContext.Transactions.Include(w => w.ToWallet).Include(t => t.TransferType).Where(t => t.Status == 3 && !excludedTypes.Contains(t.TransferType.Name) && t.FromWallet.CurrencyId == Currencies.USD.GetHashCode())
             .GroupBy(t => t.TransferType.Name)  // Grouping by transaction type
             .Select(g => new TransactionCountByTypeResponseModel
             {
@@ -547,7 +549,7 @@ namespace wleepay.Data.Repositories
                 Value = g.Count(),  // Count of transactions for this type
                 TotalAmount = Math.Round(g.Sum(t => t.Amount), 2)
             })
-            .OrderByDescending(g => g.Name)
+            .OrderByDescending(g => g.Value)
             .ToList();
 
             return transactionCountsByType;
