@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -143,7 +144,45 @@ namespace wleepay.Communication.Templates
                    $"Token(s): {token}\n" +
                    $"Account: {accountNumber}\n" +
                    $"Txn id: {momoTxnId}\n" +
-                   $"Date: {date}";
+                   $"Date: {date}\n\n" +
+                   $"Thank you for your payment.\n" +
+                   $"Liberia Electricity Corporation";
         }
+
+        public static string LecPaymentHtmlTemplate(string details , string sochitelDetails)
+        {
+            var instructionDetails = JsonConvert.DeserializeObject<object>(details);
+            var sochitelDetail = JsonConvert.DeserializeObject<object>(sochitelDetails);
+            return
+                        $"Liberia Electricity Corporation" +
+                        $"Receipt No: 9950202308235859513 \n  " +
+                        $"Issued:2023-08-23 19:28  \n  " +
+                        $"Customer:ARCHIE BERNARD  \n  " +
+                        $"Meter No:37232692667  \n  " +
+                        $"KRN:1\n  " +
+                        $"Unit Price:2.48 \n  " +
+                        $"TI:1 \n  " +
+                        $"SGC:600579 \n  " +
+                        $"Vendor:pTbc \n  " +
+
+                        $"Breakdown:  \n \n" +
+                        $"Total Payment: 20.00  \n" +
+                        $"Debt Payment: 0.00 \n" +
+                        $"Units Payment: 20.00  \n" +
+                        $"Units: 75.8 Kwh  \n" +
+                        $"Acc Bal: 0.0   \n" +
+                        $"                      \n" +
+                        $"GST:0.9 \n" +
+                        $"Units: 75.8   \n" +
+                        $"Tariff:RESIDENTIAL PREPAID \n" +
+                        $"                                             \n" +
+                        $"Token:         \n" +
+                        $"1979 6321 8256 3093 4477             \n" +
+                        $"                                             \n" +
+                        $"LEC Call: 4500   \n" +
+                        $"Libango Call: +231 770 90 9047  \n";
+                    
+        }
+
     }
 }

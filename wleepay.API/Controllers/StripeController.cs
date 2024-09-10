@@ -212,6 +212,7 @@ namespace wleepay.API.Controllers
                 var service = new ChargeService();
 
                 Charge charge = await service.CreateAsync(options);
+
                 if (charge.Status == "succeeded")
                 {
 
@@ -228,7 +229,7 @@ namespace wleepay.API.Controllers
                     };
                     var creditCardTransactions = await _creditCardTransactionService.AddCreditCardTransactions(creditTransactions);
 
-                   
+
 
                     SochitelTransactions sochitelTransactions = new SochitelTransactions
                     {
@@ -236,7 +237,7 @@ namespace wleepay.API.Controllers
                         TransactionType = "Bill Payment",
                         CreditCardTransactionId = creditCardTransactions.Id,
                         TransactionAmount = paymentRequest.Amount.ToString(),
-                        CommissionRate = (transactionResponse?.Result?.Balance?.Commission == null? "0" : transactionResponse?.Result?.Balance?.Commission),
+                        CommissionRate = (transactionResponse?.Result?.Balance?.Commission == null ? "0" : transactionResponse?.Result?.Balance?.Commission),
                         OperatorId = paymentRequest.Operator,
                         ProductId = paymentRequest.ProductId,
                         PhoneNumber = paymentRequest.Msisdn,
@@ -245,9 +246,8 @@ namespace wleepay.API.Controllers
                         ExtraInfo = transactionResponse.Result.Instructions
 
                     };
-                   
-                    var sTansaction = _sochitelTransactionService.AddSochitelTransactions(sochitelTransactions);
 
+                    var sTansaction = _sochitelTransactionService.AddSochitelTransactions(sochitelTransactions);
 
                     InstructionDetails instructionDetails = new InstructionDetails();
                     if (!transactionResponse.Result.Instructions.IsNullOrEmpty())
@@ -257,6 +257,9 @@ namespace wleepay.API.Controllers
 
                     var message = MessagesTemplates.LecPaymentTemplate(instructionDetails?.Units.ToString(), instructionDetails?.Amount.ToString(), instructionDetails?.Token, instructionDetails?.AccountNumber, transactionResponse?.Result?.Id, DateTime.UtcNow.ToString());
                     _sMSService.sendMessage(message, paymentRequest.Msisdn);
+
+                    var details = JsonConvert.SerializeObject(instructionDetails);
+                    var sochitelResult = JsonConvert.SerializeObject(transactionResponse.Result);
 
                     EmailHtmlTemplates emailHtml = new EmailHtmlTemplates();
                     var template = emailHtml.EmailTemplateForBillPayment("User", instructionDetails?.Units.ToString(), instructionDetails?.Amount.ToString(), instructionDetails?.Token, instructionDetails?.AccountNumber, transactionResponse?.Result?.Id, DateTime.UtcNow.ToString(), charge.ReceiptUrl);
@@ -270,7 +273,7 @@ namespace wleepay.API.Controllers
                     systemActivityLog.Action = ActionsForSystemLogs.BillPayment.ToDescriptionString();
                     systemActivityLog.Description = GenericMessagesForSystemLogs.BillPayment.ToDescriptionString();
                     var addLogs = await _systemActivityLogsService.AddSystemLogs(systemActivityLog);
-                    
+
                     FirebaseMessageRequest firebaseMessageRequest = new FirebaseMessageRequest();
 
                     var device = await _userDeviceService.GetUserDeviceByUserId(userDetail.Id);
@@ -303,26 +306,41 @@ namespace wleepay.API.Controllers
                             }
                         }
                     }
-                    return Ok(new { 
-                        success = true, 
+                    return Ok(new
+                    {
+                        success = true,
                         amount = charge.Amount,
                         stripeTransactionId = charge.Id,
                         receiptUrl = charge.ReceiptUrl,
                         Token = instructionDetails?.Token ?? "",
                         transactionResponse
                     });
-                }
 
-                return BadRequest("Payment is failed.");
+                }
+                else
+                {
+                    return BadRequest("Payment is failed.");
+                }
 
             }
 
             if (transactionResponse.Status.Name == ResponseStatusForSochitel.InvalidDestination.ToDescriptionString())
             {
                 transactionResponse.Status.Name = Messages.MeterNumberIncorrect.ToDescriptionString();
-                return Ok(transactionResponse);
+                return Ok(new
+                {
+                    success = false,
+                    amount = string.Empty,
+                    stripeTransactionId = string.Empty,
+                    receiptUrl = string.Empty,
+                    Token = string.Empty,
+                    transactionResponse
+                });
             }
-            return Ok(new {transactionResponse});
+            else
+            {
+                return Ok(new { transactionResponse });
+            }
 
         }
 

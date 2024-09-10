@@ -29,6 +29,7 @@ using wleepay.Communication.Templates;
 using Microsoft.IdentityModel.Tokens;
 using wleepay.Communication.Services;
 using wleepay.API.Helpers;
+using Stripe;
 
 namespace wleepay.API.Controllers
 {
@@ -138,7 +139,7 @@ namespace wleepay.API.Controllers
 
                 var products = JsonConvert.DeserializeObject<SochitelOperatorProductsResponse>(result);
 
-                List<Product> operatorsProduct = new List<Product>();
+                List<wleepay.API.Resources.Product> operatorsProduct = new List<wleepay.API.Resources.Product>();
 
                 foreach (var product in products.Result.Products)
                 {
@@ -435,8 +436,8 @@ namespace wleepay.API.Controllers
 
                             var message = MessagesTemplates.LecPaymentTemplate(instructionDetails.Units.ToString(), instructionDetails.Amount.ToString(), instructionDetails.Token, instructionDetails.AccountNumber, transactionResponse.Result.Id, DateTime.UtcNow.ToString());
                             _smsService.sendMessage(message, execTransactionRequest.Msisdn);
+                           
                             var sTansaction = _sochitelTransactionService.AddSochitelTransactions(sochitelTransactions);
-
 
                             var userDetail = await _userDetailsService.GetUserAccountByPhone(execTransactionRequest.Msisdn);
                             SystemActivityLog systemActivityLog = new SystemActivityLog();
@@ -481,6 +482,7 @@ namespace wleepay.API.Controllers
                                 }
                             }
 
+                            return Ok(transactionResponse);
                         }
 
                         if(transactionResponse.Status.Name == ResponseStatusForSochitel.InvalidDestination.ToDescriptionString())
