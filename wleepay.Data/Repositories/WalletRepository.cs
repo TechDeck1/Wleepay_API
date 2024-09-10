@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using wleepay.Core.DTO.Response;
 using wleepay.Core.Enums;
 using wleepay.Core.Models;
 using wleepay.Core.Repositories;
@@ -92,6 +93,35 @@ namespace wleepay.Data.Repositories
             await WPContext.SaveChangesAsync();
 
             return wallet;
+        }
+
+        public async Task<IList<WalletAmountHistoryByMonths>> GetWalletHistoryByWalletTypeAndCurrency(int walletType, int currencyId)
+        {
+
+            // Fetch the relevant data first
+            var transactions = WPContext.Transactions
+                .Include(t => t.ToWallet)
+                .Where(t => t.Status == 3 && t.CreatedDate >= DateTime.Now.AddMonths(-6).Date && t.ToWallet.CurrencyId == currencyId && t.ToWallet.Type == walletType)
+                .ToList();  // Fetch data into memory
+
+            // Perform grouping and conditional sum in memory
+            var finalResult = transactions
+                .GroupBy(x => new
+                {
+                    Year = x.CreatedDate.Year,
+                    Month = x.CreatedDate.Month,
+                })
+                .Select(g => new WalletAmountHistoryByMonths
+                {
+                    Name = new DateTime(g.Key.Year, g.Key.Month, 1).ToString("MMMM yyyy"), // Format after grouping
+                    Value = g.Sum(x => x.Amount).ToString(),  
+                    TotalCount = g.Count(),
+                })
+                .OrderBy(g => g.Name)
+                .ToList();
+
+            return finalResult;
+
         }
     }
 }

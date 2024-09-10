@@ -8,6 +8,7 @@ using wleepay.Core.Services;
 using System.Linq;
 using wleepay.Core.Enums;
 using Microsoft.SqlServer.Management.Smo;
+using wleepay.Core.DTO.Response;
 
 namespace wleepay.Services
 {
@@ -215,6 +216,10 @@ namespace wleepay.Services
         public async Task<Wallet> SetCashOnHand(double amount, int currencyId, int WalletTypeId)
         {
             return await _unitOfWork.Wallet.SetCashOnHand(amount,currencyId,WalletTypeId);
+        }
+        public async Task<IList<WalletAmountHistoryByMonths>> GetWalletHistoryByWalletTypeAndCurrency(int walletType, int currencyId)
+        {
+            return await _unitOfWork.Wallet.GetWalletHistoryByWalletTypeAndCurrency(walletType, currencyId);
         }
     }
 }

@@ -9,6 +9,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using wleepay.API.Resources;
 using wleepay.API.Validators;
+using wleepay.Core.DTO.Response;
 using wleepay.Core.Models;
 using wleepay.Core.Services;
 using wleepay.Services;
@@ -70,6 +71,15 @@ namespace wleepay.API.Controllers
             var walletListResource = _mapper.Map<IEnumerable<Wallet>, IEnumerable<WalletResource>>(walletData);
 
             return Ok(walletListResource);
+        }
+
+        [AllowAnonymous]
+        [HttpGet("WalletAmountHistoryByMonth")]
+        public async Task<IActionResult> GetWalletHistoryByWalletTypeAndCurrency([FromQuery] int walletType, int currencyId)
+        {
+           
+            var walletData = await _walletService.GetWalletHistoryByWalletTypeAndCurrency(walletType , currencyId);
+            return Ok(walletData);
         }
 
     }

@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using wleepay.Core.DTO.Response;
 using wleepay.Core.Models;
 
 namespace wleepay.Core.Repositories
@@ -14,6 +15,7 @@ namespace wleepay.Core.Repositories
         Task<Wallet> GetUserDetailsByWalletIdAndCurrency(long walletId);
         Task<IEnumerable<Wallet>> GetWalletByWalletTypeId(long walletTypeId);
         Task<Wallet> SetCashOnHand(double amount, int currencyId, int WalletTypeId);
+        Task<IList<WalletAmountHistoryByMonths>> GetWalletHistoryByWalletTypeAndCurrency(int walletType, int currencyId);
 
 
     }
