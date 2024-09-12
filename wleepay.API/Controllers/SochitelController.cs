@@ -266,7 +266,7 @@ namespace wleepay.API.Controllers
                             };
 
                             var sTansaction = _sochitelTransactionService.AddSochitelTransactions(sochitelTransactions);
-                            var message = MessagesTemplates.AirtimeAndLecPaymentTemplate(transactionResponse.Result.Id, transactionResponse.Reference.ToString());
+                            var message = MessagesTemplates.AirtimeAndLecPaymentTemplate(transactionResponse.Result.Operator.Name, transactionResponse.Result.Id, transactionResponse.Reference.ToString(), DateTime.UtcNow.ToString());
 
                             _smsService.sendMessage(message, execTransactionRequest.Msisdn);
 
@@ -434,7 +434,7 @@ namespace wleepay.API.Controllers
                                 instructionDetails = Common.DeserializeInstructions(transactionResponse.Result.Instructions);
                             }
 
-                            var message = MessagesTemplates.LecPaymentTemplate(instructionDetails.Units.ToString(), instructionDetails.Amount.ToString(), instructionDetails.Token, instructionDetails.AccountNumber, transactionResponse.Result.Id, DateTime.UtcNow.ToString());
+                            var message = MessagesTemplates.LecCreditPurchaseReceiptTemplate(instructionDetails.Amount.ToString(), instructionDetails.Units.ToString(), instructionDetails.Token, instructionDetails.AccountNumber, instructionDetails.CustomerName, transactionResponse.Result.Id, instructionDetails.ReceiptNumber , DateTime.UtcNow.ToString());
                             _smsService.sendMessage(message, execTransactionRequest.Msisdn);
                            
                             var sTansaction = _sochitelTransactionService.AddSochitelTransactions(sochitelTransactions);

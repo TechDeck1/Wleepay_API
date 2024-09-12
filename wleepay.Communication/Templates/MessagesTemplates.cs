@@ -132,57 +132,36 @@ namespace wleepay.Communication.Templates
             return $" Dear {Username}, \n\n Reply from system administrator:\n\n{message}";
         }
 
-        public static string AirtimeAndLecPaymentTemplate(string transactionId , string referenceId)
+        public static string AirtimeAndLecPaymentTemplate(string operatorName, string transactionId , string referenceId, string date)
         {
-            return $" Dear User, \n\n mobile recharge is successfully done. Your token (Transaction Id) for recharge is:\n\n Transaction Id :{transactionId} \n\n Reference Id: {referenceId}";
+            return $"Dear User, \n\n" +
+                $"Mobile recharge is successfully done for {operatorName} \n\n" +
+                $"Operator:{operatorName}\n "+
+                $"Txn Id:{transactionId} \n " +
+                $"Reference Id: {referenceId}"+
+                $"Date: {date}\n\n" +
+                $"For any issues, you can contact:\n" +
+                $"Call Wleepay Support @ 0886777444\n\n" +
+                $"Thank you for your purchase!";
         }
 
-        public static string LecPaymentTemplate(string units, string cost, string token, string accountNumber, string momoTxnId, string date)
+        public static string LecCreditPurchaseReceiptTemplate(string paidAmount, string units, string tokenNumber, string meterNumber, string lecCustomerName, string transactionId, string receiptNumber, string date)
         {
-            return $"Dear User,\n\n" +
-                   $"You have paid for {units} kWh units of electricity at a cost of USD {cost}.\n\n" +
-                   $"Token(s): {token}\n" +
-                   $"Account: {accountNumber}\n" +
-                   $"Txn id: {momoTxnId}\n" +
+            return $"LEC Credit Purchase Receipt\n\n" +
+                   $"You have paid USD {paidAmount} for {units} kWh units of electricity.\n\n" +
+                   $"Your Token number is: {tokenNumber}\n" +
+                   $"Your meter number is: {meterNumber}\n" +
+                   $"Customer: {lecCustomerName}\n\n" +
+                   $"Vendor: Wleepay\n" +
+                   $"Transaction ID: {transactionId}\n" +
+                   $"Receipt No: {receiptNumber}\n" +
                    $"Date: {date}\n\n" +
-                   $"Thank you for your payment.\n" +
-                   $"Liberia Electricity Corporation";
+                   $"For any issues, you can contact:\n" +
+                   $"Call LEC @ 4500\n" +
+                   $"Call Libango @ 07780020947\n" +
+                   $"Call Wleepay Support @ 0886777444\n\n" +
+                   $"Thank you for your purchase!";
         }
-
-        public static string LecPaymentHtmlTemplate(string details , string sochitelDetails)
-        {
-            var instructionDetails = JsonConvert.DeserializeObject<object>(details);
-            var sochitelDetail = JsonConvert.DeserializeObject<object>(sochitelDetails);
-            return
-                        $"Liberia Electricity Corporation" +
-                        $"Receipt No: 9950202308235859513 \n  " +
-                        $"Issued:2023-08-23 19:28  \n  " +
-                        $"Customer:ARCHIE BERNARD  \n  " +
-                        $"Meter No:37232692667  \n  " +
-                        $"KRN:1\n  " +
-                        $"Unit Price:2.48 \n  " +
-                        $"TI:1 \n  " +
-                        $"SGC:600579 \n  " +
-                        $"Vendor:pTbc \n  " +
-
-                        $"Breakdown:  \n \n" +
-                        $"Total Payment: 20.00  \n" +
-                        $"Debt Payment: 0.00 \n" +
-                        $"Units Payment: 20.00  \n" +
-                        $"Units: 75.8 Kwh  \n" +
-                        $"Acc Bal: 0.0   \n" +
-                        $"                      \n" +
-                        $"GST:0.9 \n" +
-                        $"Units: 75.8   \n" +
-                        $"Tariff:RESIDENTIAL PREPAID \n" +
-                        $"                                             \n" +
-                        $"Token:         \n" +
-                        $"1979 6321 8256 3093 4477             \n" +
-                        $"                                             \n" +
-                        $"LEC Call: 4500   \n" +
-                        $"Libango Call: +231 770 90 9047  \n";
-                    
-        }
-
+        
     }
 }

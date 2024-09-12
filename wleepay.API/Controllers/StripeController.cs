@@ -13,6 +13,7 @@ using System.Web.Http;
 using wleepay.API.Helpers;
 using wleepay.API.Resources;
 using wleepay.Communication.Interface;
+using wleepay.Communication.Services;
 using wleepay.Communication.Templates;
 using wleepay.Core.Common;
 using wleepay.Core.DTO.Request;
@@ -115,7 +116,7 @@ namespace wleepay.API.Controllers
                     };
 
                     var sTansaction = _sochitelTransactionService.AddSochitelTransactions(sochitelTransactions);
-                    var message = MessagesTemplates.AirtimeAndLecPaymentTemplate(transactionResponse.Result.Id, transactionResponse.Reference.ToString());
+                    var message = MessagesTemplates.AirtimeAndLecPaymentTemplate(transactionResponse.Result.Operator.Name, transactionResponse.Result.Id, transactionResponse.Reference.ToString(), DateTime.UtcNow.ToString());
 
                     _sMSService.sendMessage(message, paymentRequest.Msisdn);
 
@@ -145,7 +146,7 @@ namespace wleepay.API.Controllers
                         {
                             firebaseMessageRequest.DeviceId = item.DeviceId;
                             firebaseMessageRequest.DeviceToken = item.FcmToken;
-                            firebaseMessageRequest.Body = "Mobile recharge approved for $" + charge.Amount;
+                            firebaseMessageRequest.Body = "Mobile recharge approved for $" + paymentRequest.Amount;
                             firebaseMessageRequest.Title = "Mobile Recharge";
                             try
                             {
@@ -255,11 +256,8 @@ namespace wleepay.API.Controllers
                         instructionDetails = Common.DeserializeInstructions(transactionResponse.Result.Instructions);
                     }
 
-                    var message = MessagesTemplates.LecPaymentTemplate(instructionDetails?.Units.ToString(), instructionDetails?.Amount.ToString(), instructionDetails?.Token, instructionDetails?.AccountNumber, transactionResponse?.Result?.Id, DateTime.UtcNow.ToString());
+                    var message = MessagesTemplates.LecCreditPurchaseReceiptTemplate(instructionDetails.Amount.ToString(), instructionDetails.Units.ToString(), instructionDetails.Token, instructionDetails.AccountNumber, instructionDetails.CustomerName, transactionResponse.Result.Id, instructionDetails.ReceiptNumber, DateTime.UtcNow.ToString());
                     _sMSService.sendMessage(message, paymentRequest.Msisdn);
-
-                    var details = JsonConvert.SerializeObject(instructionDetails);
-                    var sochitelResult = JsonConvert.SerializeObject(transactionResponse.Result);
 
                     EmailHtmlTemplates emailHtml = new EmailHtmlTemplates();
                     var template = emailHtml.EmailTemplateForBillPayment("User", instructionDetails?.Units.ToString(), instructionDetails?.Amount.ToString(), instructionDetails?.Token, instructionDetails?.AccountNumber, transactionResponse?.Result?.Id, DateTime.UtcNow.ToString(), charge.ReceiptUrl);
@@ -283,7 +281,7 @@ namespace wleepay.API.Controllers
                         {
                             firebaseMessageRequest.DeviceId = item.DeviceId;
                             firebaseMessageRequest.DeviceToken = item.FcmToken;
-                            firebaseMessageRequest.Body = "Bill payment approved for $" + charge.Amount;
+                            firebaseMessageRequest.Body = "Bill payment approved for $" + paymentRequest.Amount;
                             firebaseMessageRequest.Title = "Bill Payment";
                             try
                             {
@@ -309,7 +307,7 @@ namespace wleepay.API.Controllers
                     return Ok(new
                     {
                         success = true,
-                        amount = charge.Amount,
+                        amount = paymentRequest.Amount,
                         stripeTransactionId = charge.Id,
                         receiptUrl = charge.ReceiptUrl,
                         Token = instructionDetails?.Token ?? "",
