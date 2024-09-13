@@ -425,15 +425,6 @@ namespace wleepay.API.Controllers
 
         }
 
-        //[AllowAnonymous]
-        //[HttpGet("TransactionCountByTypeUSD")]
-        //public async Task<IActionResult> GetTransactionCounttByTypeUSD()
-        //{
-        //    var transactionRequest = await _transactionService.GetTransactionCounttByTypeUSD();
-        //    return Ok(transactionRequest);
-
-        //}
-
         #region Helper function
         private async Task<TransactionResource> ChangePaymentRequestStatus(long paymentRequestId, Core.Enums.TransactionStatus status)
         {
