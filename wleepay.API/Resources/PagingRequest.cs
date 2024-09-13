@@ -13,6 +13,16 @@ namespace wleepay.API.Resources
         public Core.Enums.Role Role { get; set; }
     }
 
+    public class TransactionHistoryRequest
+    {
+        public string UserId { get; set; }
+        public int Status { get; set; } 
+        public int TransferTypeId { get; set; }
+        public int Index { get; set; }
+        public int Size { get; set; }
+
+    }
+
     public class Pagination
     {
         public string Email { get; set; }

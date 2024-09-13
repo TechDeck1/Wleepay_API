@@ -51,11 +51,6 @@ namespace wleepay.Data.Repositories
                     throw ex;
                 }
             }
-            
-            //var newAddedCashFlowHistory = await WPContext.CashFlowHistory
-            //    .Where(w => w.Id == cashFlowHistory.Id)
-            //    .Include(w => w.toWallet)
-            //    .FirstOrDefaultAsync(); //no query
 
             return cashFlowHistory;
 

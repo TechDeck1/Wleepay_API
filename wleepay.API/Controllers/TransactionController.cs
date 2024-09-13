@@ -40,7 +40,6 @@ namespace wleepay.API.Controllers
         private readonly IFirebaseNotification _firebaseNotification;
         private readonly IUserDeviceService _userDeviceService;
 
-
         public TransactionController(ITransactionService transactionService, IWalletService walletService, ISMSService smsService, IMapper mapper, IEmailSender emailSender, ICashFlowService cashFlowService, IUserDetailService userDetailService, IFirebaseNotification firebaseNotification, IUserDeviceService userDeviceService) 
         {
             _transactionService = transactionService;
@@ -357,6 +356,20 @@ namespace wleepay.API.Controllers
         public async Task<IActionResult> GetTransactionsByUserIdAndType(string userId, int transferType)
         {
             var transactionResult = await _transactionService.GetTransactionsByUserIdAndType(userId, transferType);
+            if (transactionResult.Transactions.Count() > 0)
+            {
+                var transactionResourceList = _mapper.Map<IEnumerable<Transaction>, IEnumerable<TransactionHistoryResource>>(transactionResult.Transactions);
+                return Ok(new { Transactions = transactionResourceList, TotalCount = transactionResult.TotalCount });
+            }
+
+            return Ok(new List<TransactionResource>());
+        }
+
+        [HttpGet("HistoryByStatusAndType")]
+        public async Task<IActionResult> GetTransactionHistoryByStatusTypeAndUserId(TransactionHistoryRequest transactionHistoryRequest)
+        {
+            var transactionResult = await _transactionService.GetTransactionsHistoryByUserIdAndType(transactionHistoryRequest.UserId,transactionHistoryRequest.Status, transactionHistoryRequest.TransferTypeId,transactionHistoryRequest.Index, transactionHistoryRequest.Size);
+          
             if (transactionResult.Transactions.Count() > 0)
             {
                 var transactionResourceList = _mapper.Map<IEnumerable<Transaction>, IEnumerable<TransactionHistoryResource>>(transactionResult.Transactions);

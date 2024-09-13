@@ -134,6 +134,11 @@ namespace wleepay.Services
         {
             return await _unitOfWork.Transaction.GetTransactionsByUserIdAndType(userId,transferType, pageIndex, pageSize);
         }
+        
+        public async Task<TransactionResponseResource> GetTransactionsHistoryByUserIdAndType(string userId, int status, int transferType, int pageIndex = 0, int pageSize = 10)
+        {
+            return await _unitOfWork.Transaction.GetTransactionsHistoryByUserIdAndType(userId,status, transferType, pageIndex, pageSize);
+        }
 
         public async Task<TransactionResponseResource> GetTransactionHistoryByUserId(string userId, int pageIndex, int pageSize)
         {

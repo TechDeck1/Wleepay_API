@@ -9,4 +9,5 @@ namespace wleepay.API.Resources
     {
         public long WalletId { get; set; }
     }
+
 }
