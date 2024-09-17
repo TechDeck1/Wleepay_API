@@ -116,7 +116,7 @@ namespace wleepay.API.Controllers
                     };
 
                     var sTansaction = _sochitelTransactionService.AddSochitelTransactions(sochitelTransactions);
-                    var message = MessagesTemplates.AirtimeAndLecPaymentTemplate(transactionResponse.Result.Operator.Name, transactionResponse.Result.Id, transactionResponse.Reference.ToString(), DateTime.UtcNow.ToString());
+                    var message = MessagesTemplates.AirtimeAndLecPaymentTemplate(transactionResponse.Result.Operator.Name, transactionResponse.Result.Id, transactionResponse.Reference.ToString(), DateTime.UtcNow.ToString(), paymentRequest.Amount.ToString());
 
                     _sMSService.sendMessage(message, paymentRequest.Msisdn);
 

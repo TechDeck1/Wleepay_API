@@ -132,17 +132,20 @@ namespace wleepay.Communication.Templates
             return $" Dear {Username}, \n\n Reply from system administrator:\n\n{message}";
         }
 
-        public static string AirtimeAndLecPaymentTemplate(string operatorName, string transactionId , string referenceId, string date)
+        public static string AirtimeAndLecPaymentTemplate(string operatorName, string transactionId , string referenceId, string date, string amount)
         {
-            return $"Dear User, \n\n" +
-                $"Mobile recharge is successfully done for {operatorName} \n\n" +
-                $"Operator:{operatorName}\n "+
-                $"Txn Id:{transactionId} \n " +
-                $"Reference Id: {referenceId}"+
-                $"Date: {date}\n\n" +
+            return $"Mobile Credit Purchase Receipt, \n\n" +
+                $"You {operatorName} mobile recharge was successful! \n\n" +
+
+                $"Date: {date}\n" +
+                $"Your recharge token # is:{transactionId} \n " +
+                $"Amount/Package Purchased: {amount}\n" +
+                $"Transaction Reference: {referenceId}\n\n"+
+
                 $"For any issues, you can contact:\n" +
                 $"Call Wleepay Support @ 0886777444\n\n" +
-                $"Thank you for your purchase!";
+                $"Buy LEC/Airtime online from anywhere at www.wleepay.com \n" +
+                "and send to relatives";
         }
 
         public static string LecCreditPurchaseReceiptTemplate(string paidAmount, string units, string tokenNumber, string meterNumber, string lecCustomerName, string transactionId, string receiptNumber, string date)
@@ -152,16 +155,20 @@ namespace wleepay.Communication.Templates
                    $"Your Token number is: {tokenNumber}\n" +
                    $"Your meter number is: {meterNumber}\n" +
                    $"Customer: {lecCustomerName}\n\n" +
+                  
                    $"Vendor: Wleepay\n" +
                    $"Transaction ID: {transactionId}\n" +
                    $"Receipt No: {receiptNumber}\n" +
                    $"Date: {date}\n\n" +
+                  
                    $"For any issues, you can contact:\n" +
                    $"Call LEC @ 4500\n" +
                    $"Call Libango @ 07780020947\n" +
                    $"Call Wleepay Support @ 0886777444\n\n" +
-                   $"Thank you for your purchase!";
+                   $"Buy LEC/Airtime online from anywhere at www.wleepay.com \n"+
+                   "and send to relatives";
         }
+        
         
     }
 }
