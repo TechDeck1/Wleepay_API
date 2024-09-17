@@ -11,6 +11,7 @@ using TransactionStatus = wleepay.Core.Enums.TransactionStatus;
 using wleepay.Core.DTO.Response;
 using Microsoft.SqlServer.Management.Smo;
 using static DevExpress.XtraPrinting.Native.PageSizeInfo;
+using wleepay.Data.Context;
 
 namespace wleepay.Services
 {
@@ -62,6 +63,18 @@ namespace wleepay.Services
         {
             return await _unitOfWork.Transaction.AddUpdateTransaction(transactionDetail);
         }
+
+        public async Task<Transaction> InitiateCashOnHandTransaction(Transaction transactionDetail)
+        {
+            var approveRequest = await InitiateTransaction(transactionDetail);
+            if (transactionDetail.TransferTypeId == TransferTypes.FillAgent.GetHashCode())
+            {
+                var getCashOnHandTransaction = AddCashOnHandCreditTransaction((long)transactionDetail.FromWalletId, transactionDetail.Amount, approveRequest.Id);
+                await InitiateTransaction(getCashOnHandTransaction);
+
+            }
+            return approveRequest;
+        }
         //Intitate Cashout
         public async Task<Transaction> InitiateCashout(Transaction transactionDetail)
         {
@@ -77,18 +90,18 @@ namespace wleepay.Services
                     int currencyId = 0;
                     //generate agent commission
                     double agentCommissionAmount = agentTranfer.Amount * (transferType.TransferFeeDetail.AgentCommission / 100);
-                    var commissionTransaction = GetAgentCommissionTransaction(agentTranfer.FromWalletId, agentTranfer.ToWalletId, Math.Round(agentCommissionAmount, 2), agentTranfer.Id, out currencyId);
+                    var commissionTransaction = GetAgentCommissionTransaction((long)agentTranfer.FromWalletId, (long)agentTranfer.ToWalletId, Math.Round(agentCommissionAmount, 2), agentTranfer.Id, out currencyId);
                     //transafer commission amount to agent account
                     await InitiateTransaction(commissionTransaction);
 
                     //generate tax transaction
                     double taxAmount = agentTranfer.Amount * (transferType.TransferFeeDetail.TaxAmount / 100);
-                    var taxTransaction = GetTaxTransaction(agentTranfer.FromWalletId, Math.Round(taxAmount, 2), agentTranfer.Id, currencyId);
+                    var taxTransaction = GetTaxTransaction((long)agentTranfer.FromWalletId, Math.Round(taxAmount, 2), agentTranfer.Id, currencyId);
                     //transafer tax amount to organization tax account
                     await InitiateTransaction(taxTransaction);
 
                     double organizationFeeAmount = agentTranfer.Amount * (transferType.TransferFeeDetail.OrganizationFee / 100);
-                    var organizationFeeTransaction = GetOrganizationFeeTransaction(agentTranfer.FromWalletId, Math.Round(organizationFeeAmount, 2), agentTranfer.Id, currencyId);
+                    var organizationFeeTransaction = GetOrganizationFeeTransaction((long)agentTranfer.FromWalletId, Math.Round(organizationFeeAmount, 2), agentTranfer.Id, currencyId);
                     //transafer organization amount to organization fee account
                     await InitiateTransaction(organizationFeeTransaction);
                 }
@@ -218,6 +231,29 @@ namespace wleepay.Services
                 ToWalletId = agentCommissionWallet.FirstOrDefault().Id
             };
             return orgFeeTransaction;
+        }
+
+        private Transaction AddCashOnHandCreditTransaction(long fromWalletId, double amount, long parentTransactionId)
+        {
+            var wallet = _unitOfWork.Wallet.GetUserByWalletIdAndTransferType(fromWalletId, WalletTypes.DebitFloatN.GetHashCode()).Result;
+            var cashOnHandWallet = _unitOfWork.Wallet.GetWalletsByUserId(wallet.UserId, wallet.CurrencyId, WalletTypes.DebitFloatN.GetHashCode()).Result;
+
+            Transaction addNewTransaction = new Transaction();
+            addNewTransaction.FromWalletId = null;
+            addNewTransaction.ToWalletId = cashOnHandWallet.FirstOrDefault().Id;
+            addNewTransaction.Status = TransactionStatus.Approved.GetHashCode();
+            addNewTransaction.TransferTypeId = TransferTypes.InHandCredit.GetHashCode();
+            addNewTransaction.CreatedDate = DateTime.Now;
+            addNewTransaction.ParentId = parentTransactionId;
+            addNewTransaction.Description = "Credited to cash on hand wallet";
+            addNewTransaction.Amount = amount;
+            
+            return addNewTransaction;
+
+            //update Cash on hand wallet
+            //var cohWallet = await WPContext.Wallet.Where(w => w.Id == 1).FirstOrDefaultAsync();
+            //cohWallet.Balance = transactionDetail.Amount;
+            //await WPContext.SaveChangesAsync();
         }
 
         #endregion

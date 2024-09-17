@@ -156,16 +156,6 @@ namespace wleepay.API.Controllers
             return Ok(newTransactionResource);
         }
 
-        //[HttpPost]
-        //public async Task<IActionResult> IntiateCashout([FromBody] Transaction transactionDetail)
-        //{
-
-        //    var newTransaction = await _transactionService.InitiateTransaction(transactionDetail);
-
-        //    var newTransactionResource = _mapper.Map<Transaction, TransactionResource>(newTransaction);
-        //    return Ok(newTransactionResource);
-        //}
-
         [SystemLock]
         [HttpPost("request")]
         public async Task<IActionResult> CreatePaymentRequest([FromBody] CreateTransactionResource transactionRequest)
@@ -365,7 +355,7 @@ namespace wleepay.API.Controllers
             return Ok(new List<TransactionResource>());
         }
 
-        [HttpGet("HistoryByStatusAndType")]
+        [HttpPost("HistoryByStatusAndType")]
         public async Task<IActionResult> GetTransactionHistoryByStatusTypeAndUserId(TransactionHistoryRequest transactionHistoryRequest)
         {
             var transactionResult = await _transactionService.GetTransactionsHistoryByUserIdAndType(transactionHistoryRequest.UserId,transactionHistoryRequest.Status, transactionHistoryRequest.TransferTypeId,transactionHistoryRequest.Index, transactionHistoryRequest.Size);
@@ -458,9 +448,9 @@ namespace wleepay.API.Controllers
 
             var status = (Core.Enums.TransactionStatus)transaction.Status;
             //Get from wallet user details
-            var fromWalletUser = await _walletService.GetUserDetailsByWalletIdAndCurrency(transaction.FromWalletId);
+            var fromWalletUser = await _walletService.GetUserDetailsByWalletIdAndCurrency((long)transaction.FromWalletId);
             //Get to wallet user details
-            var toWalletUser = await _walletService.GetUserDetailsByWalletIdAndCurrency(transaction.ToWalletId);
+            var toWalletUser = await _walletService.GetUserDetailsByWalletIdAndCurrency((long)transaction.ToWalletId);
 
             FirebaseMessageRequest firebaseMessageRequest = new FirebaseMessageRequest()
             {
@@ -613,9 +603,9 @@ namespace wleepay.API.Controllers
 
             var status = (Core.Enums.TransactionStatus)transaction.Status;
             //Get from wallet user details
-            var fromWalletUser = await _walletService.GetUserDetailsByWalletIdAndCurrency(transaction.FromWalletId);
+            var fromWalletUser = await _walletService.GetUserDetailsByWalletIdAndCurrency((long)transaction.FromWalletId);
             //Get to wallet user details
-            var toWalletUser = await _walletService.GetUserDetailsByWalletIdAndCurrency(transaction.ToWalletId);
+            var toWalletUser = await _walletService.GetUserDetailsByWalletIdAndCurrency((long)transaction.ToWalletId);
 
             //check transaction type
             if (transaction.TransferTypeId == Core.Enums.TransferTypes.TopUp.GetHashCode() ||
@@ -699,10 +689,10 @@ namespace wleepay.API.Controllers
             var status = (Core.Enums.TransactionStatus)transaction.Status;
 
             //Get from wallet user details
-            var fromWalletUser = await _walletService.GetUserDetailsByWalletIdAndCurrency(transaction.FromWalletId);
+            var fromWalletUser = await _walletService.GetUserDetailsByWalletIdAndCurrency((long)transaction.FromWalletId);
 
             //Get to wallet user details
-            var toWalletUser = await _walletService.GetUserDetailsByWalletIdAndCurrency(transaction.ToWalletId);
+            var toWalletUser = await _walletService.GetUserDetailsByWalletIdAndCurrency((long)transaction.ToWalletId);
 
             //check transaction type
             if (transaction.TransferTypeId == Core.Enums.TransferTypes.TopUpSystemWallet.GetHashCode())
@@ -734,5 +724,6 @@ namespace wleepay.API.Controllers
         }
 
         #endregion
-    }
+    
+     }
 }

@@ -17,7 +17,9 @@ namespace wleepay.Core.Enums
         TopUpSystemWallet = 9,
         MobileRechargeTransfer = 10,
         BillPayment = 11,
-        OnHandAgentCashout = 12
+        InHandWithdrawl = 12,
+        InHandCredit = 13,
+        AgentCashout = 14,
 
     }
 

@@ -13,14 +13,15 @@ namespace wleepay.Core.Models
 
         }
         public long Id { get; set; }
-        public long ToWalletId { get; set; }
-        public long FromWalletId { get; set; }
+        public long? ToWalletId { get; set; }
+        public long? FromWalletId { get; set; }
         public double Amount { get; set; }
         public int TransferTypeId { get; set; }
         public string Description { get; set; }
         public DateTime CreatedDate { get; set; }
         public long? ParentId { get; set; }
         public int? Status { get; set; }
+        public string? RefTransactionId { get; set; }
 
         public virtual Wallet ToWallet { get; set; }
         public virtual Wallet FromWallet { get; set; }
