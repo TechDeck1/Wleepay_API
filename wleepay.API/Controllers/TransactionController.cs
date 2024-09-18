@@ -365,7 +365,7 @@ namespace wleepay.API.Controllers
             return Ok(new List<TransactionResource>());
         }
 
-        [HttpGet("HistoryByStatusAndType")]
+        [HttpPost("HistoryByStatusAndType")]
         public async Task<IActionResult> GetTransactionHistoryByStatusTypeAndUserId(TransactionHistoryRequest transactionHistoryRequest)
         {
             var transactionResult = await _transactionService.GetTransactionsHistoryByUserIdAndType(transactionHistoryRequest.UserId,transactionHistoryRequest.Status, transactionHistoryRequest.TransferTypeId,transactionHistoryRequest.Index, transactionHistoryRequest.Size);
