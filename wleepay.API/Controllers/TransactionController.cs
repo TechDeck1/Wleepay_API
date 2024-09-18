@@ -466,9 +466,9 @@ namespace wleepay.API.Controllers
             if (transaction.TransferTypeId == Core.Enums.TransferTypes.TopUp.GetHashCode() ||
                 transaction.TransferTypeId == Core.Enums.TransferTypes.FillAgent.GetHashCode())
             {
-
+                var title = "Payment recived";
                 var notificationText = "Top up request approved  for $ " + transaction.Amount;
-                await SendPushNotification(toWalletUser.ApplicationUser.UserDetail.UserId, "");
+                await SendPushNotification(toWalletUser.ApplicationUser.UserDetail.UserId, notificationText, title);
                
 
                 userWallet = (status == Core.Enums.TransactionStatus.Pending) ? fromWalletUser : toWalletUser;
@@ -480,9 +480,9 @@ namespace wleepay.API.Controllers
             else if (transaction.TransferTypeId == Core.Enums.TransferTypes.CashOut.GetHashCode() ||
                transaction.TransferTypeId == Core.Enums.TransferTypes.AgentCommissionCashout.GetHashCode())
             {
-
+                var title = "Payment recived";
                 var notificationText = "Cash out request approved  for $ " + transaction.Amount;
-                await SendPushNotification(toWalletUser.ApplicationUser.UserDetail.UserId, "");
+                await SendPushNotification(toWalletUser.ApplicationUser.UserDetail.UserId, notificationText,title );
                 
 
                 userWallet = (status == Core.Enums.TransactionStatus.Pending) ? toWalletUser : fromWalletUser;
@@ -493,8 +493,9 @@ namespace wleepay.API.Controllers
             }
             else if (transaction.TransferTypeId == Core.Enums.TransferTypes.WleeTransfer.GetHashCode())
             {
+                var title = "Payment recived";
                 var notificationText = "Payment recived of amount $ " + transaction.Amount;
-                await SendPushNotification(toWalletUser.ApplicationUser.UserDetail.UserId, "");
+                await SendPushNotification(toWalletUser.ApplicationUser.UserDetail.UserId, notificationText, title);
 
                 userWallet = toWalletUser;
                 string name = $"{fromWalletUser.ApplicationUser.UserDetail.FirstName} {fromWalletUser.ApplicationUser.UserDetail.LastName}";
@@ -537,8 +538,9 @@ namespace wleepay.API.Controllers
             if (transaction.TransferTypeId == Core.Enums.TransferTypes.TopUp.GetHashCode() ||
                 transaction.TransferTypeId == Core.Enums.TransferTypes.FillAgent.GetHashCode())
             {
+                var title = "Payment request recived";
                 var notificationText = "Top up request recived for $ " + transaction.Amount;
-                await SendPushNotification(fromWalletUser.ApplicationUser.UserDetail.UserId, "");
+                await SendPushNotification(fromWalletUser.ApplicationUser.UserDetail.UserId, notificationText, title);
 
                 userWallet = (status == Core.Enums.TransactionStatus.Pending) ? fromWalletUser : toWalletUser;
                 string name = (status == Core.Enums.TransactionStatus.Pending)
@@ -549,8 +551,9 @@ namespace wleepay.API.Controllers
             else if (transaction.TransferTypeId == Core.Enums.TransferTypes.CashOut.GetHashCode() ||
                transaction.TransferTypeId == Core.Enums.TransferTypes.AgentCommissionCashout.GetHashCode())
             {
+                var title = "Payment request recived";
                 var notificationText = "Cash out request recived for $ " + transaction.Amount;
-                await SendPushNotification(toWalletUser.ApplicationUser.UserDetail.UserId, "");
+                await SendPushNotification(toWalletUser.ApplicationUser.UserDetail.UserId, notificationText, title);
 
                 userWallet = (status == Core.Enums.TransactionStatus.Pending) ? toWalletUser : fromWalletUser;
                 string name = (status == Core.Enums.TransactionStatus.Pending)
@@ -655,13 +658,13 @@ namespace wleepay.API.Controllers
             return messageText;
         }
 
-        private async Task<string> SendPushNotification(string UserId, string NotificationText)
+        private async Task<string> SendPushNotification(string UserId, string NotificationText,string title)
         {
             string sendNotification = string.Empty;
 
             FirebaseMessageRequest firebaseMessageRequest = new FirebaseMessageRequest()
             {
-                Title = "Payment recived",
+                Title = "Payment request recived",
                 Body = "",
                 DeviceToken = "",
                 DeviceId = "",
