@@ -22,12 +22,11 @@ namespace wleepay.Data.Configurations
                 .UseIdentityColumn();
 
             builder
-                .Property(k => k.ToWalletId)
-                .IsRequired();
+                .Property(k => k.ToWalletId);
+                
 
             builder
-                .Property(k => k.FromWalletId)
-                .IsRequired();
+                .Property(k => k.FromWalletId);
 
             builder
                 .Property(k => k.Amount)

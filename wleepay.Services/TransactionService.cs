@@ -61,7 +61,16 @@ namespace wleepay.Services
 
         public async Task<Transaction> InitiateTransaction(Transaction transactionDetail)
         {
-            return await _unitOfWork.Transaction.AddUpdateTransaction(transactionDetail);
+            var approveTransaction = await _unitOfWork.Transaction.AddUpdateTransaction(transactionDetail);
+            if (transactionDetail.TransferTypeId == TransferTypes.TopUp.GetHashCode())
+            {
+                var getCashOnHandTransaction = AddCashOnHandCreditTransaction((long)transactionDetail.FromWalletId, transactionDetail.Amount, approveTransaction.Id);
+                await _unitOfWork.Transaction.AddUpdateTransaction(getCashOnHandTransaction);
+
+            }
+
+            await _unitOfWork.CommitAsync();
+            return approveTransaction;
         }
 
         public async Task<Transaction> InitiateCashOnHandTransaction(Transaction transactionDetail)
@@ -115,7 +124,8 @@ namespace wleepay.Services
 
         public async Task<Transaction> InitiateTransactionRequest(Transaction transactionDetail)
         {
-            return await _unitOfWork.Transaction.CreatePaymentRequest(transactionDetail);
+            var createRequest = await _unitOfWork.Transaction.CreatePaymentRequest(transactionDetail);
+            return createRequest;
         }
 
         public async Task<Transaction> UpdateTransactionStatus(long id, Core.Enums.TransactionStatus status)

@@ -67,7 +67,7 @@ namespace wleepay.Data.Repositories
 
                     await WPContext.SaveChangesAsync();
                     //commit transaction
-                    await transaction.CommitAsync();
+                    //await transaction.CommitAsync();
                 }
                 catch (Exception ex)
                 {

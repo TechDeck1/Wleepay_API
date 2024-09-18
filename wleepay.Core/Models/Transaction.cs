@@ -21,7 +21,6 @@ namespace wleepay.Core.Models
         public DateTime CreatedDate { get; set; }
         public long? ParentId { get; set; }
         public int? Status { get; set; }
-        public string? RefTransactionId { get; set; }
 
         public virtual Wallet ToWallet { get; set; }
         public virtual Wallet FromWallet { get; set; }
