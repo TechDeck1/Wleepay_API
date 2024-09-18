@@ -461,49 +461,17 @@ namespace wleepay.API.Controllers
             var fromWalletUser = await _walletService.GetUserDetailsByWalletIdAndCurrency(transaction.FromWalletId);
             //Get to wallet user details
             var toWalletUser = await _walletService.GetUserDetailsByWalletIdAndCurrency(transaction.ToWalletId);
-
-            FirebaseMessageRequest firebaseMessageRequest = new FirebaseMessageRequest()
-            {
-                Title = "Payment recived",
-                Body = "",
-                DeviceToken = "",
-                DeviceId = "",
-                UserId = toWalletUser.ApplicationUser.UserDetail.UserId
-            };
             
             //check transaction type
             if (transaction.TransferTypeId == Core.Enums.TransferTypes.TopUp.GetHashCode() ||
                 transaction.TransferTypeId == Core.Enums.TransferTypes.FillAgent.GetHashCode())
             {
-                var device = await _userDeviceService.GetUserDeviceByUserId(toWalletUser.ApplicationUser.UserDetail.UserId);
 
-                foreach (var item in device)
-                {
-                    firebaseMessageRequest.DeviceId = item.DeviceId;
-                    firebaseMessageRequest.DeviceToken = item.FcmToken;
-                    firebaseMessageRequest.Body = "Top up request approved  for $" + transaction.Amount;
-                    //var sendNotification = _firebaseNotification.SendFirebaseMessageRequest(firebaseMessageRequest);
-                    try
-                    {
-                        var sendNotification = _firebaseNotification.SendFirebaseMessageRequest(firebaseMessageRequest);
-                    }
-                    catch (AggregateException ex)
-                    {
-                        foreach (var innerEx in ex.InnerExceptions)
-                        {
-                            if (innerEx is FirebaseMessagingException fme)
-                            {
-                                // Handle Firebase specific exceptions
-                                Console.WriteLine($"Firebase error: {fme.Message}");
-                            }
-                            else
-                            {
-                                Console.WriteLine($"General error: {innerEx.Message}");
-                            }
-                        }
-                    }
-                }
-                 userWallet = (status == Core.Enums.TransactionStatus.Pending) ? fromWalletUser : toWalletUser;
+                var notificationText = "Top up request approved  for $ " + transaction.Amount;
+                await SendPushNotification(toWalletUser.ApplicationUser.UserDetail.UserId, "");
+               
+
+                userWallet = (status == Core.Enums.TransactionStatus.Pending) ? fromWalletUser : toWalletUser;
                 string name = (status == Core.Enums.TransactionStatus.Pending)
                     ? $"{toWalletUser.ApplicationUser.UserDetail.FirstName} {toWalletUser.ApplicationUser.UserDetail.LastName}"
                     : $"{fromWalletUser.ApplicationUser.UserDetail.FirstName} {fromWalletUser.ApplicationUser.UserDetail.LastName}";
@@ -512,35 +480,10 @@ namespace wleepay.API.Controllers
             else if (transaction.TransferTypeId == Core.Enums.TransferTypes.CashOut.GetHashCode() ||
                transaction.TransferTypeId == Core.Enums.TransferTypes.AgentCommissionCashout.GetHashCode())
             {
-                var device = await _userDeviceService.GetUserDeviceByUserId(toWalletUser.ApplicationUser.UserDetail.UserId);
 
-                foreach (var item in device)
-                {
-                    firebaseMessageRequest.DeviceId = item.DeviceId;
-                    firebaseMessageRequest.DeviceToken = item.FcmToken;
-                    firebaseMessageRequest.Body = "Cash out request approved for $" + transaction.Amount;
-
-                    //var sendNotification = _firebaseNotification.SendFirebaseMessageRequest(firebaseMessageRequest);
-                    try
-                    {
-                        var sendNotification = _firebaseNotification.SendFirebaseMessageRequest(firebaseMessageRequest);
-                    }
-                    catch (AggregateException ex)
-                    {
-                        foreach (var innerEx in ex.InnerExceptions)
-                        {
-                            if (innerEx is FirebaseMessagingException fme)
-                            {
-                                // Handle Firebase specific exceptions
-                                Console.WriteLine($"Firebase error: {fme.Message}");
-                            }
-                            else
-                            {
-                                Console.WriteLine($"General error: {innerEx.Message}");
-                            }
-                        }
-                    }
-                }
+                var notificationText = "Cash out request approved  for $ " + transaction.Amount;
+                await SendPushNotification(toWalletUser.ApplicationUser.UserDetail.UserId, "");
+                
 
                 userWallet = (status == Core.Enums.TransactionStatus.Pending) ? toWalletUser : fromWalletUser;
                 string name = (status == Core.Enums.TransactionStatus.Pending)
@@ -550,35 +493,8 @@ namespace wleepay.API.Controllers
             }
             else if (transaction.TransferTypeId == Core.Enums.TransferTypes.WleeTransfer.GetHashCode())
             {
-                var device = await _userDeviceService.GetUserDeviceByUserId(toWalletUser.ApplicationUser.UserDetail.UserId);
-
-                foreach (var item in device)
-                {
-                    firebaseMessageRequest.DeviceId = item.DeviceId;
-                    firebaseMessageRequest.DeviceToken = item.FcmToken;
-                    firebaseMessageRequest.Body = "Payment recived of amount $" + transaction.Amount;
-
-                    //var sendNotification = _firebaseNotification.SendFirebaseMessageRequest(firebaseMessageRequest);
-                    try
-                    {
-                        var sendNotification = _firebaseNotification.SendFirebaseMessageRequest(firebaseMessageRequest);
-                    }
-                    catch (AggregateException ex)
-                    {
-                        foreach (var innerEx in ex.InnerExceptions)
-                        {
-                            if (innerEx is FirebaseMessagingException fme)
-                            {
-                                // Handle Firebase specific exceptions
-                                Console.WriteLine($"Firebase error: {fme.Message}");
-                            }
-                            else
-                            {
-                                Console.WriteLine($"General error: {innerEx.Message}");
-                            }
-                        }
-                    }
-                }
+                var notificationText = "Payment recived of amount $ " + transaction.Amount;
+                await SendPushNotification(toWalletUser.ApplicationUser.UserDetail.UserId, "");
 
                 userWallet = toWalletUser;
                 string name = $"{fromWalletUser.ApplicationUser.UserDetail.FirstName} {fromWalletUser.ApplicationUser.UserDetail.LastName}";
@@ -621,6 +537,9 @@ namespace wleepay.API.Controllers
             if (transaction.TransferTypeId == Core.Enums.TransferTypes.TopUp.GetHashCode() ||
                 transaction.TransferTypeId == Core.Enums.TransferTypes.FillAgent.GetHashCode())
             {
+                var notificationText = "Top up request recived for $ " + transaction.Amount;
+                await SendPushNotification(fromWalletUser.ApplicationUser.UserDetail.UserId, "");
+
                 userWallet = (status == Core.Enums.TransactionStatus.Pending) ? fromWalletUser : toWalletUser;
                 string name = (status == Core.Enums.TransactionStatus.Pending)
                     ? $"{toWalletUser.ApplicationUser.UserDetail.FirstName} {toWalletUser.ApplicationUser.UserDetail.LastName}"
@@ -630,6 +549,9 @@ namespace wleepay.API.Controllers
             else if (transaction.TransferTypeId == Core.Enums.TransferTypes.CashOut.GetHashCode() ||
                transaction.TransferTypeId == Core.Enums.TransferTypes.AgentCommissionCashout.GetHashCode())
             {
+                var notificationText = "Cash out request recived for $ " + transaction.Amount;
+                await SendPushNotification(toWalletUser.ApplicationUser.UserDetail.UserId, "");
+
                 userWallet = (status == Core.Enums.TransactionStatus.Pending) ? toWalletUser : fromWalletUser;
                 string name = (status == Core.Enums.TransactionStatus.Pending)
                     ? $"{fromWalletUser.ApplicationUser.UserDetail.FirstName} {fromWalletUser.ApplicationUser.UserDetail.LastName}"
@@ -733,6 +655,50 @@ namespace wleepay.API.Controllers
             return messageText;
         }
 
+        private async Task<string> SendPushNotification(string UserId, string NotificationText)
+        {
+            string sendNotification = string.Empty;
+
+            FirebaseMessageRequest firebaseMessageRequest = new FirebaseMessageRequest()
+            {
+                Title = "Payment recived",
+                Body = "",
+                DeviceToken = "",
+                DeviceId = "",
+                UserId = UserId
+            };
+
+            var device = await _userDeviceService.GetUserDeviceByUserId(UserId);
+
+            foreach (var item in device)
+            {
+                firebaseMessageRequest.DeviceId = item.DeviceId;
+                firebaseMessageRequest.DeviceToken = item.FcmToken;
+                firebaseMessageRequest.Body = NotificationText;
+
+                //var sendNotification = _firebaseNotification.SendFirebaseMessageRequest(firebaseMessageRequest);
+                try
+                {
+                    sendNotification = _firebaseNotification.SendFirebaseMessageRequest(firebaseMessageRequest);
+                }
+                catch (AggregateException ex)
+                {
+                    foreach (var innerEx in ex.InnerExceptions)
+                    {
+                        if (innerEx is FirebaseMessagingException fme)
+                        {
+                            // Handle Firebase specific exceptions
+                            Console.WriteLine($"Firebase error: {fme.Message}");
+                        }
+                        else
+                        {
+                            Console.WriteLine($"General error: {innerEx.Message}");
+                        }
+                    }
+                }
+            }
+            return sendNotification;
+        }
         #endregion
     }
 }
