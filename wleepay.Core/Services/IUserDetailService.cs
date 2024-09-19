@@ -24,7 +24,7 @@ namespace wleepay.Core.Services
         Task<ApplicationUser> GetUserAccountByName(string name, int role = 0);
         Task<UserDetailsResponseResource> GetUsers(Core.Enums.Role role, int pageIndex, int pageSize);
         Task<IEnumerable<Transaction>> GetIncomingOutGoingPaymentRequest(string userId, Core.Enums.PaymentRequestType type, Core.Enums.TransactionStatus transferStatus, int pageSize, int pageIndex);
-        Task<TransactionResponseResource> GetIncomingOutGoingAgentPaymentRequest(string userId, Core.Enums.PaymentRequestType type, Core.Enums.TransactionStatus transferStatus,int transferTypeId, int pageSize, int pageIndex);
+        Task<TransactionResponseResource> GetIncomingOutGoingPaymentRequestByTransaferTypeId(string userId, Core.Enums.PaymentRequestType type, Core.Enums.TransactionStatus transferStatus,int transferTypeId, int pageSize, int pageIndex);
         Task<UserDetail> UpdateUserVerificationCode(string UserId, string verificationCode);
         Task<UserDetail> UpdateUserStatus(string userId, int status);
         Task<UserDetailsResponseResource> GetAllUsersById(Core.Enums.Role role, int pageIndex, int pageSize, string createdBy);

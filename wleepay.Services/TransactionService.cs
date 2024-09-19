@@ -23,14 +23,14 @@ namespace wleepay.Services
             this._unitOfWork = unitOfWork;
         }
 
-        public async Task<IEnumerable<Transaction>> GetPaymentRequestByStatus(IEnumerable<long> walletIds, PaymentRequestType type, TransactionStatus transactionStatus, int pageSize, int pageIndex)
+        public async Task<IEnumerable<Transaction>> GetIncomingOutGoingPaymentRequest(IEnumerable<long> walletIds, PaymentRequestType type, TransactionStatus transactionStatus, int pageSize, int pageIndex)
         {
-            return await _unitOfWork.Transaction.GetPaymentRequestByStatus(walletIds, type, transactionStatus, pageSize, pageIndex);
+            return await _unitOfWork.Transaction.GetIncomingOutGoingPaymentRequest(walletIds, type, transactionStatus, pageSize, pageIndex);
         }
 
-        public async Task<TransactionResponseResource> GetIncomingOutgoingPaymentRequest(IEnumerable<long> walletIds, PaymentRequestType type, TransactionStatus transactionStatus,int transferTypeId, int pageSize, int pageIndex)
+        public async Task<TransactionResponseResource> GetIncomingOutGoingPaymentRequestByTransaferTypeId(IEnumerable<long> walletIds, PaymentRequestType type, TransactionStatus transactionStatus,int transferTypeId, int pageSize, int pageIndex)
         {
-            return await _unitOfWork.Transaction.GetIncomingOutgoingPaymentRequest(walletIds, type, transactionStatus, transferTypeId, pageSize, pageIndex);
+            return await _unitOfWork.Transaction.GetIncomingOutGoingPaymentRequestByTransaferTypeId(walletIds, type, transactionStatus, transferTypeId, pageSize, pageIndex);
         }
 
         public async Task<TransactionResponseResource> GetPaymentRequestByStatusAndType(PaymentRequestType type, TransactionStatus transactionStatus,int transferId, int pageSize, int pageIndex)
@@ -113,16 +113,6 @@ namespace wleepay.Services
         public async Task<double> CalculateTotalTransactionAmount(long walletId, bool isMonthly)
         {
             return await _unitOfWork.Transaction.CalculateWalletTransaction(walletId, isMonthly);
-        }
-
-        public async Task<TransactionResponseResource> GetCashoutTransactions(int pageIndex , int pageSize)
-        {
-            return await _unitOfWork.Transaction.GetCashoutTransactions(pageIndex, pageSize);
-        }
-
-        public async Task<TransactionResponseResource> GetTopUpTransactions(int pageIndex, int pageSize)
-        {
-            return await _unitOfWork.Transaction.GetTopUpTransactions(pageIndex, pageSize);
         }
 
         public async Task<TransactionResponseResource> GetTransactionsByTypeAndCurrency(int type, int currency, int pageIndex = 0, int pageSize = 10)

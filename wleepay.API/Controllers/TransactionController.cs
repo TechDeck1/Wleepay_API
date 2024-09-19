@@ -156,16 +156,6 @@ namespace wleepay.API.Controllers
             return Ok(newTransactionResource);
         }
 
-        //[HttpPost]
-        //public async Task<IActionResult> IntiateCashout([FromBody] Transaction transactionDetail)
-        //{
-
-        //    var newTransaction = await _transactionService.InitiateTransaction(transactionDetail);
-
-        //    var newTransactionResource = _mapper.Map<Transaction, TransactionResource>(newTransaction);
-        //    return Ok(newTransactionResource);
-        //}
-
         [SystemLock]
         [HttpPost("request")]
         public async Task<IActionResult> CreatePaymentRequest([FromBody] CreateTransactionResource transactionRequest)
@@ -212,8 +202,8 @@ namespace wleepay.API.Controllers
             return Ok(newTransactionResource);
         }
 
-        [HttpPut("BulkApprove")]
-        public async Task<IActionResult> ApprovePaymentRequest(List<long> paymentRequestIds)
+        [HttpPut("bulkApprove")]
+        public async Task<IActionResult> ApprovePaymentRequestInBulk(List<long> paymentRequestIds)
         {
             TransactionResource newTransactionResource = new TransactionResource();
             foreach (var paymentRequestId in paymentRequestIds)
@@ -262,7 +252,7 @@ namespace wleepay.API.Controllers
         }
 
         [HttpPut("bulkReject")]
-        public async Task<IActionResult> RejectPaymentRequest(List<long> paymentRequestIds)
+        public async Task<IActionResult> RejectPaymentRequestInBulk(List<long> paymentRequestIds)
         {
             TransactionResource result = new TransactionResource();
             foreach (var paymentRequestId in paymentRequestIds)
@@ -300,41 +290,6 @@ namespace wleepay.API.Controllers
             return Ok(result);
         }
 
-        [HttpGet("Cashout")]
-        public async Task<IActionResult> CashoutTransactions([FromQuery] int pageIndex = 0, [FromQuery] int pageSize = 10)
-        {
-
-            var result = await _transactionService.GetCashoutTransactions(pageIndex, pageSize);
-            var transactionResources = result.Transactions.Select(transaction => _mapper.Map<Transaction, TransactionHistoryResource>(transaction)).ToList();
-
-            if (result == null)
-                return BadRequest("Invalid UserId");
-
-            return Ok(new
-            {
-                TotalCount = result.TotalCount,
-                Transactions = transactionResources
-            });
-        }
-
-        [HttpGet("TopUp")]
-        public async Task<IActionResult> TopUpTransactions([FromQuery]int pageIndex=0 , [FromQuery] int pageSize=10)
-        {
-
-            var result = await _transactionService.GetTopUpTransactions(pageIndex, pageSize);
-            var transactionResources = result.Transactions.Select(transaction => _mapper.Map<Transaction, TransactionHistoryResource>(transaction)).ToList();
-
-            if (result == null)
-                return BadRequest("Invalid UserId");
-
-            return Ok(new
-            {
-                TotalCount = result.TotalCount,
-                Transactions = transactionResources
-            });
-
-        }
-
         [HttpGet("{transferTypeId}/{currencyTypeId}")]
         public async Task<IActionResult> GetTransactionByTypeAndCurrency(int transferTypeId,int currencyTypeId, [FromQuery] int pageIndex , [FromQuery] int pageSize)
         {
@@ -352,18 +307,18 @@ namespace wleepay.API.Controllers
             });
         }
 
-        [HttpGet("type/{transferType}/{userId}")]
-        public async Task<IActionResult> GetTransactionsByUserIdAndType(string userId, int transferType)
-        {
-            var transactionResult = await _transactionService.GetTransactionsByUserIdAndType(userId, transferType);
-            if (transactionResult.Transactions.Count() > 0)
-            {
-                var transactionResourceList = _mapper.Map<IEnumerable<Transaction>, IEnumerable<TransactionHistoryResource>>(transactionResult.Transactions);
-                return Ok(new { Transactions = transactionResourceList, TotalCount = transactionResult.TotalCount });
-            }
+        //[HttpGet("type/{transferType}/{userId}")]
+        //public async Task<IActionResult> GetTransactionsByUserIdAndType(string userId, int transferType)
+        //{
+        //    var transactionResult = await _transactionService.GetTransactionsByUserIdAndType(userId, transferType);
+        //    if (transactionResult.Transactions.Count() > 0)
+        //    {
+        //        var transactionResourceList = _mapper.Map<IEnumerable<Transaction>, IEnumerable<TransactionHistoryResource>>(transactionResult.Transactions);
+        //        return Ok(new { Transactions = transactionResourceList, TotalCount = transactionResult.TotalCount });
+        //    }
 
-            return Ok(new List<TransactionResource>());
-        }
+        //    return Ok(new List<TransactionResource>());
+        //}
 
         [HttpPost("HistoryByStatusAndType")]
         public async Task<IActionResult> GetTransactionHistoryByStatusTypeAndUserId(TransactionHistoryRequest transactionHistoryRequest)
@@ -380,7 +335,7 @@ namespace wleepay.API.Controllers
         }
 
         [AllowAnonymous]
-        [HttpGet("history/{userId}")]
+        [HttpGet("History/{userId}")]
         public async Task<IActionResult> GetTransactionHistoryByUserId(string userId, [FromQuery] int Index, [FromQuery] int Size)
         {
             var transactionResult = await _transactionService.GetTransactionHistoryByUserId(userId, Index, Size);
@@ -393,8 +348,8 @@ namespace wleepay.API.Controllers
             return Ok(new List<TransactionResource>());
         }
 
-        [HttpPost("allAgentPaymentRequest")]
-        public async Task<IActionResult> GetIncomingOutGoingTopUpRequests([FromBody] AgentPaymentRequest paymentRequestParam)
+        [HttpPost("PaymentRequestHistory")]
+        public async Task<IActionResult> GetIncomingOutGoingRequests([FromBody] AgentPaymentRequest paymentRequestParam)
         {
             var paymentRequest = await _transactionService.GetPaymentRequestByStatusAndType(paymentRequestParam.Type, paymentRequestParam.TransferStatus, paymentRequestParam.TransferId ,paymentRequestParam.PageSize, paymentRequestParam.PageIndex);
 

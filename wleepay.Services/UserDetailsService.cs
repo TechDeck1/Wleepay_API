@@ -139,19 +139,18 @@ namespace wleepay.Services
                 return null;
             //get user wallets
 
-            var paymentRequest = await _transactionService.GetPaymentRequestByStatus(user.Wallets.Select(s => s.Id), type, transactionStatus, pageSize, pageIndex);
+            var paymentRequest = await _transactionService.GetIncomingOutGoingPaymentRequest(user.Wallets.Select(s => s.Id), type, transactionStatus, pageSize, pageIndex);
 
             return paymentRequest;
         }
 
-        public async Task<TransactionResponseResource> GetIncomingOutGoingAgentPaymentRequest(string userId, Core.Enums.PaymentRequestType type, Core.Enums.TransactionStatus transactionStatus,int transferTypeId, int pageSize, int pageIndex)
+        public async Task<TransactionResponseResource> GetIncomingOutGoingPaymentRequestByTransaferTypeId(string userId, Core.Enums.PaymentRequestType type, Core.Enums.TransactionStatus transactionStatus,int transferTypeId, int pageSize, int pageIndex)
         {
             var user = await _unitOfWork.UserDetail.GetApplicationUser(userId, string.Empty, string.Empty, true);
             if (user == null)
                 return null;
-            //get user wallets
 
-            var paymentRequest = await _transactionService.GetIncomingOutgoingPaymentRequest(user.Wallets.Select(s => s.Id), type, transactionStatus, transferTypeId, pageSize, pageIndex);
+            var paymentRequest = await _transactionService.GetIncomingOutGoingPaymentRequestByTransaferTypeId(user.Wallets.Select(s => s.Id), type, transactionStatus, transferTypeId, pageSize, pageIndex);
 
             return paymentRequest;
         }
@@ -220,6 +219,7 @@ namespace wleepay.Services
         {
             return await _unitOfWork.UserDetail.GetActiveSubscribersByMonth();
         }
+        
         public async Task<IList<subscribersByType>> GetActiveSubscribersByType()
         {
             return await _unitOfWork.UserDetail.GetActiveSubscribersByType();

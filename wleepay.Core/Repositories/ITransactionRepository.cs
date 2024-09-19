@@ -15,14 +15,12 @@ namespace wleepay.Core.Repositories
         Task<IEnumerable<Transaction>> GetWalletsTransactions(IEnumerable<long> walletIdList);
         Task<Transaction> AddUpdateTransaction(Transaction transactionDetail);
         Task<Transaction> UpdateTransactionStatus(long transactionId, Core.Enums.TransactionStatus status);
-        Task<IEnumerable<Transaction>> GetPaymentRequestByStatus(IEnumerable<long> walletIds, Core.Enums.PaymentRequestType type, Core.Enums.TransactionStatus transferStatus, int pageSize, int pageIndex);
-        Task<TransactionResponseResource> GetIncomingOutgoingPaymentRequest(IEnumerable<long> walletIds, Core.Enums.PaymentRequestType type, Core.Enums.TransactionStatus transferStatus,int transferTypeId,  int pageSize, int pageIndex);
+        Task<IEnumerable<Transaction>> GetIncomingOutGoingPaymentRequest(IEnumerable<long> walletIds, Core.Enums.PaymentRequestType type, Core.Enums.TransactionStatus transferStatus, int pageSize, int pageIndex);
+        Task<TransactionResponseResource> GetIncomingOutGoingPaymentRequestByTransaferTypeId(IEnumerable<long> walletIds, Core.Enums.PaymentRequestType type, Core.Enums.TransactionStatus transferStatus,int transferTypeId,  int pageSize, int pageIndex);
         Task<TransactionResponseResource> GetPaymentRequestByStatusAndType(Core.Enums.PaymentRequestType type, Core.Enums.TransactionStatus transferStatus, int transferId, int pageSize, int pageIndex);
         Task<Transaction> CreatePaymentRequest(Transaction transactionDetail);
         Task<Transaction> GetTransactionDetails(long transactionId);
         Task<double> CalculateWalletTransaction(long walletId, bool isMonthly = false);
-        Task<TransactionResponseResource> GetCashoutTransactions(int pageIndex = 0, int pageSize = 0);
-        Task<TransactionResponseResource> GetTopUpTransactions(int pageIndex = 0, int pageSize= 0);
         Task<TransactionResponseResource> GetTransactionsByTypeAndCurrency(int type, int currency, int pageIndex = 0, int pageSize = 10);
         Task<TransactionResponseResource> GetTransactionsByUserIdAndType(string userId,int transeferType, int pageIndex = 0, int pageSize = 10);
         Task<TransactionResponseResource> GetTransactionsHistoryByUserIdAndType(string userId,int status, int transeferType, int pageIndex = 0, int pageSize = 10);
