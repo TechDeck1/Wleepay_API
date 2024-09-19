@@ -384,7 +384,7 @@ namespace wleepay.API.Controllers
             return Ok(new List<TransactionResource>());
         }
 
-        [HttpPost("allAgentPaymentRequest")]
+        [HttpPost("PaymentRequestHistory")]
         public async Task<IActionResult> GetIncomingOutGoingTopUpRequests([FromBody] AgentPaymentRequest paymentRequestParam)
         {
             var paymentRequest = await _transactionService.GetPaymentRequestByStatusAndType(paymentRequestParam.Type, paymentRequestParam.TransferStatus, paymentRequestParam.TransferId ,paymentRequestParam.PageSize, paymentRequestParam.PageIndex);

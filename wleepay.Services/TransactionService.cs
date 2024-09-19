@@ -61,15 +61,20 @@ namespace wleepay.Services
 
         public async Task<Transaction> InitiateTransaction(Transaction transactionDetail)
         {
-            var approveTransaction = await _unitOfWork.Transaction.AddUpdateTransaction(transactionDetail);
+            var approveTransaction = await _unitOfWork.Transaction.AddUpdateTransactions(transactionDetail);
             if (transactionDetail.TransferTypeId == TransferTypes.TopUp.GetHashCode())
             {
                 var getCashOnHandTransaction = AddCashOnHandCreditTransaction((long)transactionDetail.FromWalletId, transactionDetail.Amount, approveTransaction.Id);
-                await _unitOfWork.Transaction.AddUpdateTransaction(getCashOnHandTransaction);
+                await _unitOfWork.Transaction.AddUpdateTransactionsForInHand(getCashOnHandTransaction);
 
             }
+            if (transactionDetail.TransferTypeId == TransferTypes.FillAgent.GetHashCode())
+            {
+                var getCashOnHandTransaction = AddCashOnHandCreditTransaction((long)transactionDetail.FromWalletId, transactionDetail.Amount, approveTransaction.Id);
+                await _unitOfWork.Transaction.AddUpdateTransactionsForInHand(getCashOnHandTransaction);
 
-            await _unitOfWork.CommitAsync();
+            }
+            //await _unitOfWork.CommitAsync();
             return approveTransaction;
         }
 
@@ -245,7 +250,7 @@ namespace wleepay.Services
 
         private Transaction AddCashOnHandCreditTransaction(long fromWalletId, double amount, long parentTransactionId)
         {
-            var wallet = _unitOfWork.Wallet.GetUserByWalletIdAndTransferType(fromWalletId, WalletTypes.DebitFloatN.GetHashCode()).Result;
+            var wallet = _unitOfWork.Wallet.GetUserByWalletIdAndTransferType(fromWalletId, WalletTypes.SystemWallet.GetHashCode()).Result;
             var cashOnHandWallet = _unitOfWork.Wallet.GetWalletsByUserId(wallet.UserId, wallet.CurrencyId, WalletTypes.DebitFloatN.GetHashCode()).Result;
 
             Transaction addNewTransaction = new Transaction();

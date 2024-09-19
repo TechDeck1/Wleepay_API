@@ -774,7 +774,7 @@ namespace wleepay.API.Controllers
         }
 
         [AllowAnonymous]
-        [HttpPost("agentPaymentRequest")]
+        [HttpPost("PaymentRequestByUserId")]
         public async Task<IActionResult> GetIncomingOutGoingAgentRequests([FromBody] AgentPaymentRequest paymentRequestParam)
         {
             var paymentRequest = await _userDetailsService.GetIncomingOutGoingAgentPaymentRequest(paymentRequestParam.UserId, paymentRequestParam.Type, paymentRequestParam.TransferStatus,paymentRequestParam.TransferId, paymentRequestParam.PageSize, paymentRequestParam.PageIndex);
