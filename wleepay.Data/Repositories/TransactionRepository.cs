@@ -439,8 +439,17 @@ namespace wleepay.Data.Repositories
         {
             int takeCount = pageSize;
             int skipCount = pageIndex * pageSize;
-            var transactionQuery = WPContext.Transactions
-                .Where(w => w.Status == status && w.TransferTypeId == transferType);
+
+            IQueryable<Transaction> transactionQuery;
+            if (status == 0 && transferType == 0) 
+            {
+                transactionQuery = WPContext.Transactions;
+            }
+            else 
+            {
+                transactionQuery = WPContext.Transactions
+                    .Where(w => w.TransferTypeId == transferType);
+            }
 
             if (!string.IsNullOrEmpty(userId))
                 transactionQuery = transactionQuery.Where(w => w.ToWallet.UserId == userId || w.FromWallet.UserId == userId);

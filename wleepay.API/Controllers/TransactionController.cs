@@ -360,6 +360,7 @@ namespace wleepay.API.Controllers
         {
             var transactionResult = await _transactionService.GetTransactionsHistoryByUserIdAndType(transactionHistoryRequest.UserId,transactionHistoryRequest.Status, transactionHistoryRequest.TransferTypeId,transactionHistoryRequest.Index, transactionHistoryRequest.Size);
           
+            
             if (transactionResult.Transactions.Count() > 0)
             {
                 var transactionResourceList = _mapper.Map<IEnumerable<Transaction>, IEnumerable<TransactionHistoryResource>>(transactionResult.Transactions);
