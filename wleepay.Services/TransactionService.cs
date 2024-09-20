@@ -12,6 +12,7 @@ using wleepay.Core.DTO.Response;
 using Microsoft.SqlServer.Management.Smo;
 using static DevExpress.XtraPrinting.Native.PageSizeInfo;
 using wleepay.Data.Context;
+using Org.BouncyCastle.Crypto.Engines;
 
 namespace wleepay.Services
 {
@@ -61,34 +62,31 @@ namespace wleepay.Services
 
         public async Task<Transaction> InitiateTransaction(Transaction transactionDetail)
         {
-            var approveTransaction = await _unitOfWork.Transaction.AddUpdateTransactions(transactionDetail);
-            if (transactionDetail.TransferTypeId == TransferTypes.TopUp.GetHashCode())
-            {
-                var getCashOnHandTransaction = AddCashOnHandCreditTransaction((long)transactionDetail.FromWalletId, transactionDetail.Amount, approveTransaction.Id);
-                await _unitOfWork.Transaction.AddUpdateTransactionsForInHand(getCashOnHandTransaction);
+            Transaction approveTransaction = new Transaction();
 
-            }
-            if (transactionDetail.TransferTypeId == TransferTypes.FillAgent.GetHashCode())
+            if (transactionDetail.TransferTypeId == TransferTypes.TopUp.GetHashCode()) 
             {
-                var getCashOnHandTransaction = AddCashOnHandCreditTransaction((long)transactionDetail.FromWalletId, transactionDetail.Amount, approveTransaction.Id);
-                await _unitOfWork.Transaction.AddUpdateTransactionsForInHand(getCashOnHandTransaction);
-
+                approveTransaction = await _unitOfWork.Transaction.AddUpdateTransaction(transactionDetail);
             }
-            //await _unitOfWork.CommitAsync();
+            else if (transactionDetail.TransferTypeId == TransferTypes.FillAgent.GetHashCode())
+            {
+                approveTransaction = await _unitOfWork.Transaction.AddUpdateAgentTopUpTransaction(transactionDetail);
+            }
+            else if (transactionDetail.TransferTypeId == TransferTypes.CashOut.GetHashCode())
+            {
+                approveTransaction = await _unitOfWork.Transaction.AddUpdateAgentCashOutTransaction(transactionDetail);
+            }
+            else if (transactionDetail.TransferTypeId == TransferTypes.AgentCashout.GetHashCode())
+            {
+                approveTransaction = await _unitOfWork.Transaction.AddUpdateAgentCashOutTransaction(transactionDetail);
+            }
+            else
+            {
+                return approveTransaction;
+            }
             return approveTransaction;
         }
 
-        public async Task<Transaction> InitiateCashOnHandTransaction(Transaction transactionDetail)
-        {
-            var approveRequest = await InitiateTransaction(transactionDetail);
-            if (transactionDetail.TransferTypeId == TransferTypes.FillAgent.GetHashCode())
-            {
-                var getCashOnHandTransaction = AddCashOnHandCreditTransaction((long)transactionDetail.FromWalletId, transactionDetail.Amount, approveRequest.Id);
-                await InitiateTransaction(getCashOnHandTransaction);
-
-            }
-            return approveRequest;
-        }
         //Intitate Cashout
         public async Task<Transaction> InitiateCashout(Transaction transactionDetail)
         {
@@ -190,17 +188,19 @@ namespace wleepay.Services
             return await _unitOfWork.Transaction.GetTransactionCounttByTypeLD();
 
         }
+       
         public async Task<IList<TransactionCountByTypeResponseModel>> GetTransactionCounttByTypeUSD()
         {
             return await _unitOfWork.Transaction.GetTransactionCounttByTypeUSD();
 
-        } 
+        }         
         
         public async Task<IList<TransactionSummaryResponseModel>> GetTransactionData(int monthId, int currencyId)
         {
             return await _unitOfWork.Transaction.GetTransactionData(monthId, currencyId);
 
         }
+        
         #region Helper function
         private Transaction GetTaxTransaction(long fromWalletId, double amount, long parentTransactionId, int currency)
         {
@@ -247,10 +247,10 @@ namespace wleepay.Services
             };
             return orgFeeTransaction;
         }
-
         private Transaction AddCashOnHandCreditTransaction(long fromWalletId, double amount, long parentTransactionId)
         {
             var wallet = _unitOfWork.Wallet.GetUserByWalletIdAndTransferType(fromWalletId, WalletTypes.SystemWallet.GetHashCode()).Result;
+            
             var cashOnHandWallet = _unitOfWork.Wallet.GetWalletsByUserId(wallet.UserId, wallet.CurrencyId, WalletTypes.DebitFloatN.GetHashCode()).Result;
 
             Transaction addNewTransaction = new Transaction();
@@ -265,10 +265,6 @@ namespace wleepay.Services
             
             return addNewTransaction;
 
-            //update Cash on hand wallet
-            //var cohWallet = await WPContext.Wallet.Where(w => w.Id == 1).FirstOrDefaultAsync();
-            //cohWallet.Balance = transactionDetail.Amount;
-            //await WPContext.SaveChangesAsync();
         }
 
         #endregion
