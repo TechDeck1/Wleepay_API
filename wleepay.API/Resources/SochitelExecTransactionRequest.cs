@@ -17,6 +17,8 @@ namespace wleepay.API.Resources
         public int Currency { get; set; }
         public double? AmountInLd { get; set; }
 
+        public string? ProductName { get; set; }
+
     }
 
     public class SochitelTransactionRequest

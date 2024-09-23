@@ -141,6 +141,60 @@ namespace wleepay.API.Helpers
             return instructionDetails;
         }
 
+        public static ExtraInfo ParseExtraInfo(string extraInfo)
+        {
+            var lines = extraInfo.Split(new[] { '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries);
+            var extraInfoObj = new ExtraInfo();
+            var tokenInfo = new TokenInfo();
+
+            foreach (var line in lines)
+            {
+                var parts = line.Split(new[] { ':' }, 2);
+                if (parts.Length < 2) continue;
+
+                var key = parts[0].Trim();
+                var value = parts[1].Trim();
+
+                switch (key)
+                {
+                    case "Amount":
+                        extraInfoObj.Amount = decimal.Parse(value);
+                        break;
+                    case "Date":
+                        extraInfoObj.Date = DateTime.Parse(value);
+                        break;
+                    case "Description":
+                        extraInfoObj.Description = value;
+                        break;
+                    case "Tax":
+                        extraInfoObj.Tax = decimal.Parse(value);
+                        break;
+                    case "Units":
+                        extraInfoObj.Units = decimal.Parse(value);
+                        break;
+                    case "Receipt Number":
+                        extraInfoObj.ReceiptNumber = value;
+                        break;
+                    case "Account Number":
+                        extraInfoObj.AccountNumber = value;
+                        break;
+                    case "Customer Name":
+                        extraInfoObj.CustomerName = value;
+                        break;
+                    case "Token Type":
+                        tokenInfo.TokenType = value;
+                        break;
+                    case "Token":
+                        tokenInfo.Token = value;
+                        break;
+                }
+            }
+
+            extraInfoObj.Token = tokenInfo;
+            return extraInfoObj;
+        }
+
+
 
     }
 }

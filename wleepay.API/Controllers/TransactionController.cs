@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
+using wleepay.API.Helpers;
 using wleepay.API.Middleware;
 using wleepay.API.Resources;
 using wleepay.API.Validators;
@@ -327,7 +328,20 @@ namespace wleepay.API.Controllers
           
             if (transactionResult.Transactions.Count() > 0)
             {
+                
+
                 var transactionResourceList = _mapper.Map<IEnumerable<Transaction>, IEnumerable<TransactionHistoryResource>>(transactionResult.Transactions);
+
+                foreach (var transaction in transactionResourceList)
+                {
+                    if (transaction.SochitelTransactions.Count() > 0)
+                    {
+                        if (!string.IsNullOrEmpty(transaction.SochitelTransactions.FirstOrDefault().ExtraInfo))
+                        {
+                            transaction.SochitelTransactions.FirstOrDefault().ParsedExtraInfo = Common.ParseExtraInfo(transaction.SochitelTransactions.FirstOrDefault().ExtraInfo);  // Parse and assign
+                        }
+                    }
+                }
                 return Ok(new { Transactions = transactionResourceList, TotalCount = transactionResult.TotalCount });
             }
 

@@ -148,7 +148,7 @@ namespace wleepay.Data.Configurations
             builder.HasData(new TransferType
             {
                 Id = 10,
-                Name = "Mobile Recharge Transfer",
+                Name = "Mobile Airtime Purchased",
                 FromWalletType = 7,
                 ToWalletType = 1,
                 Description = "Transfer from member a/c to system float a/c",
@@ -157,7 +157,7 @@ namespace wleepay.Data.Configurations
             builder.HasData(new TransferType
             {
                 Id = 11,
-                Name = "Bill Payment",
+                Name = "LEC Credit Purchased",
                 FromWalletType = 7,
                 ToWalletType = 1,
                 Description = "Transfer from member a/c to system float a/c",

@@ -323,6 +323,7 @@ namespace wleepay.Data.Repositories
                 .Include(s => s.FromWallet.Currency)
                 .Include(s => s.ToWallet.ApplicationUser.UserDetail)
                 .Include(s => s.TransferType)
+                .Include(s=>s.SochitelTransactions)
                 .ToListAsync();
 
             return response;

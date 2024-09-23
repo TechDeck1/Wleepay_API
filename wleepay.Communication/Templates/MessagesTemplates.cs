@@ -21,6 +21,12 @@ namespace wleepay.Communication.Templates
             return $"Your Wleepay security code is {otp}.";
         }
 
+        public static string PinUpdated()
+        {
+            return $"Your Wleepay pin is updated";
+        }
+
+
         public static string PaymentApprovedRejected(string amount, string currency, string agent, long requestNumber, bool isCashOut = false, bool rejected = false)
         {
             if(rejected)

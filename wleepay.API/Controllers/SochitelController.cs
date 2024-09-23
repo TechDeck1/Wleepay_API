@@ -240,7 +240,7 @@ namespace wleepay.API.Controllers
                                 ToWalletId = (long)(walletResources?.Id),
                                 FromWalletId = execTransactionRequest.FromWalletId,
                                 Amount = (double)execTransactionRequest.AmountInUsd,
-                                TransferTypeId = (int)TransferTypes.MobileRechargeTransfer,
+                                TransferTypeId = (int)TransferTypes.MobileAirtimePurchased,
                                 Description = "Mobile recharge transfer to system wallet",
                                 CreatedDate = System.DateTime.UtcNow,
                                 Status = (int)wleepay.Core.Enums.TransactionStatus.Approved,
@@ -259,9 +259,10 @@ namespace wleepay.API.Controllers
                                 OperatorId = execTransactionRequest.Operator,
                                 ProductId = execTransactionRequest.ProductId,
                                 PhoneNumber = execTransactionRequest.Msisdn,
-                                UserReference = exeTransactionToCreate.UserReference,
-                                CreatedDate = DateTime.UtcNow
-
+                                UserReference = transactionResponse.Reference,
+                                CreatedDate = DateTime.UtcNow,
+                                MobileVendor = transactionResponse.Result.Operator.Name,
+                                ProductName = execTransactionRequest.ProductName,
 
                             };
 
@@ -402,7 +403,7 @@ namespace wleepay.API.Controllers
                                 ToWalletId = (long)(walletResources?.Id),
                                 FromWalletId = execTransactionRequest.FromWalletId,
                                 Amount = (double)execTransactionRequest.AmountInUsd,
-                                TransferTypeId = (int)TransferTypes.BillPayment,
+                                TransferTypeId = (int)TransferTypes.LECCreditPurchased,
                                 Description = "bill payment transfer to system wallet",
                                 CreatedDate = System.DateTime.UtcNow,
                                 Status = (int)wleepay.Core.Enums.TransactionStatus.Approved,
@@ -424,7 +425,7 @@ namespace wleepay.API.Controllers
                                 UserReference = transactionResponse.Reference,
                                 CreatedDate = DateTime.UtcNow,
                                 ExtraInfo = transactionResponse.Result.Instructions,
-
+                                MeterNumber = execTransactionRequest.ExtraParameters.MeterNumber.ToString(),
 
                             };
 

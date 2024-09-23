@@ -7,8 +7,6 @@ namespace wleepay.Communication.Interface
     public interface ISMSService
     {
         string sendMessage(string message, string phoneNumber);
-        //string sendSmsForAccountDeactivation (string message, string phoneNumber);
-        //string sendSmsForCustomerTicket(string message, string phoneNumber);
-
+        
     }
 }

@@ -16,6 +16,9 @@ namespace wleepay.Core.Models
         public string ProductId { get; set; }
         public string ExtraInfo { get; set; }
         public string UserReference { get; set; }
+        public string MeterNumber { get; set; }
+        public string MobileVendor { get; set; }
+        public string ProductName { get; set; }
         public DateTime? CreatedDate { get; set; } = DateTime.UtcNow;
 
         public virtual Transaction Transaction { get; set; }

@@ -34,6 +34,7 @@ using static wleepay.Communication.EmailTemplates.AccountActivatedTemplate;
 using wleepay.API.Middleware;
 using Microsoft.SqlServer.Management.Smo;
 using ApplicationRole = wleepay.Core.Models.ApplicationRole;
+using Org.BouncyCastle.Asn1.Ocsp;
 
 namespace wleepay.API.Controllers
 {
@@ -399,7 +400,11 @@ namespace wleepay.API.Controllers
                 var updatedDetail = await _userManager.ResetPasswordAsync(user, token, updatePinRequest.Pin.ToString());
 
                 if (updatedDetail.Succeeded)
+                {
+                    string message = MessagesTemplates.PinUpdated();
+                    var smsStatus = _smsService.sendMessage(message, updatePinRequest.PhoneNo);
                     return Ok("Pin is successfully updated.");
+                }
                 else
                     return BadRequest(updatedDetail.Errors.FirstOrDefault());
             }
