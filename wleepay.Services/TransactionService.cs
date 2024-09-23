@@ -76,6 +76,10 @@ namespace wleepay.Services
             {
                 approveTransaction = await _unitOfWork.Transaction.AddUpdateAgentCashOutTransaction(transactionDetail);
             }
+            else if (transactionDetail.TransferTypeId == TransferTypes.AgentCommissionCashout.GetHashCode())
+            {
+                approveTransaction = await _unitOfWork.Transaction.AddUpdateAgentCashOutTransaction(transactionDetail);
+            }
             else if (transactionDetail.TransferTypeId == TransferTypes.AgentCashout.GetHashCode())
             {
                 approveTransaction = await _unitOfWork.Transaction.AddUpdateAgentCashOutTransaction(transactionDetail);
