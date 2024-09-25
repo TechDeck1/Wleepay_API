@@ -38,6 +38,7 @@ namespace wleepay.Data.Repositories
             {
                 try
                 {
+
                     //create new transaction record or update transaction for top/payment request
                     if (transactionDetail.Id > 0)
                     {
@@ -52,6 +53,7 @@ namespace wleepay.Data.Repositories
                         transactionDetail.Status = Core.Enums.TransactionStatus.Approved.GetHashCode();
                         transactionDetail.CreatedDate = DateTime.Now;
                         await WPContext.Transactions.AddAsync(transactionDetail);
+
                     }
 
                     await WPContext.SaveChangesAsync();
@@ -67,7 +69,7 @@ namespace wleepay.Data.Repositories
 
                     await WPContext.SaveChangesAsync();
                     //commit transaction
-                    //await transaction.CommitAsync();
+                    await transaction.CommitAsync();
                 }
                 catch (Exception ex)
                 {
@@ -86,6 +88,126 @@ namespace wleepay.Data.Repositories
 
             return newAddedTransaction;
         }
+
+        public async Task<Transaction> MemberCashoutTransaction(WalletTransactions transactionDetail)
+        {
+            using (IDbContextTransaction transaction = WPContext.Database.BeginTransaction())
+            {
+                try
+                {
+                    //create new transaction record or update transaction for top/payment request
+                    if (transactionDetail.AgentCashout.Id > 0)
+                    {
+                        var transactionToUpdate = await WPContext.Transactions.Where(t => t.Id == transactionDetail.AgentCashout.Id).FirstOrDefaultAsync();
+                        if (transactionToUpdate != null)
+                        {
+                            transactionToUpdate.Status = Core.Enums.TransactionStatus.Approved.GetHashCode();
+                        }
+                    }
+                    else
+                    {
+                        transactionDetail.AgentCashout.Status = Core.Enums.TransactionStatus.Approved.GetHashCode();
+                        transactionDetail.AgentCashout.CreatedDate = DateTime.Now;
+                        await WPContext.Transactions.AddAsync(transactionDetail.AgentCashout);
+                    }
+
+                    await WPContext.SaveChangesAsync();
+
+                    var senderWallet = new Wallet();
+                    var receiverWallet = new Wallet();
+                   
+                    if (transactionDetail.commissionTransaction.TransferTypeId == TransferTypes.GeneratedAgentCommission.GetHashCode()) 
+                    {
+                        
+                        transactionDetail.commissionTransaction.ParentId = transactionDetail.commissionTransaction.Id;
+                        await WPContext.Transactions.AddAsync(transactionDetail.commissionTransaction);
+                        await WPContext.SaveChangesAsync();
+
+                        senderWallet = await WPContext.Wallet.Where(w => w.Id == transactionDetail.commissionTransaction.FromWalletId).FirstOrDefaultAsync();
+                        senderWallet.Balance = (senderWallet.Balance - transactionDetail.commissionTransaction.Amount);
+
+                        await WPContext.SaveChangesAsync();
+
+                        //update receiver wallet balance
+                        receiverWallet = await WPContext.Wallet.Where(w => w.Id == transactionDetail.commissionTransaction.ToWalletId).FirstOrDefaultAsync();
+                        receiverWallet.Balance = (receiverWallet.Balance + transactionDetail.commissionTransaction.Amount);
+
+                        await WPContext.SaveChangesAsync();
+                    }
+
+                    if (transactionDetail.commissionTransaction.TransferTypeId == TransferTypes.WleeTax.GetHashCode())
+                    {
+                        transactionDetail.taxAmount.ParentId = transactionDetail.AgentCashout.Id;
+                        await WPContext.Transactions.AddAsync(transactionDetail.taxAmount);
+                        await WPContext.SaveChangesAsync();
+
+                        senderWallet = await WPContext.Wallet.Where(w => w.Id == transactionDetail.taxAmount.FromWalletId).FirstOrDefaultAsync();
+                        senderWallet.Balance = (senderWallet.Balance - transactionDetail.taxAmount.Amount);
+
+                        await WPContext.SaveChangesAsync();
+
+                        //update receiver wallet balance
+                        receiverWallet = await WPContext.Wallet.Where(w => w.Id == transactionDetail.taxAmount.ToWalletId).FirstOrDefaultAsync();
+                        receiverWallet.Balance = (receiverWallet.Balance + transactionDetail.taxAmount.Amount);
+
+                        await WPContext.SaveChangesAsync();
+                    }
+
+                    if(transactionDetail.commissionTransaction.TransferTypeId == TransferTypes.CashOutStandardFeeSplit.GetHashCode())
+                    {
+                        transactionDetail.organizationFeeAmount.ParentId = transactionDetail.AgentCashout.Id;
+                        await WPContext.Transactions.AddAsync(transactionDetail.organizationFeeAmount);
+                        await WPContext.SaveChangesAsync();
+
+                        senderWallet = await WPContext.Wallet.Where(w => w.Id == transactionDetail.organizationFeeAmount.FromWalletId).FirstOrDefaultAsync();
+                        senderWallet.Balance = (senderWallet.Balance - transactionDetail.organizationFeeAmount.Amount);
+
+                        await WPContext.SaveChangesAsync();
+
+                        //update receiver wallet balance
+                        receiverWallet = await WPContext.Wallet.Where(w => w.Id == transactionDetail.organizationFeeAmount.ToWalletId).FirstOrDefaultAsync();
+                        receiverWallet.Balance = (receiverWallet.Balance + transactionDetail.organizationFeeAmount.Amount);
+
+                        await WPContext.SaveChangesAsync();
+
+                    }
+
+                    if (transactionDetail.commissionTransaction.TransferTypeId == TransferTypes.CashOut.GetHashCode()) 
+                    {
+                        
+                        //update sender wallet balance
+                        senderWallet = await WPContext.Wallet.Where(w => w.Id == transactionDetail.AgentCashout.FromWalletId).FirstOrDefaultAsync();
+                        senderWallet.Balance = (senderWallet.Balance - transactionDetail.AgentCashout.Amount);
+
+                        await WPContext.SaveChangesAsync();
+
+                        //update receiver wallet balance
+                        receiverWallet = await WPContext.Wallet.Where(w => w.Id == transactionDetail.AgentCashout.ToWalletId).FirstOrDefaultAsync();
+                        receiverWallet.Balance = (receiverWallet.Balance + transactionDetail.AgentCashout.Amount);
+
+                        await WPContext.SaveChangesAsync();
+                    }
+                    //commit transaction
+                    await transaction.CommitAsync();
+                }
+                catch (Exception ex)
+                {
+                    //rollback if any exception occured
+                    transaction.Rollback();
+                    throw ex;
+                }
+            }
+
+            var newAddedTransaction = await WPContext.Transactions
+                .Where(w => w.Id == transactionDetail.AgentCashout.Id)
+                .Include(w => w.FromWallet.Currency)
+                .Include(w => w.TransferType)
+                .Include(w => w.TransactionStatus)
+                .FirstOrDefaultAsync();
+
+            return newAddedTransaction;
+        }
+
 
         public async Task<Transaction> AddUpdateAgentTopUpTransaction(Transaction transactionDetail)
         {
@@ -290,87 +412,63 @@ namespace wleepay.Data.Repositories
             return newAddedTransaction;
         }
 
-
-
         public async Task<Transaction> AddUpdateAgentCommissionCashOutTransaction(Transaction transactionDetail)
         {
             using (IDbContextTransaction transaction = WPContext.Database.BeginTransaction())
             {
                 try
                 {
-                    //create new transaction record or update transaction for top/payment request
-                    if (transactionDetail.Id > 0)
-                    {
-                        var transactionToUpdate = await WPContext.Transactions.Where(t => t.Id == transactionDetail.Id).FirstOrDefaultAsync();
-                        if (transactionToUpdate != null)
+                       //create new transaction record or update transaction for top/payment request
+                        if (transactionDetail.Id > 0)
                         {
-                            transactionToUpdate.Status = Core.Enums.TransactionStatus.Approved.GetHashCode();
+                            var transactionToUpdate = await WPContext.Transactions.Where(t => t.Id == transactionDetail.Id).FirstOrDefaultAsync();
+                            if (transactionToUpdate != null)
+                            {
+                                transactionToUpdate.Status = Core.Enums.TransactionStatus.Approved.GetHashCode();
+                                await WPContext.SaveChangesAsync();
+
+                                var wallet = await WPContext.Wallet.Where(x => x.Id == transactionToUpdate.FromWalletId && x.Type == WalletTypes.SystemWallet.GetHashCode()).FirstOrDefaultAsync();
+
+                                var cashOnHandWallet = await WPContext.Wallet.Where(x => x.UserId == wallet.UserId && x.CurrencyId == wallet.CurrencyId && x.Type == WalletTypes.DebitFloatN.GetHashCode()).FirstOrDefaultAsync();
+
+                                Transaction addNewTransaction = new Transaction();
+                                addNewTransaction.FromWalletId = null;
+                                addNewTransaction.ToWalletId = cashOnHandWallet.Id;
+                                addNewTransaction.Status = TransactionStatus.Approved.GetHashCode();
+                                addNewTransaction.TransferTypeId = TransferTypes.InHandCredit.GetHashCode();
+                                addNewTransaction.CreatedDate = DateTime.Now;
+                                addNewTransaction.ParentId = transactionToUpdate.Id;
+                                addNewTransaction.Description = "Debited from cash on hand wallet";
+                                addNewTransaction.Amount = transactionToUpdate.Amount;
+
+                                await WPContext.Transactions.AddAsync(addNewTransaction);
+                                await WPContext.SaveChangesAsync();
+
+                            }
+                        }
+                        await WPContext.SaveChangesAsync();
+
+                        if (transactionDetail.TransferTypeId == TransferTypes.AgentCommissionCashout.GetHashCode())
+                        {
+                            //update sender wallet balance
+                            var senderWallet = await WPContext.Wallet.Where(w => w.Id == transactionDetail.FromWalletId).FirstOrDefaultAsync();
+                            senderWallet.Balance = (senderWallet.Balance - transactionDetail.Amount);
+
                             await WPContext.SaveChangesAsync();
 
-                            var wallet = await WPContext.Wallet.Where(x => x.Id == transactionToUpdate.FromWalletId && x.Type == WalletTypes.SystemWallet.GetHashCode()).FirstOrDefaultAsync();
+                            //update receiver wallet balance
+                            var receiverWallet = await WPContext.Wallet.Where(w => w.Id == transactionDetail.ToWalletId).FirstOrDefaultAsync();
+                            receiverWallet.Balance = (receiverWallet.Balance + transactionDetail.Amount);
 
-                            var cashOnHandWallet = await WPContext.Wallet.Where(x => x.UserId == wallet.UserId && x.CurrencyId == wallet.CurrencyId && x.Type == WalletTypes.DebitFloatN.GetHashCode()).FirstOrDefaultAsync();
-
-                            Transaction addNewTransaction = new Transaction();
-                            addNewTransaction.FromWalletId = null;
-                            addNewTransaction.ToWalletId = cashOnHandWallet.Id;
-                            addNewTransaction.Status = TransactionStatus.Approved.GetHashCode();
-                            addNewTransaction.TransferTypeId = TransferTypes.InHandCredit.GetHashCode();
-                            addNewTransaction.CreatedDate = DateTime.Now;
-                            addNewTransaction.ParentId = transactionToUpdate.Id;
-                            addNewTransaction.Description = "Debited from cash on hand wallet";
-                            addNewTransaction.Amount = transactionToUpdate.Amount;
-
-                            await WPContext.Transactions.AddAsync(addNewTransaction);
                             await WPContext.SaveChangesAsync();
                         }
-                    }
-                    else
-                    {
-                        transactionDetail.Status = Core.Enums.TransactionStatus.Approved.GetHashCode();
-                        transactionDetail.CreatedDate = DateTime.Now;
-                        await WPContext.Transactions.AddAsync(transactionDetail);
+                        if (transactionDetail.TransferTypeId == TransferTypes.InHandWithdrawl.GetHashCode())
+                        {
+                            var cashOnHandWallet = await WPContext.Wallet.Where(w => w.Type == 1 && w.CurrencyId == transactionDetail.ToWallet.CurrencyId).FirstOrDefaultAsync();
+                            cashOnHandWallet.Balance = (cashOnHandWallet.Balance - transactionDetail.Amount);
 
-                        var wallet = await WPContext.Wallet.Where(x => x.Id == transactionDetail.FromWalletId && x.Type == WalletTypes.SystemWallet.GetHashCode()).FirstOrDefaultAsync();
-
-                        var cashOnHandWallet = await WPContext.Wallet.Where(x => x.UserId == wallet.UserId && x.CurrencyId == wallet.CurrencyId && x.Type == WalletTypes.DebitFloatN.GetHashCode()).FirstOrDefaultAsync();
-
-                        Transaction addNewTransaction = new Transaction();
-                        addNewTransaction.FromWalletId = null;
-                        addNewTransaction.ToWalletId = cashOnHandWallet.Id;
-                        addNewTransaction.Status = TransactionStatus.Approved.GetHashCode();
-                        addNewTransaction.TransferTypeId = TransferTypes.InHandCredit.GetHashCode();
-                        addNewTransaction.CreatedDate = DateTime.Now;
-                        addNewTransaction.ParentId = transactionDetail.Id;
-                        addNewTransaction.Description = "Debited from cash on hand wallet";
-                        addNewTransaction.Amount = transactionDetail.Amount;
-
-                        await WPContext.Transactions.AddAsync(addNewTransaction);
-                        await WPContext.SaveChangesAsync();
-                    }
-                    await WPContext.SaveChangesAsync();
-
-                    if (transactionDetail.TransferTypeId == TransferTypes.AgentCommissionCashout.GetHashCode())
-                    {
-                        //update sender wallet balance
-                        var senderWallet = await WPContext.Wallet.Where(w => w.Id == transactionDetail.FromWalletId).FirstOrDefaultAsync();
-                        senderWallet.Balance = (senderWallet.Balance - transactionDetail.Amount);
-
-                        await WPContext.SaveChangesAsync();
-
-                        //update receiver wallet balance
-                        var receiverWallet = await WPContext.Wallet.Where(w => w.Id == transactionDetail.ToWalletId).FirstOrDefaultAsync();
-                        receiverWallet.Balance = (receiverWallet.Balance + transactionDetail.Amount);
-
-                        await WPContext.SaveChangesAsync();
-                    }
-                    if (transactionDetail.TransferTypeId == TransferTypes.InHandWithdrawl.GetHashCode())
-                    {
-                        var cashOnHandWallet = await WPContext.Wallet.Where(w => w.Type == 1 && w.CurrencyId == transactionDetail.ToWallet.CurrencyId).FirstOrDefaultAsync();
-                        cashOnHandWallet.Balance = (cashOnHandWallet.Balance - transactionDetail.Amount);
-
-                        await WPContext.SaveChangesAsync();
-                    }
+                            await WPContext.SaveChangesAsync();
+                        }
 
                     //commit transaction
                     await transaction.CommitAsync();

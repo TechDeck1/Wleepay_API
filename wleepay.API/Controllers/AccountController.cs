@@ -134,7 +134,6 @@ namespace wleepay.API.Controllers
                     return BadRequest(Messages.PhoneAlreadyUsed.ToDescriptionString());
 
                 //create new user with identity
-
                 var newUser = new ApplicationUser() { UserName = userDetail.PhoneNumber, Id = Guid.NewGuid().ToString() };
                 if (!string.IsNullOrEmpty(userDetail.EmailId))
                     newUser.Email = userDetail.EmailId;
@@ -143,12 +142,10 @@ namespace wleepay.API.Controllers
                 if (string.IsNullOrEmpty(userDetail.Pin))
                 {
                      isUserCreated = await _userManager.CreateAsync(newUser);
-
                 }
                 else
                 {
                      isUserCreated = await _userManager.CreateAsync(newUser, userDetail?.Pin?.ToString());
-
                 }
 
                 if (isUserCreated.Succeeded)
@@ -397,7 +394,7 @@ namespace wleepay.API.Controllers
                 //generate password reset token
                 var token = await _userManager.GeneratePasswordResetTokenAsync(user);
                 var updatedDetail = await _userManager.ResetPasswordAsync(user, token, updatePinRequest.Pin.ToString());
-
+ 
                 if (updatedDetail.Succeeded)
                     return Ok("Pin is successfully updated.");
                 else

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using wleepay.Core.Common;
 using wleepay.Core.DTO.Response;
 using wleepay.Core.Enums;
 using wleepay.Core.Models;
@@ -14,6 +15,7 @@ namespace wleepay.Core.Repositories
         Task<IEnumerable<Transaction>> GetTransactionsByType(Core.Enums.TransferTypes type, int pageIndex = 0, int pageSize = 10);
         Task<IEnumerable<Transaction>> GetWalletsTransactions(IEnumerable<long> walletIdList);
         Task<Transaction> AddUpdateTransaction(Transaction transactionDetail);
+        Task<Transaction> MemberCashoutTransaction(WalletTransactions transactionDetail);
         Task<Transaction> AddUpdateAgentTopUpTransaction(Transaction transactionDetail);
         Task<Transaction> AddUpdateAgentCashOutTransaction(Transaction transactionDetail);
         Task<Transaction> AddUpdateAgentCommissionCashOutTransaction(Transaction transactionDetail);

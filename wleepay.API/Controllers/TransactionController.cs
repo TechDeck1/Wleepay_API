@@ -157,6 +157,7 @@ namespace wleepay.API.Controllers
         }
 
         [SystemLock]
+        [AllowAnonymous]
         [HttpPost("request")]
         public async Task<IActionResult> CreatePaymentRequest([FromBody] CreateTransactionResource transactionRequest)
         {
@@ -179,6 +180,7 @@ namespace wleepay.API.Controllers
         }
 
         [HttpPut("approve")]
+        [AllowAnonymous]
         public async Task<IActionResult> ApprovePaymentRequest(long paymentRequestId)
         {
             if (paymentRequestId <= 0)
@@ -500,8 +502,7 @@ namespace wleepay.API.Controllers
                     : $"{fromWalletUser.ApplicationUser.UserDetail.FirstName} {fromWalletUser.ApplicationUser.UserDetail.LastName}";
                 messageText = GenerateMessageText(transaction.Amount, fromWalletUser.Currency, name, transaction.Id, status, transaction.TransferTypeId);
             }
-            else if (transaction.TransferTypeId == Core.Enums.TransferTypes.CashOut.GetHashCode() ||
-               transaction.TransferTypeId == Core.Enums.TransferTypes.AgentCommissionCashout.GetHashCode())
+            else if (transaction.TransferTypeId == Core.Enums.TransferTypes.CashOut.GetHashCode() || transaction.TransferTypeId == Core.Enums.TransferTypes.AgentCommissionCashout.GetHashCode())
             {
                 var device = await _userDeviceService.GetUserDeviceByUserId(toWalletUser.ApplicationUser.UserDetail.UserId);
 
