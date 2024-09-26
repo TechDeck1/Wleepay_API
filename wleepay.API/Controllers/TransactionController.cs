@@ -122,6 +122,7 @@ namespace wleepay.API.Controllers
             }
 
             var aplicationUserDetail = await _userDetailService.GetApplicationUserById(walletBalance.UserId);
+
             if ((aplicationUserDetail.UserRoles.FirstOrDefault().Role.Name == "Agent" && walletBalance.ApplicationUser.UserDetail.Status == (int)Status.Suspend) && transactionRequest.TransferTypeId != (int)TransferTypes.AgentCommissionCashout)
             {
                 return BadRequest("Agent cannot make transaction when account is suspended. He/she can only cashout agent comminsion and wallet balances.");
@@ -290,41 +291,6 @@ namespace wleepay.API.Controllers
                 return BadRequest("Invalid payment Id");
 
             return Ok(result);
-        }
-
-        [HttpGet("Cashout")]
-        public async Task<IActionResult> CashoutTransactions([FromQuery] int pageIndex = 0, [FromQuery] int pageSize = 10)
-        {
-
-            var result = await _transactionService.GetCashoutTransactions(pageIndex, pageSize);
-            var transactionResources = result.Transactions.Select(transaction => _mapper.Map<Transaction, TransactionHistoryResource>(transaction)).ToList();
-
-            if (result == null)
-                return BadRequest("Invalid UserId");
-
-            return Ok(new
-            {
-                TotalCount = result.TotalCount,
-                Transactions = transactionResources
-            });
-        }
-
-        [HttpGet("TopUp")]
-        public async Task<IActionResult> TopUpTransactions([FromQuery]int pageIndex=0 , [FromQuery] int pageSize=10)
-        {
-
-            var result = await _transactionService.GetTopUpTransactions(pageIndex, pageSize);
-            var transactionResources = result.Transactions.Select(transaction => _mapper.Map<Transaction, TransactionHistoryResource>(transaction)).ToList();
-
-            if (result == null)
-                return BadRequest("Invalid UserId");
-
-            return Ok(new
-            {
-                TotalCount = result.TotalCount,
-                Transactions = transactionResources
-            });
-
         }
 
         [HttpGet("{transferTypeId}/{currencyTypeId}")]
