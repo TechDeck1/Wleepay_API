@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore.Storage;
+using System;
 using System.Threading.Tasks;
 using wleepay.Core;
 using wleepay.Core.Repositories;
@@ -39,6 +40,7 @@ namespace wleepay.Data
         private IUserDeviceRepository _userDeviceRepository;
         private ISochitelTransactionRepository _sochitelTransactionRepository;
         private ICreditCardTransactionRepository _creditCardTransactionRepository;
+        private IDbContextTransaction _currentTransaction;
 
 
 
@@ -78,6 +80,30 @@ namespace wleepay.Data
         public async Task<int> CommitAsync()
         {
             return await _context.SaveChangesAsync();
+        }
+        public async Task BeginTransactionAsync()
+        {
+            _currentTransaction = await _context.Database.BeginTransactionAsync();
+        }
+
+        public async Task CommitTransactionAsync()
+        {
+            if (_currentTransaction != null)
+            {
+                await _currentTransaction.CommitAsync();
+                await _currentTransaction.DisposeAsync();
+                _currentTransaction = null;
+            }
+        }
+
+        public void RollbackTransaction()
+        {
+            if (_currentTransaction != null)
+            {
+                _currentTransaction.Rollback();
+                _currentTransaction.Dispose();
+                _currentTransaction = null;
+            }
         }
 
         public void Dispose()

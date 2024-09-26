@@ -36,7 +36,9 @@ namespace wleepay.Core
         IUserDeviceRepository UserDevice { get; }
         ISochitelTransactionRepository SochitelTransaction { get; }
         ICreditCardTransactionRepository CreditCardTransaction { get; }
-
         Task<int> CommitAsync();
+        Task BeginTransactionAsync(); // Begins the transaction
+        Task CommitTransactionAsync(); // Commits the transaction
+        void RollbackTransaction(); // Rollback transaction in case of failure
     }
 }

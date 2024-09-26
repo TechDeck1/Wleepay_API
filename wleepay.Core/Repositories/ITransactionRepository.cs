@@ -15,6 +15,7 @@ namespace wleepay.Core.Repositories
         Task<IEnumerable<Transaction>> GetTransactionsByType(Core.Enums.TransferTypes type, int pageIndex = 0, int pageSize = 10);
         Task<IEnumerable<Transaction>> GetWalletsTransactions(IEnumerable<long> walletIdList);
         Task<Transaction> AddUpdateTransaction(Transaction transactionDetail);
+        void AddTransaction(Transaction transactionDetail);
         Task<Transaction> AddUpdateMemberCashoutTransactions(WalletTransactions transactionDetail);
         Task<Transaction> AddUpdateAgentAndMemberTopUpTransaction(Transaction transactionDetail);
         Task<Transaction> AddUpdateAgentCashOutTransactions(Transaction transactionDetail);
@@ -25,8 +26,6 @@ namespace wleepay.Core.Repositories
         Task<Transaction> CreatePaymentRequest(Transaction transactionDetail);
         Task<Transaction> GetTransactionDetails(long transactionId);
         Task<double> CalculateWalletTransaction(long walletId, bool isMonthly = false);
-        Task<TransactionResponseResource> GetCashoutTransactions(int pageIndex = 0, int pageSize = 0);
-        Task<TransactionResponseResource> GetTopUpTransactions(int pageIndex = 0, int pageSize= 0);
         Task<TransactionResponseResource> GetTransactionsByTypeAndCurrency(int type, int currency, int pageIndex = 0, int pageSize = 10);
         Task<TransactionResponseResource> GetTransactionsByUserIdAndType(string userId,int transeferType, int pageIndex = 0, int pageSize = 10);
         Task<TransactionResponseResource> GetTransactionsHistoryByUserIdAndType(string userId,int status, int transeferType, int pageIndex = 0, int pageSize = 10);

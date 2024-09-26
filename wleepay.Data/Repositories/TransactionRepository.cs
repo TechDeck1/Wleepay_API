@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.SqlServer.Management.Smo;
+using SendGrid.Helpers.Mail;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -32,6 +33,11 @@ namespace wleepay.Data.Repositories
             get { return Context as WPContext; }
         }
 
+
+        public async void AddTransaction(Transaction transaction)
+        {
+            await WPContext.Transactions.AddAsync(transaction);
+        }
         public async Task<Transaction> AddUpdateTransaction(Transaction transactionDetail)
         {
             using (IDbContextTransaction transaction = WPContext.Database.BeginTransaction())
@@ -566,90 +572,6 @@ namespace wleepay.Data.Repositories
             var todayStartDate = DateTime.Today.Date;
             var todayEndDate = DateTime.Today.Date.AddHours(23);
             return itemDate >= todayStartDate && itemDate <= todayEndDate;
-        }
-
-        public async Task<TransactionResponseResource> GetCashoutTransactions(int pageIndex = 0, int pageSize =0 )
-        {
-            if (pageSize > 0)
-            {
-                int takeCount = pageSize;
-                int skipCount = pageIndex * pageSize;
-                var cashOutTransactions = await WPContext.Transactions.Where(u => u.TransferTypeId == (int)TransferTypes.CashOut)
-                    .Include(s => s.FromWallet.ApplicationUser.UserDetail)
-                    .Include(s => s.FromWallet.Currency)
-                    .Include(s => s.ToWallet.ApplicationUser.UserDetail)
-                    .Include(s => s.TransferType)
-                    .OrderByDescending(w => w.CreatedDate)
-                    .Skip(skipCount)
-                    .Take(takeCount)
-                    .ToListAsync();
-
-                var TotalCount = await WPContext.Transactions.Where(u => u.TransferTypeId == (int)TransferTypes.CashOut).CountAsync();
-
-                TransactionResponseResource response = new TransactionResponseResource();
-                response.Transactions = cashOutTransactions;
-                response.TotalCount = TotalCount;
-                return response;
-            }
-            else
-            {
-                var cashOutTransactions = await WPContext.Transactions.Where(u => u.TransferTypeId == (int)TransferTypes.CashOut)
-                   .Include(s => s.FromWallet.ApplicationUser.UserDetail)
-                   .Include(s => s.FromWallet.Currency)
-                   .Include(s => s.ToWallet.ApplicationUser.UserDetail)
-                   .Include(s => s.TransferType)
-                   .OrderByDescending(w => w.CreatedDate)
-                   .ToListAsync();
-
-                var TotalCount = await WPContext.Transactions.Where(u => u.TransferTypeId == (int)TransferTypes.CashOut).CountAsync();
-
-                TransactionResponseResource response = new TransactionResponseResource();
-                response.Transactions = cashOutTransactions;
-                response.TotalCount = TotalCount;
-                return response;
-            }
-        }
-
-        public async Task<TransactionResponseResource> GetTopUpTransactions(int pageIndex = 0, int pageSize = 0)
-        {
-            if (pageSize > 0)
-            {
-                int takeCount = pageSize;
-                int skipCount = pageIndex * pageSize;
-                var topUpTransactions = await WPContext.Transactions.Where(u => u.TransferTypeId == (int)TransferTypes.TopUp)
-                    .Include(s => s.FromWallet.ApplicationUser.UserDetail)
-                    .Include(s => s.FromWallet.Currency)
-                    .Include(s => s.ToWallet.ApplicationUser.UserDetail)
-                    .Include(s => s.TransferType)
-                    .OrderByDescending(w => w.CreatedDate)
-                    .Skip(skipCount)
-                    .Take(takeCount)
-                    .ToListAsync();
-
-                var TotalCount = await WPContext.Transactions.Where(u => u.TransferTypeId == (int)TransferTypes.TopUp).CountAsync();
-
-                TransactionResponseResource response = new TransactionResponseResource();
-                response.Transactions = topUpTransactions;
-                response.TotalCount = TotalCount;
-                return response;
-            }
-            else
-            {
-                var topUpTransactions = await WPContext.Transactions.Where(u => u.TransferTypeId == (int)TransferTypes.TopUp)
-                  .Include(s => s.FromWallet.ApplicationUser.UserDetail)
-                  .Include(s => s.FromWallet.Currency)
-                  .Include(s => s.ToWallet.ApplicationUser.UserDetail)
-                  .Include(s => s.TransferType)
-                  .OrderByDescending(w => w.CreatedDate)
-                  .ToListAsync();
-
-                var TotalCount = await WPContext.Transactions.Where(u => u.TransferTypeId == (int)TransferTypes.TopUp).CountAsync();
-
-                TransactionResponseResource response = new TransactionResponseResource();
-                response.Transactions = topUpTransactions;
-                response.TotalCount = TotalCount;
-                return response;
-            }
         }
 
         public  async Task<TransactionResponseResource> GetTransactionsByTypeAndCurrency(int type, int currency, int pageIndex = 0, int pageSize = 10)
