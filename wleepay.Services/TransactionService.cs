@@ -17,6 +17,7 @@ using wleepay.Data.Migrations;
 using Microsoft.Identity.Client;
 using wleepay.Core.Common;
 using System.Diagnostics;
+using SendGrid.Helpers.Errors.Model;
 
 namespace wleepay.Services
 {
@@ -105,7 +106,8 @@ namespace wleepay.Services
                 
                 //get fee details
                 var transferType = await _unitOfWork.TransferType.GetTransferTypeById(transactionDetail.TransferTypeId);
-               
+                var wallet = await _unitOfWork.Wallet.GetByIdAsync((long)transactionDetail.FromWalletId);
+
                 if (transferType.TransferFeeDetail != null)
                 {
                     int currencyId = 0;
@@ -131,17 +133,26 @@ namespace wleepay.Services
 
 
                     //transfer amount to agent account
-                    transactionDetail.Amount = transactionDetail.Amount - (agentCommissionAmount+taxAmount+organizationFeeAmount);
+                    var agentDirectTransferAmount = transactionDetail.Amount + (agentCommissionAmount + taxAmount + organizationFeeAmount);
+                    transactionDetail.Amount = agentDirectTransferAmount;
                     transactions.AgentCashout = transactionDetail;
                     transactionsList.Add(transactionDetail);
 
                     //await BatchAddTransactionsAsync(transactions);
-
-                    await BatchAddTransactionsAsync(transactionsList);
-
                     //await Cashout(transactions);
 
+                    if (agentDirectTransferAmount <= wallet.Balance)
+                    {
+                        await BatchAddTransactionsAsync(transactionsList);
+
+                    }
+                    else
+                    {
+                        throw new Exception($"Wallet balance is not sufficient.");
+                    }
+
                 }
+
                 return transactionDetail;
             }
             catch (Exception e)
@@ -239,10 +250,11 @@ namespace wleepay.Services
                         transaction.Status = Core.Enums.TransactionStatus.Approved.GetHashCode();
                         transaction.CreatedDate = DateTime.Now;
                         transaction.ParentId = transactionToUpdate.Id;
-                        await UpdateWalletBalance((long)transaction.FromWalletId, -transaction.Amount);
-                        await UpdateWalletBalance((long)transaction.ToWalletId, transaction.Amount);
                         await _unitOfWork.Transaction.AddAsync(transaction);
                     }
+
+                    await UpdateWalletBalance((long)transaction.FromWalletId, -transaction.Amount);
+                    await UpdateWalletBalance((long)transaction.ToWalletId, transaction.Amount);
 
                     await _unitOfWork.CommitAsync();
                 }
@@ -340,6 +352,7 @@ namespace wleepay.Services
         private async Task UpdateWalletBalance(long walletId, double amount)
         {
             var wallet = await _unitOfWork.Wallet.GetByIdAsync(walletId);
+           
             wallet.Balance += amount;
             await _unitOfWork.CommitAsync();
         }
