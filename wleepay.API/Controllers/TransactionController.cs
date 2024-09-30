@@ -192,12 +192,14 @@ namespace wleepay.API.Controllers
                 return BadRequest("Invalid payment Id");
 
             var approvedTransaction = new Transaction();
+
             if (transactionToApprove.TransferTypeId == TransferTypes.CashOut.GetHashCode())
                 approvedTransaction = await _transactionService.InitiateCashout(transactionToApprove);
             else
                 approvedTransaction = await _transactionService.InitiateTransaction(transactionToApprove);
-
+           
             var newTransactionResource = _mapper.Map<Transaction, TransactionResource>(approvedTransaction);
+           
             //send sms to user
             if (newTransactionResource != null)
                 await SendTransactionActionSMS(approvedTransaction);

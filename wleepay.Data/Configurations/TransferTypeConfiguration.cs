@@ -58,7 +58,7 @@ namespace wleepay.Data.Configurations
             builder.HasData(new TransferType
             {
                 Id = 1,
-                Name = "Subscriber Cash Out",
+                Name = "Cash Out",
                 FromWalletType = 7,
                 ToWalletType = 6,
                 Description = "Transfer to agent a/c from member a/c ",
@@ -108,7 +108,7 @@ namespace wleepay.Data.Configurations
             builder.HasData(new TransferType
             {
                 Id = 6,
-                Name = "Subscriber Top Up",
+                Name = "Top Up",
                 FromWalletType = 6,
                 ToWalletType = 7,
                 Description = "TopUp to member wallet from agent a/c",

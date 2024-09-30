@@ -65,34 +65,38 @@ namespace wleepay.Services
             return await _unitOfWork.Transaction.GetWalletsTransactions(walletIdList);
         }
 
-        public async Task<Transaction> Cashout(WalletTransactions walletTransactions)
+        public async Task<Transaction> IntiateTopupWithWleepay(Transaction walletTransactions)
         {
-            return await _unitOfWork.Transaction.AddUpdateMemberCashoutTransactions(walletTransactions);
+            return await _unitOfWork.Transaction.AddUpdateAgentAndMemberTopUpTransaction(walletTransactions);
         }
-        
+
         public async Task<Transaction> InitiateTransaction(Transaction transactionDetail)
         {
             Transaction approveTransaction = new Transaction();
-
-            if (transactionDetail.TransferTypeId == TransferTypes.TopUp.GetHashCode())
+            if (transactionDetail.TransferTypeId == TransferTypes.WleeTransfer.GetHashCode())
             {
                 approveTransaction = await _unitOfWork.Transaction.AddUpdateTransaction(transactionDetail);
             }
-            else if (transactionDetail.TransferTypeId == TransferTypes.FillAgent.GetHashCode())
+            if ( transactionDetail.TransferTypeId == TransferTypes.TopUp.GetHashCode())
+            {
+                var userDetail = await _unitOfWork.UserDetail.GetUserDetailsById(transactionDetail.FromWallet.UserId);
+                if (userDetail.ApplicationUser.UserRoles.FirstOrDefault().Role.Name == Role.Agent.ToDescriptionString())
+                {
+                    approveTransaction = await _unitOfWork.Transaction.AddUpdateTransaction(transactionDetail);
+                }
+                else
+                {
+                    approveTransaction = await _unitOfWork.Transaction.AddUpdateAgentAndMemberTopUpTransaction(transactionDetail);
+
+                }
+            }
+            if (transactionDetail.TransferTypeId == TransferTypes.FillAgent.GetHashCode())
             {
                 approveTransaction = await _unitOfWork.Transaction.AddUpdateAgentAndMemberTopUpTransaction(transactionDetail);
             }
-            else if (transactionDetail.TransferTypeId == TransferTypes.AgentCashout.GetHashCode())
+            if (transactionDetail.TransferTypeId == TransferTypes.AgentCashout.GetHashCode()|| transactionDetail.TransferTypeId == TransferTypes.AgentCommissionCashout.GetHashCode())
             {
                 approveTransaction = await _unitOfWork.Transaction.AddUpdateAgentCashOutTransactions(transactionDetail);
-            }
-            else if (transactionDetail.TransferTypeId == TransferTypes.AgentCommissionCashout.GetHashCode())
-            {
-                approveTransaction = await _unitOfWork.Transaction.AddUpdateAgentCashOutTransactions(transactionDetail);
-            }
-            else
-            {
-                return approveTransaction;
             }
             return approveTransaction;
         }
@@ -107,16 +111,20 @@ namespace wleepay.Services
                 //get fee details
                 var transferType = await _unitOfWork.TransferType.GetTransferTypeById(transactionDetail.TransferTypeId);
                 var wallet = await _unitOfWork.Wallet.GetByIdAsync((long)transactionDetail.FromWalletId);
+                var toUserDetail = await _unitOfWork.UserDetail.GetUserDetailsById(transactionDetail.ToWallet.UserId);
 
                 if (transferType.TransferFeeDetail != null)
                 {
                     int currencyId = 0;
-
-                    //generate agent commission
-                    double agentCommissionAmount = transactionDetail.Amount * (transferType.TransferFeeDetail.AgentCommission / 100);
-                    var commissionTransaction = GetAgentCommissionTransaction((long)transactionDetail.FromWalletId, (long)transactionDetail.ToWalletId, Math.Round(agentCommissionAmount, 2), transactionDetail.Id, out currencyId);
-                    transactions.commissionTransaction = commissionTransaction;
-                    transactionsList.Add(commissionTransaction);
+                    double agentCommissionAmount = 0;
+                    if (toUserDetail != null && toUserDetail.ApplicationUser.UserRoles.FirstOrDefault().Role.Name == Role.Agent.ToDescriptionString())
+                    {
+                        //generate agent commission
+                        agentCommissionAmount = transactionDetail.Amount * (transferType.TransferFeeDetail.AgentCommission / 100);
+                        var commissionTransaction = GetAgentCommissionTransaction((long)transactionDetail.FromWalletId, (long)transactionDetail.ToWalletId, Math.Round(agentCommissionAmount, 2), transactionDetail.Id, out currencyId);
+                        transactions.commissionTransaction = commissionTransaction;
+                        transactionsList.Add(commissionTransaction);
+                    }
 
                     //generate tax transaction
                     double taxAmount = transactionDetail.Amount * (transferType.TransferFeeDetail.TaxAmount / 100);
