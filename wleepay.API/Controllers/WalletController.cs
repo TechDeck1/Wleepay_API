@@ -73,6 +73,18 @@ namespace wleepay.API.Controllers
             return Ok(walletListResource);
         }
 
+        [HttpGet("{userId}/{walletTypeId}/walletType")]
+        public async Task<IActionResult> GetWalletByWalletTypeId(string userId, long walletTypeId)
+        {
+            if (walletTypeId == null || userId == null)
+                return BadRequest("Please select userId.");
+
+            var walletData = await _walletService.GetWalletByWalletTypeIdAndUserId(userId, walletTypeId);
+            var walletListResource = _mapper.Map<IEnumerable<Wallet>, IEnumerable<WalletResource>>(walletData);
+
+            return Ok(walletListResource);
+        }
+
         [AllowAnonymous]
         [HttpGet("WalletAmountHistoryByMonth")]
         public async Task<IActionResult> GetWalletHistoryByWalletTypeAndCurrency([FromQuery] int walletType, int currencyId)

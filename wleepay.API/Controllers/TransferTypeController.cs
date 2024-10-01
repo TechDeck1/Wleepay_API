@@ -36,6 +36,7 @@ namespace wleepay.API.Controllers
             return Ok(transferTypeResource);
         }
 
+
         [HttpGet("{typeId}")]
         public async Task<IActionResult> GetTransferType(int typeId)
         {

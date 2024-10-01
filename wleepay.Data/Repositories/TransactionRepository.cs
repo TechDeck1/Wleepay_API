@@ -1,6 +1,7 @@
 ﻿using DevExpress.Data.Linq.Helpers;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.SqlServer.Management.Smo;
 using SendGrid.Helpers.Mail;
 using System;
@@ -478,10 +479,9 @@ namespace wleepay.Data.Repositories
             var transactionQuery = WPContext.Transactions.Where(t => t.Status == statusType.GetHashCode());
 
             transactionQuery = transactionQuery.Where(t => t.TransferTypeId == transferId)
-                      .Include(s => s.FromWallet.ApplicationUser.UserDetail)
-                      .Include(s => s.ToWallet.ApplicationUser.UserDetail)
-                      .Include(s => s.TransferType);
-
+                        .Include(s => s.FromWallet.ApplicationUser.UserDetail)
+                        .Include(s => s.ToWallet.ApplicationUser.UserDetail)
+                        .Include(s => s.TransferType);
             
             return new TransactionResponseResource
             {

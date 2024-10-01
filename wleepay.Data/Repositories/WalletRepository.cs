@@ -82,6 +82,17 @@ namespace wleepay.Data.Repositories
             return walletDetail;
         }
 
+        public async Task<IEnumerable<Wallet>> GetWalletByWalletTypeIdAndUserId(string userId, long walletTypeId)
+        {
+            var wallet = WPContext.Wallet.Where(w => w.Type == walletTypeId && w.UserId == userId).AsQueryable();
+            var walletDetail = await wallet
+                .Include(w => w.Currency)
+                .Include(w => w.WalletType)
+                .ToListAsync();
+
+            return walletDetail;
+        }
+
         public async Task<Wallet> SetCashOnHand(double amount, int currencyId, int WalletTypeId)
         {
             var wallet = await WPContext.Wallet.Where(w => w.Type == WalletTypeId && w.CurrencyId == currencyId).FirstOrDefaultAsync();

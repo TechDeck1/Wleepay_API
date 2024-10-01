@@ -19,6 +19,7 @@ namespace wleepay.Core.Services
         Task<IEnumerable<Wallet>> CreateSystemAdminWallet(string userId);
         Task<Wallet> GetUserDetailsByWalletIdAndCurrency(long walletId);
         Task<IEnumerable<Wallet>> GetWalletByWalletTypeId(long walletTypeId);
+        Task<IEnumerable<Wallet>> GetWalletByWalletTypeIdAndUserId(string UserId, long walletTypeId);
         Task<Wallet> SetCashOnHand(double amount, int currencyId, int WalletTypeId);
         Task<IList<WalletAmountHistoryByMonths>> GetWalletHistoryByWalletTypeAndCurrency(int walletType, int currencyId);
 
