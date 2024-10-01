@@ -339,8 +339,8 @@ namespace wleepay.Data.Repositories
                             cashOnHandWallet = await WPContext.Wallet.Where(x => x.UserId == wallet.UserId && x.CurrencyId == wallet.CurrencyId && x.Type == WalletTypes.DebitFloatN.GetHashCode()).FirstOrDefaultAsync();
 
                             Transaction addNewTransaction = new Transaction();
-                            addNewTransaction.FromWalletId = null;
-                            addNewTransaction.ToWalletId = cashOnHandWallet.Id;
+                            addNewTransaction.FromWalletId = cashOnHandWallet.Id;
+                            addNewTransaction.ToWalletId = null;
                             addNewTransaction.Status = TransactionStatus.Approved.GetHashCode();
                             addNewTransaction.TransferTypeId = TransferTypes.InHandCredit.GetHashCode();
                             addNewTransaction.CreatedDate = DateTime.Now;
@@ -364,8 +364,8 @@ namespace wleepay.Data.Repositories
                         cashOnHandWallet = await WPContext.Wallet.Where(x => x.UserId == wallet.UserId && x.CurrencyId == wallet.CurrencyId && x.Type == WalletTypes.DebitFloatN.GetHashCode()).FirstOrDefaultAsync();
 
                         Transaction addNewTransaction = new Transaction();
-                        addNewTransaction.FromWalletId = null;
-                        addNewTransaction.ToWalletId = cashOnHandWallet.Id;
+                        addNewTransaction.FromWalletId = cashOnHandWallet.Id;
+                        addNewTransaction.ToWalletId = null;
                         addNewTransaction.Status = TransactionStatus.Approved.GetHashCode();
                         addNewTransaction.TransferTypeId = TransferTypes.InHandWithdrawl.GetHashCode();
                         addNewTransaction.CreatedDate = DateTime.Now;
@@ -722,7 +722,7 @@ namespace wleepay.Data.Repositories
                     .Include(s => s.ToWallet.ApplicationUser.UserDetail)
                     .Include(s => s.TransferType);
             }
-            if (transferTypeId == TransferTypes.InHandWithdrawl.GetHashCode())
+            if (transferTypeId == TransferTypes.AgentCashout.GetHashCode())
             {
                 transactionQuery = transactionQuery.Where(t => walletIds.Contains((long)t.FromWalletId)
                 && (t.TransferTypeId == transferTypeId && walletIds.Contains((long)t.FromWalletId)))

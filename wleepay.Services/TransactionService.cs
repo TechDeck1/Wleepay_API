@@ -374,7 +374,7 @@ namespace wleepay.Services
                 CreatedDate = DateTime.Now,
                 FromWalletId = fromWalletId,
                 ParentId = parentTransactionId,
-                Status = TransactionStatus.Pending.GetHashCode(),
+                Status = TransactionStatus.Approved.GetHashCode(),
                 TransferTypeId = TransferTypes.WleeTax.GetHashCode(),
                 ToWalletId = currency == Currencies.LRD.GetHashCode() ? OrganizationWallet.WleeTax_LRD.GetHashCode() : OrganizationWallet.WleeTax_USD.GetHashCode()
             };
@@ -388,7 +388,7 @@ namespace wleepay.Services
                 CreatedDate = DateTime.Now,
                 FromWalletId = fromWalletId,
                 ParentId = parentTransactionId,
-                Status = TransactionStatus.Pending.GetHashCode(),
+                Status = TransactionStatus.Approved.GetHashCode(),
                 TransferTypeId = TransferTypes.CashOutStandardFeeSplit.GetHashCode(),
                 ToWalletId = currency == Currencies.LRD.GetHashCode() ? OrganizationWallet.OrgP_LRD.GetHashCode() : OrganizationWallet.OrgP_USD.GetHashCode()
             };
@@ -405,7 +405,7 @@ namespace wleepay.Services
                 CreatedDate = DateTime.Now,
                 FromWalletId = fromWalletId,
                 ParentId = parentTransactionId,
-                Status = TransactionStatus.Pending.GetHashCode(),
+                Status = TransactionStatus.Approved.GetHashCode(),
                 TransferTypeId = TransferTypes.GeneratedAgentCommission.GetHashCode(),
                 ToWalletId = agentCommissionWallet.FirstOrDefault().Id
             };
