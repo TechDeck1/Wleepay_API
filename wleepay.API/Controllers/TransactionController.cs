@@ -195,6 +195,8 @@ namespace wleepay.API.Controllers
 
             if (transactionToApprove.TransferTypeId == TransferTypes.CashOut.GetHashCode())
                 approvedTransaction = await _transactionService.InitiateCashout(transactionToApprove);
+            else if(transactionToApprove.TransferTypeId == TransferTypes.MemberCashOutByWleePay.GetHashCode())
+                approvedTransaction = await _transactionService.InitiateCashout(transactionToApprove);
             else
                 approvedTransaction = await _transactionService.InitiateTransaction(transactionToApprove);
            
@@ -208,30 +210,28 @@ namespace wleepay.API.Controllers
         }
 
         [HttpPut("BulkApprove")]
-        public async Task<IActionResult> ApprovePaymentRequest(List<long> paymentRequestIds)
+        public async Task<IActionResult> BulkApprovePaymentRequest(List<long> paymentRequestIds)
         {
             TransactionResource newTransactionResource = new TransactionResource();
-            foreach (var paymentRequestId in paymentRequestIds)
-            {
-                if (paymentRequestId <= 0)
+            if (paymentRequestIds.Count() <= 0)
                     return BadRequest("Please enter valid payment request Id");
 
-                var transactionToApprove = await _transactionService.GetTransactionsById(paymentRequestId);
+                var transactionToApprove = await _transactionService.GetWalletsTransactions(paymentRequestIds.ToList());
                 if (transactionToApprove == null)
                     return BadRequest("Invalid payment Id");
 
                 var approvedTransaction = new Transaction();
 
-                if (transactionToApprove.TransferTypeId == TransferTypes.CashOut.GetHashCode())
-                    approvedTransaction = await _transactionService.InitiateCashout(transactionToApprove);
-                else
-                    approvedTransaction = await _transactionService.InitiateTransaction(transactionToApprove);
+                //if (transactionToApprove.TransferTypeId == TransferTypes.CashOut.GetHashCode())
+                //    approvedTransaction = await _transactionService.InitiateCashout(transactionToApprove);
+                //else
+                //    approvedTransaction = await _transactionService.InitiateTransaction(transactionToApprove);
 
-                   newTransactionResource = _mapper.Map<Transaction, TransactionResource>(approvedTransaction);
-                //send sms to user
-                if (newTransactionResource != null)
-                    await SendTransactionActionSMS(approvedTransaction);
-            }
+                //   newTransactionResource = _mapper.Map<Transaction, TransactionResource>(approvedTransaction);
+                ////send sms to user
+                //if (newTransactionResource != null)
+                //    await SendTransactionActionSMS(approvedTransaction);
+            
 
             return Ok(newTransactionResource);
         }
@@ -257,30 +257,26 @@ namespace wleepay.API.Controllers
             return Ok(result);
         }
 
-        [HttpPut("bulkReject")]
-        public async Task<IActionResult> RejectPaymentRequest(List<long> paymentRequestIds)
+        [HttpPost("bulkReject")]
+        public async Task<IActionResult> BulkRejectPaymentRequest(List<long> paymentRequestIds)
         {
-            TransactionResource result = new TransactionResource();
-            foreach (var paymentRequestId in paymentRequestIds)
-            {
 
-                if (paymentRequestId <= 0)
-                    return BadRequest("Please enter valid payment request Id");
+            if (paymentRequestIds.Count() <= 0)
+                return BadRequest("Please enter valid payment request Id");
 
-                var transactionToReject = await _transactionService.GetTransactionsById(paymentRequestId);
-                if (transactionToReject == null)
-                    return BadRequest("Invalid payment Id");
+            var updatedTransactions = await ChangePaymentRequestStatusInBulk(paymentRequestIds, Core.Enums.TransactionStatus.Rejected);
+            if (updatedTransactions.Count() <= 0)
+                return BadRequest("Invalid payment Id");
 
-                result = await ChangePaymentRequestStatus(paymentRequestId, Core.Enums.TransactionStatus.Rejected);
-                if (result == null)
-                    return BadRequest("Invalid payment Id");
+            //send sms to user
+            if (updatedTransactions.Count() >= 0)
+                foreach (var transaction in updatedTransactions)
+                {
+                    await SendTransactionActionSMS(transaction);
+                }
 
-                //send sms to user
-                if (result != null)
-                    await SendTransactionActionSMS(transactionToReject);
-            }
 
-            return Ok(result);
+            return Ok(updatedTransactions);
         }
 
         [HttpPut("cancel")]
@@ -410,6 +406,12 @@ namespace wleepay.API.Controllers
 
             var rejectedTransaction = await _transactionService.UpdateTransactionStatus(paymentRequestId, status);
             return _mapper.Map<Transaction, TransactionResource>(rejectedTransaction);
+        }
+
+        private async Task<IEnumerable<Transaction>> ChangePaymentRequestStatusInBulk(IEnumerable<long> paymentRequestId, Core.Enums.TransactionStatus status)
+        {
+            var rejectedTransaction = await _transactionService.UpdateTransactionStatusInBulk(paymentRequestId, status);
+            return rejectedTransaction;
         }
 
         private async Task<string> SendTransactionActionSMS(Transaction transaction)

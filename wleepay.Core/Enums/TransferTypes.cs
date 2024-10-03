@@ -20,6 +20,8 @@ namespace wleepay.Core.Enums
         InHandWithdrawl = 12,
         InHandCredit = 13,
         AgentCashout = 14,
+        MemberTopUpByWleePay = 15,
+        MemberCashOutByWleePay = 16,
 
     }
 

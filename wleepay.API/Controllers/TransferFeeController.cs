@@ -167,6 +167,20 @@ namespace wleepay.API.Controllers
             }
         }
 
-      
+        [HttpGet]
+        public async Task<IActionResult> GetLatestTaxRatesHistory([FromQuery] PagingRequestForRates pagingRequestForRates)
+        {
+            try
+            {
+                var transferFees = await _transferFeeService.GetTransferFeeByDesc();
+                return Ok(transferFees);
+            }
+            catch (Exception ex)
+            {
+                throw ex.InnerException;
+            }
+        }
+
+
     }
 }

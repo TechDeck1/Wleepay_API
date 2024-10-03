@@ -77,6 +77,10 @@ namespace wleepay.Services
             {
                 approveTransaction = await _unitOfWork.Transaction.AddUpdateTransaction(transactionDetail);
             }
+            if (transactionDetail.TransferTypeId == TransferTypes.MemberTopUpByWleePay.GetHashCode())
+            {
+                approveTransaction = await _unitOfWork.Transaction.AddUpdateTransaction(transactionDetail);
+            }
             if ( transactionDetail.TransferTypeId == TransferTypes.TopUp.GetHashCode())
             {
                 var userDetail = await _unitOfWork.UserDetail.GetUserDetailsById(transactionDetail.FromWallet.UserId);
@@ -179,7 +183,10 @@ namespace wleepay.Services
         {
             return await _unitOfWork.Transaction.UpdateTransactionStatus(id, status);
         }
-
+        public async Task<IEnumerable<Transaction>> UpdateTransactionStatusInBulk(IEnumerable<long> walletIdList, Core.Enums.TransactionStatus status)
+        {
+            return await _unitOfWork.Transaction.UpdateTransactionStatusInBulk(walletIdList, status);
+        }
         public async Task<double> CalculateTotalTransactionAmount(long walletId, bool isMonthly)
         {
             return await _unitOfWork.Transaction.CalculateWalletTransaction(walletId, isMonthly);

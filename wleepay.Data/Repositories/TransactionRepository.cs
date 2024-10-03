@@ -567,6 +567,21 @@ namespace wleepay.Data.Repositories
             return transactionToUpdate;
         }
 
+        public async Task<IEnumerable<Transaction>> UpdateTransactionStatusInBulk(IEnumerable<long> transactionIds, Core.Enums.TransactionStatus status)
+        {
+            var transactionToUpdate = await WPContext.Transactions.Where(t => transactionIds.Contains(t.Id)).ToListAsync();
+            if (transactionToUpdate != null)
+            {
+                foreach (var transaction in transactionToUpdate)
+                {
+                    transaction.Status = status.GetHashCode();
+                }
+            }
+
+            await WPContext.SaveChangesAsync();
+            return transactionToUpdate;
+        }
+
         private bool isTodayRecord(DateTime itemDate)
         {
             var todayStartDate = DateTime.Today.Date;

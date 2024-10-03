@@ -190,6 +190,24 @@ namespace wleepay.Data.Configurations
                 Description = "Transfer from agent a/c to sytem wallet a/c",
                 TransferFee = null
             });
+            builder.HasData(new TransferType
+            {
+                Id = 15,
+                Name = "Member Top Up By WleePay",
+                FromWalletType = 9,
+                ToWalletType = 7,
+                Description = "Transfer from system a/c to member wallet a/c",
+                TransferFee = null
+            });
+            builder.HasData(new TransferType
+            {
+                Id = 16,
+                Name = "Member Cash Out By Wleepay",
+                FromWalletType = 7,
+                ToWalletType = 9,
+                Description = "Transfer from member a/c to sytem wallet a/c",
+                TransferFee = null
+            });
         }
     }
 }
