@@ -196,7 +196,7 @@ namespace wleepay.API.Controllers
             if (transactionToApprove.TransferTypeId == TransferTypes.CashOut.GetHashCode())
                 approvedTransaction = await _transactionService.InitiateCashout(transactionToApprove);
             else if(transactionToApprove.TransferTypeId == TransferTypes.MemberCashOutByWleePay.GetHashCode())
-                approvedTransaction = await _transactionService.InitiateCashoutWithWleePay(transactionToApprove);
+                approvedTransaction = await _transactionService.InitiateCashOutWithWleePay(transactionToApprove);
             else
                 approvedTransaction = await _transactionService.InitiateTransaction(transactionToApprove);
            

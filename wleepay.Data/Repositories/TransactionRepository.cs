@@ -277,8 +277,8 @@ namespace wleepay.Data.Repositories
                     }
                     await WPContext.SaveChangesAsync();
 
-                    if (transactionDetail.TransferTypeId == TransferTypes.FillAgent.GetHashCode()) 
-                    {
+                    //if (transactionDetail.TransferTypeId == TransferTypes.FillAgent.GetHashCode() || transactionDetail.TransferTypeId == TransferTypes.MemberTopUpByWleePay.GetHashCode()) 
+                    //{
                         //update sender wallet balance
                         var senderWallet = await WPContext.Wallet.Where(w => w.Id == transactionDetail.FromWalletId).FirstOrDefaultAsync();
                         senderWallet.Balance = (senderWallet.Balance - transactionDetail.Amount);
@@ -295,7 +295,7 @@ namespace wleepay.Data.Repositories
                        
                         await WPContext.SaveChangesAsync();
 
-                    }
+                    //}
 
                     //commit transaction
                     await transaction.CommitAsync();

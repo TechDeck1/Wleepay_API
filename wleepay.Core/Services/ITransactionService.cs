@@ -23,7 +23,7 @@ namespace wleepay.Core.Services
         Task<TransactionResponseResource> GetIncomingOutgoingPaymentRequest(IEnumerable<long> walletIds, PaymentRequestType type, Core.Enums.TransactionStatus transferStatus,int transferTypeId, int pageSize, int pageIndex);
         Task<TransactionResponseResource> GetPaymentRequestByStatusAndType(PaymentRequestType type, Core.Enums.TransactionStatus transferStatus, int transferId, int pageSize, int pageIndex);
         Task<Transaction> InitiateCashout(Transaction transactionDetail);
-        Task<Transaction> InitiateCashoutWithWleePay(Transaction transactionDetail);
+        Task<Transaction> InitiateCashOutWithWleePay(Transaction transactionDetail);
         Task<double> CalculateTotalTransactionAmount(long walletId, bool isMonthly);
         Task<TransactionResponseResource> GetTransactionsByTypeAndCurrency(int type, int currencies, int pageIndex = 0, int pageSize = 10);
         Task<TransactionResponseResource> GetTransactionsByUserIdAndType(string userId,int transferType, int pageIndex = 0, int pageSize = 10);
