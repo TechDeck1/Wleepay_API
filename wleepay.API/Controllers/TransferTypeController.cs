@@ -36,6 +36,15 @@ namespace wleepay.API.Controllers
             return Ok(transferTypeResource);
         }
 
+        [HttpGet("fromWalletId/{fromWalletTypeId}/toWalletId/{toWalletTypeId}")]
+        public async Task<IActionResult> GetTransferTypeList(int fromWalletTypeId, int toWalletTypeId)
+        {
+            var transferType = await _transferTypeService.GetTransferTypeList(fromWalletTypeId, toWalletTypeId);
+            var transferTypeResource = _mapper.Map<IList<TransferType>, IList<TransferTypeResource>>(transferType);
+
+            return Ok(transferTypeResource);
+        }
+
 
         [HttpGet("{typeId}")]
         public async Task<IActionResult> GetTransferType(int typeId)

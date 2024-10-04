@@ -12,5 +12,6 @@ namespace wleepay.Core.Services
         Task<TransferType> GetTransferTypeById(int id);
         Task<TransferType> UpdateTransferTypeById(TransferType id);
         Task<TransferType> GetTransferTypeForTransaction(int fromWalletTypeId, int toWalletTypeId);
+        Task<IList<TransferType>> GetTransferTypeList(int fromWalletTypeId, int toWalletTypeId);
     }
 }

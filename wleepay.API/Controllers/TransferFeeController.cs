@@ -168,6 +168,7 @@ namespace wleepay.API.Controllers
         }
 
         [HttpGet]
+        [AllowAnonymous]
         public async Task<IActionResult> GetLatestTaxRatesHistory([FromQuery] PagingRequestForRates pagingRequestForRates)
         {
             try

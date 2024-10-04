@@ -11,6 +11,7 @@ namespace wleepay.Core.Common
         public Transaction taxAmount { get; set; }
         public Transaction commissionTransaction { get; set; }
         public Transaction organizationFeeAmount { get; set; }
+        public Transaction InHandWithdrawl { get; set; }
     }
 }
 

@@ -34,6 +34,13 @@ namespace wleepay.Data.Repositories
                 .FirstOrDefaultAsync();
         }
 
+        public async Task<IList<TransferType>> GetTransferTypeList(int fromWalletTypeId, int toWalletTypeId)
+        {
+            return await WPContext.TransferTypes
+                .Where(t => t.FromWalletType == fromWalletTypeId && t.ToWalletType == toWalletTypeId)
+                .ToListAsync();
+        }
+
         public async Task<TransferType> UpdateTransferTypeById(TransferType transferType)
         {
             if(transferType != null)

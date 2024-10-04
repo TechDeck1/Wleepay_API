@@ -31,6 +31,11 @@ namespace wleepay.Services
         public async Task<TransferType> GetTransferTypeForTransaction(int fromWalletTypeId, int toWalletTypeId)
         {
             return await _unitOfWork.TransferType.GetTransferTypeForTransaction(fromWalletTypeId, toWalletTypeId);
+        }    
+        
+        public async Task<IList<TransferType>> GetTransferTypeList(int fromWalletTypeId, int toWalletTypeId)
+        {
+            return await _unitOfWork.TransferType.GetTransferTypeList(fromWalletTypeId, toWalletTypeId);
         }
 
         public async  Task<TransferType> UpdateTransferTypeById(TransferType request)

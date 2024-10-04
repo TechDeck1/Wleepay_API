@@ -54,7 +54,7 @@ namespace wleepay.API.Controllers
         }
 
         [HttpPost("History")]
-        public async Task<IActionResult> GetTrasactionHistoryByWalletId([FromBody] TransactionPageRequest request)
+        public async Task<IActionResult> GetTransactionHistoryByWalletId([FromBody] TransactionPageRequest request)
         {
             var transactionResult = await _transactionService.GetTransactionsByWalletId(request.WalletId, request.Index, request.Size);
             if (transactionResult.Transactions.Count() > 0)
@@ -86,7 +86,7 @@ namespace wleepay.API.Controllers
         }
 
         [HttpGet("{transactionId}")]
-        public async Task<IActionResult> GetTrasactionById(long transactionId)
+        public async Task<IActionResult> GetTransactionById(long transactionId)
         {
             var transaction = await _transactionService.GetTransactionsById(transactionId);
             var transactionResource = _mapper.Map<Transaction, TransactionHistoryResource>(transaction);
@@ -94,7 +94,7 @@ namespace wleepay.API.Controllers
         }
 
         [HttpGet("{userId}/{currency}/{isMonthly}")]
-        public async Task<IActionResult> GetTrasactionAmount(string userId, int currency, bool isMonthly)
+        public async Task<IActionResult> GetTransactionAmount(string userId, int currency, bool isMonthly)
         {
             var wallets = await _walletService.GetWalletsByUserId(userId, currency);
             var wallet = wallets.Where(w => w.Type == WalletTypes.MemberAccount.GetHashCode()).FirstOrDefault();
@@ -196,7 +196,7 @@ namespace wleepay.API.Controllers
             if (transactionToApprove.TransferTypeId == TransferTypes.CashOut.GetHashCode())
                 approvedTransaction = await _transactionService.InitiateCashout(transactionToApprove);
             else if(transactionToApprove.TransferTypeId == TransferTypes.MemberCashOutByWleePay.GetHashCode())
-                approvedTransaction = await _transactionService.InitiateCashout(transactionToApprove);
+                approvedTransaction = await _transactionService.InitiateCashoutWithWleePay(transactionToApprove);
             else
                 approvedTransaction = await _transactionService.InitiateTransaction(transactionToApprove);
            
@@ -213,25 +213,29 @@ namespace wleepay.API.Controllers
         public async Task<IActionResult> BulkApprovePaymentRequest(List<long> paymentRequestIds)
         {
             TransactionResource newTransactionResource = new TransactionResource();
-            if (paymentRequestIds.Count() <= 0)
+
+            foreach (var paymentRequestId in paymentRequestIds)
+            {
+                if (paymentRequestIds.Count() <= 0)
                     return BadRequest("Please enter valid payment request Id");
 
-                var transactionToApprove = await _transactionService.GetWalletsTransactions(paymentRequestIds.ToList());
+                var transactionToApprove = await _transactionService.GetTransactionsById(paymentRequestId);
                 if (transactionToApprove == null)
                     return BadRequest("Invalid payment Id");
 
                 var approvedTransaction = new Transaction();
 
-                //if (transactionToApprove.TransferTypeId == TransferTypes.CashOut.GetHashCode())
-                //    approvedTransaction = await _transactionService.InitiateCashout(transactionToApprove);
-                //else
-                //    approvedTransaction = await _transactionService.InitiateTransaction(transactionToApprove);
+                if (transactionToApprove.TransferTypeId == TransferTypes.CashOut.GetHashCode())
+                    approvedTransaction = await _transactionService.InitiateCashout(transactionToApprove);
+                else
+                    approvedTransaction = await _transactionService.InitiateTransaction(transactionToApprove);
 
-                //   newTransactionResource = _mapper.Map<Transaction, TransactionResource>(approvedTransaction);
-                ////send sms to user
-                //if (newTransactionResource != null)
-                //    await SendTransactionActionSMS(approvedTransaction);
-            
+                newTransactionResource = _mapper.Map<Transaction, TransactionResource>(approvedTransaction);
+                
+                //send sms to user
+                if (newTransactionResource != null)
+                    await SendTransactionActionSMS(approvedTransaction);
+            }
 
             return Ok(newTransactionResource);
         }
@@ -387,7 +391,7 @@ namespace wleepay.API.Controllers
 
         [AllowAnonymous]
         [HttpGet("TransactionCountByType")]
-        public async Task<IActionResult> GetTransactionCounttByTypeLD()
+        public async Task<IActionResult> GetTransactionCountByTypeLD()
         {
             var transactionRequestLD = await _transactionService.GetTransactionCounttByTypeLD();
             var transactionRequestUSD = await _transactionService.GetTransactionCounttByTypeUSD();
