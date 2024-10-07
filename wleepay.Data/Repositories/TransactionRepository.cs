@@ -481,7 +481,9 @@ namespace wleepay.Data.Repositories
             transactionQuery = transactionQuery.Where(t => t.TransferTypeId == transferId)
                         .Include(s => s.FromWallet.ApplicationUser.UserDetail)
                         .Include(s => s.ToWallet.ApplicationUser.UserDetail)
+                        .Include(s=> s.ToWallet.Currency)
                         .Include(s => s.TransferType);
+
             
             return new TransactionResponseResource
             {
@@ -489,7 +491,6 @@ namespace wleepay.Data.Repositories
                 Transactions = await transactionQuery.Skip(skipCount).Take(takeCount).Include(t => t.TransactionStatus).ToListAsync()
             };
 
-            //return await transactionQuery.Skip(skipCount).Take(takeCount).Include(t => t.TransactionStatus).ToListAsync();
         }
 
         public async Task<Transaction> GetTransactionDetails(long transactionId)
@@ -509,9 +510,9 @@ namespace wleepay.Data.Repositories
             int skipCount = pageIndex * pageSize;
             var transactionQuery = WPContext.Transactions
                 .Where(w => w.Status != Core.Enums.TransactionStatus.Pending.GetHashCode());
-            
-            if(walletId != 0)
-                transactionQuery = transactionQuery.Where(w=> w.FromWalletId == walletId || w.ToWalletId == walletId);
+
+            if (walletId != 0)
+                transactionQuery = transactionQuery.Where(w => w.FromWalletId == walletId || w.ToWalletId == walletId);
 
             TransactionResponseResource response = new TransactionResponseResource();
             response.TotalCount = transactionQuery.Count();
@@ -521,6 +522,7 @@ namespace wleepay.Data.Repositories
                 .Take(takeCount)
                 .Include(s => s.FromWallet.ApplicationUser.UserDetail)
                 .Include(s => s.FromWallet.Currency)
+                .Include(s => s.ToWallet.Currency)
                 .Include(s => s.ToWallet.ApplicationUser.UserDetail)
                 .Include(s => s.TransferType)
                 .ToListAsync();
@@ -741,6 +743,22 @@ namespace wleepay.Data.Repositories
             {
                 transactionQuery = transactionQuery.Where(t => walletIds.Contains((long)t.FromWalletId)
                 && (t.TransferTypeId == transferTypeId && walletIds.Contains((long)t.FromWalletId)))
+                    .Include(s => s.FromWallet.ApplicationUser.UserDetail)
+                    .Include(s => s.ToWallet.ApplicationUser.UserDetail)
+                    .Include(s => s.TransferType);
+            }
+            if (transferTypeId == TransferTypes.MemberCashOutByWleePay.GetHashCode())
+            {
+                transactionQuery = transactionQuery.Where(t => walletIds.Contains((long)t.FromWalletId)
+                && (t.TransferTypeId == transferTypeId && walletIds.Contains((long)t.FromWalletId)))
+                    .Include(s => s.FromWallet.ApplicationUser.UserDetail)
+                    .Include(s => s.ToWallet.ApplicationUser.UserDetail)
+                    .Include(s => s.TransferType);
+            }
+            if (transferTypeId == TransferTypes.MemberTopUpByWleePay.GetHashCode())
+            {
+                transactionQuery = transactionQuery.Where(t => walletIds.Contains((long)t.ToWalletId)
+                && (t.TransferTypeId == transferTypeId && walletIds.Contains((long)t.ToWalletId)))
                     .Include(s => s.FromWallet.ApplicationUser.UserDetail)
                     .Include(s => s.ToWallet.ApplicationUser.UserDetail)
                     .Include(s => s.TransferType);
