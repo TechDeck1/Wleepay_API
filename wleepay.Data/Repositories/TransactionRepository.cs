@@ -456,10 +456,13 @@ namespace wleepay.Data.Repositories
                 transactionQuery = transactionQuery.Where(t => walletIds.Contains((long)t.FromWalletId)
                 || (t.TransferTypeId == TransferTypes.CashOut.GetHashCode() && walletIds.Contains((long)t.ToWalletId))
                 || (t.TransferTypeId == TransferTypes.AgentCommissionCashout.GetHashCode() && walletIds.Contains((long)t.ToWalletId))
+                || (t.TransferTypeId == TransferTypes.MemberCashOutByWleePay.GetHashCode() && walletIds.Contains((long)t.ToWalletId))
+                || (t.TransferTypeId == TransferTypes.MemberTopUpByWleePay.GetHashCode() && walletIds.Contains((long)t.ToWalletId))
                 || (t.TransferTypeId == TransferTypes.TopUp.GetHashCode() && walletIds.Contains((long)t.ToWalletId)))
                     .Include(s => s.FromWallet.ApplicationUser.UserDetail)
                     .Include(s => s.ToWallet.ApplicationUser.UserDetail)
                     .Include(s => s.TransferType);
+
             else
                 transactionQuery = transactionQuery.Where(t => walletIds.Contains((long)t.ToWalletId)
                 || (t.TransferTypeId == TransferTypes.CashOut.GetHashCode() && walletIds.Contains((long)t.FromWalletId))
@@ -469,7 +472,7 @@ namespace wleepay.Data.Repositories
                       .Include(s => s.ToWallet.ApplicationUser.UserDetail)
                       .Include(s => s.TransferType);
 
-            return await transactionQuery.Skip(skipCount).Take(takeCount).Include(t => t.TransactionStatus).ToListAsync();
+            return await transactionQuery.Where(x=>x.FromWallet != null && x.ToWallet != null).Skip(skipCount).Take(takeCount).Include(t => t.TransactionStatus).ToListAsync();
         }
 
         public async Task<TransactionResponseResource> GetPaymentRequestByStatusAndType(PaymentRequestType type, TransactionStatus statusType,int transferId, int pageSize, int pageIndex)
@@ -596,7 +599,7 @@ namespace wleepay.Data.Repositories
             int takeCount = pageSize;
             int skipCount = pageIndex * pageSize;
             var transactionQuery = WPContext.Transactions
-                .Where(w => w.Status != Core.Enums.TransactionStatus.Pending.GetHashCode() && w.TransferTypeId == type && w.FromWallet.CurrencyId == currency);
+                .Where(w => w.Status != Core.Enums.TransactionStatus.Pending.GetHashCode() && w.TransferTypeId == type && (w.FromWallet.CurrencyId == currency || w.ToWallet.CurrencyId == currency));
 
             var result = await transactionQuery
                .OrderByDescending(w => w.CreatedDate)
@@ -607,6 +610,7 @@ namespace wleepay.Data.Repositories
                .Include(s => s.ToWallet.ApplicationUser.UserDetail)
                .Include(s => s.TransferType)
                .ToListAsync();
+
             TransactionResponseResource response = new TransactionResponseResource();
             response.Transactions = result;
             response.TotalCount =await  WPContext.Transactions

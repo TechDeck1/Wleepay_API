@@ -164,7 +164,6 @@ namespace wleepay.Services
                 if (transferType.TransferFeeDetail != null)
                 {
                     int currencyId = 0;
-
                     double agentCommissionAmount = transactionDetail.Amount * (transferType.TransferFeeDetail.AgentCommission / 100);
                     double taxAmount = transactionDetail.Amount * (transferType.TransferFeeDetail.TaxAmount / 100);
                     double organizationFeeAmount = transactionDetail.Amount * (transferType.TransferFeeDetail.OrganizationFee / 100);
@@ -180,12 +179,10 @@ namespace wleepay.Services
                     transactions.commissionTransaction = commissionTransaction;
                     transactionsList.Add(commissionTransaction);
                     
-
                     //generate tax transaction
                     var taxTransaction = GetTaxTransaction((long)transactionDetail.FromWalletId, Math.Round(taxAmount, 2), transactionDetail.Id, currencyId);
                     transactions.taxAmount = taxTransaction;
                     transactionsList.Add(taxTransaction);
-                   
 
                     //generate and transfer organization amount
                     var organizationFeeTransaction = GetOrganizationFeeTransaction((long)transactionDetail.FromWalletId, Math.Round(organizationFeeAmount, 2), transactionDetail.Id, currencyId);
@@ -198,7 +195,6 @@ namespace wleepay.Services
                     if (agentDirectTransferAmount <= wallet.Balance)
                     {
                         await BatchAddTransactionsAsync(transactionsList);
-
                     }
                     else
                     {
@@ -301,7 +297,6 @@ namespace wleepay.Services
                         {
                             transactionToUpdate.Status = Core.Enums.TransactionStatus.Approved.GetHashCode();
                         }
-
                     }
                     else
                     {
@@ -311,9 +306,9 @@ namespace wleepay.Services
                         await _unitOfWork.Transaction.AddAsync(transaction);
                     }
 
-                    if (transaction.FromWalletId != null || transaction.FromWalletId > 0)
+                    if (transaction.FromWalletId != null && transaction.FromWalletId > 0)
                         await UpdateWalletBalance((long)transaction.FromWalletId, -transaction.Amount);
-                    if(transaction.ToWalletId!= null || transaction.ToWalletId > 0)
+                    if (transaction.ToWalletId != null && transaction.ToWalletId > 0)
                         await UpdateWalletBalance((long)transaction.ToWalletId, transaction.Amount);
 
                     await _unitOfWork.CommitAsync();
@@ -412,7 +407,6 @@ namespace wleepay.Services
         private async Task UpdateWalletBalance(long walletId, double amount)
         {
             var wallet = await _unitOfWork.Wallet.GetByIdAsync(walletId);
-           
             wallet.Balance += amount;
             await _unitOfWork.CommitAsync();
         }
