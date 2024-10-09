@@ -26,6 +26,15 @@ namespace wleepay.Data.Repositories
             get { return Context as WPContext; }
         }
 
+        public async Task<SystemActivityLog> AddActivityLog(SystemActivityLog systemActivityLog)
+        {
+            systemActivityLog.CreatedDate = DateTime.Now;
+            await WPContext.SystemActivities.AddAsync(systemActivityLog);
+
+            WPContext.SaveChanges();
+            return systemActivityLog;
+        }
+
         public async Task<bool> DeleteLogsById(int id)
         {
             var entityToDelete = WPContext.SystemActivities.Find(id); // Retrieve the entity by its primary key

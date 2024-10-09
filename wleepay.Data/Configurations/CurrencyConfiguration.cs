@@ -31,7 +31,7 @@ namespace wleepay.Data.Configurations
             builder.HasData(new Currency
             {
                 Id = 1,
-                Name = "LD",
+                Name = "LRD",
                 Symbol = "L$"
             });
             

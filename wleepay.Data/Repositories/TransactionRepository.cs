@@ -777,11 +777,12 @@ namespace wleepay.Data.Repositories
 
         public async Task<IList<TransactionAmountBasedOnMonthsResponseModel>> GetTransactionAmountByMonthLD()
         {
+            var excludedTypes = new List<string> { "Top Up System Wallet", "Wlee Tax Transfer", "Cash Out Standard Fee Split", "In hand Credit", "In hand Withdrawl", "Generated Agent Commission", "Cash Out Standard Fee Split" };
 
             // Fetch the relevant data first
             var transactions = WPContext.Transactions
                 .Include(t => t.ToWallet)
-                .Where(t => t.Status == 3 && t.CreatedDate >= DateTime.Now.AddMonths(-3).Date && t.ToWallet.CurrencyId == 1)
+                .Where(t => t.Status == 3 && !excludedTypes.Contains(t.TransferType.Name) && t.CreatedDate >= DateTime.Now.AddMonths(-3).Date && t.ToWallet.CurrencyId == 1)
                 .ToList();  // Fetch data into memory
 
             // Perform grouping and conditional sum in memory
@@ -808,10 +809,12 @@ namespace wleepay.Data.Repositories
         public async Task<IList<TransactionAmountBasedOnMonthsResponseModel>> GetTransactionAmountByMonthUSD()
         {
 
+            var excludedTypes = new List<string> { "Top Up System Wallet", "Wlee Tax Transfer", "Cash Out Standard Fee Split", "In hand Credit", "In hand Withdrawl", "Generated Agent Commission", "Cash Out Standard Fee Split" };
+
             // Fetch the relevant data first
             var transactions = WPContext.Transactions
                 .Include(t => t.ToWallet)
-                .Where(t => t.Status == 3 && t.CreatedDate >= DateTime.Now.AddMonths(-3).Date && t.ToWallet.CurrencyId == 2)
+                .Where(t => t.Status == 3 && !excludedTypes.Contains(t.TransferType.Name) && t.CreatedDate >= DateTime.Now.AddMonths(-3).Date && t.ToWallet.CurrencyId == 2)
                 .ToList();  // Fetch data into memory
 
             // Perform grouping and conditional sum in memory
@@ -837,7 +840,7 @@ namespace wleepay.Data.Repositories
 
         public async Task<IList<TransactionCountByTypeResponseModel>> GetTransactionCounttByTypeLD()
         {
-            var excludedTypes = new List<string> { "Top Up System Wallet", "Wlee Tax Transfer", "Cash Out Standard Fee Split", "On Hand Agent Cashout", "Generated Agent Commission" };
+            var excludedTypes = new List<string> { "Top Up System Wallet", "Wlee Tax Transfer", "Cash Out Standard Fee Split", "In hand Credit", "In hand Withdrawl", "Generated Agent Commission", "Cash Out Standard Fee Split" };
 
             var transactionCountsByType = WPContext.Transactions.Include(w=>w.ToWallet).Include(t => t.TransferType).Where(t => t.Status == 3 && !excludedTypes.Contains(t.TransferType.Name) && t.FromWallet.CurrencyId == Currencies.LRD.GetHashCode())
             .GroupBy(t => t.TransferType.Name)  // Grouping by transaction type
@@ -856,7 +859,7 @@ namespace wleepay.Data.Repositories
 
         public async Task<IList<TransactionCountByTypeResponseModel>> GetTransactionCounttByTypeUSD()
         {
-            var excludedTypes = new List<string> { "Top Up System Wallet", "Wlee Tax Transfer", "Cash Out Standard Fee Split", "On Hand Agent Cashout", "Generated Agent Commission" };
+            var excludedTypes = new List<string> { "Top Up System Wallet", "Wlee Tax Transfer", "Cash Out Standard Fee Split", "In hand Credit", "In hand Withdrawl", "Generated Agent Commission", "Cash Out Standard Fee Split" };
 
             var transactionCountsByType = WPContext.Transactions.Include(w => w.ToWallet).Include(t => t.TransferType).Where(t => t.Status == 3 && !excludedTypes.Contains(t.TransferType.Name) && t.FromWallet.CurrencyId == Currencies.USD.GetHashCode())
             .GroupBy(t => t.TransferType.Name)  // Grouping by transaction type
@@ -878,7 +881,7 @@ namespace wleepay.Data.Repositories
 
             var currentDate = DateTime.Now;
             var MonthsAgo = currentDate.AddMonths(-monthId);
-            var excludedTypes = new List<string> { "Top Up System Wallet", "Wlee Tax Transfer", "Cash Out Standard Fee Split", "On Hand Agent Cashout", "Generated Agent Commission" };
+            var excludedTypes = new List<string> { "Top Up System Wallet", "Wlee Tax Transfer", "Cash Out Standard Fee Split", "In hand Credit", "In hand Withdrawl", "Generated Agent Commission" };
 
             var seperateTransactionCountsByMonth = WPContext.Transactions.Include(w => w.ToWallet).Include(t => t.TransferType).Where(t => t.Status == 3 && !excludedTypes.Contains(t.TransferType.Name) && t.CreatedDate >= MonthsAgo && t.FromWallet.CurrencyId == currencyId)
             .GroupBy(t => t.TransferType.Name)  // Grouping by transaction type

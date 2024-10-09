@@ -21,10 +21,9 @@ namespace wleepay.Services
 
         public async Task<SystemActivityLog> AddSystemLogs(SystemActivityLog systemActivityLog)
         {
-            systemActivityLog.CreatedDate = DateTime.Now;
-            await _unitOfWork.SystemActivity.AddAsync(systemActivityLog);
-            await _unitOfWork.CommitAsync();
-            return systemActivityLog;        }
+            var systemActivityResponse = await _unitOfWork.SystemActivity.AddActivityLog(systemActivityLog);
+            return systemActivityResponse;       
+        }
 
         public async Task<bool> DeleteLogsById(int id)
         {

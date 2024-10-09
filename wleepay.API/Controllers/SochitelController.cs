@@ -220,24 +220,24 @@ namespace wleepay.API.Controllers
 
                         if (transactionResponse.Status.Name == "Successful")
                         {
-                            var walletData = await _walletService.GetWalletByWalletTypeId((int)WalletTypes.DebitFloatN);
+                            var walletData = await _walletService.GetWalletByWalletTypeId((int)WalletTypes.SystemWallet);
                             var walletListResource = _mapper.Map<IEnumerable<Wallet>, IEnumerable<WalletResource>>(walletData);
-                            WalletResource walletResources = new WalletResource();
-                            foreach (var walletResource in walletListResource)
+                            WalletResource walletResource = new WalletResource();
+                            foreach (var wallet in walletListResource)
                             {
-                                if (walletResource != null && walletResource.CurrencyId == 2)
+                                if (wallet != null && wallet.CurrencyId == Currencies.USD.GetHashCode())
                                 {
-                                    walletResources = walletResource;
+                                    walletResource = wallet;
                                 }
                                 else
                                 {
-                                    walletResources = null;
+                                    walletResource = null;
                                 }
                             }
 
                             var transactionToCreate = new Transaction()
                             {
-                                ToWalletId = (long)(walletResources?.Id),
+                                ToWalletId = (long)(walletResource?.Id),
                                 FromWalletId = execTransactionRequest.FromWalletId,
                                 Amount = (double)execTransactionRequest.AmountInUsd,
                                 TransferTypeId = (int)TransferTypes.MobileRechargeTransfer,
@@ -383,7 +383,7 @@ namespace wleepay.API.Controllers
 
                         if (transactionResponse.Status.Name == ResponseStatusForSochitel.Successful.ToDescriptionString())
                         {
-                            var walletData = await _walletService.GetWalletByWalletTypeId((int)WalletTypes.DebitFloatN);
+                            var walletData = await _walletService.GetWalletByWalletTypeId((int)WalletTypes.SystemWallet);
                             var walletListResource = _mapper.Map<IEnumerable<Wallet>, IEnumerable<WalletResource>>(walletData);
                             WalletResource walletResources = new WalletResource();
                             foreach (var walletResource in walletListResource)
@@ -440,6 +440,7 @@ namespace wleepay.API.Controllers
                             var sTansaction = _sochitelTransactionService.AddSochitelTransactions(sochitelTransactions);
 
                             var userDetail = await _userDetailsService.GetUserAccountByPhone(execTransactionRequest.Msisdn);
+                           
                             SystemActivityLog systemActivityLog = new SystemActivityLog();
                             systemActivityLog.UserId = userDetail.Id;
                             systemActivityLog.Email = userDetail.Email;

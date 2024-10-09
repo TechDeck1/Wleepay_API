@@ -12,6 +12,7 @@ namespace wleepay.Core.Repositories
         Task<ActivityResponseResource> GetAllActivityLogs(int pageIndex, int pageSize);
         Task<ActivityResponseResource> GetActivityLogsById(string userId , int pageIndex, int pageSize);
         Task<ActivityResponseResource> FilterLogsByEmail(string email, int index, int size);
+        Task<SystemActivityLog> AddActivityLog(SystemActivityLog systemActivityLog);
         Task<bool> DeleteLogsById(int id);
 
 

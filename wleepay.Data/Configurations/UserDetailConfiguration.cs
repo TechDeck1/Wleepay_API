@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
+using wleepay.Core.Enums;
 using wleepay.Core.Models;
 
 namespace wleepay.Data.Configurations
@@ -147,7 +148,8 @@ namespace wleepay.Data.Configurations
                 PhoneNumber = "+919845654543",
                 CreatedDate = DateTime.Now,
                 UpdatedDate = DateTime.Now,
-                AccountNumber = "50285368"
+                AccountNumber = "50285368",
+                Status = Status.Active.GetHashCode()
             });
         }
     }

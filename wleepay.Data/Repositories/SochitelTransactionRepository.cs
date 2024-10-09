@@ -21,7 +21,7 @@ namespace wleepay.Data.Repositories
 
         public async Task<SochitelTransactions> AddSochitelTransaction(SochitelTransactions transaction)
         {
-            await WPContext.SochitelTransactions.AddAsync(transaction);
+            var transactionRsponse = await WPContext.SochitelTransactions.AddAsync(transaction);
             WPContext.SaveChanges();
             return transaction;
         }
