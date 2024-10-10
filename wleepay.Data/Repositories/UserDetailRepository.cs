@@ -403,7 +403,7 @@ namespace wleepay.Data.Repositories
             return total == 0 ? 0 : (decimal)activeLast30Days / total * 100;
         }
 
-        public async Task<decimal> GetSubscriberRetentionRate()
+        public async Task<decimal> GetSubscriberRetentionRateAsync()
         {
             var retained = await WPContext.Users.CountAsync(s => s.UserDetail.CreatedDate >= DateTime.Today.AddDays(-30) && s.UserRoles.FirstOrDefault().Role.Name == Role.Member.ToDescriptionString());
             var activeLast30Days = await WPContext.Transactions

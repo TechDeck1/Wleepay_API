@@ -31,9 +31,9 @@ namespace wleepay.Services
             {
                 TotalSubscribers = totalSubscribers,
                 ActiveSubscribers = activeSubscribers,
-                activeLast7Days = activeLast7Days,
-                activeToday = activeToday,
-                activeLast30Days = activeLast30Days,
+                ActiveLast7Days = activeLast7Days,
+                ActiveToday = activeToday,
+                ActiveLast30Days = activeLast30Days,
                 RetentionRate = retentionRate,
                 ChurnRate = churnRate,
                 InactiveLast30Days = inactiveLast30Days,
