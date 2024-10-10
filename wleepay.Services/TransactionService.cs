@@ -256,36 +256,6 @@ namespace wleepay.Services
             return await _unitOfWork.Transaction.GetTransactionsHistoryByUserId(userId, pageIndex, pageSize);
         }
 
-        public async Task<IList<TransactionAmountBasedOnMonthsResponseModel>> GetTransactionAmountByMonthLD()
-        {
-            return await _unitOfWork.Transaction.GetTransactionAmountByMonthLD();
-
-        }
-
-        public async Task<IList<TransactionAmountBasedOnMonthsResponseModel>> GetTransactionAmountByMonthUSD()
-        {
-            return await _unitOfWork.Transaction.GetTransactionAmountByMonthUSD();
-
-        }
-
-        public async Task<IList<TransactionCountByTypeResponseModel>> GetTransactionCounttByTypeLD()
-        {
-            return await _unitOfWork.Transaction.GetTransactionCounttByTypeLD();
-
-        }
-
-        public async Task<IList<TransactionCountByTypeResponseModel>> GetTransactionCounttByTypeUSD()
-        {
-            return await _unitOfWork.Transaction.GetTransactionCounttByTypeUSD();
-
-        }
-
-        public async Task<IList<TransactionSummaryResponseModel>> GetTransactionData(int monthId, int currencyId)
-        {
-            return await _unitOfWork.Transaction.GetTransactionData(monthId, currencyId);
-
-        }
-
         public async Task<Transaction> BatchAddTransactionsAsync(IList<Transaction> transactionDetail)
         {
             await _unitOfWork.BeginTransactionAsync();

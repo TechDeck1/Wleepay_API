@@ -205,24 +205,5 @@ namespace wleepay.Services
             return await _unitOfWork.UserDetail.AddDeviceIdAndToken(deviceId, token,userId);
         }
 
-        public async Task<AgentSubscribersCountResponseModel> GetActiveAgentsAndSubscribersCount()
-        {
-            return await _unitOfWork.UserDetail.GetActiveAgentsAndSubscribersCount();
-
-        }
-
-        public async Task<IList<CountByMonths>> GetActiveAgentsByMonth()
-        {
-            return await _unitOfWork.UserDetail.GetActiveAgentsByMonth();
-        }
-
-        public async Task<IList<CountByMonths>> GetActiveSubscribersByMonth()
-        {
-            return await _unitOfWork.UserDetail.GetActiveSubscribersByMonth();
-        }
-        public async Task<IList<subscribersByType>> GetActiveSubscribersByType()
-        {
-            return await _unitOfWork.UserDetail.GetActiveSubscribersByType();
-        }
     }
 }

@@ -378,28 +378,6 @@ namespace wleepay.API.Controllers
             });
         }
 
-        [AllowAnonymous]
-        [HttpGet("TransactionAmountByMonth")]
-        public async Task<IActionResult> GetTransactionAmountByMonth([FromQuery]int? monthId , int currencyId )
-        {
-            var transactionRequestLD = await _transactionService.GetTransactionAmountByMonthLD();
-            var transactionRequestUSD = await _transactionService.GetTransactionAmountByMonthUSD();
-            var transactionData = await _transactionService.GetTransactionData((int)monthId, (int)currencyId);
-            return Ok(new { transactionRequestLD, transactionRequestUSD,transactionData });
-
-        }
-
-        [AllowAnonymous]
-        [HttpGet("TransactionCountByType")]
-        public async Task<IActionResult> GetTransactionCountByTypeLD()
-        {
-            var transactionRequestLD = await _transactionService.GetTransactionCounttByTypeLD();
-            var transactionRequestUSD = await _transactionService.GetTransactionCounttByTypeUSD();
-
-            return Ok(new { transactionRequestLD, transactionRequestUSD });
-
-        }
-
         #region Helper function
         private async Task<TransactionResource> ChangePaymentRequestStatus(long paymentRequestId, Core.Enums.TransactionStatus status)
         {

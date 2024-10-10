@@ -25,7 +25,14 @@ namespace wleepay.Core.Repositories
         Task<IList<CountByMonths>> GetActiveAgentsByMonth();
         Task<IList<CountByMonths>> GetActiveSubscribersByMonth();
         Task<IList<subscribersByType>> GetActiveSubscribersByType();
-
+        Task<int> GetTotalSubscribersAsync();
+        Task<int> GetActiveSubscribersAsync();
+        Task<int> GetInactiveSubscribersAsync(DateTime since);
+        Task<decimal> GetActiveSubscriberLast30DaysAsync();
+        Task<decimal> GetSubscriberRetentionRateAsync();
+        Task<decimal> GetActiveSubscriberTodayAsync();
+        Task<decimal> GetActiveSubscriberLast7daysAsync();
+        Task<decimal> GetSubscriberChurnRateAsync();
 
 
     }

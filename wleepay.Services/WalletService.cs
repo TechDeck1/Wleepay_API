@@ -221,9 +221,6 @@ namespace wleepay.Services
         {
             return await _unitOfWork.Wallet.SetCashOnHand(amount,currencyId,WalletTypeId);
         }
-        public async Task<IList<WalletAmountHistoryByMonths>> GetWalletHistoryByWalletTypeAndCurrency(int walletType, int currencyId)
-        {
-            return await _unitOfWork.Wallet.GetWalletHistoryByWalletTypeAndCurrency(walletType, currencyId);
-        }
+       
     }
 }

@@ -378,6 +378,75 @@ namespace wleepay.Data.Repositories
             return x;
         }
 
+        public async Task<int> GetTotalSubscribersAsync()
+        {
+            return await WPContext.Users.Where(s=> s.UserRoles.FirstOrDefault().Role.Name == Role.Member.ToDescriptionString()).CountAsync();
+        }
+
+        public async Task<int> GetActiveSubscribersAsync()
+        {
+            return await WPContext.Users.CountAsync(s => s.UserDetail.Status == Status.Active.GetHashCode() && s.UserRoles.FirstOrDefault().Role.Name == Role.Member.ToDescriptionString());
+        }
+
+        public async Task<int> GetInactiveSubscribersAsync(DateTime since)
+        {
+            return await WPContext.Users.CountAsync(s => s.UserDetail.Status == Status.Active.GetHashCode()&& s.UserRoles.FirstOrDefault().Role.Name == Role.Member.ToDescriptionString() && s.UserDetail.CreatedDate < since);
+        }
+
+        public async Task<decimal> GetActiveSubscriberLast30DaysAsync()
+        {
+            var retained = await WPContext.Users.CountAsync(s => s.UserDetail.CreatedDate >= DateTime.Today.AddDays(-30) && s.UserRoles.FirstOrDefault().Role.Name == Role.Member.ToDescriptionString());
+            var activeLast30Days = await WPContext.Transactions
+                                    .Where(t => t.CreatedDate.Date >= DateTime.Today.AddDays(-30) && t.CreatedDate.Date <= DateTime.Today && t.FromWallet.ApplicationUser.UserRoles.FirstOrDefault().Role.Name == Role.Member.ToDescriptionString())
+                                    .Select(t => t.FromWallet.UserId).Distinct().CountAsync();
+            var total = await WPContext.Users.CountAsync();
+            return total == 0 ? 0 : (decimal)activeLast30Days / total * 100;
+        }
+
+        public async Task<decimal> GetSubscriberRetentionRate()
+        {
+            var retained = await WPContext.Users.CountAsync(s => s.UserDetail.CreatedDate >= DateTime.Today.AddDays(-30) && s.UserRoles.FirstOrDefault().Role.Name == Role.Member.ToDescriptionString());
+            var activeLast30Days = await WPContext.Transactions
+                                    .Where(t => t.CreatedDate.Date >= DateTime.Today.AddDays(-30) && t.CreatedDate.Date <= DateTime.Today && t.FromWallet.ApplicationUser.UserRoles.FirstOrDefault().Role.Name == Role.Member.ToDescriptionString())
+                                    .Select(t => t.FromWallet.UserId).Distinct().CountAsync();
+            var total = await WPContext.Users.CountAsync();
+            return total == 0 ? 0 : (decimal)activeLast30Days / total * 100;
+        }
+
+
+        public async Task<decimal> GetActiveSubscriberTodayAsync()
+        {
+            var activeToday = await WPContext.Transactions
+                            .Where(t => t.CreatedDate == DateTime.Today && t.FromWallet.ApplicationUser.UserRoles.FirstOrDefault().Role.Name == Role.Member.ToDescriptionString())
+                            .Select(t => t.FromWallet.UserId).Distinct().CountAsync();
+
+            var total = await WPContext.Users.CountAsync();
+            return total == 0 ? 0 : (decimal)activeToday / total * 100;
+        }
+
+        public async Task<decimal> GetActiveSubscriberLast7daysAsync()
+        {
+            var activeLast7Days = await WPContext.Transactions
+                            .Where(t => t.CreatedDate.Date >= DateTime.Today.AddDays(-7) && t.CreatedDate.Date <= DateTime.Today && t.FromWallet.ApplicationUser.UserRoles.FirstOrDefault().Role.Name == Role.Member.ToDescriptionString())
+                            .Select(t => t.FromWallet.UserId).Distinct().CountAsync();
+
+            var total = await WPContext.Users.CountAsync();
+            return total == 0 ? 0 : (decimal)activeLast7Days / total * 100;
+        }
+
+        public async Task<decimal> GetSubscriberChurnRateAsync()
+        {
+            var churned = await WPContext.Users.CountAsync(s => s.UserDetail.CreatedDate < DateTime.Now.AddDays(-30));
+            var subscribersWithNoTransactions = await WPContext.Users
+                                        .Where(s => !WPContext.Transactions.Any(t => t.FromWallet.UserId == s.Id || t.ToWallet.UserId == s.Id) && s.UserRoles.FirstOrDefault().Role.Name == Role.Member.ToDescriptionString())
+                                        .CountAsync();
+
+            var total = await WPContext.Users.CountAsync();
+            var churnRate = (subscribersWithNoTransactions / (double)total) * 100;
+            return total == 0 ? 0 : (decimal)subscribersWithNoTransactions / total * 100;
+        }
+
+
         public async Task<subscribersByType> GetOverAllSubscriberData()
         {
 

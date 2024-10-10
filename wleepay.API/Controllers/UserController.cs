@@ -795,21 +795,6 @@ namespace wleepay.API.Controllers
             });
         }
 
-        [AllowAnonymous]
-        [HttpGet("SubscribersAndAgentsOnBoardByMonth")]
-        public async Task<IActionResult> activeAgentsSubscribersByMonth()
-        {
-            var agentMemberCount = await _userDetailsService.GetActiveAgentsAndSubscribersCount();
-            var activeAgentsByMonth = await _userDetailsService.GetActiveAgentsByMonth();
-            var activeSubscribersByMonth = await _userDetailsService.GetActiveSubscribersByMonth();
-            var activeSubscribersByType = await _userDetailsService.GetActiveSubscribersByType();
-            return Ok(new{
-                agentMemberCount,
-                activeAgentsByMonth,
-                activeSubscribersByMonth,
-                activeSubscribersByType
-            });
-        }
         #region helper methods
         private async Task<string> uploadDocument(IFormFile file, string userId, string containerName = "kyc-document")
         {

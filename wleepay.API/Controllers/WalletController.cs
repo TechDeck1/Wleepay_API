@@ -96,14 +96,5 @@ namespace wleepay.API.Controllers
             return Ok(walletListResource);
         }
 
-        [AllowAnonymous]
-        [HttpGet("WalletAmountHistoryByMonth")]
-        public async Task<IActionResult> GetWalletHistoryByWalletTypeAndCurrency([FromQuery] int walletType, int currencyId)
-        {
-           
-            var walletData = await _walletService.GetWalletHistoryByWalletTypeAndCurrency(walletType , currencyId);
-            return Ok(walletData);
-        }
-
     }
 }
