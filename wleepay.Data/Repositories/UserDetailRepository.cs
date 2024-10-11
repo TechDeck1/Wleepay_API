@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.SqlServer.Management.Smo;
 using SendGrid.Helpers.Mail;
 using System;
 using System.Collections.Generic;
@@ -13,6 +14,7 @@ using wleepay.Core.Enums;
 using wleepay.Core.Models;
 using wleepay.Core.Repositories;
 using wleepay.Data.Context;
+using static DevExpress.XtraPrinting.Native.PageSizeInfo;
 
 namespace wleepay.Data.Repositories
 {
@@ -446,6 +448,27 @@ namespace wleepay.Data.Repositories
             return total == 0 ? 0 : (decimal)subscribersWithNoTransactions / total * 100;
         }
 
+        public async Task<UserDetailsResponseResource> GetReportOfUserByStatusAsync(int role, int status, int pageIndex = 0, int pageSize = 10)
+        {
+            int takeCount = pageSize;
+            int skipCount = pageIndex * pageSize;
+            var result = await WPContext.Users
+                .Where(s => s.UserDetail.Status == status && s.UserRoles.FirstOrDefault().Role.Name == ((Core.Enums.Role)role).ToString())
+                .Include(s=>s.UserDetail)
+                .Include(s => s.UserRoles)
+                       .ThenInclude(s => s.Role)
+                .OrderByDescending(w => w.UserDetail.CreatedDate)
+                .Skip(skipCount)
+                .Take(takeCount)
+                .ToListAsync();
+
+            return new UserDetailsResponseResource
+            {
+                TotalCount = await WPContext.Users.Where(s => s.UserDetail.Status == status && s.UserRoles.FirstOrDefault().Role.Name == ((Core.Enums.Role)role).ToString()).CountAsync(),
+                UserDetails = result
+            };
+
+        }
 
         public async Task<subscribersByType> GetOverAllSubscriberData()
         {

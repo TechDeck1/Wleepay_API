@@ -10,6 +10,6 @@ namespace wleepay.Core.Enums
         DeActive = 0,
         Suspend = 2,
         UnSuspend = 3, 
-        
+        RiskReview = 4,        
     }
 }

@@ -24,4 +24,13 @@ namespace wleepay.API.Resources
     {
         public string PhoneNumber { get; set; }
     }
+
+    public class ReportByUserStatusRequest
+    {
+        public int Role { get; set; }
+        public int Status { get; set; }
+        public int PageSize { get; set; }
+        public int PageIndex { get; set; }
+    }
+
 }

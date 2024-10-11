@@ -33,7 +33,7 @@ namespace wleepay.Core.Repositories
         Task<decimal> GetActiveSubscriberTodayAsync();
         Task<decimal> GetActiveSubscriberLast7daysAsync();
         Task<decimal> GetSubscriberChurnRateAsync();
-
+        Task<UserDetailsResponseResource> GetReportOfUserByStatusAsync(int role, int status , int pageIndex = 0, int pageSize = 10);
 
     }
 }
