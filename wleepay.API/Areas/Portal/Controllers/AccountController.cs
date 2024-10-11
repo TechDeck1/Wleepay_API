@@ -1662,8 +1662,8 @@ namespace wleepay.API.Areas.Portal.Controllers
         }
 
         [AllowAnonymous]
-        [HttpPost("ActiveOrDeactivateAccount")]
-        public async Task<IActionResult> ActiveOrDeActiveAccount([FromBody] ActivateDeactivateAccountResource model)
+        [HttpPost("UpdateStatus")]
+        public async Task<IActionResult> UpdateUserStatus([FromBody] ActivateDeactivateAccountResource model)
         {
             try
             {

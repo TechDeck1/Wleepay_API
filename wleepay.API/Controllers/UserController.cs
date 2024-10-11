@@ -333,6 +333,8 @@ namespace wleepay.API.Controllers
             if (string.IsNullOrEmpty(imageUrl))
                 return BadRequest("Can't upload image");
 
+            //userDetail.Image = imageUrl.ToString();
+            //var updateUser =  await _userDetailsService.AddOrUpdateUserDetails(userDetail);
             //update document url
             var kycDocumentToUpdate = await _kycDocumentsService.GetKYCDocumentByUserId(userId);
             if (kycDocumentToUpdate == null)
