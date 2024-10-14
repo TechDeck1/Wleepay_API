@@ -20,11 +20,27 @@ namespace wleepay.Services
 
         public async Task<UserDetailsResponseResource> GetReportOfUserByStatusAsync(int role, int status, int pageIndex = 0, int pageSize = 10)
         {
-            var result =await _unitOfWork.UserDetail.GetReportOfUserByStatusAsync(role,status,pageIndex,pageSize);
+            var result = await _unitOfWork.UserDetail.GetReportOfUserByStatusAsync(role, status, pageIndex, pageSize);
             return result;
-           
+
         }
 
+        public async Task<UserDetailsResponseResource> GetInActiveSubscriberListAsync(int role)
+        {
+            var result = await _unitOfWork.UserDetail.GetInActiveSubscriberAndMemberListAsync(role);
+            return result;
+        }
 
+        public async Task<UserDetailsResponseResource> GetActiveSubscriberListAsync(int role)
+        {
+            var result = await _unitOfWork.UserDetail.GetActiveSubscriberAndMemberListAsync(role);
+            return result;
+        }
+
+        public async Task<UserDetailsResponseResource> GetSubscriberAndMemberListByWalletBalanceAsync(int WalletType, int role, int balance)
+        {
+            var result = await _unitOfWork.UserDetail.GetSubscriberAndMemberListByWalletBalanceAsync(WalletType, role,balance);
+            return result;
+        }
     }
 }

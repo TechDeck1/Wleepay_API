@@ -10,5 +10,8 @@ namespace wleepay.Core.Services
     public interface IReportService
     {
         Task<UserDetailsResponseResource> GetReportOfUserByStatusAsync(int role, int status, int pageIndex = 0, int pageSize = 10);
+        Task<UserDetailsResponseResource> GetInActiveSubscriberListAsync(int role);
+        Task<UserDetailsResponseResource> GetActiveSubscriberListAsync(int role);
+        Task<UserDetailsResponseResource> GetSubscriberAndMemberListByWalletBalanceAsync(int WalletType, int role, int balance);
     }
 }

@@ -26,5 +26,26 @@ namespace wleepay.API.Controllers
             var data = await _reportService.GetReportOfUserByStatusAsync(reportByUserStatus.Role, reportByUserStatus.Status, reportByUserStatus.PageIndex=0, reportByUserStatus.PageSize=10);
             return Ok(data);
         }
+
+        [HttpGet("InActiveUsers")]
+        public async Task<IActionResult> GetInActiveSubscriberListAsync([FromQuery]int role)
+        {
+            var data = await _reportService.GetInActiveSubscriberListAsync(role);
+            return Ok(data);
+        }
+        [HttpGet("ActiveUsers")]
+        public async Task<IActionResult> GetActiveSubscriberListAsync([FromQuery] int role)
+        {
+            var data = await _reportService.GetActiveSubscriberListAsync(role);
+            return Ok(data);
+        }
+
+        [HttpPost("ReportByWalletBalance")]
+        public async Task<IActionResult> GetSubscriberAndMemberListByWalletBalanceAsync(ReportByWalletBalanceRequest reportByWalletBalanceRequest)
+        {
+            var data = await _reportService.GetSubscriberAndMemberListByWalletBalanceAsync(reportByWalletBalanceRequest.WalletType, reportByWalletBalanceRequest.Role , reportByWalletBalanceRequest.Balance);
+            return Ok(data);
+        }
+
     }
 }

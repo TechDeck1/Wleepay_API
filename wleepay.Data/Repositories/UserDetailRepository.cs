@@ -415,7 +415,6 @@ namespace wleepay.Data.Repositories
             return total == 0 ? 0 : (decimal)activeLast30Days / total * 100;
         }
 
-
         public async Task<decimal> GetActiveSubscriberTodayAsync()
         {
             var activeToday = await WPContext.Transactions
@@ -468,6 +467,64 @@ namespace wleepay.Data.Repositories
                 UserDetails = result
             };
 
+        }
+
+        public async Task<UserDetailsResponseResource> GetInActiveSubscriberAndMemberListAsync(int role)
+        {
+            var thirtyDaysAgo = DateTime.Now.AddDays(-30);
+
+            // Query to get all inactive subscribers for the last 30 days
+            var inactiveSubscribers = WPContext.Users
+                .Where(subscriber => subscriber.UserRoles.FirstOrDefault().Role.Name == ((Core.Enums.Role)role).ToString() && !WPContext.Transactions
+                    .Any(transaction =>
+                        (WPContext.Wallet
+                            .Any(wallet => wallet.UserId == subscriber.Id &&
+                                          (wallet.Id == transaction.FromWalletId || wallet.Id == transaction.ToWalletId))
+                         && transaction.CreatedDate >= thirtyDaysAgo))).Include(s=>s.UserDetail)
+                .ToList();
+
+            return new UserDetailsResponseResource
+            {
+                TotalCount = inactiveSubscribers.Count(),
+                UserDetails = inactiveSubscribers
+            };
+        }
+
+        public async Task<UserDetailsResponseResource> GetActiveSubscriberAndMemberListAsync(int role)
+        {
+            var thirtyDaysAgo = DateTime.Now.AddDays(-30);
+            var activeSubscribers = WPContext.Users
+                .Select(subscriber => new
+                {
+                    Subscriber = subscriber,
+                    TransactionCount = WPContext.Transactions
+                        .Where(transaction =>
+                            WPContext.Wallet
+                                .Any(wallet => wallet.UserId == subscriber.Id &&
+                                              (wallet.Id == transaction.FromWalletId || wallet.Id == transaction.ToWalletId))
+                            && transaction.CreatedDate >= thirtyDaysAgo)
+                        .Count()
+                })
+                .Where(x => x.TransactionCount > 0 && x.Subscriber.UserRoles.FirstOrDefault().Role.Name == ((Core.Enums.Role)role).ToString())  // Only include subscribers with at least 1 transaction in the last 30 days
+                .OrderByDescending(x => x.TransactionCount)  // Order by the number of transactions (most active first)
+                .Select(x => x.Subscriber).Include(s => s.UserDetail).ToList();
+
+            return new UserDetailsResponseResource
+            {
+                TotalCount = activeSubscribers.Count(),
+                UserDetails = activeSubscribers
+            };
+        }
+
+        public async Task<UserDetailsResponseResource> GetSubscriberAndMemberListByWalletBalanceAsync(int currencyId, int role, double balance)
+        {
+            var listByWalletbalance = await WPContext.Users.Where(users => users.UserRoles.FirstOrDefault().Role.Name == ((Core.Enums.Role)role).ToString() && WPContext.Wallet.Any(w => w.UserId == users.Id && w.Balance >= balance && w.CurrencyId == currencyId)).Include(s => s.UserDetail).ToListAsync();
+            
+            return new UserDetailsResponseResource
+            {
+                TotalCount = listByWalletbalance.Count(),
+                UserDetails = listByWalletbalance
+            };
         }
 
         public async Task<subscribersByType> GetOverAllSubscriberData()
