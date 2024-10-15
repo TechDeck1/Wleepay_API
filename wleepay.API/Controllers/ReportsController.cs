@@ -64,12 +64,8 @@ namespace wleepay.API.Controllers
         public async Task<IActionResult> GetReportByAllActiveAccountsAsync([FromQuery] int role)
         {
 
-            var data = await _userDetailService.GetAllUsersByRole(role);
-            return Ok(new
-            {
-                TotalCount = data.Count(),
-                UserDetail = data,
-            });
+            var data = await _reportService.GetAllActiveAccountsAsync(role);
+            return Ok(data);
         }
 
 
