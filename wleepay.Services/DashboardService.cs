@@ -31,11 +31,11 @@ namespace wleepay.Services
             {
                 TotalSubscribers = totalSubscribers,
                 ActiveSubscribers = activeSubscribers,
-                ActiveLast7Days = activeLast7Days,
-                ActiveToday = activeToday,
-                ActiveLast30Days = activeLast30Days,
-                RetentionRate = retentionRate,
-                ChurnRate = churnRate,
+                ActiveLast7Days = Math.Round(activeLast7Days, 1),
+                ActiveToday = Math.Round(activeToday,2),
+                ActiveLast30Days = Math.Round(activeLast30Days,2),
+                RetentionRate = Math.Round(retentionRate, 2),
+                ChurnRate = Math.Round(churnRate,2),
                 InactiveLast30Days = inactiveLast30Days,
                 InactivePrevious30Days = inactivePrevious30Days
                 // Populate other fields accordingly

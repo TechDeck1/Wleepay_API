@@ -37,6 +37,8 @@ namespace wleepay.Core.Repositories
         Task<UserDetailsResponseResource> GetInActiveSubscriberAndMemberListAsync(int role);
         Task<UserDetailsResponseResource> GetActiveSubscriberAndMemberListAsync(int role);
         Task<UserDetailsResponseResource> GetSubscriberAndMemberListByWalletBalanceAsync(int WalletType , int role, double balance);
+        Task<UserDetailsResponseResource> GetReportBySubscribersKYCLevelAsync(int level , int role);
+        Task<UserDetailsResponseResource> GetAllActiveAccountsAsync(int role);
 
     }
 }

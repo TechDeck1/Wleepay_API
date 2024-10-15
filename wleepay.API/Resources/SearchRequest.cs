@@ -37,7 +37,7 @@ namespace wleepay.API.Resources
     public class ReportByWalletBalanceRequest
     {
         public int Role { get; set; }
-        public int WalletType { get; set; }
+        public int CurrencyType { get; set; }
         public int Balance { get; set; }
 
     }

@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using wleepay.Core.Services;
 using wleepay.Services;
 using wleepay.API.Resources;
+using System.Linq;
 
 namespace wleepay.API.Controllers
 {
@@ -14,10 +15,13 @@ namespace wleepay.API.Controllers
     public class ReportsController : Controller
     {
         private readonly IReportService _reportService;
+        private readonly IUserDetailService _userDetailService;
 
-        public ReportsController(IReportService reportService)
+
+        public ReportsController(IReportService reportService, IUserDetailService userDetailService)
         {
             _reportService = reportService;
+            _userDetailService = userDetailService;
         }
 
         [HttpPost("RiskReview")]
@@ -43,9 +47,31 @@ namespace wleepay.API.Controllers
         [HttpPost("ReportByWalletBalance")]
         public async Task<IActionResult> GetSubscriberAndMemberListByWalletBalanceAsync(ReportByWalletBalanceRequest reportByWalletBalanceRequest)
         {
-            var data = await _reportService.GetSubscriberAndMemberListByWalletBalanceAsync(reportByWalletBalanceRequest.WalletType, reportByWalletBalanceRequest.Role , reportByWalletBalanceRequest.Balance);
+            var data = await _reportService.GetSubscriberAndMemberListByWalletBalanceAsync(reportByWalletBalanceRequest.CurrencyType, reportByWalletBalanceRequest.Role , reportByWalletBalanceRequest.Balance);
             return Ok(data);
         }
+        [HttpGet("ReportBySubscribersKYCLevel")]
+        public async Task<IActionResult> GetReportBySubscribersKYCLevelAsync([FromQuery]int role, [FromQuery]int level)
+        {
+            
+                var data = await _reportService.GetReportBySubscribersKYCLevelAsync(level, role);
+                return Ok(data);
+          
+                
+        }
+
+        [HttpGet("AllActiveAccounts")]
+        public async Task<IActionResult> GetReportByAllActiveAccountsAsync([FromQuery] int role)
+        {
+
+            var data = await _userDetailService.GetAllUsersByRole(role);
+            return Ok(new
+            {
+                TotalCount = data.Count(),
+                UserDetail = data,
+            });
+        }
+
 
     }
 }

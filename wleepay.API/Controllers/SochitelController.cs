@@ -413,9 +413,9 @@ namespace wleepay.API.Controllers
 
                             SochitelTransactions sochitelTransactions = new SochitelTransactions
                             {
-                                TransactionId = transactionResponse?.Result?.Id ?? "12345",
+                                TransactionId = transactionResponse?.Result?.Id ?? "0",
                                 TransactionType = "Bill Payment",
-                                WalletTransactionId = newTransaction.Id,
+                                WalletTransactionId = newTransaction?.Id ,
                                 TransactionAmount = newTransaction.Amount.ToString(),
                                 CommissionRate = (transactionResponse?.Result?.Balance?.Commission == null ? "0" : transactionResponse?.Result?.Balance?.Commission),
                                 OperatorId = execTransactionRequest.Operator,
@@ -423,7 +423,7 @@ namespace wleepay.API.Controllers
                                 PhoneNumber = execTransactionRequest.Msisdn,
                                 UserReference = transactionResponse.Reference,
                                 CreatedDate = DateTime.UtcNow,
-                                ExtraInfo = transactionResponse.Result.Instructions,
+                                ExtraInfo = transactionResponse?.Result?.Instructions ?? "",
 
 
                             };
@@ -485,12 +485,36 @@ namespace wleepay.API.Controllers
 
                             return Ok(transactionResponse);
                         }
+                        else
+                        {
+                            SochitelTransactions sochitelTransactions = new SochitelTransactions
+                            {
+                                TransactionId = transactionResponse?.Result?.Id ?? "0",
+                                TransactionType = "Bill Payment",
+                                WalletTransactionId = 0,
+                                TransactionAmount = execTransactionRequest.AmountInUsd.ToString() ?? execTransactionRequest.AmountInLd.ToString(),
+                                CommissionRate = (transactionResponse?.Result?.Balance?.Commission == null ? "0" : transactionResponse?.Result?.Balance?.Commission),
+                                OperatorId = execTransactionRequest.Operator,
+                                ProductId = execTransactionRequest.ProductId,
+                                PhoneNumber = execTransactionRequest.Msisdn,
+                                UserReference = transactionResponse.Reference,
+                                CreatedDate = DateTime.UtcNow,
+                                ExtraInfo = transactionResponse?.Result?.Instructions ?? "",
 
-                        if(transactionResponse.Status.Name == ResponseStatusForSochitel.InvalidDestination.ToDescriptionString())
+
+                            };
+
+                            var sTansaction = _sochitelTransactionService.AddSochitelTransactions(sochitelTransactions);
+                        }
+
+
+                        if (transactionResponse.Status.Name == ResponseStatusForSochitel.InvalidDestination.ToDescriptionString())
                         {
                             transactionResponse.Status.Name = Messages.MeterNumberIncorrect.ToDescriptionString();
                             return Ok(transactionResponse);
                         }
+
+
 
                         return Ok(transactionResponse);
                     }

@@ -527,68 +527,27 @@ namespace wleepay.Data.Repositories
             };
         }
 
-        public async Task<subscribersByType> GetOverAllSubscriberData()
+        public async Task<UserDetailsResponseResource> GetReportBySubscribersKYCLevelAsync(int level, int role)
         {
+            var listByKYCLevel = await WPContext.Users.Where(users => users.UserRoles.FirstOrDefault().Role.Name == ((Core.Enums.Role)role).ToString() && users.UserDetail.KYCLevel == level).Include(s => s.UserDetail).ToListAsync();
 
-            subscribersByType subscribersByType = new subscribersByType();
-            var today = DateTime.Today;
-            var sevenDaysAgo = today.AddDays(-7);
-            var thirtyDaysAgo = today.AddDays(-30);
+            return new UserDetailsResponseResource
+            {
+                TotalCount = listByKYCLevel.Count(),
+                UserDetails = listByKYCLevel
+            };
+        }
 
-            var totalSubscribers = await WPContext.Users.CountAsync();
-            var retainedSubscribers = await WPContext.Transactions.Select(t => t.FromWallet.UserId).Distinct().CountAsync();
-            var retentionRate = (retainedSubscribers / (double)totalSubscribers) * 100;
+        public async Task<UserDetailsResponseResource> GetAllActiveAccountsAsync(int role)
+        {
+            var listByKYCLevel = await WPContext.Users.Where(users => users.UserRoles.FirstOrDefault().Role.Name == ((Core.Enums.Role)role).ToString() && users.UserDetail.Status == Status.Active.GetHashCode()).Include(s => s.UserDetail).ToListAsync();
 
-            var activeSubscribersL1 = await WPContext.Users.Include(s=>s.UserDetail)
-                .Where(s => s.UserDetail.KYCLevel == wleepay.Core.Enums.KYCLevel.L1.GetHashCode() || s.Wallets.FirstOrDefault().TransactionFrom.Any()|| s.Wallets.FirstOrDefault().TransactionTo.Any())
-                .CountAsync();
-
-            var activeSubscribersL2 = await WPContext.Users
-                .Where(s => s.UserDetail.KYCLevel == wleepay.Core.Enums.KYCLevel.L2.GetHashCode() || s.Wallets.FirstOrDefault().TransactionFrom.Any() || s.Wallets.FirstOrDefault().TransactionTo.Any())
-                .CountAsync();
-
-            var activeSubscribersL3 = await WPContext.Users
-                .Where(s => s.UserDetail.KYCLevel == wleepay.Core.Enums.KYCLevel.L3.GetHashCode() || s.Wallets.FirstOrDefault().TransactionFrom.Any() || s.Wallets.FirstOrDefault().TransactionTo.Any())
-                .CountAsync();
-           
-
-            var activeToday = await WPContext.Transactions
-                .Where(t => t.CreatedDate == today)
-                .Select(t => t.FromWallet.UserId).Distinct().CountAsync();
-
-            var activeLast7Days = await WPContext.Transactions
-                .Where(t => t.CreatedDate.Date >= sevenDaysAgo && t.CreatedDate.Date <= today)
-                .Select(t => t.FromWallet.UserId).Distinct().CountAsync();
-
-            var activeLast30Days = await WPContext.Transactions
-                .Where(t => t.CreatedDate.Date >= thirtyDaysAgo && t.CreatedDate.Date <= today)
-                .Select(t => t.FromWallet.UserId).Distinct().CountAsync();
-
-            var subscribersWithNoTransactions = await WPContext.Users
-                .Where(s => !WPContext.Transactions.Any(t => t.FromWallet.UserId == s.Id || t.ToWallet.UserId == s.Id))
-                .CountAsync();
-
-            var churnRate = (subscribersWithNoTransactions / (double)totalSubscribers) * 100;
-
-            var inactiveSubscribersLast30Days = await WPContext.Users
-                .Where(s => !WPContext.Transactions
-                    .Any(t => (t.FromWallet.UserId == s.Id || t.ToWallet.UserId == s.Id) && t.CreatedDate.Date >= thirtyDaysAgo))
-                .CountAsync();
-
-            var previousThirtyDaysAgo = today.AddDays(-60);
-
-            var inactiveSubscribersPrevious30Days = await WPContext.Users
-                .Where(s => !WPContext.Transactions
-                    .Any(t =>(t.FromWallet.UserId == s.Id || t.ToWallet.UserId == s.Id) && t.CreatedDate.Date >= previousThirtyDaysAgo && t.CreatedDate.Date < thirtyDaysAgo))
-                .CountAsync();
-
-            var activeTodayPercentage = (activeToday / (double)totalSubscribers) * 100;
-            var activeLast7DaysPercentage = (activeLast7Days / (double)totalSubscribers) * 100;
-            var inactiveLast30DaysPercentage = (inactiveSubscribersLast30Days / (double)totalSubscribers) * 100;
-
-            return subscribersByType;
-
-      }
+            return new UserDetailsResponseResource
+            {
+                TotalCount = listByKYCLevel.Count(),
+                UserDetails = listByKYCLevel
+            };
+        }
 
     }
 }

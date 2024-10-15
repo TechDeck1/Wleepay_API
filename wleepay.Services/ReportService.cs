@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Stripe;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
@@ -42,5 +43,20 @@ namespace wleepay.Services
             var result = await _unitOfWork.UserDetail.GetSubscriberAndMemberListByWalletBalanceAsync(WalletType, role,balance);
             return result;
         }
+
+        public async Task<UserDetailsResponseResource> GetReportBySubscribersKYCLevelAsync(int level, int role)
+        {
+
+            var result = await _unitOfWork.UserDetail.GetReportBySubscribersKYCLevelAsync(level, role);
+            return result;
+        }
+
+        public async Task<UserDetailsResponseResource> GetAllActiveAccountsAsync(int role)
+        {
+            var result = await _unitOfWork.UserDetail.GetAllActiveAccountsAsync(role);
+            return result;
+
+        }
+
     }
 }
