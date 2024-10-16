@@ -39,6 +39,7 @@ namespace wleepay.API.Controllers
             var data = await _reportService.GetInActiveSubscriberListAsync(role);
             return Ok(data);
         }
+
         [HttpGet("ActiveUsers")]
         public async Task<IActionResult> GetActiveSubscriberListAsync([FromQuery] int role)
         {
@@ -52,20 +53,17 @@ namespace wleepay.API.Controllers
             var data = await _reportService.GetSubscriberAndMemberListByWalletBalanceAsync(reportByWalletBalanceRequest.CurrencyType, reportByWalletBalanceRequest.Role , reportByWalletBalanceRequest.Balance);
             return Ok(data);
         }
+
         [HttpGet("ReportBySubscribersKYCLevel")]
         public async Task<IActionResult> GetReportBySubscribersKYCLevelAsync([FromQuery]int role, [FromQuery]int level)
         {
-            
-                var data = await _reportService.GetReportBySubscribersKYCLevelAsync(level, role);
-                return Ok(data);
-          
-                
+            var data = await _reportService.GetReportBySubscribersKYCLevelAsync(level, role);
+            return Ok(data);
         }
 
         [HttpGet("AllActiveAccounts")]
         public async Task<IActionResult> GetReportByAllActiveAccountsAsync([FromQuery] int role)
         {
-
             var data = await _reportService.GetAllActiveAccountsAsync(role);
             return Ok(data);
         }
@@ -74,8 +72,14 @@ namespace wleepay.API.Controllers
         [HttpGet("AccountOpenedByDateRange")]
         public async Task<IActionResult> GetAccountOpenedByDateRangeAsync([FromQuery] DateTime fromDate , DateTime toDate)
         {
-
             var data = await _reportService.GetAccountOpenedByDateRangeAsync(fromDate, toDate);
+            return Ok(data);
+        }
+
+        [HttpGet("SubscribersCountByCountry")]
+        public async Task<IActionResult> GetSubscribersCountByCountryAsync([FromQuery] int countryId)
+        {
+            var data = await _reportService.GetSubscribersCountByCountryAsync(countryId);
             return Ok(data);
         }
 

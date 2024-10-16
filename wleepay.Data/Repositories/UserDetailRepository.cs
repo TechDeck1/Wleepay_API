@@ -559,5 +559,12 @@ namespace wleepay.Data.Repositories
             };
         }
 
+        public async Task<int> GetSubscribersCountByCountryAsync(int countryId)
+        {
+            var subscriberCountbyCountry = await WPContext.Users.Where(users => users.UserRoles.FirstOrDefault().Role.Name == Role.Member.ToDescriptionString() && users.UserDetail.CountyId == countryId).Include(s => s.UserDetail).CountAsync();
+
+            return subscriberCountbyCountry;
+        }
+
     }
 }

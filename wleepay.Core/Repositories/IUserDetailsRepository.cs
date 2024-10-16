@@ -40,6 +40,8 @@ namespace wleepay.Core.Repositories
         Task<UserDetailsResponseResource> GetReportBySubscribersKYCLevelAsync(int level , int role);
         Task<UserDetailsResponseResource> GetAllActiveAccountsAsync(int role);
         Task<UserDetailsResponseResource> GetAccountOpenedByDateRangeAsync(DateTime fromDate , DateTime toDate);
+        Task<int> GetSubscribersCountByCountryAsync(int countryId);
+
 
     }
 }

@@ -65,5 +65,13 @@ namespace wleepay.Services
 
         }
 
+
+        public async Task<int> GetSubscribersCountByCountryAsync(int countryId)
+        {
+            var result = await _unitOfWork.UserDetail.GetSubscribersCountByCountryAsync(countryId);
+            return result;
+
+        }
+
     }
 }
