@@ -547,6 +547,16 @@ namespace wleepay.Data.Repositories
                 TotalCount = listByKYCLevel.Count(),
                 UserDetails = listByKYCLevel
             };
+        }  
+        public async Task<UserDetailsResponseResource> GetAccountOpenedByDateRangeAsync(DateTime fromDate, DateTime toDate)
+        {
+            var listByDateRange = await WPContext.Users.Where(users => users.UserRoles.FirstOrDefault().Role.Name == Role.Member.ToDescriptionString() && users.UserDetail.CreatedDate > fromDate && users.UserDetail.CreatedDate < toDate).Include(s => s.UserDetail).OrderByDescending(x=>x.UserDetail.CreatedDate).ToListAsync();
+
+            return new UserDetailsResponseResource
+            {
+                TotalCount = listByDateRange.Count(),
+                UserDetails = listByDateRange
+            };
         }
 
     }

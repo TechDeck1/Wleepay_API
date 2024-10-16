@@ -5,6 +5,8 @@ using wleepay.Core.Services;
 using wleepay.Services;
 using wleepay.API.Resources;
 using System.Linq;
+using Microsoft.VisualBasic;
+using System;
 
 namespace wleepay.API.Controllers
 {
@@ -65,6 +67,15 @@ namespace wleepay.API.Controllers
         {
 
             var data = await _reportService.GetAllActiveAccountsAsync(role);
+            return Ok(data);
+        }
+
+
+        [HttpGet("AccountOpenedByDateRange")]
+        public async Task<IActionResult> GetAccountOpenedByDateRangeAsync([FromQuery] DateTime fromDate , DateTime toDate)
+        {
+
+            var data = await _reportService.GetAccountOpenedByDateRangeAsync(fromDate, toDate);
             return Ok(data);
         }
 

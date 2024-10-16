@@ -58,5 +58,12 @@ namespace wleepay.Services
 
         }
 
+        public async Task<UserDetailsResponseResource> GetAccountOpenedByDateRangeAsync(DateTime fromDate, DateTime toDate)
+        {
+            var result = await _unitOfWork.UserDetail.GetAccountOpenedByDateRangeAsync(fromDate,toDate);
+            return result;
+
+        }
+
     }
 }
