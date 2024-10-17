@@ -7,6 +7,9 @@ using wleepay.API.Resources;
 using System.Linq;
 using Microsoft.VisualBasic;
 using System;
+using static DevExpress.Xpo.Helpers.AssociatedCollectionCriteriaHelper;
+using wleepay.Core.Models;
+using AutoMapper;
 
 namespace wleepay.API.Controllers
 {
@@ -18,12 +21,14 @@ namespace wleepay.API.Controllers
     {
         private readonly IReportService _reportService;
         private readonly IUserDetailService _userDetailService;
+        private readonly IMapper _mapper;
 
 
-        public ReportsController(IReportService reportService, IUserDetailService userDetailService)
+        public ReportsController(IReportService reportService, IUserDetailService userDetailService, IMapper mapper)
         {
             _reportService = reportService;
             _userDetailService = userDetailService;
+            _mapper = mapper;
         }
 
         [HttpPost("RiskReview")]
@@ -87,7 +92,13 @@ namespace wleepay.API.Controllers
         public async Task<IActionResult> GetTransactionCountSummaryAsync(TransactionCountSummaryRequest transactionCountSummaryRequest)
         {
             var data = await _reportService.TransactionCountSummary(transactionCountSummaryRequest.Role , transactionCountSummaryRequest.TransferType, transactionCountSummaryRequest.fromDate, transactionCountSummaryRequest.toDate);
-            return Ok(data);
+            var transactionResources = data.Transactions.Select(transaction => _mapper.Map<Transaction, TransactionHistoryResource>(transaction)).ToList();
+
+            return Ok(new
+            {
+                TotalCount = data.TotalCount,
+                Transactions = transactionResources
+            });
         }
 
 

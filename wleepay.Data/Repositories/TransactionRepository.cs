@@ -901,9 +901,12 @@ namespace wleepay.Data.Repositories
         {
             // Fetch the relevant data first
             var transactions = await WPContext.Transactions
-                .Include(t => t.ToWallet)
-                .Where(t => t.Status == 3 && t.TransferTypeId == transaferType && t.CreatedDate > fromDate && t.CreatedDate < toDate)
-                .ToListAsync();
+               .Where(t => t.Status == 3 && t.TransferTypeId == transaferType && t.CreatedDate > fromDate && t.CreatedDate < toDate)
+               .Include(s => s.FromWallet.ApplicationUser.UserDetail)
+               .Include(s => s.FromWallet.Currency)
+               .Include(s => s.ToWallet.ApplicationUser.UserDetail)
+               .Include(s => s.TransferType)
+               .ToListAsync();
 
             return new TransactionResponseResource
             {
