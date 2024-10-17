@@ -17,7 +17,6 @@ using wleepay.Core.Models;
 using wleepay.Core.Repositories;
 using wleepay.Core.Services;
 using wleepay.Data.Context;
-using static DevExpress.Xpo.Helpers.AssociatedCollectionCriteriaHelper;
 using TransactionStatus = wleepay.Core.Enums.TransactionStatus;
 
 namespace wleepay.Data.Repositories
@@ -898,15 +897,19 @@ namespace wleepay.Data.Repositories
             return (seperateTransactionCountsByMonth);
         }
 
-        public async Task<int> TransactionCountSummary(int role, int transaferType, DateTime fromDate, DateTime toDate)
+        public async Task<TransactionResponseResource> TransactionCountSummary(int role, int transaferType, DateTime fromDate, DateTime toDate)
         {
             // Fetch the relevant data first
-            var transactionsCount = await WPContext.Transactions
+            var transactions = await WPContext.Transactions
                 .Include(t => t.ToWallet)
                 .Where(t => t.Status == 3 && t.TransferTypeId == transaferType && t.CreatedDate > fromDate && t.CreatedDate < toDate)
-                .CountAsync();
+                .ToListAsync();
 
-            return transactionsCount;
+            return new TransactionResponseResource
+            {
+                TotalCount = transactions.Count(),
+                Transactions = transactions
+            };
 
         }
     }

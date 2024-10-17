@@ -36,7 +36,7 @@ namespace wleepay.Core.Repositories
         Task<IList<TransactionCountByTypeResponseModel>> GetTransactionCounttByTypeLD();
         Task<IList<TransactionCountByTypeResponseModel>> GetTransactionCounttByTypeUSD();
         Task<IList<TransactionSummaryResponseModel>> GetTransactionData(int monthId, int currencyId);
-        Task<int> TransactionCountSummary(int role, int transaferType, DateTime fromDate, DateTime toDate);
+        Task<TransactionResponseResource> TransactionCountSummary(int role, int transaferType, DateTime fromDate, DateTime toDate);
 
 
     }
