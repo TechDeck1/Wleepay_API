@@ -516,9 +516,9 @@ namespace wleepay.Data.Repositories
             };
         }
 
-        public async Task<UserDetailsResponseResource> GetSubscriberAndMemberListByWalletBalanceAsync(int currencyId, int role, double balance)
+        public async Task<UserDetailsResponseResource> GetSubscriberAndMemberListByWalletBalanceAsync(int currencyId, int role, double balance, int walletType)
         {
-            var listByWalletbalance = await WPContext.Users.Where(users => users.UserRoles.FirstOrDefault().Role.Name == ((Core.Enums.Role)role).ToString() && WPContext.Wallet.Any(w => w.UserId == users.Id && w.Balance >= balance && w.CurrencyId == currencyId)).Include(s => s.UserDetail).ToListAsync();
+            var listByWalletbalance = await WPContext.Users.Where(users => users.UserRoles.FirstOrDefault().Role.Name == ((Core.Enums.Role)role).ToString() && WPContext.Wallet.Any(w => w.UserId == users.Id && w.Balance >= balance && w.CurrencyId == currencyId && w.Type == walletType)).Include(s => s.UserDetail).Include(w=>w.Wallets).ToListAsync();
             
             return new UserDetailsResponseResource
             {

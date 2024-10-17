@@ -38,9 +38,9 @@ namespace wleepay.Services
             return result;
         }
 
-        public async Task<UserDetailsResponseResource> GetSubscriberAndMemberListByWalletBalanceAsync(int WalletType, int role, int balance)
+        public async Task<UserDetailsResponseResource> GetSubscriberAndMemberListByWalletBalanceAsync(int WalletType, int role, int balance, int walletType)
         {
-            var result = await _unitOfWork.UserDetail.GetSubscriberAndMemberListByWalletBalanceAsync(WalletType, role,balance);
+            var result = await _unitOfWork.UserDetail.GetSubscriberAndMemberListByWalletBalanceAsync(WalletType, role,balance, walletType);
             return result;
         }
 

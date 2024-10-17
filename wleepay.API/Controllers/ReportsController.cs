@@ -50,7 +50,7 @@ namespace wleepay.API.Controllers
         [HttpPost("ReportByWalletBalance")]
         public async Task<IActionResult> GetSubscriberAndMemberListByWalletBalanceAsync(ReportByWalletBalanceRequest reportByWalletBalanceRequest)
         {
-            var data = await _reportService.GetSubscriberAndMemberListByWalletBalanceAsync(reportByWalletBalanceRequest.CurrencyType, reportByWalletBalanceRequest.Role , reportByWalletBalanceRequest.Balance);
+            var data = await _reportService.GetSubscriberAndMemberListByWalletBalanceAsync(reportByWalletBalanceRequest.CurrencyType, reportByWalletBalanceRequest.Role , reportByWalletBalanceRequest.Balance , reportByWalletBalanceRequest.WalletType);
             return Ok(data);
         }
 
