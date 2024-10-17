@@ -39,6 +39,7 @@ namespace wleepay.Data.Repositories
         {
             await WPContext.Transactions.AddAsync(transaction);
         }
+
         public async Task<Transaction> AddUpdateTransaction(Transaction transactionDetail)
         {
             using (IDbContextTransaction transaction = WPContext.Database.BeginTransaction())
@@ -895,6 +896,18 @@ namespace wleepay.Data.Repositories
             .ToList();
 
             return (seperateTransactionCountsByMonth);
+        }
+
+        public async Task<int> TransactionCountSummary(int role, int transaferType, DateTime fromDate, DateTime toDate)
+        {
+            // Fetch the relevant data first
+            var transactionsCount = await WPContext.Transactions
+                .Include(t => t.ToWallet)
+                .Where(t => t.Status == 3 && t.TransferTypeId == transaferType && t.CreatedDate > fromDate && t.CreatedDate < toDate)
+                .CountAsync();
+
+            return transactionsCount;
+
         }
     }
 }

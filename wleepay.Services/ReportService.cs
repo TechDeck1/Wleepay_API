@@ -72,6 +72,12 @@ namespace wleepay.Services
             return result;
 
         }
+        public async Task<int> TransactionCountSummary(int role, int transaferType, DateTime fromDate, DateTime toDate)
+        {
+            var result = await _unitOfWork.Transaction.TransactionCountSummary(role , transaferType, fromDate , toDate);
+            return result;
+
+        }
 
     }
 }

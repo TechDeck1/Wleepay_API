@@ -42,4 +42,13 @@ namespace wleepay.API.Resources
         public int WalletType { get; set; }
 
     }
+
+    public class TransactionCountSummaryRequest
+    {
+        public int Role { get; set; }
+        public int TransferType { get; set; }
+        public DateTime fromDate { get; set; }
+        public DateTime toDate { get; set; }
+
+    }
 }

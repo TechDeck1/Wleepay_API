@@ -83,6 +83,13 @@ namespace wleepay.API.Controllers
             return Ok(data);
         }
 
+        [HttpPost("TransactionCountSummary")]
+        public async Task<IActionResult> GetTransactionCountSummaryAsync(TransactionCountSummaryRequest transactionCountSummaryRequest)
+        {
+            var data = await _reportService.TransactionCountSummary(transactionCountSummaryRequest.Role , transactionCountSummaryRequest.TransferType, transactionCountSummaryRequest.fromDate, transactionCountSummaryRequest.toDate);
+            return Ok(data);
+        }
+
 
     }
 }
