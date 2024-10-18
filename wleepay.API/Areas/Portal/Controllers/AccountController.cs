@@ -1686,36 +1686,40 @@ namespace wleepay.API.Areas.Portal.Controllers
                     {
                         systemActivityLog.Action = ActionsForSystemLogs.Activate.ToDescriptionString();
                         systemActivityLog.Description = GenericMessagesForSystemLogs.AccountActivated.ToDescriptionString();
+                        string message = "The wleepay " + user.UserRoles.FirstOrDefault().Role.Name + " with this email " + model.EmailId + " is now Activated";
+                        _SMSService.sendMessage(message, userDetails.PhoneNumber);
 
-                        var subject = EmailSubjectEnums.AccountSetupConfirmation.ToDescriptionString();
+                        if(user.UserRoles.FirstOrDefault().Role.Name == Role.Staff.ToDescriptionString()) {
+                            var subject = EmailSubjectEnums.AccountSetupConfirmation.ToDescriptionString();
 
-                        //send email to staff for activation
-                        AccountActivatedTemplateForUser templateForstaff = new AccountActivatedTemplateForUser
-                        {
-                            Email = model.EmailId,
-                            FirstName = userDetails.FirstName,
-                            PhoneNumber = userDetails.PhoneNumber,
+                            //send email to staff for activation
+                            AccountActivatedTemplateForUser templateForstaff = new AccountActivatedTemplateForUser
+                            {
+                                Email = model.EmailId,
+                                FirstName = userDetails.FirstName,
+                                PhoneNumber = userDetails.PhoneNumber,
 
-                        };
+                            };
 
-                        string htmlTemplateForStaff = templateForstaff.GenerateHtml();
-                        await _emailSender.SendEmailAsync(model.EmailId, htmlTemplateForStaff, userDetails.FirstName, subject);
+                            string htmlTemplateForStaff = templateForstaff.GenerateHtml();
+                            await _emailSender.SendEmailAsync(model.EmailId, htmlTemplateForStaff, userDetails.FirstName, subject);
 
-                        //send email to all admins for activation
-                        var allSystemAdmins = await _userDetailsService.GetAllUsersByRole((int)Role.SystemAdmin);
-                        var allSystemAdminsList = _mapper.Map<IEnumerable<ApplicationUser>, IEnumerable<ApplicationUserResource>>(allSystemAdmins);
-                        AccountActivatedTemplateForSystemAdmin template = new AccountActivatedTemplateForSystemAdmin
-                        {
-                            StaffEmail = model.EmailId,
-                            StaffFirstName = userDetails.FirstName,
-                            StaffPhoneNumber = userDetails.PhoneNumber,
-                            StaffPermissions = userDetails.Permissions
+                            //send email to all admins for activation
+                            var allSystemAdmins = await _userDetailsService.GetAllUsersByRole((int)Role.SystemAdmin);
+                            var allSystemAdminsList = _mapper.Map<IEnumerable<ApplicationUser>, IEnumerable<ApplicationUserResource>>(allSystemAdmins);
+                            AccountActivatedTemplateForSystemAdmin template = new AccountActivatedTemplateForSystemAdmin
+                            {
+                                StaffEmail = model.EmailId,
+                                StaffFirstName = userDetails.FirstName,
+                                StaffPhoneNumber = userDetails.PhoneNumber,
+                                StaffPermissions = userDetails.Permissions
 
-                        };
-                        string htmlTemplate = template.GenerateHtml();
-                        foreach (var systemAdmin in allSystemAdminsList)
-                        {
-                            await _emailSender.SendEmailAsync(systemAdmin.Email, htmlTemplate, systemAdmin.UserDetail.FirstName, subject);
+                            };
+                            string htmlTemplate = template.GenerateHtml();
+                            foreach (var systemAdmin in allSystemAdminsList)
+                            {
+                                await _emailSender.SendEmailAsync(systemAdmin.Email, htmlTemplate, systemAdmin.UserDetail.FirstName, subject);
+                            }
                         }
                     }
                     else if (model.Status == (int)Status.Suspend)
@@ -1723,74 +1727,89 @@ namespace wleepay.API.Areas.Portal.Controllers
                         systemActivityLog.Action = ActionsForSystemLogs.Suspend.ToDescriptionString();
                         systemActivityLog.Description = GenericMessagesForSystemLogs.AccountSuspended.ToDescriptionString();
 
-                        var subject = EmailSubjectEnums.AccountSuspensionConfirmation.ToDescriptionString();
+                        string message = "The wleepay " + user.UserRoles.FirstOrDefault().Role.Name + " with this email " + model.EmailId + " is now Suspended";
+                        _SMSService.sendMessage(message, userDetails.PhoneNumber);
 
-                        //send email to staff for activation
-                        AccountSuspendedTemplateForUser templateForUser = new AccountSuspendedTemplateForUser
+                        if (user.UserRoles.FirstOrDefault().Role.Name == Role.Staff.ToDescriptionString())
                         {
-                            Email = model.EmailId,
-                            FirstName = userDetails.FirstName,
-                            PhoneNumber = userDetails.PhoneNumber,
+                            var subject = EmailSubjectEnums.AccountSuspensionConfirmation.ToDescriptionString();
 
-                        };
+                            //send email to staff for activation
+                            AccountSuspendedTemplateForUser templateForUser = new AccountSuspendedTemplateForUser
+                            {
+                                Email = model.EmailId,
+                                FirstName = userDetails.FirstName,
+                                PhoneNumber = userDetails.PhoneNumber,
 
-                        string htmlTemplateForUser = templateForUser.GenerateHtml();
-                        await _emailSender.SendEmailAsync(model.EmailId, htmlTemplateForUser, userDetails.FirstName, subject);
+                            };
+
+                            string htmlTemplateForUser = templateForUser.GenerateHtml();
+                            await _emailSender.SendEmailAsync(model.EmailId, htmlTemplateForUser, userDetails.FirstName, subject);
+                        }
                     }
-                    else if(model.Status == (int)Status.UnSuspend)
+                    else if(model.Status == (int)Status.DeActive)
                     {
                         systemActivityLog.Action = ActionsForSystemLogs.UnSuspend.ToDescriptionString();
                         systemActivityLog.Description = GenericMessagesForSystemLogs.AccountUnsuspended.ToDescriptionString();
 
-                        var subject = EmailSubjectEnums.AccountSuspensionConfirmation.ToDescriptionString();
+                        string message = "The wleepay " + user.UserRoles.FirstOrDefault().Role.Name + " with this email " + model.EmailId + " is now De-Activated";
+                        _SMSService.sendMessage(message, userDetails.PhoneNumber);
 
-                        //send email to staff for activation
-                        AccountUnsuspendedTemplateForUser templateForUser = new AccountUnsuspendedTemplateForUser
+                        if (user.UserRoles.FirstOrDefault().Role.Name == Role.Staff.ToDescriptionString())
                         {
-                            FirstName = userDetails.FirstName,
-                            PhoneNumber = userDetails.PhoneNumber,
-                            Email = model.EmailId,
+                            var subject = EmailSubjectEnums.AccountSuspensionConfirmation.ToDescriptionString();
 
-                        };
+                            //send email to staff for activation
+                            AccountUnsuspendedTemplateForUser templateForUser = new AccountUnsuspendedTemplateForUser
+                            {
+                                FirstName = userDetails.FirstName,
+                                PhoneNumber = userDetails.PhoneNumber,
+                                Email = model.EmailId,
 
-                        string htmlTemplateForUser = templateForUser.GenerateHtml();
-                        await _emailSender.SendEmailAsync(model.EmailId, htmlTemplateForUser, userDetails.FirstName, subject);
+                            };
+
+                            string htmlTemplateForUser = templateForUser.GenerateHtml();
+                            await _emailSender.SendEmailAsync(model.EmailId, htmlTemplateForUser, userDetails.FirstName, subject);
+                        }
                     }
                     else
                     {
-                        string message = "The wleepay staff with this email " + model.EmailId + " is now deactivated";
+                        string message = "The wleepay "+ user.UserRoles.FirstOrDefault().Role.Name + " with this email " + model.EmailId + " is now Risk Reviewd";
                         systemActivityLog.Action = ActionsForSystemLogs.Deactivate.ToDescriptionString();
                         systemActivityLog.Description = GenericMessagesForSystemLogs.AccountDeActivated.ToDescriptionString();
+                        
                         _SMSService.sendMessage(message, userDetails.PhoneNumber);
+                        if (user.UserRoles.FirstOrDefault().Role.Name == Role.Staff.ToDescriptionString()) {
+                            //send email to staff for deactivation
+                            AccountDeactivatedTemplateForStaff accountDeactivatedTemplateForStaff = new AccountDeactivatedTemplateForStaff
+                            {
+                                StaffEmail = model.EmailId,
+                                StaffFirstName = userDetails.FirstName,
+                                StaffPhoneNumber = userDetails.PhoneNumber
+                            };
 
-                        //send email to staff for deactivation
-                        AccountDeactivatedTemplateForStaff accountDeactivatedTemplateForStaff = new AccountDeactivatedTemplateForStaff
-                        {
-                            StaffEmail = model.EmailId,
-                            StaffFirstName = userDetails.FirstName,
-                            StaffPhoneNumber = userDetails.PhoneNumber
-                        };
-                        var subject = EmailSubjectEnums.AccountDeactivate.ToDescriptionString();
-                        string htmlTemplateForStaff = accountDeactivatedTemplateForStaff.GenerateHtml();
-                        await _emailSender.SendEmailAsync(model.EmailId, htmlTemplateForStaff, userDetails.FirstName, subject);
+                            var subject = EmailSubjectEnums.AccountDeactivate.ToDescriptionString();
+                            string htmlTemplateForStaff = accountDeactivatedTemplateForStaff.GenerateHtml();
+                            await _emailSender.SendEmailAsync(model.EmailId, htmlTemplateForStaff, userDetails.FirstName, subject);
 
-                        //send email to all admins for deactivation
-                        var allSystemAdmins = await _userDetailsService.GetAllUsersByRole((int)Role.SystemAdmin);
-                        var allSystemAdminsList = _mapper.Map<IEnumerable<ApplicationUser>, IEnumerable<ApplicationUserResource>>(allSystemAdmins);
+                            //send email to all admins for deactivation
+                            var allSystemAdmins = await _userDetailsService.GetAllUsersByRole((int)Role.SystemAdmin);
+                            var allSystemAdminsList = _mapper.Map<IEnumerable<ApplicationUser>, IEnumerable<ApplicationUserResource>>(allSystemAdmins);
 
-                        AccountDeactivatedTemplateForSystemAdmin template = new AccountDeactivatedTemplateForSystemAdmin
-                        {
-                            StaffEmail = model.EmailId,
-                            StaffFirstName = userDetails.FirstName,
-                            StaffPhoneNumber = userDetails.PhoneNumber,
-                            StaffPermissions = userDetails.Permissions
+                            AccountDeactivatedTemplateForSystemAdmin template = new AccountDeactivatedTemplateForSystemAdmin
+                            {
+                                StaffEmail = model.EmailId,
+                                StaffFirstName = userDetails.FirstName,
+                                StaffPhoneNumber = userDetails.PhoneNumber,
+                                StaffPermissions = userDetails.Permissions
 
-                        };
+                            };
 
-                        string htmlTemplate = template.GenerateHtml();
-                        foreach (var systemAdmin in allSystemAdminsList)
-                        {
-                            await _emailSender.SendEmailAsync(systemAdmin.Email, htmlTemplate, userDetails.FirstName, subject);
+                            string htmlTemplate = template.GenerateHtml();
+                            foreach (var systemAdmin in allSystemAdminsList)
+                            {
+                                await _emailSender.SendEmailAsync(systemAdmin.Email, htmlTemplate, userDetails.FirstName, subject);
+                            }
                         }
                     }
 
