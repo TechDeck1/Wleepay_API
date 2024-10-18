@@ -28,6 +28,7 @@ using wleepay.Core.Models;
 using wleepay.Core.Services;
 using wleepay.Storage.Interface;
 using wleepay.Storage.Services;
+using static AutoMapper.Internal.ExpressionFactory;
 using static wleepay.Communication.EmailTemplates.EmailTemplates;
 
 namespace wleepay.API.Controllers
@@ -719,9 +720,10 @@ namespace wleepay.API.Controllers
 
                     if (request.AlertType == "Email")
                     {
+                        var template = emailTemplates.EmailTemplateForSendAlert(request.Note, "Agent");
+
                         foreach (var agent in allAgents)
                         {
-                            var template = emailTemplates.EmailTemplateForSendAlert(request.Note, agent.UserDetail.FirstName);
                             response = await _emailSender.SendEmailAsync(agent.Email, template, agent.UserDetail.FirstName, "Email Alert");
                         }
                     }
@@ -736,7 +738,7 @@ namespace wleepay.API.Controllers
 
                     return Ok(new
                     {
-                        message = response.ToString(),
+                        message = Messages.smsSentToAgents.ToDescriptionString(),
                         success = true
                     });
                 }
@@ -744,9 +746,10 @@ namespace wleepay.API.Controllers
                 {
                     if (request.AlertType == "Email")
                     {
+                        var template = emailTemplates.EmailTemplateForSendAlert(request.Note, "User");
+
                         foreach (var member in allMembers)
                         {
-                            var template = emailTemplates.EmailTemplateForSendAlert(request.Note, member.UserDetail.FirstName);
                             response = await _emailSender.SendEmailAsync(member.Email, template, member.UserDetail.FirstName, "Email Alert");
                         }
                     }
@@ -761,7 +764,7 @@ namespace wleepay.API.Controllers
 
                     return Ok(new
                     {
-                        message = response.ToString(),
+                        message = Messages.smsSentToSubscribers.ToDescriptionString(),
                         success = true
                     });
 

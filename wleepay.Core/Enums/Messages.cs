@@ -52,11 +52,8 @@ namespace wleepay.Core.Enums
         [Description("Your account is logged in on other device.")] UserLoggedInOtherDevice,
         [Description("Meter number is incorrect.")] MeterNumberIncorrect,
         [Description("Payment is failed.")] PaymentFailed,
-
-
-
-
-
+        [Description("Message is sent to all the agents.")] smsSentToAgents,
+        [Description("Message is sent to all the members.")] smsSentToSubscribers,
 
     }
 }

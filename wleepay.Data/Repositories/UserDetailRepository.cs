@@ -55,7 +55,7 @@ namespace wleepay.Data.Repositories
                     .ThenInclude(s => s.County)
                 .Include(s => s.Wallets)
                     .ThenInclude(s => s.Currency)
-                .Where(user => user.UserRoles == null || user.UserRoles.FirstOrDefault().Role.Name == ((Core.Enums.Role)role).ToString() && user.UserDetail.Status==(int)Status.Active)
+                .Where(user => user.UserRoles != null && user.UserRoles.FirstOrDefault().Role.Name == ((Core.Enums.Role)role).ToString() && user.UserDetail.Status == Status.Active.GetHashCode())
                 .ToListAsync();
             return result;
         }
