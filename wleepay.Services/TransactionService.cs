@@ -68,10 +68,6 @@ namespace wleepay.Services
         public async Task<Transaction> InitiateTransaction(Transaction transactionDetail)
         {
             Transaction approveTransaction = new Transaction();
-            //if (transactionDetail.TransferTypeId == TransferTypes.WleeTransfer.GetHashCode() || transactionDetail.TransferTypeId == TransferTypes.TopUp.GetHashCode()|| transactionDetail.TransferTypeId == TransferTypes.MobileRechargeTransfer.GetHashCode() || transactionDetail.TransferTypeId == TransferTypes.BillPayment.GetHashCode())
-            //{
-            //    approveTransaction = await _unitOfWork.Transaction.AddUpdateTransaction(transactionDetail);
-            //}
             if (transactionDetail.TransferTypeId == TransferTypes.FillAgent.GetHashCode() || transactionDetail.TransferTypeId == TransferTypes.MemberTopUpByWleePay.GetHashCode())
             {
                 approveTransaction = await _unitOfWork.Transaction.AddUpdateAgentAndMemberTopUpTransaction(transactionDetail);

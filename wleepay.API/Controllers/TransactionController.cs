@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using FirebaseAdmin.Messaging;
+using Microsoft.AspNet.Identity;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.SqlServer.Management.Smo;
@@ -8,11 +9,13 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
+using wleepay.API.Helpers;
 using wleepay.API.Middleware;
 using wleepay.API.Resources;
 using wleepay.API.Validators;
 using wleepay.Communication.Interface;
 using wleepay.Communication.Templates;
+using wleepay.Core.Common;
 using wleepay.Core.DTO.Request;
 using wleepay.Core.Enums;
 using wleepay.Core.Models;
@@ -39,8 +42,9 @@ namespace wleepay.API.Controllers
         private readonly IUserDetailService _userDetailService;
         private readonly IFirebaseNotification _firebaseNotification;
         private readonly IUserDeviceService _userDeviceService;
+        private readonly ISystemActivityLogsService _systemActivityLogsService;
 
-        public TransactionController(ITransactionService transactionService, IWalletService walletService, ISMSService smsService, IMapper mapper, IEmailSender emailSender, ICashFlowService cashFlowService, IUserDetailService userDetailService, IFirebaseNotification firebaseNotification, IUserDeviceService userDeviceService) 
+        public TransactionController(ITransactionService transactionService, IWalletService walletService, ISMSService smsService, IMapper mapper, IEmailSender emailSender, ICashFlowService cashFlowService, IUserDetailService userDetailService, IFirebaseNotification firebaseNotification, IUserDeviceService userDeviceService, ISystemActivityLogsService systemActivityLogsService) 
         {
             _transactionService = transactionService;
             _walletService = walletService;
@@ -51,6 +55,7 @@ namespace wleepay.API.Controllers
             _userDetailService = userDetailService;
             _firebaseNotification = firebaseNotification;
             _userDeviceService = userDeviceService;
+            _systemActivityLogsService = systemActivityLogsService;
         }
 
         [HttpPost("History")]
@@ -207,27 +212,29 @@ namespace wleepay.API.Controllers
             if (transactionToApprove == null)
                 return BadRequest("Invalid payment Id");
 
-            var aplicationUserDetail = await _userDetailService.GetApplicationUserById(transactionToApprove.FromWallet.UserId);
-
-            if ((aplicationUserDetail.UserRoles.FirstOrDefault().Role.Name == "Agent" && transactionToApprove.FromWallet.ApplicationUser.UserDetail.Status == (int)Status.Suspend) && (transactionToApprove.TransferTypeId != (int)TransferTypes.AgentCommissionCashout || transactionToApprove.TransferTypeId != (int)TransferTypes.AgentCashout))
-            {
-                return BadRequest("Agent cannot make transaction when account is suspended. He/she can only cashout agent comminsion and wallet balances.");
-            }
-
             var approvedTransaction = new Transaction();
 
             if (transactionToApprove.TransferTypeId == TransferTypes.CashOut.GetHashCode())
+            {
                 approvedTransaction = await _transactionService.InitiateCashout(transactionToApprove);
-            else if(transactionToApprove.TransferTypeId == TransferTypes.MemberCashOutByWleePay.GetHashCode())
+            }
+            else if (transactionToApprove.TransferTypeId == TransferTypes.MemberCashOutByWleePay.GetHashCode())
+            {
                 approvedTransaction = await _transactionService.InitiateCashOutWithWleePay(transactionToApprove);
+            }
             else
                 approvedTransaction = await _transactionService.InitiateTransaction(transactionToApprove);
            
             var newTransactionResource = _mapper.Map<Transaction, TransactionResource>(approvedTransaction);
-           
+
+            await LogTransaction(approvedTransaction, "approved");
+
             //send sms to user
             if (newTransactionResource != null)
+            {
                 await SendTransactionActionSMS(approvedTransaction);
+            }
+
 
             return Ok(newTransactionResource);
         }
@@ -274,14 +281,17 @@ namespace wleepay.API.Controllers
                 return BadRequest("Invalid payment Id");
 
             var result = await ChangePaymentRequestStatus(paymentRequestId, Core.Enums.TransactionStatus.Rejected);
+            var transactionResource = _mapper.Map<Transaction, TransactionResource>(result);
             if (result == null)
                 return BadRequest("Invalid payment Id");
+
+            await LogTransaction(transactionToReject, "rejected");
 
             //send sms to user
             if (result != null)
                 await SendTransactionActionSMS(transactionToReject);
 
-            return Ok(result);
+            return Ok(transactionResource);
         }
 
         [HttpPost("bulkReject")]
@@ -313,10 +323,13 @@ namespace wleepay.API.Controllers
                 return BadRequest("Please enter valid payment request Id");
 
             var result = await ChangePaymentRequestStatus(paymentRequestId, Core.Enums.TransactionStatus.Cancel);
+            var transactionResource = _mapper.Map<Transaction, TransactionResource>(result);
+            await LogTransaction(result, "cancelled");
+
             if (result == null)
                 return BadRequest("Invalid payment Id");
 
-            return Ok(result);
+            return Ok(transactionResource);
         }
 
         [HttpGet("{transferTypeId}/{currencyTypeId}")]
@@ -402,15 +415,15 @@ namespace wleepay.API.Controllers
         }
 
         #region Helper function
-        private async Task<TransactionResource> ChangePaymentRequestStatus(long paymentRequestId, Core.Enums.TransactionStatus status)
+        private async Task<Transaction> ChangePaymentRequestStatus(long paymentRequestId, Core.Enums.TransactionStatus status)
         {
 
-            var transactionToApprove = await _transactionService.GetTransactionsById(paymentRequestId);
-            if (transactionToApprove == null)
+            var transactionToUpdate = await _transactionService.GetTransactionsById(paymentRequestId);
+            if (transactionToUpdate == null)
                 return null;
 
-            var rejectedTransaction = await _transactionService.UpdateTransactionStatus(paymentRequestId, status);
-            return _mapper.Map<Transaction, TransactionResource>(rejectedTransaction);
+            var updatedTransaction = await _transactionService.UpdateTransactionStatus(paymentRequestId, status);
+            return updatedTransaction;
         }
 
         private async Task<IEnumerable<Transaction>> ChangePaymentRequestStatusInBulk(IEnumerable<long> paymentRequestId, Core.Enums.TransactionStatus status)
@@ -442,7 +455,7 @@ namespace wleepay.API.Controllers
             
             //check transaction type
             if (transaction.TransferTypeId == Core.Enums.TransferTypes.TopUp.GetHashCode() ||
-                transaction.TransferTypeId == Core.Enums.TransferTypes.FillAgent.GetHashCode())
+                transaction.TransferTypeId == Core.Enums.TransferTypes.FillAgent.GetHashCode() || transaction.TransferTypeId == Core.Enums.TransferTypes.MemberTopUpByWleePay.GetHashCode())
             {
                 var device = await _userDeviceService.GetUserDeviceByUserId(toWalletUser.ApplicationUser.UserDetail.UserId);
 
@@ -478,7 +491,8 @@ namespace wleepay.API.Controllers
                     : $"{fromWalletUser.ApplicationUser.UserDetail.FirstName} {fromWalletUser.ApplicationUser.UserDetail.LastName}";
                 messageText = GenerateMessageText(transaction.Amount, fromWalletUser.Currency, name, transaction.Id, status, transaction.TransferTypeId);
             }
-            else if (transaction.TransferTypeId == Core.Enums.TransferTypes.CashOut.GetHashCode() || transaction.TransferTypeId == Core.Enums.TransferTypes.AgentCommissionCashout.GetHashCode())
+            else if (transaction.TransferTypeId == Core.Enums.TransferTypes.CashOut.GetHashCode() || transaction.TransferTypeId == Core.Enums.TransferTypes.AgentCommissionCashout.GetHashCode() ||
+                     transaction.TransferTypeId == Core.Enums.TransferTypes.AgentCashout.GetHashCode() || transaction.TransferTypeId == Core.Enums.TransferTypes.MemberCashOutByWleePay.GetHashCode())
             {
                 var device = await _userDeviceService.GetUserDeviceByUserId(toWalletUser.ApplicationUser.UserDetail.UserId);
 
@@ -701,7 +715,55 @@ namespace wleepay.API.Controllers
             return messageText;
         }
 
+        private string GetClientIpAddress()
+        {
+            if (HttpContext.Connection.RemoteIpAddress != null)
+            {
+                return HttpContext.Connection.RemoteIpAddress.ToString();
+            }
+            return "Unknown";
+        }
+
+        private async Task<bool> LogTransaction(Transaction transactionToApprove, string requestStatus)
+        {
+            SystemActivityLog systemActivityLog = new SystemActivityLog();
+            systemActivityLog.UserId = transactionToApprove.FromWallet.UserId;
+            systemActivityLog.Email = transactionToApprove.FromWallet.ApplicationUser.Email;
+            systemActivityLog.IpAddress = GetClientIpAddress();
+            systemActivityLog.Action = ActionsForSystemLogs.Transaction.ToDescriptionString();
+
+            if (transactionToApprove.TransferTypeId == TransferTypes.CashOut.GetHashCode() || transactionToApprove.TransferTypeId == TransferTypes.MemberCashOutByWleePay.GetHashCode())
+            {
+                systemActivityLog.Description = "Transaction request is successfully "+ requestStatus + " for member cashout";
+            }
+            else if (transactionToApprove.TransferTypeId == TransferTypes.TopUp.GetHashCode()|| transactionToApprove.TransferTypeId == TransferTypes.FillAgent.GetHashCode() || transactionToApprove.TransferTypeId == TransferTypes.MemberTopUpByWleePay.GetHashCode())
+            {
+                systemActivityLog.Description = "Transaction request is successfully "+ requestStatus + " for topup";
+
+            }
+            else if (transactionToApprove.TransferTypeId == TransferTypes.AgentCashout.GetHashCode() || transactionToApprove.TransferTypeId == TransferTypes.AgentCommissionCashout.GetHashCode())
+            {
+                systemActivityLog.Description = "Transaction request is successfully "+ requestStatus + " for agent cashout";
+
+            }
+            else
+            {
+                systemActivityLog.Description = "payment transfer request is successfully "+ requestStatus ;
+
+            }
+
+            var addLogs = await _systemActivityLogsService.AddSystemLogs(systemActivityLog);
+            if (addLogs != null) 
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+
+        }
         #endregion
-    
-     }
+
+    }
 }

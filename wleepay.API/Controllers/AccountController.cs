@@ -281,11 +281,23 @@ namespace wleepay.API.Controllers
             var user = await _userManager.FindByNameAsync(loginRequest.PhoneNo);
             if (user == null)
                 return BadRequest("Account does not exists.");
+
+
             var result = await _signInManager.PasswordSignInAsync(user, loginRequest.Pin.ToString(), false, true);
+
             if (result.Succeeded)
             {
                 //get user
                 var userDetails = await _userDetailsService.GetUserDetailsByPhone(loginRequest.PhoneNo);
+
+                if (userDetails.Status == Core.Enums.Status.DeActive.GetHashCode())
+                {
+                    return Ok(new
+                    {
+                        Success = false,
+                        Message = Messages.AccountDeActivated.ToDescriptionString(),
+                    });
+                }
                 //generate token
                 var token = GenerateJSONWebToken(userDetails);
 

@@ -19,6 +19,7 @@ namespace wleepay.Core.Enums
         [Description("Unsuspend")] UnSuspend,
         [Description("BillPayment")] BillPayment,
         [Description("MobileRecharge")] MobileRecharge,
+        [Description("Transaction")] Transaction,
 
 
     }

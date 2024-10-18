@@ -232,7 +232,7 @@ namespace wleepay.Data.Repositories
                 .Include(s => s.Wallets)
                     .ThenInclude(s => s.Currency)
                 .OrderByDescending(w => w.UserDetail.CreatedDate)
-                .Where(entity => (entity.Email.Contains(searchText) || entity.UserDetail.PhoneNumber.Contains(searchText) || entity.UserDetail.FirstName.Contains(searchText) || entity.UserDetail.LastName.Contains(searchText)) && entity.UserRoles.FirstOrDefault().Role.Name == role.ToString())
+                .Where(entity => (entity.Email.Contains(searchText) || entity.UserDetail.PhoneNumber.Contains(searchText) || entity.UserDetail.FirstName.Contains(searchText) || entity.UserDetail.LastName.Contains(searchText) || entity.UserDetail.AccountNumber.Contains(searchText)) && entity.UserRoles.FirstOrDefault().Role.Name == role.ToString())
                 .Skip(skipCount)
                 .Take(takeCount)
                 .ToListAsync();

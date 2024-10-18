@@ -3,6 +3,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System;
 using wleepay.API.Resources;
+using Microsoft.AspNetCore.Http;
 
 namespace wleepay.API.Helpers
 {
@@ -140,7 +141,6 @@ namespace wleepay.API.Helpers
 
             return instructionDetails;
         }
-
 
     }
 }
