@@ -58,7 +58,13 @@ namespace wleepay.Data.Configurations
                 Name = "Voter Card"
             });
 
-           
+            builder.HasData(new DocumentType
+            {
+                Id = 6,
+                Name = "Business License"
+            });
+
+
         }
     }
 }
