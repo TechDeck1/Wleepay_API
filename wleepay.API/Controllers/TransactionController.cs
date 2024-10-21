@@ -187,7 +187,8 @@ namespace wleepay.API.Controllers
 
             if ((getUserByWalletId.ApplicationUser.UserRoles.FirstOrDefault().Role.Name == "Member" && getUserByWalletId.ApplicationUser.UserDetail.Status == (int)Status.Suspend) && (transactionToCreate.TransferTypeId == (int)TransferTypes.TopUp || transactionToCreate.TransferTypeId == (int)TransferTypes.WleeTransfer))
             {
-                return BadRequest("Member cannot make transaction when account is suspended. He/she can only cashout wallet balances.");
+                return BadRequest( new { status = 400,
+                    message = "Member cannot make transaction when account is suspended. He/she can only cashout wallet balances." });
             }
 
             var newTransaction = await _transactionService.InitiateTransactionRequest(transactionToCreate);
@@ -239,7 +240,7 @@ namespace wleepay.API.Controllers
             return Ok(newTransactionResource);
         }
 
-        [HttpPut("BulkApprove")]
+        [HttpPost("BulkApprove")]
         public async Task<IActionResult> BulkApprovePaymentRequest(List<long> paymentRequestIds)
         {
             TransactionResource newTransactionResource = new TransactionResource();
@@ -252,16 +253,23 @@ namespace wleepay.API.Controllers
                 var transactionToApprove = await _transactionService.GetTransactionsById(paymentRequestId);
                 if (transactionToApprove == null)
                     return BadRequest("Invalid payment Id");
-
                 var approvedTransaction = new Transaction();
 
                 if (transactionToApprove.TransferTypeId == TransferTypes.CashOut.GetHashCode())
+                {
                     approvedTransaction = await _transactionService.InitiateCashout(transactionToApprove);
+                }
+                else if (transactionToApprove.TransferTypeId == TransferTypes.MemberCashOutByWleePay.GetHashCode())
+                {
+                    approvedTransaction = await _transactionService.InitiateCashOutWithWleePay(transactionToApprove);
+                }
                 else
                     approvedTransaction = await _transactionService.InitiateTransaction(transactionToApprove);
 
                 newTransactionResource = _mapper.Map<Transaction, TransactionResource>(approvedTransaction);
-                
+
+                await LogTransaction(approvedTransaction, "approved");
+
                 //send sms to user
                 if (newTransactionResource != null)
                     await SendTransactionActionSMS(approvedTransaction);

@@ -15,6 +15,7 @@ namespace wleepay.Core.Repositories
         Task<IEnumerable<CustomerTickets>> GetAllTickets();
         Task<CustomerServiceResponseResource> GetCustomerTicketsByPhoneNumber(string phone, int pageIndex, int pageSize);
         Task<CustomerTickets> GetCustomerTicketsById(int Id);
-        Task<IEnumerable<CustomerTickets>> GetCustomerTicketsByUserId(string userId);
+        Task<IEnumerable<CustomerTickets>> GetNewCustomerTicketsByUserId(string userId);
+        Task<IEnumerable<CustomerTickets>> GetAllCustomerTicketsByUserId(string userId);
     }
 }

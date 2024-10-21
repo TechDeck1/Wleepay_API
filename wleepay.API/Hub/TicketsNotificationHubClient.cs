@@ -16,7 +16,7 @@ namespace wleepay.API.Hub
 
             public async Task GetLatestNotificationForTickets(string userId)
             {
-                var result = await _unitOfWork.CustomerTickets.GetCustomerTicketsByUserId(userId);
+                var result = await _unitOfWork.CustomerTickets.GetNewCustomerTicketsByUserId(userId);
                 await Clients.All.GetLatestNotificationForTickets(result);
             
         }

@@ -45,7 +45,7 @@ namespace wleepay.Services
 
         public async Task<IEnumerable<CustomerTickets>> GetCustomerTicketsByUserId(string UserId)
         {
-            var tickets = await _unitOfWork.CustomerTickets.GetCustomerTicketsByUserId(UserId);
+            var tickets = await _unitOfWork.CustomerTickets.GetAllCustomerTicketsByUserId(UserId);
             return tickets;
         }
     }
