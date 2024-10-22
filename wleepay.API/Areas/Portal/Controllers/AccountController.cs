@@ -39,6 +39,8 @@ using wleepay.Communication.Services;
 using System.Reflection;
 using static wleepay.Communication.EmailTemplates.AccountSuspendAndUnsuspendTemplate;
 using Status = wleepay.Core.Enums.Status;
+using Microsoft.AspNetCore.SignalR;
+using wleepay.API.SignalRHub;
 
 namespace wleepay.API.Areas.Portal.Controllers
 {
@@ -59,7 +61,7 @@ namespace wleepay.API.Areas.Portal.Controllers
         private readonly ILogger<AccountController> _logger;
         private readonly IMapper _mapper;
         private readonly IConfiguration _configuration;
-        public readonly IHostingEnvironment _hostingEnvironment;
+        public readonly  IHostingEnvironment _hostingEnvironment;
         private readonly IUploadDocument _documentUploaderService;
         private readonly IEmailSender _emailSender;
         private readonly ISystemActivityLogsService _systemActivityLogsService;
@@ -67,6 +69,8 @@ namespace wleepay.API.Areas.Portal.Controllers
         private readonly IVerificationService _verificationService;
         private readonly ILookupService _lookupService;
         private readonly ISMSService _SMSService;
+        private readonly IHubContext<PortalNotificationHubClient> _hubContext;
+
 
         public AccountController(UserManager<ApplicationUser> userManager,
             RoleManager<ApplicationRole> roleManager,
@@ -87,8 +91,8 @@ namespace wleepay.API.Areas.Portal.Controllers
             IUsersStaffRoleService usersStaffRoleService,
             IVerificationService verificationService,
             ILookupService lookupService,
-            ISMSService sMSService)
-        {
+            ISMSService sMSService, IHubContext<PortalNotificationHubClient> hubContext)
+            {
             _userManager = userManager;
             _roleManager = roleManager;
             _signInManager = signInManager;
@@ -109,7 +113,8 @@ namespace wleepay.API.Areas.Portal.Controllers
             _verificationService = verificationService;
             _lookupService = lookupService;
             _SMSService = sMSService;
-        }
+            _hubContext = hubContext;
+             }
 
         [SystemLock]
         [HttpPost("RegisterStaff")]
@@ -1181,6 +1186,8 @@ namespace wleepay.API.Areas.Portal.Controllers
                         await _emailSender.SendEmailAsync(decryptedEmail, htmlTemplate, userDetails.FirstName, subject);
 
                         _smsService.sendMessage(MessagesTemplates.RegistrationSuccessMessage(userDetails.AccountNumber, userDetails?.KYCLevelDetail?.Name), userDetails.PhoneNumber);
+
+                        await _hubContext.Clients.All.SendAsync("ReceiveNotification", $"Subscriber {user.Email} completed signup.");
 
 
                         systemActivityLog.Description = GenericMessagesForSystemLogs.CompleteLoginProcess.ToDescriptionString();

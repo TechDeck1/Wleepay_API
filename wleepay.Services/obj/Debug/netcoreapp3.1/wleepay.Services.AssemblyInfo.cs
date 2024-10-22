@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("wleepay.Services")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+064c989467d2e566cd7c38ed5b2ab7a832877433")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+1213cfc2d2bc213fb2edd2640179204c1a77ae6b")]
 [assembly: System.Reflection.AssemblyProductAttribute("wleepay.Services")]
 [assembly: System.Reflection.AssemblyTitleAttribute("wleepay.Services")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

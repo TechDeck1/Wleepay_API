@@ -31,11 +31,11 @@ using IEmailSender = wleepay.Communication.Interface.IEmailSender;
 using Microsoft.AspNet.Identity;
 using wleepay.Core.Repositories;
 using wleepay.Data.Repositories;
-using wleepay.API.Hub;
 using wleepay.API.Middleware;
 using FirebaseAdmin;
 using Google.Apis.Auth.OAuth2;
 using System.IO;
+using wleepay.API.SignalRHub;
 
 namespace wleepay.API
 {
@@ -278,6 +278,7 @@ namespace wleepay.API
                 endpoints.MapControllers();
                 endpoints.MapHub<StatusHubClient>("/status");
                 endpoints.MapHub<TicketsNotificationHubClient>("/notification");
+                endpoints.MapHub<PortalNotificationHubClient>("/portalNotification");  // SignalR Hub Endpoint
                 endpoints.MapControllerRoute(
                        name: "areas",
                        pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}"

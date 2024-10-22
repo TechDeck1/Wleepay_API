@@ -10,9 +10,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using wleepay.API.Helpers;
-using wleepay.API.Hub;
 using wleepay.API.Middleware;
 using wleepay.API.Resources;
+using wleepay.API.SignalRHub;
 using wleepay.Communication.Interface;
 using wleepay.Communication.Templates;
 using wleepay.Core.Common;
@@ -41,7 +41,7 @@ namespace wleepay.API.Controllers
         private readonly INotesService _notesService;
         private readonly IWhatsAppService _whatsAppService;
         private readonly IFirebaseNotification _firebaseNotification;
-        private IHubContext<TicketsNotificationHubClient, ITicketsNotificationHubClient> _notificationHub;
+        private IHubContext<TicketsNotificationHubClient> _notificationHub;
         private readonly IUserDeviceService _userDeviceService;
 
         public TicketsController(
@@ -53,7 +53,7 @@ namespace wleepay.API.Controllers
             IEmailSender emailSender,
             INotesService notesService,
             IWhatsAppService whatsAppService,
-            IHubContext<TicketsNotificationHubClient, ITicketsNotificationHubClient> notificationHub,
+            IHubContext<TicketsNotificationHubClient> notificationHub,
             IFirebaseNotification firebaseNotification,
             IUserDeviceService userDeviceService)
         {
@@ -152,7 +152,7 @@ namespace wleepay.API.Controllers
             {
                 var tickets = await _customerTicketsService.GetAllCustomerTickets(phoneNumber, status, pageIndex, pageSize);
                 var customerTicketsToInsert = _mapper.Map<IEnumerable<CustomerTickets>, IEnumerable<AddCustomerTicketResponseResource>>(tickets.CustomerTickets);
-                var hubtest= _notificationHub.Clients.All.GetLatestNotificationForTickets(tickets.CustomerTickets);
+                var hubtest= _notificationHub.Clients.All.SendAsync("ReceiveTicketNotifications", tickets.CustomerTickets);
 
                 return Ok(new
                 {

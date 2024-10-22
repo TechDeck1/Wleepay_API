@@ -6,20 +6,20 @@ using System.Threading.Tasks;
 using wleepay.Core;
 using wleepay.Core.Models;
 
-namespace wleepay.API.Hub
+namespace wleepay.API.SignalRHub
 {
-    public class StatusHubClient : Hub<IStatusHubClient>
+    public class StatusHubClient : Hub
     {
         private readonly IUnitOfWork _unitOfWork;
         public StatusHubClient(IUnitOfWork unitOfWork)
         {
-            this._unitOfWork = unitOfWork;
+            _unitOfWork = unitOfWork;
         }
-     
+
         public async Task SendStatusToUser(SystemStatus systemStatus)
         {
             var result = await _unitOfWork.SystemStatus.GetSystemStatus();
-            await Clients.All.SendStatusToUser(result);
+            await Clients.All.SendAsync("sendStatusNotification", result);
         }
 
     }
