@@ -22,5 +22,10 @@ namespace wleepay.API.SignalRHub
             await Clients.All.SendAsync("sendStatusNotification", result);
         }
 
+        public async Task SendNotification(string message)
+        {
+            await Clients.All.SendAsync("PortalNotification", message);
+        }
+
     }
 }

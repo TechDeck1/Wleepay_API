@@ -69,7 +69,7 @@ namespace wleepay.API.Areas.Portal.Controllers
         private readonly IVerificationService _verificationService;
         private readonly ILookupService _lookupService;
         private readonly ISMSService _SMSService;
-        private readonly IHubContext<PortalNotificationHubClient> _hubContext;
+        private readonly IHubContext<StatusHubClient> _hubContext;
 
 
         public AccountController(UserManager<ApplicationUser> userManager,
@@ -91,7 +91,7 @@ namespace wleepay.API.Areas.Portal.Controllers
             IUsersStaffRoleService usersStaffRoleService,
             IVerificationService verificationService,
             ILookupService lookupService,
-            ISMSService sMSService, IHubContext<PortalNotificationHubClient> hubContext)
+            ISMSService sMSService, IHubContext<StatusHubClient> hubContext)
             {
             _userManager = userManager;
             _roleManager = roleManager;
@@ -114,7 +114,7 @@ namespace wleepay.API.Areas.Portal.Controllers
             _lookupService = lookupService;
             _SMSService = sMSService;
             _hubContext = hubContext;
-             }
+           }
 
         [SystemLock]
         [HttpPost("RegisterStaff")]
@@ -1135,7 +1135,6 @@ namespace wleepay.API.Areas.Portal.Controllers
         {
             try
             {
-
             var secretKey = _configuration.GetSection("SecretKeyForEncryptAndDecrypt").Value; //secret key
             string decryptedEmail = Common.Decrypt(setupLogin.Email, secretKey); // helper function for decryption
 
@@ -1187,8 +1186,7 @@ namespace wleepay.API.Areas.Portal.Controllers
 
                         _smsService.sendMessage(MessagesTemplates.RegistrationSuccessMessage(userDetails.AccountNumber, userDetails?.KYCLevelDetail?.Name), userDetails.PhoneNumber);
 
-                        await _hubContext.Clients.All.SendAsync("ReceiveNotification", $"Subscriber {user.Email} completed signup.");
-
+                        await _hubContext.Clients.All.SendAsync("PortalNotification", $"Subscriber {user.Email} completed signup.");
 
                         systemActivityLog.Description = GenericMessagesForSystemLogs.CompleteLoginProcess.ToDescriptionString();
                         var addLogs = await _systemActivityLogsService.AddSystemLogs(systemActivityLog);
@@ -2037,7 +2035,6 @@ namespace wleepay.API.Areas.Portal.Controllers
                         var htmlTemplate = template.EmailTemplateForAccountSetup(completeSignUpResourceModel.Email, callbackUrl, username);
 
                         await _emailSender.SendEmailAsync(completeSignUpResourceModel.Email, htmlTemplate, username, subject);
-
                         return true;
                     }
                     else
