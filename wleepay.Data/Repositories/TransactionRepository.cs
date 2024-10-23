@@ -929,7 +929,9 @@ namespace wleepay.Data.Repositories
             return new SochitelTransactionResponseResource
             {
                 TotalCount = sochitelTransactions.Count(),
-                Transactions = sochitelTransactions
+                Transactions = sochitelTransactions,
+                CommisionEarned = sochitelTransactions.Sum(s => Convert.ToDecimal(s.CommissionRate))
+
             };
 
         }

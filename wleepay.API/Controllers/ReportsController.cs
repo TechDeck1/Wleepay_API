@@ -111,7 +111,8 @@ namespace wleepay.API.Controllers
             return Ok(new
             {
                 TotalCount = data.TotalCount,
-                Transactions = transactionResources
+                Transactions = transactionResources,
+                CommissionRate = data.CommisionEarned
             });
         }
 
