@@ -18,6 +18,7 @@ namespace wleepay.Core.Services
         Task<UserDetailsResponseResource> GetAccountOpenedByDateRangeAsync(DateTime fromDate, DateTime toDate);
         Task<int> GetSubscribersCountByCountryAsync(int countryId);
         Task<TransactionResponseResource> TransactionCountSummary(int role, int transaferType, DateTime fromDate, DateTime toDate);
+        Task<SochitelTransactionResponseResource> SochitelCommisionTransactionSummary(int role, string transactionType, DateTime fromDate, DateTime toDate);
 
 
     }

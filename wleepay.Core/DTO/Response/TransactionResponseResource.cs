@@ -11,4 +11,11 @@ namespace wleepay.Core.DTO.Response
 
         public List<Transaction> Transactions { get; set; }
     }
+
+    public class SochitelTransactionResponseResource
+    {
+        public int TotalCount { get; set; }
+
+        public List<SochitelTransactions> Transactions { get; set; }
+    }
 }

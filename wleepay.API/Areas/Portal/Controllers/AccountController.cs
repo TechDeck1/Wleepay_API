@@ -91,7 +91,8 @@ namespace wleepay.API.Areas.Portal.Controllers
             IUsersStaffRoleService usersStaffRoleService,
             IVerificationService verificationService,
             ILookupService lookupService,
-            ISMSService sMSService, IHubContext<StatusHubClient> hubContext)
+            ISMSService sMSService, 
+            IHubContext<StatusHubClient> hubContext)
             {
             _userManager = userManager;
             _roleManager = roleManager;
@@ -650,7 +651,6 @@ namespace wleepay.API.Areas.Portal.Controllers
             }
             catch (Exception)
             {
-
                 throw new CustomException("Sorry, we're having trouble sending password reset link. Please contact support.");
             }
         }

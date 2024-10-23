@@ -51,4 +51,13 @@ namespace wleepay.API.Resources
         public DateTime toDate { get; set; }
 
     }
+
+    public class SochitelTransactionCommisionSummaryRequest
+    {
+        public int Role { get; set; }
+        public string TransactionType { get; set; }
+        public DateTime fromDate { get; set; }
+        public DateTime toDate { get; set; }
+
+    }
 }

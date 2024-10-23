@@ -915,5 +915,24 @@ namespace wleepay.Data.Repositories
             };
 
         }
+
+        public async Task<SochitelTransactionResponseResource> SochitelCommisionTransactionSummary(int role, string transactionType, DateTime fromDate, DateTime toDate)
+        {
+            // Fetch the relevant data first
+            var sochitelTransactions = await WPContext.SochitelTransactions
+               .Where(t => t.TransactionType == transactionType && t.CreatedDate > fromDate && t.CreatedDate < toDate)
+               .Include(s => s.Transaction)
+               .Include(s => s.Transaction.TransferType)
+               .Include(s => s.Transaction.FromWallet.Currency)
+               .ToListAsync();
+
+            return new SochitelTransactionResponseResource
+            {
+                TotalCount = sochitelTransactions.Count(),
+                Transactions = sochitelTransactions
+            };
+
+        }
+
     }
 }

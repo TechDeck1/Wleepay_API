@@ -79,5 +79,12 @@ namespace wleepay.Services
 
         }
 
+        public async Task<SochitelTransactionResponseResource> SochitelCommisionTransactionSummary(int role, string transaferType, DateTime fromDate, DateTime toDate)
+        {
+            var result = await _unitOfWork.Transaction.SochitelCommisionTransactionSummary(role, transaferType, fromDate, toDate);
+            return result;
+
+        }
+
     }
 }

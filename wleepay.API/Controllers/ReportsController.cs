@@ -10,6 +10,7 @@ using System;
 using static DevExpress.Xpo.Helpers.AssociatedCollectionCriteriaHelper;
 using wleepay.Core.Models;
 using AutoMapper;
+using wleepay.Core.DTO.Response;
 
 namespace wleepay.API.Controllers
 {
@@ -93,6 +94,19 @@ namespace wleepay.API.Controllers
         {
             var data = await _reportService.TransactionCountSummary(transactionCountSummaryRequest.Role , transactionCountSummaryRequest.TransferType, transactionCountSummaryRequest.fromDate, transactionCountSummaryRequest.toDate);
             var transactionResources = data.Transactions.Select(transaction => _mapper.Map<Transaction, TransactionHistoryResource>(transaction)).ToList();
+
+            return Ok(new
+            {
+                TotalCount = data.TotalCount,
+                Transactions = transactionResources
+            });
+        }
+
+        [HttpPost("LecAirtimeCommssionEarnedReport")]
+        public async Task<IActionResult> LecAirtimeCommssionEarnedReport(SochitelTransactionCommisionSummaryRequest transactionCountSummaryRequest)
+        {
+            var data = await _reportService.SochitelCommisionTransactionSummary(transactionCountSummaryRequest.Role, transactionCountSummaryRequest.TransactionType, transactionCountSummaryRequest.fromDate, transactionCountSummaryRequest.toDate);
+            var transactionResources = data.Transactions.Select(transaction => _mapper.Map<SochitelTransactions, SochitelTransactionCommissionEarnedResource>(transaction)).ToList();
 
             return Ok(new
             {

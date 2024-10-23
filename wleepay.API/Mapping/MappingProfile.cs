@@ -102,6 +102,8 @@ namespace wleepay.API.Mapping
             CreateMap<CashFlowHistory, CashFlowHistoryResource>().ReverseMap();
             CreateMap<SystemStatus, SystemStatusResource>().ReverseMap();
 
+            CreateMap<SochitelTransactions, SochitelTransactionCommissionEarnedResource>().ReverseMap();
+
             CreateMap<ExecTransactionRequest, SochitelTransactionRequest>()
                  .ForMember(dest => dest.Amount, src => src.MapFrom(x => x.AmountInUsd))
                  .ReverseMap();
