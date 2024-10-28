@@ -117,5 +117,29 @@ namespace wleepay.API.Controllers
         }
 
 
+        [HttpPost("GetStaringCOHBalance")]
+        public async Task<IActionResult> GetStaringCOHBalance()
+        {
+            var data = await _reportService.getStartingLdWalletBalance(DateTime.Now.AddDays(-30));
+
+            return Ok(data);
+        }
+
+        [HttpPost("Credits")]
+        public async Task<IActionResult> getCreditsForAgentAndMemberByWleepay()
+        {
+            var data = await _reportService.getCreditsForAgentAndMemberByWleepay();
+
+            return Ok(data);
+        }
+
+        [HttpPost("Debits")]
+        public async Task<IActionResult> getDebitsForAgentAndMemberByWleepay()
+        {
+            var data = await _reportService.getDebitsForAgentAndMemberByWleepay();
+
+            return Ok(data);
+        }
+
     }
 }

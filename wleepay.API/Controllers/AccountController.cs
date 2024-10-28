@@ -292,7 +292,7 @@ namespace wleepay.API.Controllers
 
                 if (userDetails.Status == Core.Enums.Status.DeActive.GetHashCode())
                 {
-                    return Ok(new
+                    return BadRequest(new
                     {
                         Success = false,
                         Message = Messages.AccountDeActivated.ToDescriptionString(),

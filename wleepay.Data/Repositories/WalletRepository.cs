@@ -134,5 +134,76 @@ namespace wleepay.Data.Repositories
             return finalResult;
 
         }
+
+        public async Task<CashOnHandBeginingBalance> getStartingLdWalletBalance(DateTime reportStartDate)
+        {
+            var beginningBalanceLD = await WPContext.Wallet
+            .Where(t => t.CreatedDate < reportStartDate && t.CurrencyId == 1 && t.Type == WalletTypes.DebitFloatN.GetHashCode())
+            .SumAsync(t => t.Balance);
+
+            var beginningBalanceUSD = await WPContext.Wallet
+                .Where(t => t.CreatedDate < reportStartDate && t.CurrencyId == 2)
+                .SumAsync(t => t.Balance);
+
+            return (new CashOnHandBeginingBalance { beginningBalanceLD = beginningBalanceLD, beginningBalanceUSD = beginningBalanceUSD });
+
+        }
+
+        public async Task<CreditsByWleepay> getCreditsForAgentAndMemberByWleepay()
+        {
+            var creditAgentTopupsLD = await WPContext.Transactions
+            .Where(t => t.TransferTypeId == TransferTypes.FillAgent.GetHashCode() && t.FromWallet.CurrencyId == 1 && t.FromWallet.Type == WalletTypes.AgentAccount.GetHashCode())
+            .SumAsync(t => t.Amount);
+
+            var creditSubscriberTopupsLD = await WPContext.Transactions
+            .Where(t => t.TransferTypeId == TransferTypes.MemberTopUpByWleePay.GetHashCode() && t.FromWallet.CurrencyId == 1 && t.FromWallet.Type == WalletTypes.MemberAccount.GetHashCode())
+            .SumAsync(t => t.Amount);
+
+            var creditAgentTopupsUSD = await WPContext.Transactions
+            .Where(t => t.TransferTypeId == TransferTypes.FillAgent.GetHashCode() && t.FromWallet.CurrencyId == 1 && t.FromWallet.Type == WalletTypes.AgentAccount.GetHashCode())
+            .SumAsync(t => t.Amount);
+
+            var creditSubscriberTopupsUSD = await WPContext.Transactions
+            .Where(t => t.TransferTypeId == TransferTypes.MemberTopUpByWleePay.GetHashCode() && t.FromWallet.CurrencyId == 1 && t.FromWallet.Type == WalletTypes.MemberAccount.GetHashCode())
+            .SumAsync(t => t.Amount);
+
+            return new CreditsByWleepay
+            {
+                LDCreditToAgent = creditAgentTopupsLD,
+                LDCreditToMember = creditSubscriberTopupsLD,
+                USDCreditToAgent = creditAgentTopupsUSD,
+                USDCreditToMember = creditSubscriberTopupsUSD
+
+            };
+        }
+
+        public async Task<DebitsByWleepay> getDebitsForAgentAndMemberByWleepay()
+        {
+            var LDdebitSubscriberCashouts = await WPContext.Transactions
+            .Where(t => t.TransferTypeId == TransferTypes.MemberCashOutByWleePay.GetHashCode() && t.FromWallet.CurrencyId == 1 && t.FromWallet.Type == WalletTypes.AgentAccount.GetHashCode())
+            .SumAsync(t => t.Amount);
+
+            var USDdebitSubscriberCashouts = await WPContext.Transactions
+            .Where(t => t.TransferTypeId == TransferTypes.MemberCashOutByWleePay.GetHashCode() && t.FromWallet.CurrencyId == 1 && t.FromWallet.Type == WalletTypes.MemberAccount.GetHashCode())
+            .SumAsync(t => t.Amount);
+
+            var LDdebitAgentCommissionCashouts = await WPContext.Transactions
+            .Where(t => t.TransferTypeId == TransferTypes.AgentCommissionCashout.GetHashCode() && t.FromWallet.CurrencyId == 1 && t.FromWallet.Type == WalletTypes.AgentAccount.GetHashCode())
+            .SumAsync(t => t.Amount);
+
+            var USDdebitAgentCommissionCashouts = await WPContext.Transactions
+            .Where(t => t.TransferTypeId == TransferTypes.AgentCommissionCashout.GetHashCode() && t.FromWallet.CurrencyId == 1 && t.FromWallet.Type == WalletTypes.MemberAccount.GetHashCode())
+            .SumAsync(t => t.Amount);
+
+            return new DebitsByWleepay
+            {
+                LDDebitsFromAgent = LDdebitAgentCommissionCashouts,
+                LDDebitFromMember = LDdebitSubscriberCashouts,
+                USDDebitsFromAgent = USDdebitAgentCommissionCashouts,
+                USDDebitsFromMember = USDdebitSubscriberCashouts
+
+            };
+
+        }
     }
 }

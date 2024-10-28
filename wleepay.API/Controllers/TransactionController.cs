@@ -130,7 +130,9 @@ namespace wleepay.API.Controllers
 
             if ((aplicationUserDetail.UserRoles.FirstOrDefault().Role.Name == "Member" && walletBalance.ApplicationUser.UserDetail.Status == (int)Status.Suspend) && (transactionRequest.TransferTypeId == (int)TransferTypes.WleeTransfer))
             {
-                return BadRequest("Member cannot make transaction when account is suspended. He/she can only cashout wallet balances.");
+                return BadRequest(new{
+                    status = 400,
+                    message = "Member cannot make transaction when account is suspended. He/she can only cashout wallet balances." });
             }
             if (transactionRequest != null && transactionRequest.TransferTypeId == (int)TransferTypes.TopUpSystemWallet)
             {
@@ -182,7 +184,8 @@ namespace wleepay.API.Controllers
 
             if ((getUserByWalletId.ApplicationUser.UserRoles.FirstOrDefault().Role.Name == "Agent" && getUserByWalletId.ApplicationUser.UserDetail.Status == (int)Status.Suspend) && (transactionToCreate.TransferTypeId == (int)TransferTypes.FillAgent))
             {
-                return BadRequest("Agent cannot make transaction when account is suspended. He/she can only cashout agent comminsion and wallet balances.");
+                return BadRequest(new {status = 400,
+                    message = "Member cannot make transaction when account is suspended. He/she can only cashout wallet balances." });
             }
 
             if ((getUserByWalletId.ApplicationUser.UserRoles.FirstOrDefault().Role.Name == "Member" && getUserByWalletId.ApplicationUser.UserDetail.Status == (int)Status.Suspend) && (transactionToCreate.TransferTypeId == (int)TransferTypes.TopUp || transactionToCreate.TransferTypeId == (int)TransferTypes.WleeTransfer))

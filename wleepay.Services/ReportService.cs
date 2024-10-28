@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using wleepay.Core;
 using wleepay.Core.DTO.Response;
+using wleepay.Core.Enums;
 using wleepay.Core.Models;
 using wleepay.Core.Services;
 using static DevExpress.Xpo.Helpers.AssociatedCollectionCriteriaHelper;
@@ -85,6 +86,20 @@ namespace wleepay.Services
             return result;
 
         }
-
+        public async Task<CashOnHandBeginingBalance> getStartingLdWalletBalance(DateTime reportStartDate)
+        {
+            var result = await _unitOfWork.Wallet.getStartingLdWalletBalance(reportStartDate);
+            return result;
+        }
+        public async Task<CreditsByWleepay> getCreditsForAgentAndMemberByWleepay()
+        {
+            var result = await _unitOfWork.Wallet.getCreditsForAgentAndMemberByWleepay();
+            return result;
+        }
+        public async Task<DebitsByWleepay> getDebitsForAgentAndMemberByWleepay()
+        {
+            var result = await _unitOfWork.Wallet.getDebitsForAgentAndMemberByWleepay();
+            return result;
+        }
     }
 }
