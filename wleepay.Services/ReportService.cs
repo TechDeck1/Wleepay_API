@@ -98,6 +98,7 @@ namespace wleepay.Services
         }
         public async Task<DebitsByWleepay> getDebitsForAgentAndMemberByWleepay()
         {
+
             var result = await _unitOfWork.Wallet.getDebitsForAgentAndMemberByWleepay();
             return result;
         }

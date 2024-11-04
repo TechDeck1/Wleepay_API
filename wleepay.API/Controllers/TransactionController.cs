@@ -160,6 +160,8 @@ namespace wleepay.API.Controllers
                     await SendTransactionActionEmail(newTransaction);
 
                 }
+                SendSmsNotificationToSystemAdmin(newTransaction);
+
             }
             return Ok(newTransactionResource);
         }
@@ -237,6 +239,8 @@ namespace wleepay.API.Controllers
             if (newTransactionResource != null)
             {
                 await SendTransactionActionSMS(approvedTransaction);
+                SendSmsNotificationToSystemAdmin(approvedTransaction);
+
             }
 
 
@@ -466,7 +470,8 @@ namespace wleepay.API.Controllers
             
             //check transaction type
             if (transaction.TransferTypeId == Core.Enums.TransferTypes.TopUp.GetHashCode() ||
-                transaction.TransferTypeId == Core.Enums.TransferTypes.FillAgent.GetHashCode() || transaction.TransferTypeId == Core.Enums.TransferTypes.MemberTopUpByWleePay.GetHashCode())
+                transaction.TransferTypeId == Core.Enums.TransferTypes.FillAgent.GetHashCode() || 
+                transaction.TransferTypeId == Core.Enums.TransferTypes.MemberTopUpByWleePay.GetHashCode())
             {
                 var device = await _userDeviceService.GetUserDeviceByUserId(toWalletUser.ApplicationUser.UserDetail.UserId);
 
@@ -502,8 +507,10 @@ namespace wleepay.API.Controllers
                     : $"{fromWalletUser.ApplicationUser.UserDetail.FirstName} {fromWalletUser.ApplicationUser.UserDetail.LastName}";
                 messageText = GenerateMessageText(transaction.Amount, fromWalletUser.Currency, name, transaction.Id, status, transaction.TransferTypeId);
             }
-            else if (transaction.TransferTypeId == Core.Enums.TransferTypes.CashOut.GetHashCode() || transaction.TransferTypeId == Core.Enums.TransferTypes.AgentCommissionCashout.GetHashCode() ||
-                     transaction.TransferTypeId == Core.Enums.TransferTypes.AgentCashout.GetHashCode() || transaction.TransferTypeId == Core.Enums.TransferTypes.MemberCashOutByWleePay.GetHashCode())
+            else if (transaction.TransferTypeId == Core.Enums.TransferTypes.CashOut.GetHashCode() || 
+                     transaction.TransferTypeId == Core.Enums.TransferTypes.AgentCommissionCashout.GetHashCode() ||
+                     transaction.TransferTypeId == Core.Enums.TransferTypes.AgentCashout.GetHashCode() || 
+                     transaction.TransferTypeId == Core.Enums.TransferTypes.MemberCashOutByWleePay.GetHashCode())
             {
                 var device = await _userDeviceService.GetUserDeviceByUserId(toWalletUser.ApplicationUser.UserDetail.UserId);
 
@@ -773,6 +780,24 @@ namespace wleepay.API.Controllers
                 return false;
             }
 
+        }
+        
+        private async void SendSmsNotificationToSystemAdmin(Transaction transaction)
+        {
+            string messageText = string.Empty;
+            string result = string.Empty;
+            
+            var systemAdmins = await _userDetailService.GetAllUsersByRole(Role.SystemAdmin.GetHashCode());
+            
+            string amountString = transaction.Amount.ToString("C2", new CultureInfo("en-US"));
+            string currencyName = transaction.FromWallet.Currency.Symbol == "L$" ? "LRD" : "USD";
+            messageText = MessagesTemplates.TransactionCompleted(amountString, currencyName, transaction.Id);
+
+
+            foreach (var admin in systemAdmins)
+            {
+                result = _smsService.sendMessage(messageText, admin.UserDetail.PhoneNumber);
+            }
         }
         #endregion
 
