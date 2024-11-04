@@ -11,6 +11,7 @@ using static DevExpress.Xpo.Helpers.AssociatedCollectionCriteriaHelper;
 using wleepay.Core.Models;
 using AutoMapper;
 using wleepay.Core.DTO.Response;
+using wleepay.Core.Enums;
 
 namespace wleepay.API.Controllers
 {
@@ -74,7 +75,6 @@ namespace wleepay.API.Controllers
             return Ok(data);
         }
 
-
         [HttpGet("AccountOpenedByDateRange")]
         public async Task<IActionResult> GetAccountOpenedByDateRangeAsync([FromQuery] DateTime fromDate , DateTime toDate)
         {
@@ -116,11 +116,18 @@ namespace wleepay.API.Controllers
             });
         }
 
-
-        [HttpPost("GetStaringCOHBalance")]
-        public async Task<IActionResult> GetStaringCOHBalance()
+        [HttpPost("GetStaringBalance")]
+        public async Task<IActionResult> GetStaringWalletBalance(GetWalletBalanceResponse getWalletBalanceResponse)
         {
-            var data = await _reportService.getStartingLdWalletBalance(DateTime.Now.AddDays(-30));
+            var data = await _reportService.getStartingWalletBalance(DateTime.Now, getWalletBalanceResponse.WalletType);
+
+            return Ok(data);
+        }
+
+        [HttpPost("GetEndingBalance")]
+        public async Task<IActionResult> GetEndingWalletBalance(GetWalletBalanceResponse getWalletBalanceResponse)
+        {
+            var data = await _reportService.getEndingWalletBalance(DateTime.Now.AddDays(-30), getWalletBalanceResponse.WalletType);
 
             return Ok(data);
         }

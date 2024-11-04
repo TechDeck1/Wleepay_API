@@ -86,9 +86,15 @@ namespace wleepay.Services
             return result;
 
         }
-        public async Task<CashOnHandBeginingBalance> getStartingLdWalletBalance(DateTime reportStartDate)
+        public async Task<WalletsBeginingBalance> getStartingWalletBalance(DateTime reportStartDate, int walletType)
         {
-            var result = await _unitOfWork.Wallet.getStartingLdWalletBalance(reportStartDate);
+            var result = await _unitOfWork.Wallet.getStartingWalletBalance(reportStartDate, walletType);
+            return result;
+        }
+
+        public async Task<WalletsEndingBalance> getEndingWalletBalance(DateTime reportStartDate, int walletType)
+        {
+            var result = await _unitOfWork.Wallet.getEndingWalletBalance(reportStartDate,walletType);
             return result;
         }
         public async Task<CreditsByWleepay> getCreditsForAgentAndMemberByWleepay()

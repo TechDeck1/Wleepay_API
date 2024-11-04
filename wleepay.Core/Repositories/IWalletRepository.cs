@@ -17,7 +17,8 @@ namespace wleepay.Core.Repositories
         Task<IEnumerable<Wallet>> GetWalletByWalletTypeIdAndUserId(string userId,long walletTypeId);
         Task<Wallet> SetCashOnHand(double amount, int currencyId, int WalletTypeId);
         Task<IList<WalletAmountHistoryByMonths>> GetWalletHistoryByWalletTypeAndCurrency(int walletType, int currencyId);
-        Task<CashOnHandBeginingBalance> getStartingLdWalletBalance(DateTime reportStartDate);
+        Task<WalletsBeginingBalance> getStartingWalletBalance(DateTime reportStartDate, int walletType);
+        Task<WalletsEndingBalance> getEndingWalletBalance(DateTime reportStartDate, int walletType);
         Task<CreditsByWleepay> getCreditsForAgentAndMemberByWleepay();
         Task<DebitsByWleepay> getDebitsForAgentAndMemberByWleepay();
 
