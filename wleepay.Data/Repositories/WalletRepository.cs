@@ -138,8 +138,8 @@ namespace wleepay.Data.Repositories
         public async Task<WalletsBeginingBalance> getStartingWalletBalance(DateTime reportStartDate, int walletType)
         {
             var beginningBalanceLD = await WPContext.Wallet
-            .Where(t => t.CreatedDate < reportStartDate && t.CurrencyId == 1 && t.Type == walletType)
-            .SumAsync(t => t.Balance);
+                .Where(t => t.CreatedDate < reportStartDate && t.CurrencyId == 1 && t.Type == walletType)
+                .SumAsync(t => t.Balance);
 
             var beginningBalanceUSD = await WPContext.Wallet
                 .Where(t => t.CreatedDate < reportStartDate && t.CurrencyId == 2 && t.Type == walletType)
@@ -152,8 +152,8 @@ namespace wleepay.Data.Repositories
         public async Task<WalletsEndingBalance> getEndingWalletBalance(DateTime reportEndDate, int walletType)
         {
             var endingBalanceLD = await WPContext.Wallet
-            .Where(t => t.CreatedDate < reportEndDate && t.CurrencyId == 1 && t.Type == walletType)
-            .SumAsync(t => t.Balance);
+                .Where(t => t.CreatedDate < reportEndDate && t.CurrencyId == 1 && t.Type == walletType)
+                .SumAsync(t => t.Balance);
 
             var endingBalanceUSD = await WPContext.Wallet
                 .Where(t => t.CreatedDate < reportEndDate && t.CurrencyId == 2 && t.Type == walletType)
@@ -192,6 +192,35 @@ namespace wleepay.Data.Repositories
         }
 
         public async Task<DebitsByWleepay> getDebitsForAgentAndMemberByWleepay()
+        {
+            var LDdebitSubscriberCashouts = await WPContext.Transactions
+            .Where(t => t.TransferTypeId == TransferTypes.MemberCashOutByWleePay.GetHashCode() && t.FromWallet.CurrencyId == 1 && t.FromWallet.Type == WalletTypes.MemberAccount.GetHashCode())
+            .SumAsync(t => t.Amount);
+
+            var USDdebitSubscriberCashouts = await WPContext.Transactions
+            .Where(t => t.TransferTypeId == TransferTypes.MemberCashOutByWleePay.GetHashCode() && t.FromWallet.CurrencyId == 2 && t.FromWallet.Type == WalletTypes.MemberAccount.GetHashCode())
+            .SumAsync(t => t.Amount);
+
+            var LDdebitAgentCommissionCashouts = await WPContext.Transactions
+            .Where(t => t.TransferTypeId == TransferTypes.AgentCommissionCashout.GetHashCode() && t.FromWallet.CurrencyId == 1 && t.FromWallet.Type == WalletTypes.AgentComission.GetHashCode())
+            .SumAsync(t => t.Amount);
+
+            var USDdebitAgentCommissionCashouts = await WPContext.Transactions
+            .Where(t => t.TransferTypeId == TransferTypes.AgentCommissionCashout.GetHashCode() && t.FromWallet.CurrencyId == 2 && t.FromWallet.Type == WalletTypes.AgentComission.GetHashCode())
+            .SumAsync(t => t.Amount);
+
+            return new DebitsByWleepay
+            {
+                LDDebitsFromAgent = LDdebitAgentCommissionCashouts,
+                LDDebitFromMember = LDdebitSubscriberCashouts,
+                USDDebitsFromAgent = USDdebitAgentCommissionCashouts,
+                USDDebitsFromMember = USDdebitSubscriberCashouts
+
+            };
+
+        }
+
+        public async Task<DebitsByWleepay> getBusinessAccountReport()
         {
             var LDdebitSubscriberCashouts = await WPContext.Transactions
             .Where(t => t.TransferTypeId == TransferTypes.MemberCashOutByWleePay.GetHashCode() && t.FromWallet.CurrencyId == 1 && t.FromWallet.Type == WalletTypes.MemberAccount.GetHashCode())
