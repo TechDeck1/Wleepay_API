@@ -220,31 +220,33 @@ namespace wleepay.Data.Repositories
 
         }
 
-        public async Task<DebitsByWleepay> getBusinessAccountReport()
+        public async Task<BusinessAccountReportResponse> getBusinessAccountReport()
         {
-            var LDdebitSubscriberCashouts = await WPContext.Transactions
-            .Where(t => t.TransferTypeId == TransferTypes.MemberCashOutByWleePay.GetHashCode() && t.FromWallet.CurrencyId == 1 && t.FromWallet.Type == WalletTypes.MemberAccount.GetHashCode())
+            var LdWleepayCommission = await WPContext.Transactions
+            .Where(t => t.TransferTypeId == TransferTypes.CashOutStandardFeeSplit.GetHashCode() && t.FromWallet.CurrencyId == 1 && t.FromWallet.Type == WalletTypes.WleeTax.GetHashCode())
             .SumAsync(t => t.Amount);
 
-            var USDdebitSubscriberCashouts = await WPContext.Transactions
-            .Where(t => t.TransferTypeId == TransferTypes.MemberCashOutByWleePay.GetHashCode() && t.FromWallet.CurrencyId == 2 && t.FromWallet.Type == WalletTypes.MemberAccount.GetHashCode())
+            var USDdebitCashouts = await WPContext.Transactions
+            .Where(t => t.TransferTypeId == TransferTypes.CashOutStandardFeeSplit.GetHashCode() && t.FromWallet.CurrencyId == 2 && t.FromWallet.Type == WalletTypes.WleeTax.GetHashCode())
             .SumAsync(t => t.Amount);
 
-            var LDdebitAgentCommissionCashouts = await WPContext.Transactions
-            .Where(t => t.TransferTypeId == TransferTypes.AgentCommissionCashout.GetHashCode() && t.FromWallet.CurrencyId == 1 && t.FromWallet.Type == WalletTypes.AgentComission.GetHashCode())
-            .SumAsync(t => t.Amount);
+            var AirtimeCommisionEarned = await WPContext.SochitelTransactions
+            .Where(t => t.TransactionType == "Mobile Recharge")
+            .Select(t => Convert.ToDouble(t.CommissionRate))
+            .SumAsync();
 
-            var USDdebitAgentCommissionCashouts = await WPContext.Transactions
-            .Where(t => t.TransferTypeId == TransferTypes.AgentCommissionCashout.GetHashCode() && t.FromWallet.CurrencyId == 2 && t.FromWallet.Type == WalletTypes.AgentComission.GetHashCode())
-            .SumAsync(t => t.Amount);
+            var LecCommissionEarned = await WPContext.SochitelTransactions
+            .Where(t => t.TransactionType == "Bill Payment")
+            .Select(t => Convert.ToDouble(t.CommissionRate))
+            .SumAsync();
 
-            return new DebitsByWleepay
+
+            return new BusinessAccountReportResponse
             {
-                LDDebitsFromAgent = LDdebitAgentCommissionCashouts,
-                LDDebitFromMember = LDdebitSubscriberCashouts,
-                USDDebitsFromAgent = USDdebitAgentCommissionCashouts,
-                USDDebitsFromMember = USDdebitSubscriberCashouts
-
+                LdWleepayCommission = LdWleepayCommission,
+                USDWleepayCommission = USDdebitCashouts,
+                AirtimeCommisionEarned = AirtimeCommisionEarned,
+                LecCommissionEarned = LecCommissionEarned
             };
 
         }
