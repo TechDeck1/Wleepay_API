@@ -38,6 +38,7 @@ namespace wleepay.Data.Repositories
 
             return walletList;
         }
+        
         public async Task<Wallet> GetUserByWalletIdAndTransferType(long walletId, int type)
         {
             var wallet = WPContext.Wallet.Where(w => w.Id == walletId && w.Type == type).AsQueryable();
@@ -48,7 +49,7 @@ namespace wleepay.Data.Repositories
 
             return walletDetail;
         }
-
+        
         public async Task<Wallet> GetUserDetailsByWalletIdAndCurrency(long walletId)
         {
             return await WPContext.Wallet.Where(w => w.Id == walletId)
@@ -57,6 +58,7 @@ namespace wleepay.Data.Repositories
                 .ThenInclude(s => s.UserDetail)
                 .FirstOrDefaultAsync();
         }
+        
         public async Task<IEnumerable<Wallet>> GetWalletsBy(string userId, int currencyId = 0)
         {
             var wallets = WPContext.Wallet.Where(w => w.UserId == userId).AsQueryable();
@@ -222,23 +224,53 @@ namespace wleepay.Data.Repositories
 
         public async Task<BusinessAccountReportResponse> getBusinessAccountReport()
         {
-            var LdWleepayCommission = await WPContext.Transactions
-            .Where(t => t.TransferTypeId == TransferTypes.CashOutStandardFeeSplit.GetHashCode() && t.FromWallet.CurrencyId == 1 && t.FromWallet.Type == WalletTypes.WleeTax.GetHashCode())
-            .SumAsync(t => t.Amount);
+            //var LdWleepayCommission = await WPContext.Transactions
+            //.Where(t => t.TransferTypeId == TransferTypes.CashOutStandardFeeSplit.GetHashCode() && t.FromWallet.CurrencyId == 1 && t.FromWallet.Type == WalletTypes.WleeTax.GetHashCode()).Where(x=>x.Amount > 0)
+            //.SumAsync(t => t.Amount);
 
-            var USDdebitCashouts = await WPContext.Transactions
-            .Where(t => t.TransferTypeId == TransferTypes.CashOutStandardFeeSplit.GetHashCode() && t.FromWallet.CurrencyId == 2 && t.FromWallet.Type == WalletTypes.WleeTax.GetHashCode())
-            .SumAsync(t => t.Amount);
+            //var USDdebitCashouts = await WPContext.Transactions
+            //.Where(t => t.TransferTypeId == TransferTypes.CashOutStandardFeeSplit.GetHashCode() && t.FromWallet.CurrencyId == 2 && t.FromWallet.Type == WalletTypes.WleeTax.GetHashCode())
+            //.SumAsync(t => t.Amount);
 
-            var AirtimeCommisionEarned = await WPContext.SochitelTransactions
-            .Where(t => t.TransactionType == "Mobile Recharge")
-            .Select(t => Convert.ToDouble(t.CommissionRate))
-            .SumAsync();
+            var commissionSums = await WPContext.Transactions
+            .Where(t => t.TransferTypeId == TransferTypes.CashOutStandardFeeSplit.GetHashCode()
+                        && t.FromWallet.Type == WalletTypes.WleeTax.GetHashCode()
+                        && (t.FromWallet.CurrencyId == 1 || t.FromWallet.CurrencyId == 2))
+            .GroupBy(t => t.FromWallet.CurrencyId)
+            .Select(g => new
+            {
+                CurrencyId = g.Key,
+                TotalAmount = g.Sum(t => t.Amount)
+            }).ToListAsync();
 
-            var LecCommissionEarned = await WPContext.SochitelTransactions
-            .Where(t => t.TransactionType == "Bill Payment")
-            .Select(t => Convert.ToDouble(t.CommissionRate))
-            .SumAsync();
+            var LdWleepayCommission = commissionSums.FirstOrDefault(x => x.CurrencyId == 1)?.TotalAmount ?? 0;
+            var USDdebitCashouts = commissionSums.FirstOrDefault(x => x.CurrencyId == 2)?.TotalAmount ?? 0;
+
+
+            var CreditCommissionEarned = await WPContext.SochitelTransactions
+            .Where(t => t.TransactionType == "Mobile Recharge" || t.TransactionType == "Bill Payment")
+            .GroupBy(t => t.TransactionType)
+            .Select(g => new
+            {
+                TransactionType = g.Key,
+                TotalAmount = g.Sum(t => Convert.ToDouble(t.CommissionRate))
+            }).ToListAsync();
+
+
+            var LecCommissionEarned = CreditCommissionEarned.FirstOrDefault(x => x.TransactionType == "Mobile Recharge")?.TotalAmount ?? 0;
+            var AirtimeCommisionEarned = CreditCommissionEarned.FirstOrDefault(x => x.TransactionType == "Bill Payment")?.TotalAmount ?? 0;
+
+
+
+            //var AirtimeCommisionEarned = await WPContext.SochitelTransactions
+            //.Where(t => t.TransactionType == "Mobile Recharge")
+            //.Select(t => Convert.ToDouble(t.CommissionRate))
+            //.SumAsync();
+
+            //var LecCommissionEarned = await WPContext.SochitelTransactions
+            //.Where(t => t.TransactionType == "Bill Payment")
+            //.Select(t => Convert.ToDouble(t.CommissionRate))
+            //.SumAsync();
 
 
             return new BusinessAccountReportResponse

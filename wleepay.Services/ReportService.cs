@@ -73,6 +73,13 @@ namespace wleepay.Services
             return result;
 
         }
+
+        public async Task<int> GetSubscribersCountByAgeAsync(int minAge,int maxAge)
+        {
+            var result = await _unitOfWork.UserDetail.GetSubscribersCountByAgeAsync(minAge,maxAge);
+            return result;
+
+        }
         public async Task<TransactionResponseResource> TransactionCountSummary(int role, int transaferType, DateTime fromDate, DateTime toDate)
         {
             var result = await _unitOfWork.Transaction.TransactionCountSummary(role , transaferType, fromDate , toDate);

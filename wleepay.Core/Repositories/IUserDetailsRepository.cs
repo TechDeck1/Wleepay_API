@@ -41,7 +41,6 @@ namespace wleepay.Core.Repositories
         Task<UserDetailsResponseResource> GetAllActiveAccountsAsync(int role);
         Task<UserDetailsResponseResource> GetAccountOpenedByDateRangeAsync(DateTime fromDate , DateTime toDate);
         Task<int> GetSubscribersCountByCountryAsync(int countryId);
-
-
+        Task<int> GetSubscribersCountByAgeAsync(int minAge, int maxAge);
     }
 }

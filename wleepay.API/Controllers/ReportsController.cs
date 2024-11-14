@@ -89,6 +89,13 @@ namespace wleepay.API.Controllers
             return Ok(data);
         }
 
+        [HttpGet("SubscribersCountByAgeRange")]
+        public async Task<IActionResult> GetSubscribersCountByAgeAsync([FromQuery] int minAge,int maxAge)
+        {
+            var data = await _reportService.GetSubscribersCountByAgeAsync(minAge,maxAge);
+            return Ok(data);
+        }
+
         [HttpPost("TransactionCountSummary")]
         public async Task<IActionResult> GetTransactionCountSummaryAsync(TransactionCountSummaryRequest transactionCountSummaryRequest)
         {

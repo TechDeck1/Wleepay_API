@@ -1,7 +1,9 @@
-﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using Microsoft.AspNet.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.SqlServer.Management.Smo;
 using SendGrid.Helpers.Mail;
+using Stripe;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -564,6 +566,49 @@ namespace wleepay.Data.Repositories
             var subscriberCountbyCountry = await WPContext.Users.Where(users => users.UserRoles.FirstOrDefault().Role.Name == Role.Member.ToDescriptionString() && users.UserDetail.CountyId == countryId).Include(s => s.UserDetail).CountAsync();
 
             return subscriberCountbyCountry;
+        }
+
+        public async Task<int> GetSubscribersCountByAgeAsync(int minAge, int maxAge)
+        {
+            var currentDate = DateTime.UtcNow;
+
+            //var age = CalculateAge(DateTime.Now.AddYears(-24));
+            var subscriberCountByAgeRange = 0;
+
+
+            DateTime today = DateTime.Today;
+            DateTime age18Threshold = today.AddYears(-18);
+            DateTime age45Threshold = today.AddYears(-45);
+
+            var age18Plus = WPContext.Set<UserDetail>()
+                .Where(u => u.DOB >= age18Threshold)
+                .ToList();
+
+            var age18To45 = WPContext.Set<UserDetail>()
+                .Where(u => u.DOB <= age18Threshold && u.DOB >= age45Threshold)
+                .ToList();
+
+            var age45Plus = WPContext.Set<UserDetail>()
+                .Where(u => u.DOB <= age45Threshold)
+                .ToList();
+
+            //DateTime today = DateTime.Today;
+
+            //// LINQ query to filter by age groups
+            //var age18Plus = WPContext.UserDetail.Where(user => CalculateAge((DateTime)user.DOB) >= 18).ToList();
+            //var age18To45 = WPContext.UserDetail.Where(user => CalculateAge((DateTime)user.DOB) >= 18 && CalculateAge((DateTime)user.DOB) <= 45).ToList();
+            //var age45Plus = WPContext.UserDetail.Where(user => CalculateAge((DateTime)user.DOB) > 45).ToList();
+
+
+            return subscriberCountByAgeRange;
+        }
+
+        public static int CalculateAge(DateTime birthDate)
+        {
+            var today = DateTime.Today;
+            int age = today.Year - birthDate.Year;
+            if (birthDate.Date > today.AddYears(-age)) age--;
+            return age;
         }
 
     }

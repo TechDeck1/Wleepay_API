@@ -285,13 +285,28 @@ namespace wleepay.API.Controllers
 
             var result = await _signInManager.PasswordSignInAsync(user, loginRequest.Pin.ToString(), false, true);
 
+            // get user
+            var userDetails = await _userDetailsService.GetUserDetailsByPhone(loginRequest.PhoneNo);
+
+            // Check if the user is locked out
+            if (userDetails.FailedLoginAttempt >= 3)
+            {
+                var lockoutDuration = DateTime.UtcNow - userDetails.UpdatedDate;
+                if (lockoutDuration.TotalMinutes < 30)  // Check if user is locked out
+                {
+                    return BadRequest("Your account is locked. Please try again after 30 minutes.");
+                } else
+                {
+                    await _userDetailsService.UpdateUserLoggedInStatus(userDetails.UserId, false, 0);
+                }
+            }
+
             if (result.Succeeded)
             {
-                //get user
-                var userDetails = await _userDetailsService.GetUserDetailsByPhone(loginRequest.PhoneNo);
-
                 if (userDetails.Status == Core.Enums.Status.DeActive.GetHashCode())
                 {
+                    var failedAttempt = userDetails.FailedLoginAttempt + 1;
+                    await _userDetailsService.UpdateUserLoggedInStatus(userDetails.UserId, false, failedAttempt);
                     return BadRequest(new
                     {
                         Success = false,
@@ -344,16 +359,15 @@ namespace wleepay.API.Controllers
             {
                 if (user != null)
                 {
-                    var userDetails = await _userDetailsService.GetUserDetailsByPhone(loginRequest.PhoneNo);
                     if (userDetails != null)
                     {
-                        userDetails.FailedLoginAttempt++;
-                        await _userDetailsService.UpdateUserLoggedInStatus(userDetails.UserId, true, userDetails.FailedLoginAttempt);
-
                         if (userDetails.FailedLoginAttempt >= 3) // Threshold for sending SMS
                         {
                             var sendSms = _smsService.sendMessage("Multiple failed login attempts detected.", userDetails.PhoneNumber);
                         }
+
+                        var failedAttempt = userDetails.FailedLoginAttempt + 1;
+                        await _userDetailsService.UpdateUserLoggedInStatus(userDetails.UserId, false, failedAttempt);
                     }
                     return BadRequest("Invalid login request.");
                 }
