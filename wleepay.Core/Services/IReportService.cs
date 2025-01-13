@@ -10,6 +10,7 @@ namespace wleepay.Core.Services
     public interface IReportService
     {
         Task<UserDetailsResponseResource> GetReportOfUserByStatusAsync(int role, int status, int pageIndex = 0, int pageSize = 10);
+        Task<TicketsResponse> GetReportOfUserByOpenTicketsAsync(int role, int status, int pageIndex = 0, int pageSize = 10);
         Task<UserDetailsResponseResource> GetInActiveSubscriberListAsync(int role);
         Task<UserDetailsResponseResource> GetActiveSubscriberListAsync(int role);
         Task<UserDetailsResponseResource> GetSubscriberAndMemberListByWalletBalanceAsync(int WalletType, int role, int balance, int walletType);
@@ -22,6 +23,7 @@ namespace wleepay.Core.Services
         Task<SochitelTransactionResponseResource> SochitelCommisionTransactionSummary(int role, string transactionType, DateTime fromDate, DateTime toDate);
         Task<WalletsBeginingBalance> getStartingWalletBalance(DateTime reportStartDate, int walletType, int currencyId);
         Task<WalletsEndingBalance> getEndingWalletBalance(DateTime reportStartDate, int walletType, int currencyId);
+        Task<WalletsBalanceResponse> getWalletBalance(DateTime reportStartDate,DateTime reportEndDate, int walletType, int currencyId);
         Task<CreditsByWleepay> getCreditsForAgentAndMemberByWleepay();
         Task<DebitsByWleepay> getDebitsForAgentAndMemberByWleepay();
 
@@ -35,6 +37,8 @@ namespace wleepay.Core.Services
         GetReconciliationResponse getReconciliationReport(int pageIndex, int pageSize, int currencyId, DateTime reportStartDate,string userId);
 
         List<GetReconciliationMonthlyBalance> getReconciliationReportByMonth(int pageIndex, int pageSize, int currencyId, DateTime reportStartDate, string userId);
+
+        GetWalletBalances getWalletBalancesReport(string role, int currency, int pageIndex, int pageSize);
 
     }
 }

@@ -144,7 +144,7 @@ namespace wleepay.Services
             return paymentRequest;
         }
 
-        public async Task<TransactionResponseResource> GetIncomingOutGoingAgentPaymentRequest(string userId, Core.Enums.PaymentRequestType type, Core.Enums.TransactionStatus transactionStatus,int transferTypeId, int pageSize, int pageIndex)
+        public async Task<TransactionResponseResource> GetIncomingOutGoingAgentPaymentRequest(string userId, Core.Enums.PaymentRequestType type, Core.Enums.TransactionStatus transactionStatus,string transferTypeId, int pageSize, int pageIndex)
         {
             var user = await _unitOfWork.UserDetail.GetApplicationUser(userId, string.Empty, string.Empty, true);
             if (user == null)
@@ -185,9 +185,9 @@ namespace wleepay.Services
             return await _unitOfWork.UserDetail.GetAllUsersById(role, pageIndex, pageSize, createdBy);
         }
 
-        public async Task<UserDetailsResponseResource> SearchUsersByEmail(string searchText, Core.Enums.Role role, int index, int size)
+        public async Task<UserDetailsResponseResource> SearchUsersByEmail(string searchText, Core.Enums.Role role, int index, int size, int filterType)
         {
-            return await _unitOfWork.UserDetail.SearchApplicationUserByEmail(searchText, role, index, size);
+            return await _unitOfWork.UserDetail.SearchApplicationUserByEmail(searchText, role, index, size,filterType);
         }
 
         public async Task<TransactionAndUserResponseResource> VerifyUserAccountByPhone(string phone)
@@ -203,6 +203,16 @@ namespace wleepay.Services
         public async Task<UserDetail> AddDeviceIdAndToken(string deviceId, string token, string userId)
         {
             return await _unitOfWork.UserDetail.AddDeviceIdAndToken(deviceId, token,userId);
+        }
+
+        public async Task<UserNotes> AddUserNotes(string userId, string addBy, string description, string note, MessageType messageType)
+        {
+            return await _unitOfWork.UserDetail.AddUserNotes(userId, addBy, description, note, messageType);
+        }
+
+        public async Task<UserNotesReponse> GetUserNotes(string userId,int messageType)
+        {
+            return await _unitOfWork.UserDetail.GetUserNotes(userId, messageType);
         }
 
     }

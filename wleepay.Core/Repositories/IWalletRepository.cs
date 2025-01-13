@@ -19,6 +19,7 @@ namespace wleepay.Core.Repositories
         Task<IList<WalletAmountHistoryByMonths>> GetWalletHistoryByWalletTypeAndCurrency(int walletType, int currencyId);
         Task<WalletsBeginingBalance> getStartingWalletBalance(DateTime reportStartDate, int walletType, int currencyId);
         Task<WalletsEndingBalance> getEndingWalletBalance(DateTime reportStartDate, int walletType, int currencyId);
+        Task<WalletsBalanceResponse> getWalletBalance(DateTime reportStartDate, DateTime reportEndDate, int walletType, int currencyId);
         Task<CreditsByWleepay> getCreditsForAgentAndMemberByWleepay();
         Task<DebitsByWleepay> getDebitsForAgentAndMemberByWleepay();
         CashOnHandReponse getCashHandByWleepay(DateTime reportStartDate, DateTime reportEndDate, int walletType,int currencyType, int PageSize, int PageIndex);
@@ -29,5 +30,6 @@ namespace wleepay.Core.Repositories
         GetFloatAccountResponse getFloatAccountReport(DateTime reportStartDate, DateTime reportEndDate, int walletType, int pageIndex, int pageSize, int currencyId);
         GetReconciliationResponse getReconciliationReport(int pageIndex, int pageSize, int currencyId, DateTime reportStartDate, string userId);
         List<GetReconciliationMonthlyBalance> getReconciliationReportByMonth(int pageIndex, int pageSize, int currencyId, DateTime reportStartDate, string userId);
+        GetWalletBalances getWalletBalancesReport(string role, int currency, int pageIndex, int pageSize);
     }
 }

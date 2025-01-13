@@ -34,14 +34,14 @@ namespace wleepay.Services
             return await _unitOfWork.Transaction.GetPaymentRequestByStatus(walletIds, type, transactionStatus, pageSize, pageIndex);
         }
 
-        public async Task<TransactionResponseResource> GetIncomingOutgoingPaymentRequest(IEnumerable<long> walletIds, PaymentRequestType type, TransactionStatus transactionStatus, int transferTypeId, int pageSize, int pageIndex)
+        public async Task<TransactionResponseResource> GetIncomingOutgoingPaymentRequest(IEnumerable<long> walletIds, PaymentRequestType type, TransactionStatus transactionStatus, string transferTypeId, int pageSize, int pageIndex)
         {
             return await _unitOfWork.Transaction.GetIncomingOutgoingPaymentRequest(walletIds, type, transactionStatus, transferTypeId, pageSize, pageIndex);
         }
 
-        public async Task<TransactionResponseResource> GetPaymentRequestByStatusAndType(PaymentRequestType type, TransactionStatus transactionStatus, int transferId, int pageSize, int pageIndex)
+        public async Task<TransactionResponseResource> GetPaymentRequestByStatusAndType(PaymentRequestType type, TransactionStatus transactionStatus, string transferId, int pageSize, int pageIndex, string? searchTerm)
         {
-            return await _unitOfWork.Transaction.GetPaymentRequestByStatusAndType(type, transactionStatus, transferId, pageSize, pageIndex);
+            return await _unitOfWork.Transaction.GetPaymentRequestByStatusAndType(type, transactionStatus, transferId, pageSize, pageIndex, searchTerm);
         }
 
         public async Task<Transaction> GetTransactionsById(long Id)
@@ -264,6 +264,7 @@ namespace wleepay.Services
                         transactionToUpdate = await _unitOfWork.Transaction.GetByIdAsync(transaction.Id);
                         if (transactionToUpdate != null)
                         {
+                            transaction.ParentId = transactionToUpdate.Id;
                             transactionToUpdate.Status = Core.Enums.TransactionStatus.Approved.GetHashCode();
                         }
                     }
@@ -271,7 +272,7 @@ namespace wleepay.Services
                     {
                         transaction.Status = Core.Enums.TransactionStatus.Approved.GetHashCode();
                         transaction.CreatedDate = DateTime.Now;
-                        transaction.ParentId = transactionToUpdate.Id;
+                        //transaction.ParentId = transactionToUpdate.ParentId;
                         await _unitOfWork.Transaction.AddAsync(transaction);
                     }
 

@@ -8,6 +8,10 @@ namespace wleepay.Core.DTO.Request
     {
         public string Note { get; set; }
         public string? PhoneNumber {  get; set; }
+
+        public string userId { get; set; }
+
+        public string AddedBy { get; set; }
     }
 
     public class SendEmailSmsAlertModel

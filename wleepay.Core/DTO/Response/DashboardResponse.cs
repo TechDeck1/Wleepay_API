@@ -20,6 +20,10 @@ namespace wleepay.Core.DTO.Response
         public double TotalSubscribersWalletBalanceByUSD { get; set; }
         public double TotalAgentsWalletBalanceByLD { get; set; }
         public double TotalAgentsWalletBalanceByUSD { get; set; }
+
+        public int SignUpSubscriberLast7Days {get;set;}
+        public int SignUpSubscriberLast30Days {get;set;}
+        public int PendingKYCSubscriber { get;set;}
     }
 
     public class EarnedCommission

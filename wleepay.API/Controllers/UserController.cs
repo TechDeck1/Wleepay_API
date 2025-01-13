@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Microsoft.SqlServer.Management.Smo;
+using Microsoft.SqlServer.Management.Smo.Broker;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -20,6 +21,8 @@ using wleepay.API.Resources;
 using wleepay.API.Validators;
 using wleepay.Communication.EmailTemplates;
 using wleepay.Communication.Interface;
+using wleepay.Communication.Services;
+using wleepay.Communication.Templates;
 using wleepay.Core.Common;
 using wleepay.Core.DTO.Request;
 using wleepay.Core.DTO.Response;
@@ -53,6 +56,7 @@ namespace wleepay.API.Controllers
         private readonly ISMSService _sMSService;
         private readonly IExternalApiService _externalApiService;
         private readonly IEmailSender _emailSender;
+
         public UserController(UserManager<ApplicationUser> userManager,
             IUserDetailService userDetailsService,
             IUploadDocument uploadDocument,
@@ -159,7 +163,7 @@ namespace wleepay.API.Controllers
         {
             if (!string.IsNullOrEmpty(request.SearchText))
             {
-                var result = await _userDetailsService.SearchUsersByEmail(request.SearchText, request.Role, request.Index, request.Size);
+                var result = await _userDetailsService.SearchUsersByEmail(request.SearchText, request.Role, request.Index, request.Size,request.FilterType);
                 var userDetailResource = _mapper.Map<IEnumerable<ApplicationUser>, IEnumerable<ApplicationUserResource>>(result.UserDetails);
                 return Ok(new
                 {
@@ -675,6 +679,9 @@ namespace wleepay.API.Controllers
                 var response = _sMSService.sendMessage(request.Note, request.PhoneNumber);
                 if (response == "success")
                 {
+                    await _userDetailsService.AddUserNotes(request.userId, request.AddedBy, "SMS sent", request.Note,Core.Models.MessageType.SMS);
+
+             
                     return Ok(new{
                         message="Message sent successfully!",
                         success=true
@@ -798,6 +805,32 @@ namespace wleepay.API.Controllers
                 transactionResource=transactionResource,
                 totalCount=paymentRequest.TotalCount
             });
+        }
+
+        [AllowAnonymous]
+        [HttpPost("UserNotes")]
+        public async Task<IActionResult> SaveUserNotes([FromBody] UserNotesRequest userNotes)
+        {
+            var userDetail = await _userDetailsService.GetUserDetailsById(userNotes.UserId);
+            if (userDetail == null)
+                return BadRequest("No user found");
+
+            var response = await _userDetailsService.AddUserNotes(userNotes.UserId, userNotes.AddedBy, userNotes.Description, userNotes.UserNote,Core.Models.MessageType.Note);
+
+
+
+            _sMSService.sendMessage(userNotes.UserNote, userDetail.PhoneNumber);
+
+            return Ok(response);
+        }
+
+        [AllowAnonymous]
+        [HttpGet("GetUserNotes")]
+        public async Task<IActionResult> GetUserNotes(string userId,int messageType)
+        {
+            var response = await _userDetailsService.GetUserNotes(userId, messageType);
+
+            return Ok(response);
         }
 
         #region helper methods

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 
 namespace wleepay.Core.Models
@@ -21,7 +22,8 @@ namespace wleepay.Core.Models
         public DateTime CreatedDate { get; set; }
         public long? ParentId { get; set; }
         public int? Status { get; set; }
-
+        [NotMapped]
+        public double? CommissionEarned { get; set; }
         public virtual Wallet ToWallet { get; set; }
         public virtual Wallet FromWallet { get; set; }
         public virtual TransferType TransferType { get; set; }

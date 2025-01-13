@@ -22,6 +22,12 @@ namespace wleepay.Core.DTO.Response
         public double EndingBalance { get; set; }
     }
 
+    public class WalletsBalanceResponse
+    {
+        public double BeginningBalance { get; set; }
+        public double EndingBalance { get; set; }
+    }
+
     public class CreditsByWleepay
     {
         public double LDCreditToAgent { get; set; }
@@ -44,7 +50,14 @@ namespace wleepay.Core.DTO.Response
         public DateTime DateTime { get; set; }
 
         public int CurrencyId { get; set; }
+    }
 
+    public class GetReportWeeklyBalanceResponse
+    {
+        public int WalletType { get; set; }
+        public DateTime ReportStartingBalance { get; set; }
+        public DateTime ReportEndingBalance { get; set; }
+        public int CurrencyId { get; set; }
     }
 
     public class GetBusinessReport
@@ -59,7 +72,7 @@ namespace wleepay.Core.DTO.Response
 
     public class GetCashOnHandByWleepay
     {
-        public int WalletType { get; set; }
+        public int TransferType { get; set; }
         public DateTime FromDate { get; set; }
         public DateTime ToDate { get; set; }
         public int CurrencyType { get; set; }
@@ -69,27 +82,27 @@ namespace wleepay.Core.DTO.Response
 
     public class CashOnHandReponse
     {
-        public int total { get; set; }
-        public List<Transaction> transacion { get; set; }
+        public int TotalCount { get; set; }
+        public List<Transaction> Transaction { get; set; }
 
     }
 
     public class GetBillPaymentCommissionEarnedResponse
     {
-        public int Total { get; set; }
-        public List<SochitelTransactions> billCommissionEarned;
+        public int TotalCount { get; set; }
+        public List<SochitelTransactions> commissionEarned;
 
     }
 
     public class GetCashOutCommissionEarnedResponse
     {
-        public int Total { get; set; }
-        public List<Transaction> cashOutCommissionEarned;
+        public int TotalCount { get; set; }
+        public List<Transaction> commissionEarned;
     }
 
     public class GetFloatAccount
     {
-        public int WalletType { get; set; }
+        public int TransferType { get; set; }
         public DateTime FromDate { get; set; }
         public DateTime ToDate { get; set; }
         public int CurrencyType { get; set; }
@@ -99,7 +112,7 @@ namespace wleepay.Core.DTO.Response
 
     public class GetFloatAccountResponse
     {
-        public int Total { get; set; }
+        public int TotalCount { get; set; }
         public List<Transaction> Transaction { get; set; }
 
     }
@@ -113,9 +126,17 @@ namespace wleepay.Core.DTO.Response
         public int PageIndex { get; set; }
     }
 
+    public class GetWalletBalancesReports
+    {
+        public int Role { get; set; }
+        public int CurrencyType { get; set; }
+        public int PageSize { get; set; }
+        public int PageIndex { get; set; }
+    }
+
     public class GetReconciliationResponse
     {
-        public int Total { get; set; }
+        public int TotalCount { get; set; }
         public List<Wallet> reconciliations;
     }
     public class GetReconciliationMonthlyBalance
@@ -124,5 +145,11 @@ namespace wleepay.Core.DTO.Response
         public string WalletName { get; set; }
         public double Balance { get; set; } 
         public string UserEmail { get; set; }
+    }
+
+    public class GetWalletBalances
+    {
+        public int TotalCount { get; set; }
+        public List<ApplicationUser> WalletBalances;
     }
 }

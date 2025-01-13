@@ -29,7 +29,7 @@ namespace wleepay.Data.Context
         public DbSet<IssueType> IssueType { get; set; }
         public DbSet<CustomerTickets> CustomerTickets { get; set; }
         public DbSet<Notes> Notes { get; set; }
-        //public DbSet<UserNotes> UserNotes { get; set; }
+        public DbSet<UserNotes> UserNotes { get; set; }
         public DbSet<StaffRoles> StaffRoles { get; set; }
         public DbSet<StaffPermissionType> StaffPermissionType { get; set; }
         public DbSet<UsersStaffRole> UsersStaffRole { get; set; }
@@ -79,6 +79,7 @@ namespace wleepay.Data.Context
             builder.ApplyConfiguration(new UserDevicesConfiguration());
             builder.ApplyConfiguration(new SochitelTransactionConfiguration());
             builder.ApplyConfiguration(new CreditCardTransactionConfiguration());
+            builder.ApplyConfiguration(new UserNotesConfiguration());
 
         }
     }

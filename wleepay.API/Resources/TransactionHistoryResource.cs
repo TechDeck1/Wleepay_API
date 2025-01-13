@@ -17,6 +17,8 @@ namespace wleepay.API.Resources
         public DateTime CreatedDate { get; set; }
         public long? ParentId { get; set; }
         public int? Status { get; set; }
+
+        public double? CommissionEarned { get; set; }
         public string TransactionNumber
         {
             get

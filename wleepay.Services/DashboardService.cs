@@ -32,22 +32,29 @@ namespace wleepay.Services
             var totalSubscribersWalletBalanceByUSD = await _unitOfWork.UserDetail.GetTotalWalletBalanceByCurrency(WalletTypes.MemberAccount.GetHashCode(), Currencies.USD.GetHashCode());
             var totalAgentsWalletBalanceByLD = await _unitOfWork.UserDetail.GetTotalWalletBalanceByCurrency(WalletTypes.AgentAccount.GetHashCode(), Currencies.LRD.GetHashCode());
             var totalAgentsWalletBalanceByUSD = await _unitOfWork.UserDetail.GetTotalWalletBalanceByCurrency(WalletTypes.AgentAccount.GetHashCode(), Currencies.USD.GetHashCode());
+            var subscriberSignup = await _unitOfWork.UserDetail.GetSubscribersSignup(DateTime.Now.AddDays(-7));
+            var subscriberSignupFor30days = await _unitOfWork.UserDetail.GetSubscribersSignup(DateTime.Now.AddDays(-30));
+            var pendingKYC = await _unitOfWork.UserDetail.GetPendingKYCSubscribersByMonth();
+
 
             return new DashboardResponse
             {
                 TotalSubscribers = totalSubscribers,
                 ActiveSubscribers = activeSubscribers,
                 ActiveLast7Days = Math.Round(activeLast7Days, 1),
-                ActiveToday = Math.Round(activeToday,2),
-                ActiveLast30Days = Math.Round(activeLast30Days,2),
+                ActiveToday = Math.Round(activeToday, 2),
+                ActiveLast30Days = Math.Round(activeLast30Days, 2),
                 RetentionRate = Math.Round(retentionRate, 2),
-                ChurnRate = Math.Round(churnRate,2),
+                ChurnRate = Math.Round(churnRate, 2),
                 InactiveLast30Days = inactiveLast30Days,
                 InactivePrevious30Days = inactivePrevious30Days,
                 TotalSubscribersWalletBalanceByLD = Math.Round(totalSubscribersWalletBalanceByLD, 2),
                 TotalSubscribersWalletBalanceByUSD = Math.Round(totalSubscribersWalletBalanceByUSD, 2),
                 TotalAgentsWalletBalanceByLD = Math.Round(totalAgentsWalletBalanceByLD, 2),
-                TotalAgentsWalletBalanceByUSD = Math.Round(totalAgentsWalletBalanceByUSD, 2) 
+                TotalAgentsWalletBalanceByUSD = Math.Round(totalAgentsWalletBalanceByUSD, 2),
+                PendingKYCSubscriber = pendingKYC.Count,
+                SignUpSubscriberLast7Days = subscriberSignup.Count,
+                SignUpSubscriberLast30Days = subscriberSignupFor30days.Count
                 // Populate other fields accordingly
             };
         }

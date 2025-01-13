@@ -1,9 +1,11 @@
 ﻿using DevExpress.Data.Linq.Helpers;
+using MailKit.Search;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.SqlServer.Management.Smo;
 using SendGrid.Helpers.Mail;
+using Stripe;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -475,17 +477,90 @@ namespace wleepay.Data.Repositories
             return await transactionQuery.Where(x => x.FromWallet != null && x.ToWallet != null).Skip(skipCount).Take(takeCount).Include(t => t.TransactionStatus).ToListAsync();
         }
 
-        public async Task<TransactionResponseResource> GetPaymentRequestByStatusAndType(PaymentRequestType type, TransactionStatus statusType, int transferId, int pageSize, int pageIndex)
+
+    //    public async Task<TransactionResponseResource> GetPaymentRequestByStatusAndType(
+    //PaymentRequestType type,
+    //TransactionStatus statusType,
+    //string transferId,
+    //int pageSize,
+    //int pageIndex,
+    //string? searchTerm)
+    //    {
+    //        int takeCount = pageSize;
+    //        int skipCount = pageIndex * pageSize;
+
+    //        var transactionQuery = WPContext.Transactions.Where(t => t.Status == statusType.GetHashCode());
+
+
+
+    //        // Map the TransferId string to the database Id
+    //        var transferTypeId = WPContext.Transactions 
+    //            .Where(tt => tt.Name == transferId)
+    //            .Select(tt => tt.Id)
+    //            .FirstOrDefault();
+
+    //        // Use the mapped Id in your query
+    //        var transactionQuery = WPContext.Transactions
+    //            .Where(t => t.Status == statusType.GetHashCode())
+    //            .Where(t => t.TransferTypeId == transferTypeId)
+    //            .Include(s => s.FromWallet.ApplicationUser.UserDetail)
+    //            .Include(s => s.ToWallet.ApplicationUser.UserDetail)
+    //            .Include(s => s.ToWallet.Currency)
+    //            .Include(s => s.TransferType);
+
+    //        if (!string.IsNullOrEmpty(searchTerm))
+    //        {
+    //            searchTerm = searchTerm.ToLower();
+    //            transactionQuery = transactionQuery.Where(t =>
+    //                t.ToWallet.ApplicationUser.UserDetail.PhoneNumber.Contains(searchTerm) ||
+    //                t.ToWallet.ApplicationUser.UserDetail.FirstName.ToLower().Contains(searchTerm));
+    //        }
+
+    //        return new TransactionResponseResource
+    //        {
+    //            TotalCount = await transactionQuery.CountAsync(),
+    //            Transactions = await transactionQuery.Skip(skipCount).Take(takeCount).Include(t => t.TransactionStatus).ToListAsync()
+    //        };
+    //    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        public async Task<TransactionResponseResource> GetPaymentRequestByStatusAndType(PaymentRequestType type, TransactionStatus statusType, string transferId, int pageSize, int pageIndex, string? searchTerm)
         {
             int takeCount = pageSize;
             int skipCount = pageIndex * pageSize;
             var transactionQuery = WPContext.Transactions.Where(t => t.Status == statusType.GetHashCode());
 
-            transactionQuery = transactionQuery.Where(t => t.TransferTypeId == transferId)
+            transactionQuery = transactionQuery.Where(t => t.TransferTypeId == (int)Enum.Parse(typeof(Core.Enums.TransferTypes), transferId))
                         .Include(s => s.FromWallet.ApplicationUser.UserDetail)
                         .Include(s => s.ToWallet.ApplicationUser.UserDetail)
                         .Include(s => s.ToWallet.Currency)
                         .Include(s => s.TransferType);
+
+            // Apply search term filter if provided
+            if (!string.IsNullOrEmpty(searchTerm))
+            {
+                searchTerm = searchTerm.ToLower(); // Normalize case for comparison
+                transactionQuery = transactionQuery.Where(t =>
+                    //t.ToWallet.ApplicationUser.Email.ToLower().Contains(searchTerm) ||
+                    t.ToWallet.ApplicationUser.UserDetail.PhoneNumber.Contains(searchTerm) ||
+                    t.ToWallet.ApplicationUser.UserDetail.FirstName.ToLower().Contains(searchTerm));
+            }
+
 
 
             return new TransactionResponseResource
@@ -684,15 +759,14 @@ namespace wleepay.Data.Repositories
         {
             int takeCount = pageSize;
             int skipCount = pageIndex * pageSize;
+
             var transactionQuery = WPContext.Transactions
                 .Where(w => w.Status != Core.Enums.TransactionStatus.Pending.GetHashCode());
 
             if (!string.IsNullOrEmpty(userId))
                 transactionQuery = transactionQuery.Where(w => w.ToWallet.UserId == userId || w.FromWallet.UserId == userId);
 
-            TransactionResponseResource response = new TransactionResponseResource();
-            response.TotalCount = transactionQuery.Count();
-            response.Transactions = await transactionQuery
+            var transactions = await transactionQuery
                 .OrderByDescending(w => w.CreatedDate)
                 .Skip(skipCount)
                 .Take(takeCount)
@@ -702,67 +776,84 @@ namespace wleepay.Data.Repositories
                 .Include(s => s.TransferType)
                 .ToListAsync();
 
+            // Calculate commission for each transaction
+            foreach (var transaction in transactions)
+            {
+                if (transaction.ParentId.HasValue)
+                {
+                    transaction.CommissionEarned = WPContext.Transactions
+                        .Where(t => t.ParentId == transaction.ParentId && t.Description.Contains("commission"))
+                        .Sum(t => t.Amount);
+                }
+            }
+
+            TransactionResponseResource response = new TransactionResponseResource
+            {
+                TotalCount = transactionQuery.Count(),
+                Transactions = transactions
+            };
+
             return response;
         }
 
-        public async Task<TransactionResponseResource> GetIncomingOutgoingPaymentRequest(IEnumerable<long> walletIds, PaymentRequestType type, TransactionStatus statusType, int transferTypeId, int pageSize, int pageIndex)
+        public async Task<TransactionResponseResource> GetIncomingOutgoingPaymentRequest(IEnumerable<long> walletIds, PaymentRequestType type, TransactionStatus statusType, string transferTypeId, int pageSize, int pageIndex)
         {
             int takeCount = pageSize;
             int skipCount = pageIndex * pageSize;
             var transactionQuery = WPContext.Transactions.Where(t => t.Status == statusType.GetHashCode());
 
-            if(transferTypeId == TransferTypes.TopUp.GetHashCode())
+            if((int)Enum.Parse(typeof(Core.Enums.TransferTypes), transferTypeId) == TransferTypes.TopUp.GetHashCode())
             {
                 transactionQuery = transactionQuery.Where(t => walletIds.Contains((long)t.ToWalletId)
-                && (t.TransferTypeId == transferTypeId && walletIds.Contains((long)t.ToWalletId)))
+                && (t.TransferTypeId == (int)Enum.Parse(typeof(Core.Enums.TransferTypes), transferTypeId) && walletIds.Contains((long)t.ToWalletId)))
                     .Include(s => s.FromWallet.ApplicationUser.UserDetail)
                     .Include(s => s.ToWallet.ApplicationUser.UserDetail)
                     .Include(s => s.TransferType);
             }
-            if (transferTypeId == TransferTypes.CashOut.GetHashCode())
+            if ((int)Enum.Parse(typeof(Core.Enums.TransferTypes), transferTypeId) == TransferTypes.CashOut.GetHashCode())
             {
                 transactionQuery = transactionQuery.Where(t => walletIds.Contains((long)t.FromWalletId)
-                && (t.TransferTypeId == transferTypeId && walletIds.Contains((long)t.FromWalletId)))
+                && (t.TransferTypeId == (int)Enum.Parse(typeof(Core.Enums.TransferTypes), transferTypeId) && walletIds.Contains((long)t.FromWalletId)))
                     .Include(s => s.FromWallet.ApplicationUser.UserDetail)
                     .Include(s => s.ToWallet.ApplicationUser.UserDetail)
                     .Include(s => s.TransferType);
             }
-            if (transferTypeId == TransferTypes.FillAgent.GetHashCode())
+            if ((int)Enum.Parse(typeof(Core.Enums.TransferTypes), transferTypeId) == TransferTypes.FillAgent.GetHashCode())
             {
                 transactionQuery = transactionQuery.Where(t => walletIds.Contains((long)t.ToWalletId)
-                && (t.TransferTypeId == transferTypeId && walletIds.Contains((long)t.ToWalletId)))
+                && (t.TransferTypeId == (int)Enum.Parse(typeof(Core.Enums.TransferTypes), transferTypeId) && walletIds.Contains((long)t.ToWalletId)))
                     .Include(s => s.FromWallet.ApplicationUser.UserDetail)
                     .Include(s => s.ToWallet.ApplicationUser.UserDetail)
                     .Include(s => s.TransferType);
             }
-            if (transferTypeId == TransferTypes.AgentCommissionCashout.GetHashCode())
+            if ((int)Enum.Parse(typeof(Core.Enums.TransferTypes), transferTypeId) == TransferTypes.AgentCommissionCashout.GetHashCode())
             {
                 transactionQuery = transactionQuery.Where(t => walletIds.Contains((long)t.FromWalletId)
-                && (t.TransferTypeId == transferTypeId && walletIds.Contains((long)t.FromWalletId)))
+                && (t.TransferTypeId == (int)Enum.Parse(typeof(Core.Enums.TransferTypes), transferTypeId) && walletIds.Contains((long)t.FromWalletId)))
                     .Include(s => s.FromWallet.ApplicationUser.UserDetail)
                     .Include(s => s.ToWallet.ApplicationUser.UserDetail)
                     .Include(s => s.TransferType);
             }
-            if (transferTypeId == TransferTypes.AgentCashout.GetHashCode())
+            if ((int)Enum.Parse(typeof(Core.Enums.TransferTypes), transferTypeId) == TransferTypes.AgentCashout.GetHashCode())
             {
                 transactionQuery = transactionQuery.Where(t => walletIds.Contains((long)t.FromWalletId)
-                && (t.TransferTypeId == transferTypeId && walletIds.Contains((long)t.FromWalletId)))
+                && (t.TransferTypeId == (int)Enum.Parse(typeof(Core.Enums.TransferTypes), transferTypeId) && walletIds.Contains((long)t.FromWalletId)))
                     .Include(s => s.FromWallet.ApplicationUser.UserDetail)
                     .Include(s => s.ToWallet.ApplicationUser.UserDetail)
                     .Include(s => s.TransferType);
             }
-            if (transferTypeId == TransferTypes.MemberCashOutByWleePay.GetHashCode())
+            if ((int)Enum.Parse(typeof(Core.Enums.TransferTypes), transferTypeId) == TransferTypes.MemberCashOutByWleePay.GetHashCode())
             {
                 transactionQuery = transactionQuery.Where(t => walletIds.Contains((long)t.FromWalletId)
-                && (t.TransferTypeId == transferTypeId && walletIds.Contains((long)t.FromWalletId)))
+                && (t.TransferTypeId == (int)Enum.Parse(typeof(Core.Enums.TransferTypes), transferTypeId) && walletIds.Contains((long)t.FromWalletId)))
                     .Include(s => s.FromWallet.ApplicationUser.UserDetail)
                     .Include(s => s.ToWallet.ApplicationUser.UserDetail)
                     .Include(s => s.TransferType);
             }
-            if (transferTypeId == TransferTypes.MemberTopUpByWleePay.GetHashCode())
+            if ((int)Enum.Parse(typeof(Core.Enums.TransferTypes), transferTypeId) == TransferTypes.MemberTopUpByWleePay.GetHashCode())
             {
                 transactionQuery = transactionQuery.Where(t => walletIds.Contains((long)t.ToWalletId)
-                && (t.TransferTypeId == transferTypeId && walletIds.Contains((long)t.ToWalletId)))
+                && (t.TransferTypeId == (int)Enum.Parse(typeof(Core.Enums.TransferTypes), transferTypeId) && walletIds.Contains((long)t.ToWalletId)))
                     .Include(s => s.FromWallet.ApplicationUser.UserDetail)
                     .Include(s => s.ToWallet.ApplicationUser.UserDetail)
                     .Include(s => s.TransferType);
@@ -931,7 +1022,6 @@ namespace wleepay.Data.Repositories
                 TotalCount = sochitelTransactions.Count(),
                 Transactions = sochitelTransactions,
                 CommisionEarned = sochitelTransactions.Sum(s => Convert.ToDecimal(s.CommissionRate))
-
             };
 
         }

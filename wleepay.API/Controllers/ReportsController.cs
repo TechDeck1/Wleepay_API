@@ -41,6 +41,13 @@ namespace wleepay.API.Controllers
             return Ok(data);
         }
 
+        [HttpPost("ListOfUserWithminimum5Tickets")]
+        public async Task<IActionResult> GetReportOfUserByOpenTicketsAsync(ReportByUserStatusRequest reportByUserStatus)
+        {
+            var data = await _reportService.GetReportOfUserByOpenTicketsAsync(reportByUserStatus.Role, reportByUserStatus.Status, reportByUserStatus.PageIndex = 0, reportByUserStatus.PageSize = 10);
+            return Ok(data);
+        }
+
         [HttpGet("InActiveUsers")]
         public async Task<IActionResult> GetInActiveSubscriberListAsync([FromQuery]int role)
         {
@@ -140,6 +147,14 @@ namespace wleepay.API.Controllers
             return Ok(data);
         }
 
+        [HttpPost("GenerateReportWeeklyBalance")]
+        public async Task<IActionResult> GetReportWeeklyBalance(GetReportWeeklyBalanceResponse getWalletBalanceResponse)
+        {
+            var data = await _reportService.getWalletBalance(getWalletBalanceResponse.ReportStartingBalance, getWalletBalanceResponse.ReportEndingBalance, getWalletBalanceResponse.WalletType, getWalletBalanceResponse.CurrencyId);
+
+            return Ok(data);
+        }
+
         [HttpPost("Credits")]
         public async Task<IActionResult> getCreditsForAgentAndMemberByWleepay()
         {
@@ -160,7 +175,7 @@ namespace wleepay.API.Controllers
         [HttpPost("GetCashOnHandBalance")]
         public IActionResult GetCashOnHandBalance(GetCashOnHandByWleepay getWalletBalanceResponse)
         {
-            var data = _reportService.getCashOnHandByWleepay(getWalletBalanceResponse.FromDate, getWalletBalanceResponse.ToDate, getWalletBalanceResponse.WalletType, getWalletBalanceResponse.CurrencyType, getWalletBalanceResponse.PageSize, getWalletBalanceResponse.PageIndex);
+            var data = _reportService.getCashOnHandByWleepay(getWalletBalanceResponse.FromDate, getWalletBalanceResponse.ToDate, getWalletBalanceResponse.TransferType, getWalletBalanceResponse.CurrencyType, getWalletBalanceResponse.PageSize, getWalletBalanceResponse.PageIndex);
 
             return Ok(data);
         }
@@ -184,7 +199,7 @@ namespace wleepay.API.Controllers
         [HttpPost("GetFloatAccountReport")]
         public IActionResult GetFloatAccountReport(GetFloatAccount getWalletBalanceResponse)
         {
-            var data = _reportService.getFloatAccountReport(getWalletBalanceResponse.FromDate, getWalletBalanceResponse.ToDate, getWalletBalanceResponse.WalletType, getWalletBalanceResponse.PageIndex, getWalletBalanceResponse.PageSize, getWalletBalanceResponse.CurrencyType);
+            var data = _reportService.getFloatAccountReport(getWalletBalanceResponse.FromDate, getWalletBalanceResponse.ToDate, getWalletBalanceResponse.TransferType, getWalletBalanceResponse.PageIndex, getWalletBalanceResponse.PageSize, getWalletBalanceResponse.CurrencyType);
 
             return Ok(data);
         }
@@ -206,6 +221,15 @@ namespace wleepay.API.Controllers
                 getWalletBalanceResponse.CurrencyType,
                 getWalletBalanceResponse.DateTime,
                 getWalletBalanceResponse.userId);
+
+            return Ok(data);
+        }
+
+        [HttpGet("GetWalletBalancesReport")]
+        [AllowAnonymous]
+        public IActionResult GeWalletBalances(string role,int currency,int pageIndex,int pageSize)
+        {
+            var data = _reportService.getWalletBalancesReport(role, currency, pageIndex, pageSize);
 
             return Ok(data);
         }

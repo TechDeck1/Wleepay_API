@@ -25,4 +25,12 @@ namespace wleepay.API.Resources
         public string City { get; set; }
         public string District { get; set; }
     }
+
+    public class UserNotesRequest
+    {
+        public string UserId { get; set; }
+        public string Description { get; set; }
+        public string UserNote { get; set; }
+        public string AddedBy { get; set; }
+    }
 }

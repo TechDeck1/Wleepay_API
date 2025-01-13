@@ -20,6 +20,7 @@ using wleepay.Core.DTO.Request;
 using wleepay.Core.Enums;
 using wleepay.Core.Models;
 using wleepay.Core.Services;
+using wleepay.Data.Context;
 using wleepay.Services;
 using Currency = wleepay.Core.Models.Currency;
 using Status = wleepay.Core.Enums.Status;
@@ -413,7 +414,7 @@ namespace wleepay.API.Controllers
         [HttpPost("PaymentRequestHistory")]
         public async Task<IActionResult> GetIncomingOutGoingTopUpRequests([FromBody] AgentPaymentRequest paymentRequestParam)
         {
-            var paymentRequest = await _transactionService.GetPaymentRequestByStatusAndType(paymentRequestParam.Type, paymentRequestParam.TransferStatus, paymentRequestParam.TransferId ,paymentRequestParam.PageSize, paymentRequestParam.PageIndex);
+            var paymentRequest = await _transactionService.GetPaymentRequestByStatusAndType(paymentRequestParam.Type, paymentRequestParam.TransferStatus, paymentRequestParam.TransferId ,paymentRequestParam.PageSize, paymentRequestParam.PageIndex, paymentRequestParam.Filterterm);
 
             if (paymentRequest == null)
                 return Ok(new List<TransactionResource>());
@@ -803,6 +804,8 @@ namespace wleepay.API.Controllers
                 result = _smsService.sendMessage(messageText, admin.UserDetail.PhoneNumber);
             }
         }
+
+      
         #endregion
 
     }

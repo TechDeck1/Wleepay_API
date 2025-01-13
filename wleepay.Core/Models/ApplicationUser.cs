@@ -15,6 +15,7 @@ namespace wleepay.Core.Models
             SmileIdentityJobs = new Collection<SmileIdentityJob>();
             UsersStaffRole=new Collection<UsersStaffRole>();
             UserDevices = new HashSet<UserDevices>();
+            UserNotes = new HashSet<UserNotes>();
 
         }
 
@@ -27,6 +28,7 @@ namespace wleepay.Core.Models
         public virtual ICollection<SmileIdentityJob> SmileIdentityJobs { get; set; }
         public virtual ICollection<UsersStaffRole> UsersStaffRole { get; set; }
         public virtual ICollection<UserDevices> UserDevices { get; set; }
+        public virtual ICollection<UserNotes> UserNotes { get; set; }
 
 
 

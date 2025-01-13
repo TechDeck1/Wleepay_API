@@ -24,13 +24,15 @@ namespace wleepay.Core.Services
         Task<ApplicationUser> GetUserAccountByName(string name, int role = 0);
         Task<UserDetailsResponseResource> GetUsers(Core.Enums.Role role, int pageIndex, int pageSize);
         Task<IEnumerable<Transaction>> GetIncomingOutGoingPaymentRequest(string userId, Core.Enums.PaymentRequestType type, Core.Enums.TransactionStatus transferStatus, int pageSize, int pageIndex);
-        Task<TransactionResponseResource> GetIncomingOutGoingAgentPaymentRequest(string userId, Core.Enums.PaymentRequestType type, Core.Enums.TransactionStatus transferStatus,int transferTypeId, int pageSize, int pageIndex);
+        Task<TransactionResponseResource> GetIncomingOutGoingAgentPaymentRequest(string userId, Core.Enums.PaymentRequestType type, Core.Enums.TransactionStatus transferStatus,string transferTypeId, int pageSize, int pageIndex);
         Task<UserDetail> UpdateUserVerificationCode(string UserId, string verificationCode);
         Task<UserDetail> UpdateUserStatus(string userId, int status);
         Task<UserDetailsResponseResource> GetAllUsersById(Core.Enums.Role role, int pageIndex, int pageSize, string createdBy);
-        Task<UserDetailsResponseResource> SearchUsersByEmail(string searchText, Core.Enums.Role role , int index, int size);
+        Task<UserDetailsResponseResource> SearchUsersByEmail(string searchText, Core.Enums.Role role , int index, int size,int filterType);
         Task<TransactionAndUserResponseResource> VerifyUserAccountByPhone(string phone);
         Task<ApplicationUser> GetStaffPermissionsById(string userId);
         Task<UserDetail> AddDeviceIdAndToken(string deviceId, string token, string userId);
+        Task<UserNotesReponse> GetUserNotes(string userId,int messageType);
+        Task<UserNotes> AddUserNotes(string userId, string addBy, string description,string note,MessageType messageType);
     }
 }

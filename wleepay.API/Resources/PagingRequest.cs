@@ -8,6 +8,8 @@ namespace wleepay.API.Resources
     public class PagingRequest
     {
         public String SearchText { get; set; }
+
+        public int FilterType { get; set; }
         public int Index { get; set; }
         public int Size { get; set; }
         public Core.Enums.Role Role { get; set; }

@@ -28,6 +28,13 @@ namespace wleepay.Services
 
         }
 
+        public async Task<TicketsResponse> GetReportOfUserByOpenTicketsAsync(int role, int status, int pageIndex = 0, int pageSize = 10)
+        {
+            var result = await _unitOfWork.UserDetail.GetReportOfUserByOpenTicketsAsync(role, status, pageIndex, pageSize);
+            return result;
+
+        }
+
         public async Task<UserDetailsResponseResource> GetInActiveSubscriberListAsync(int role)
         {
             var result = await _unitOfWork.UserDetail.GetInActiveSubscriberAndMemberListAsync(role);
@@ -105,6 +112,13 @@ namespace wleepay.Services
             var result = await _unitOfWork.Wallet.getEndingWalletBalance(reportStartDate,walletType,currencyId);
             return result;
         }
+
+        public async Task<WalletsBalanceResponse> getWalletBalance(DateTime reportStartDate, DateTime reportEndDate, int walletType, int currencyId)
+        {
+            var result = await _unitOfWork.Wallet.getWalletBalance(reportStartDate, reportEndDate, walletType, currencyId);
+            return result;
+        }
+
         public async Task<CreditsByWleepay> getCreditsForAgentAndMemberByWleepay()
         {
             var result = await _unitOfWork.Wallet.getCreditsForAgentAndMemberByWleepay();
@@ -150,6 +164,12 @@ namespace wleepay.Services
         public List<GetReconciliationMonthlyBalance> getReconciliationReportByMonth(int pageIndex, int pageSize, int currencyId, DateTime reportStartDate, string userId)
         {
             var result = _unitOfWork.Wallet.getReconciliationReportByMonth(pageIndex, pageSize, currencyId, reportStartDate, userId);
+            return result;
+        }
+
+        public GetWalletBalances getWalletBalancesReport(string role, int currency, int pageIndex, int pageSize)
+        {
+            var result = _unitOfWork.Wallet.getWalletBalancesReport(role, currency, pageIndex, pageSize);
             return result;
         }
     }
