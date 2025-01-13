@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using wleepay.Core.Models;
 
 namespace wleepay.API.Resources
 {
@@ -28,5 +29,6 @@ namespace wleepay.API.Resources
         public virtual UserDetailResource FromWalletUser { get; set; }
         public virtual TransferTypeResource TransferType { get; set; }
         public virtual LookupResource TransactionStatus { get; set; }
+        public virtual ICollection<SochitelTransactions> SochitelTransactions { get; set; }
     }
 }

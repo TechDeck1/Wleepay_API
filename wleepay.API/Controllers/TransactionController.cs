@@ -40,14 +40,16 @@ namespace wleepay.API.Controllers
         private readonly IEmailSender _emailSender;
         private readonly ICashFlowService _cashFlowService;
         private readonly IUserDetailService _userDetailService;
+        private readonly ISystemStatusService _statusService;
         private readonly IFirebaseNotification _firebaseNotification;
         private readonly IUserDeviceService _userDeviceService;
         private readonly ISystemActivityLogsService _systemActivityLogsService;
 
-        public TransactionController(ITransactionService transactionService, IWalletService walletService, ISMSService smsService, IMapper mapper, IEmailSender emailSender, ICashFlowService cashFlowService, IUserDetailService userDetailService, IFirebaseNotification firebaseNotification, IUserDeviceService userDeviceService, ISystemActivityLogsService systemActivityLogsService) 
+        public TransactionController(ITransactionService transactionService, ISystemStatusService statusService, IWalletService walletService, ISMSService smsService, IMapper mapper, IEmailSender emailSender, ICashFlowService cashFlowService, IUserDetailService userDetailService, IFirebaseNotification firebaseNotification, IUserDeviceService userDeviceService, ISystemActivityLogsService systemActivityLogsService) 
         {
             _transactionService = transactionService;
             _walletService = walletService;
+            _statusService = statusService;
             _smsService = smsService;
             _mapper = mapper;
             _emailSender = emailSender;
@@ -114,6 +116,7 @@ namespace wleepay.API.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateTransaction([FromBody] CreateTransactionResource transactionRequest)
         {
+            var systemStatus = await _statusService.GetSystemStatus();
             var validator = new CreateTransactionValidator();
             var validationResult = await validator.ValidateAsync(transactionRequest);
 
@@ -128,7 +131,7 @@ namespace wleepay.API.Controllers
 
             var aplicationUserDetail = await _userDetailService.GetApplicationUserById(walletBalance.UserId);
 
-            if ((aplicationUserDetail.UserRoles.FirstOrDefault().Role.Name == "Member" && walletBalance.ApplicationUser.UserDetail.Status == (int)Status.Suspend) && (transactionRequest.TransferTypeId == (int)TransferTypes.WleeTransfer))
+            if ((aplicationUserDetail.UserRoles.FirstOrDefault().Role.Name == "Member" && systemStatus.Status && walletBalance.ApplicationUser.UserDetail.Status == (int)Status.Suspend) && (transactionRequest.TransferTypeId == (int)TransferTypes.WleeTransfer))
             {
                 return BadRequest(new{
                     status = 400,
@@ -177,6 +180,7 @@ namespace wleepay.API.Controllers
             if (!validationResult.IsValid)
                 return BadRequest(validationResult.Errors);
 
+            var systemStatus = await _statusService.GetSystemStatus();
 
             var transactionToCreate = _mapper.Map<CreateTransactionResource, Transaction>(transactionRequest);
 
@@ -184,13 +188,13 @@ namespace wleepay.API.Controllers
 
             var aplicationUserDetail = await _userDetailService.GetApplicationUserById(getUserByWalletId.ApplicationUser.Id);
 
-            if ((getUserByWalletId.ApplicationUser.UserRoles.FirstOrDefault().Role.Name == "Agent" && getUserByWalletId.ApplicationUser.UserDetail.Status == (int)Status.Suspend) && (transactionToCreate.TransferTypeId == (int)TransferTypes.FillAgent))
+            if ((getUserByWalletId.ApplicationUser.UserRoles.FirstOrDefault().Role.Name == "Agent" && systemStatus.Status && getUserByWalletId.ApplicationUser.UserDetail.Status == (int)Status.Suspend) && (transactionToCreate.TransferTypeId == (int)TransferTypes.FillAgent))
             {
                 return BadRequest(new {status = 400,
-                    message = "Member cannot make transaction when account is suspended. He/she can only cashout wallet balances." });
+                    message = "Agent cannot make transaction when account is suspended. He/she can only cashout wallet balances." });
             }
 
-            if ((getUserByWalletId.ApplicationUser.UserRoles.FirstOrDefault().Role.Name == "Member" && getUserByWalletId.ApplicationUser.UserDetail.Status == (int)Status.Suspend) && (transactionToCreate.TransferTypeId == (int)TransferTypes.TopUp || transactionToCreate.TransferTypeId == (int)TransferTypes.WleeTransfer))
+            if ((getUserByWalletId.ApplicationUser.UserRoles.FirstOrDefault().Role.Name == "Member" && systemStatus.Status && getUserByWalletId.ApplicationUser.UserDetail.Status == (int)Status.Suspend) && (transactionToCreate.TransferTypeId == (int)TransferTypes.TopUp || transactionToCreate.TransferTypeId == (int)TransferTypes.WleeTransfer))
             {
                 return BadRequest( new { status = 400,
                     message = "Member cannot make transaction when account is suspended. He/she can only cashout wallet balances." });

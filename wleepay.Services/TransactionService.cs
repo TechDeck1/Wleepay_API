@@ -13,7 +13,6 @@ using Microsoft.SqlServer.Management.Smo;
 using static DevExpress.XtraPrinting.Native.PageSizeInfo;
 using wleepay.Data.Context;
 using Org.BouncyCastle.Crypto.Engines;
-using wleepay.Data.Migrations;
 using Microsoft.Identity.Client;
 using wleepay.Core.Common;
 using System.Diagnostics;

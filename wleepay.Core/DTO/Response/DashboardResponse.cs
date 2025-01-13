@@ -15,5 +15,22 @@ namespace wleepay.Core.DTO.Response
         public decimal ActiveLast30Days { get; set; }
         public int InactiveLast30Days { get; set; }
         public int InactivePrevious30Days { get; set; }
+        public double TotalSubscribersWalletBalanceByLD { get; set; }
+
+        public double TotalSubscribersWalletBalanceByUSD { get; set; }
+        public double TotalAgentsWalletBalanceByLD { get; set; }
+        public double TotalAgentsWalletBalanceByUSD { get; set; }
+    }
+
+    public class EarnedCommission
+    {
+        public double MobileDataCreditCommission { get; set; }
+        public double LECCreditCommission { get; set; }
+    }
+
+    public class PayBillCreditPurchaseCount
+    {
+        public double MobileDataPurchaseCount {get; set; }
+        public double LECPurchaseCount { get; set; }
     }
 }

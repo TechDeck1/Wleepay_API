@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.SqlServer.Management.Smo;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +10,7 @@ using wleepay.Core.Enums;
 using wleepay.Core.Models;
 using wleepay.Core.Repositories;
 using wleepay.Data.Context;
+using static DevExpress.XtraPrinting.Native.PageSizeInfo;
 
 namespace wleepay.Data.Repositories
 {
@@ -137,32 +139,30 @@ namespace wleepay.Data.Repositories
 
         }
 
-        public async Task<WalletsBeginingBalance> getStartingWalletBalance(DateTime reportStartDate, int walletType)
+        public async Task<WalletsBeginingBalance> getStartingWalletBalance(DateTime reportStartDate, int walletType,int currencyId)
         {
-            var beginningBalanceLD = await WPContext.Wallet
-                .Where(t => t.CreatedDate < reportStartDate && t.CurrencyId == 1 && t.Type == walletType)
+            var transactions = await WPContext.Transactions
+                .Where(t => t.CreatedDate.Date >= reportStartDate.Date && t.FromWallet.CurrencyId == currencyId && t.FromWallet.Type == walletType)
+                .SumAsync(t => t.Amount);
+
+            var currentBalance = await WPContext.Wallet
+                .Where(t => t.CurrencyId == currencyId && t.Type == walletType)
                 .SumAsync(t => t.Balance);
 
-            var beginningBalanceUSD = await WPContext.Wallet
-                .Where(t => t.CreatedDate < reportStartDate && t.CurrencyId == 2 && t.Type == walletType)
-                .SumAsync(t => t.Balance);
-
-            return (new WalletsBeginingBalance { BeginningBalanceLD = beginningBalanceLD, BeginningBalanceUSD = beginningBalanceUSD });
-
+            return (new WalletsBeginingBalance { BeginningBalance = currentBalance - transactions });
         }
 
-        public async Task<WalletsEndingBalance> getEndingWalletBalance(DateTime reportEndDate, int walletType)
+        public async Task<WalletsEndingBalance> getEndingWalletBalance(DateTime reportEndDate, int walletType, int currencyId)
         {
-            var endingBalanceLD = await WPContext.Wallet
-                .Where(t => t.CreatedDate < reportEndDate && t.CurrencyId == 1 && t.Type == walletType)
+            var transactions = await WPContext.Transactions
+                    .Where(t => t.CreatedDate.Date >= reportEndDate.Date && t.FromWallet.CurrencyId == currencyId && t.FromWallet.Type == walletType)
+                    .SumAsync(t => t.Amount);
+
+            var currentBalance = await WPContext.Wallet
+                .Where(t => t.CurrencyId == currencyId && t.Type == walletType)
                 .SumAsync(t => t.Balance);
 
-            var endingBalanceUSD = await WPContext.Wallet
-                .Where(t => t.CreatedDate < reportEndDate && t.CurrencyId == 2 && t.Type == walletType)
-                .SumAsync(t => t.Balance);
-
-            return (new WalletsEndingBalance { EndingBalanceLD = endingBalanceLD, EndingBalanceUSD = endingBalanceUSD });
-
+            return (new WalletsEndingBalance { EndingBalance = currentBalance - transactions });
         }
 
         public async Task<CreditsByWleepay> getCreditsForAgentAndMemberByWleepay()
@@ -222,64 +222,181 @@ namespace wleepay.Data.Repositories
 
         }
 
-        public async Task<BusinessAccountReportResponse> getBusinessAccountReport()
+
+        public CashOnHandReponse getCashHandByWleepay(DateTime reportStartDate, DateTime reportEndDate, int walletType, int currencyType, int PageSize, int PageIndex)
         {
-            //var LdWleepayCommission = await WPContext.Transactions
-            //.Where(t => t.TransferTypeId == TransferTypes.CashOutStandardFeeSplit.GetHashCode() && t.FromWallet.CurrencyId == 1 && t.FromWallet.Type == WalletTypes.WleeTax.GetHashCode()).Where(x=>x.Amount > 0)
-            //.SumAsync(t => t.Amount);
+            int takeCount = PageSize;
+            int skipCount = PageIndex * PageSize;
 
-            //var USDdebitCashouts = await WPContext.Transactions
-            //.Where(t => t.TransferTypeId == TransferTypes.CashOutStandardFeeSplit.GetHashCode() && t.FromWallet.CurrencyId == 2 && t.FromWallet.Type == WalletTypes.WleeTax.GetHashCode())
-            //.SumAsync(t => t.Amount);
+            var result = WPContext.Transactions
+             .Include(s => s.ToWallet.ApplicationUser.UserDetail)
+            .Where(t => t.TransferTypeId == walletType
+               && t.FromWallet.CurrencyId == currencyType
+                      && t.CreatedDate.Date >= reportStartDate.Date
+        && t.CreatedDate.Date <= reportEndDate.Date
+        );
 
-            var commissionSums = await WPContext.Transactions
+            var resultList = result.Skip(skipCount).Take(takeCount)
+            .ToList();
+
+            return (new CashOnHandReponse
+            {
+                total = result.Count(),
+                transacion = resultList
+            });
+        }
+
+        public GetCashOutCommissionEarnedResponse getcashOutCommissionEarnedReport(DateTime reportStartDate, DateTime reportEndDate, string type, int pageIndex, int pageSize, int currencyId)
+        {
+            int takeCount = pageSize;
+            int skipCount = pageIndex * pageSize;
+
+            var cashOutCommission = WPContext.Transactions
+            .Include(u => u.FromWallet.ApplicationUser.UserDetail)
             .Where(t => t.TransferTypeId == TransferTypes.CashOutStandardFeeSplit.GetHashCode()
                         && t.FromWallet.Type == WalletTypes.WleeTax.GetHashCode()
-                        && (t.FromWallet.CurrencyId == 1 || t.FromWallet.CurrencyId == 2))
-            .GroupBy(t => t.FromWallet.CurrencyId)
-            .Select(g => new
+                        && t.FromWallet.CurrencyId == currencyId
+                         && t.CreatedDate.Date >= reportStartDate.Date
+        && t.CreatedDate.Date <= reportEndDate.Date);
+
+            var cashOut = cashOutCommission.Skip(skipCount).Take(takeCount)
+            .ToList();
+
+
+            return new GetCashOutCommissionEarnedResponse
             {
-                CurrencyId = g.Key,
-                TotalAmount = g.Sum(t => t.Amount)
-            }).ToListAsync();
-
-            var LdWleepayCommission = commissionSums.FirstOrDefault(x => x.CurrencyId == 1)?.TotalAmount ?? 0;
-            var USDdebitCashouts = commissionSums.FirstOrDefault(x => x.CurrencyId == 2)?.TotalAmount ?? 0;
-
-
-            var CreditCommissionEarned = await WPContext.SochitelTransactions
-            .Where(t => t.TransactionType == "Mobile Recharge" || t.TransactionType == "Bill Payment")
-            .GroupBy(t => t.TransactionType)
-            .Select(g => new
-            {
-                TransactionType = g.Key,
-                TotalAmount = g.Sum(t => Convert.ToDouble(t.CommissionRate))
-            }).ToListAsync();
-
-
-            var LecCommissionEarned = CreditCommissionEarned.FirstOrDefault(x => x.TransactionType == "Mobile Recharge")?.TotalAmount ?? 0;
-            var AirtimeCommisionEarned = CreditCommissionEarned.FirstOrDefault(x => x.TransactionType == "Bill Payment")?.TotalAmount ?? 0;
-
-
-
-            //var AirtimeCommisionEarned = await WPContext.SochitelTransactions
-            //.Where(t => t.TransactionType == "Mobile Recharge")
-            //.Select(t => Convert.ToDouble(t.CommissionRate))
-            //.SumAsync();
-
-            //var LecCommissionEarned = await WPContext.SochitelTransactions
-            //.Where(t => t.TransactionType == "Bill Payment")
-            //.Select(t => Convert.ToDouble(t.CommissionRate))
-            //.SumAsync();
-
-
-            return new BusinessAccountReportResponse
-            {
-                LdWleepayCommission = LdWleepayCommission,
-                USDWleepayCommission = USDdebitCashouts,
-                AirtimeCommisionEarned = AirtimeCommisionEarned,
-                LecCommissionEarned = LecCommissionEarned
+                Total = cashOutCommission.Count(),
+                cashOutCommissionEarned = cashOut
             };
+
+        }
+
+        public GetBillPaymentCommissionEarnedResponse getBillPaymentCommissionEarnedReport(DateTime reportStartDate, DateTime reportEndDate, string type, int pageIndex, int pageSize, int currencyId)
+        {
+            int takeCount = pageSize;
+            int skipCount = pageIndex * pageSize;
+
+            var CreditCommissionEarned = WPContext.SochitelTransactions
+             .Include(s => s.Transaction.FromWallet.ApplicationUser)
+            .Where(t => t.TransactionType == type
+            && t.CreatedDate >= reportStartDate.Date
+        && t.CreatedDate <= reportEndDate.Date
+        );
+
+            var creditsList = CreditCommissionEarned.Skip(skipCount).Take(takeCount)
+              .ToList();
+
+
+
+            return new GetBillPaymentCommissionEarnedResponse
+            {
+               Total = CreditCommissionEarned.Count(),
+               billCommissionEarned = creditsList
+            };
+
+        }
+
+        public GetFloatAccountResponse getFloatAccountReport(DateTime reportStartDate, DateTime reportEndDate, int walletType, int pageIndex, int pageSize, int currencyId)
+        {
+            int takeCount = pageSize;
+            int skipCount = pageIndex * pageSize;
+
+            var transactions = WPContext.Transactions
+             .Include(s => s.ToWallet.ApplicationUser.UserDetail)
+            .Where(t => t.TransferTypeId == walletType
+               && t.FromWallet.CurrencyId == currencyId
+                           && t.CreatedDate.Date >= reportStartDate.Date
+        && t.CreatedDate.Date <= reportEndDate.Date
+               );
+
+            var cashOut = transactions.Skip(skipCount).Take(takeCount)
+            .ToList();
+
+
+            return new GetFloatAccountResponse
+            {
+                Total = transactions.Count(),
+                Transaction = cashOut
+            };
+        }
+
+        public GetReconciliationResponse getReconciliationReport(int pageIndex, int pageSize, int currencyId, DateTime reportStartDate, string userId)
+        {
+            int takeCount = pageSize;
+            int skipCount = pageIndex * pageSize;
+
+            var reconciliationResult = WPContext.Wallet.Include(u => u.ApplicationUser).Include(w => w.WalletType)
+                .Where(t => t.CurrencyId == currencyId 
+                && t.ApplicationUser.UserDetail.UserId == userId 
+                && t.ApplicationUser.UserDetail.Status == Status.Active.GetHashCode());
+
+            var reconciliationList = reconciliationResult.Skip(skipCount).Take(takeCount)
+              .ToList();
+
+            return new GetReconciliationResponse
+            {
+                Total = reconciliationResult.Count(),
+                reconciliations = reconciliationList
+            };
+        }
+
+        public List<GetReconciliationMonthlyBalance> getReconciliationReportByMonth(int pageIndex, int pageSize, int currencyId, DateTime reportStartDate, string userId)
+        {
+            var currentWalletBalances = WPContext.Wallet
+                 .Include(u => u.ApplicationUser)
+                 .Include(u => u.WalletType)
+                 .Where(t => t.CurrencyId == currencyId
+                     && t.ApplicationUser.UserDetail.UserId == userId)
+                 .ToList();
+
+            var userEmail = currentWalletBalances
+                .Select(w => w.ApplicationUser.Email)
+                .FirstOrDefault();
+
+            var walletIds = currentWalletBalances.Select(w => w.Id).ToList();
+
+            var transactions = WPContext.Transactions
+                .Include(t => t.FromWallet.ApplicationUser)
+                .Where(t => walletIds.Contains(t.FromWalletId ?? 0)
+                    && t.FromWallet.CurrencyId == currencyId
+                    && t.FromWallet.ApplicationUser.UserDetail.UserId == userId
+                    && t.CreatedDate >= DateTime.Now.AddMonths(-6))
+                .ToList();
+
+            var lastSixMonthsBalances = new List<GetReconciliationMonthlyBalance>();
+
+            foreach (var wallet in currentWalletBalances)
+            {
+                double walletBalance = wallet.Balance;
+
+                for (int i = 0; i < 6; i++) // Iterate over 6 months
+                {
+                    var monthStart = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1).AddMonths(-i);
+                    var monthEnd = monthStart.AddMonths(1);
+
+                    // Filter transactions for this wallet and month
+                    var monthlyTransactions = transactions
+                        .Where(t => t.FromWalletId != null && t.FromWalletId == wallet.Id && t.CreatedDate.Month >= monthStart.Month && t.CreatedDate.Month < monthEnd.Month)
+                        .ToList();
+
+                    var monthlyTransactionSum = monthlyTransactions
+                        .Sum(t => (t.TransferTypeId == 5 || t.TransferTypeId == 1) ? t.Amount : -t.Amount);
+
+                    // Add to result list BEFORE updating the wallet balance
+                    lastSixMonthsBalances.Add(new GetReconciliationMonthlyBalance
+                    {
+                        WalletName = wallet.WalletType.Name, // Include Wallet ID
+                        Month = monthStart.ToString("MMMM yyyy"), // Format as "Month Year"
+                        Balance = walletBalance,
+                        UserEmail = userEmail,
+                    });
+
+                    // Update the wallet balance to include this month's transactions
+                    walletBalance += monthlyTransactionSum;
+                }
+            }
+
+            return lastSixMonthsBalances;
 
         }
     }

@@ -10,7 +10,9 @@ namespace wleepay.Core.Services
     {
         public Task<DashboardResponse> GetDashboardDataAsync();
         Task<AgentSubscribersCountResponseModel> GetActiveAgentsAndSubscribersCount();
+        Task<PayBillCreditPurchaseCount> GetBillPayCreditPurchaseCount();
         Task<IList<CountByMonths>> GetActiveAgentsByMonth();
+        Task<decimal> GetEarnedCommissionAsync(string transactionType);
         Task<IList<CountByMonths>> GetActiveSubscribersByMonth();
         Task<IList<subscribersByType>> GetActiveSubscribersByType();
         Task<IList<TransactionAmountBasedOnMonthsResponseModel>> GetTransactionAmountByMonthLD();

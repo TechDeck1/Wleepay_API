@@ -32,14 +32,14 @@ namespace wleepay.Data.Repositories
 
         public async Task<UserDetail> GetUserDetailsById(string userId)
         {
-            var userDetails= await WPContext.UserDetail.Where(user => user.UserId == userId)
+            var userDetails = await WPContext.UserDetail.Where(user => user.UserId == userId)
                 .Include(s => s.KYCLevelDetail)
                 .Include(s => s.KYCStatus)
                 .Include(s => s.County)
                 .Include(s => s.ApplicationUser.UsersStaffRole)
                     .ThenInclude(s => s.StaffRoles)
-                .Include(s=> s.ApplicationUser.UserRoles)
-                    .ThenInclude(s=>s.Role)
+                .Include(s => s.ApplicationUser.UserRoles)
+                    .ThenInclude(s => s.Role)
                 .FirstOrDefaultAsync();
             return userDetails;
         }
@@ -66,7 +66,7 @@ namespace wleepay.Data.Repositories
         {
             int takeCount = pageSize;
             int skipCount = pageIndex * pageSize;
-            var result= await WPContext.Users
+            var result = await WPContext.Users
                 .Where(s => s.UserRoles.FirstOrDefault().Role.Name == role.ToString())
                 .Include(s => s.UserDetail)
                     .ThenInclude(s => s.KYCLevelDetail)
@@ -77,8 +77,8 @@ namespace wleepay.Data.Repositories
                 .Include(s => s.Address)
                 .Include(s => s.Wallets)
                     .ThenInclude(s => s.Currency)
-                .Include(s=> s.UsersStaffRole)
-                    .ThenInclude(s=>s.StaffRoles)
+                .Include(s => s.UsersStaffRole)
+                    .ThenInclude(s => s.StaffRoles)
                 .OrderByDescending(w => w.UserDetail.CreatedDate)
                 .Skip(skipCount)
                 .Take(takeCount)
@@ -159,7 +159,7 @@ namespace wleepay.Data.Repositories
             return await WPContext.UserDetail.AnyAsync(u => u.AccountNumber == accountNumber);
         }
 
-        public async Task<UserDetailsResponseResource> GetAllUsersById(Core.Enums.Role role, int pageIndex = 0, int pageSize=0, string createdBy="")
+        public async Task<UserDetailsResponseResource> GetAllUsersById(Core.Enums.Role role, int pageIndex = 0, int pageSize = 0, string createdBy = "")
         {
             if (pageSize > 0)
             {
@@ -204,12 +204,13 @@ namespace wleepay.Data.Repositories
                  .Where(s => s.UserRoles.FirstOrDefault().Role.Name == role.ToString() && s.UserDetail.CreatedBy == createdBy)
                  .ToListAsync();
 
-               // var totalCount = await WPContext.Users.Where(s => s.UserRoles.FirstOrDefault().Role.Name == role.ToString() && s.UserDetail.CreatedBy == createdBy).CountAsync();
-                return new UserDetailsResponseResource{
-                   UserDetails = result,
-                   TotalCount = await WPContext.Users.Where(s => s.UserRoles.FirstOrDefault().Role.Name == role.ToString() && s.UserDetail.CreatedBy == createdBy).CountAsync(),
+                // var totalCount = await WPContext.Users.Where(s => s.UserRoles.FirstOrDefault().Role.Name == role.ToString() && s.UserDetail.CreatedBy == createdBy).CountAsync();
+                return new UserDetailsResponseResource
+                {
+                    UserDetails = result,
+                    TotalCount = await WPContext.Users.Where(s => s.UserRoles.FirstOrDefault().Role.Name == role.ToString() && s.UserDetail.CreatedBy == createdBy).CountAsync(),
                 };
-              
+
 
             }
         }
@@ -248,7 +249,7 @@ namespace wleepay.Data.Repositories
                 TotalCount = await WPContext.Users
                             .Where(entity => entity.Email.Contains(searchText) && entity.UserRoles.FirstOrDefault().Role.Name == role.ToString()).CountAsync()
             };
-            
+
             //UserDetailsResponseResource response = new UserDetailsResponseResource();
             //response.UserDetails = result;
             //response.TotalCount = totalCount;
@@ -292,7 +293,8 @@ namespace wleepay.Data.Repositories
                 transactionResultsList.Add(transactionsForWallet);
             }
 
-            return new TransactionAndUserResponseResource {
+            return new TransactionAndUserResponseResource
+            {
                 UserDetails = UserDetails,
                 Transactions = transactionResultsList.SelectMany(x => x).ToList()
             };
@@ -308,7 +310,7 @@ namespace wleepay.Data.Repositories
 
         public async Task<UserDetail> AddDeviceIdAndToken(string deviceId, string token, string userId)
         {
-            if(userId == null) { throw new ArgumentNullException("userId"); }
+            if (userId == null) { throw new ArgumentNullException("userId"); }
             var userDetails = await WPContext.UserDetail.Where(user => user.UserId == userId).FirstOrDefaultAsync();
             //userDetails.DeviceId = deviceId;
             //userDetails.FcmToken = token;
@@ -319,11 +321,18 @@ namespace wleepay.Data.Repositories
 
         public async Task<AgentSubscribersCountResponseModel> GetActiveAgentsAndSubscribersCount()
         {
-            var agentCount = await WPContext.Users.Include(x => x.UserDetail).Include(r=>r.UserRoles).Where(s => s.UserRoles.FirstOrDefault().Role.Name == Role.Agent.ToDescriptionString() && s.UserDetail.Status == Status.Active.GetHashCode()).CountAsync();
+            var agentCount = await WPContext.Users.Include(x => x.UserDetail).Include(r => r.UserRoles).Where(s => s.UserRoles.FirstOrDefault().Role.Name == Role.Agent.ToDescriptionString() && s.UserDetail.Status == Status.Active.GetHashCode()).CountAsync();
             var subscriberCount = await WPContext.Users.Include(x => x.UserDetail).Include(r => r.UserRoles).Where(s => s.UserRoles.FirstOrDefault().Role.Name == Role.Member.ToDescriptionString() && s.UserDetail.Status == Status.Active.GetHashCode()).CountAsync();
 
             return new AgentSubscribersCountResponseModel { AgentCount = agentCount, SubscribersCount = subscriberCount };
 
+        }
+
+        public async Task<decimal> GetEarnedCommission(string transactionType)
+        {
+            return await WPContext.SochitelTransactions
+   .Where(s => s.TransactionType == transactionType)
+    .SumAsync(s => Convert.ToDecimal(s.CommissionRate));
         }
 
         public async Task<IList<CountByMonths>> GetActiveAgentsByMonth()
@@ -332,7 +341,7 @@ namespace wleepay.Data.Repositories
             var activeAgentsByMonth = WPContext.Users.Include(u => u.UserDetail).Include(r => r.UserRoles)
                 .Where(s => s.UserDetail.Status == Status.Active.GetHashCode() && s.UserDetail.CreatedDate >= sixMonthsAgo && s.UserRoles.FirstOrDefault().Role.Name == Role.Agent.ToDescriptionString()).ToList();
 
-            var x = activeAgentsByMonth.GroupBy(s => new  { Year = s.UserDetail.CreatedDate.Year, Month = s.UserDetail.CreatedDate.Month })
+            var x = activeAgentsByMonth.GroupBy(s => new { Year = s.UserDetail.CreatedDate.Year, Month = s.UserDetail.CreatedDate.Month })
                 .Select(g => new CountByMonths
                 {
                     Name = new DateTime(g.Key.Year, g.Key.Month, 1).ToString("MMMM yyyy"), // Format after grouping
@@ -362,7 +371,7 @@ namespace wleepay.Data.Repositories
 
             return x;
         }
-       
+
         public async Task<IList<subscribersByType>> GetActiveSubscribersByType()
         {
             var activeSubscribersByMonth = WPContext.Users.Include(u => u.UserDetail).Include(r => r.UserRoles)
@@ -373,7 +382,7 @@ namespace wleepay.Data.Repositories
                 .GroupBy(t => t.UserDetail.KYCLevel)  // Grouping by transaction type
                 .Select(g => new subscribersByType
                 {
-                    Name = "Level"+" "+g.Key.ToString(),
+                    Name = "Level" + " " + g.Key.ToString(),
                     Value = g.Count()
                 })
                 .OrderBy(g => g.Name)
@@ -384,7 +393,14 @@ namespace wleepay.Data.Repositories
 
         public async Task<int> GetTotalSubscribersAsync()
         {
-            return await WPContext.Users.Where(s=> s.UserRoles.FirstOrDefault().Role.Name == Role.Member.ToDescriptionString()).CountAsync();
+            return await WPContext.Users.Where(s => s.UserRoles.FirstOrDefault().Role.Name == Role.Member.ToDescriptionString()).CountAsync();
+        }
+
+        public async Task<double> GetTotalWalletBalanceByCurrency(int walletType, int currencyId)
+        {
+            return await WPContext.Wallet
+    .Where(s => s.Type == walletType && s.CurrencyId == currencyId)
+    .SumAsync(s => s.Balance);
         }
 
         public async Task<int> GetActiveSubscribersAsync()
@@ -394,7 +410,7 @@ namespace wleepay.Data.Repositories
 
         public async Task<int> GetInactiveSubscribersAsync(DateTime since)
         {
-            return await WPContext.Users.CountAsync(s => s.UserDetail.Status == Status.Active.GetHashCode()&& s.UserRoles.FirstOrDefault().Role.Name == Role.Member.ToDescriptionString() && s.UserDetail.CreatedDate < since);
+            return await WPContext.Users.CountAsync(s => s.UserDetail.Status == Status.Active.GetHashCode() && s.UserRoles.FirstOrDefault().Role.Name == Role.Member.ToDescriptionString() && s.UserDetail.CreatedDate < since);
         }
 
         public async Task<decimal> GetActiveSubscriberLast30DaysAsync()
@@ -409,7 +425,7 @@ namespace wleepay.Data.Repositories
 
         public async Task<decimal> GetSubscriberRetentionRateAsync()
         {
-            var retained = await WPContext.Users.CountAsync(s => s.UserDetail.CreatedDate >= DateTime.Today.AddDays(-30) && s.UserRoles.FirstOrDefault().Role.Name == Role.Member.ToDescriptionString());
+            //var retained = await WPContext.Users.CountAsync(s => s.UserDetail.CreatedDate >= DateTime.Today.AddDays(-30) && s.UserRoles.FirstOrDefault().Role.Name == Role.Member.ToDescriptionString());
             var activeLast30Days = await WPContext.Transactions
                                     .Where(t => t.CreatedDate.Date >= DateTime.Today.AddDays(-30) && t.CreatedDate.Date <= DateTime.Today && t.FromWallet.ApplicationUser.UserRoles.FirstOrDefault().Role.Name == Role.Member.ToDescriptionString())
                                     .Select(t => t.FromWallet.UserId).Distinct().CountAsync();
@@ -439,13 +455,13 @@ namespace wleepay.Data.Repositories
 
         public async Task<decimal> GetSubscriberChurnRateAsync()
         {
-            var churned = await WPContext.Users.CountAsync(s => s.UserDetail.CreatedDate < DateTime.Now.AddDays(-30));
-            var subscribersWithNoTransactions = await WPContext.Users
-                                        .Where(s => !WPContext.Transactions.Any(t => t.FromWallet.UserId == s.Id || t.ToWallet.UserId == s.Id) && s.UserRoles.FirstOrDefault().Role.Name == Role.Member.ToDescriptionString())
-                                        .CountAsync();
+            //var churned = await WPContext.Users.CountAsync(s => s.UserDetail.CreatedDate < DateTime.Now.AddDays(-30));
+            var subscribersWithNoTransactions =
+                await WPContext.Users.Where(s => !WPContext.Transactions.Any(t => t.FromWallet.UserId == s.Id && t.CreatedDate < DateTime.Now.AddDays(-30))
+                && s.UserRoles.FirstOrDefault().Role.Name == Role.Member.ToDescriptionString()).Distinct().CountAsync();
 
             var total = await WPContext.Users.CountAsync();
-            var churnRate = (subscribersWithNoTransactions / (double)total) * 100;
+            //var churnRate = (subscribersWithNoTransactions / (double)total) * 100;
             return total == 0 ? 0 : (decimal)subscribersWithNoTransactions / total * 100;
         }
 
@@ -455,7 +471,7 @@ namespace wleepay.Data.Repositories
             int skipCount = pageIndex * pageSize;
             var result = await WPContext.Users
                 .Where(s => s.UserDetail.Status == status && s.UserRoles.FirstOrDefault().Role.Name == ((Core.Enums.Role)role).ToString())
-                .Include(s=>s.UserDetail)
+                .Include(s => s.UserDetail)
                 .Include(s => s.UserRoles)
                        .ThenInclude(s => s.Role)
                 .OrderByDescending(w => w.UserDetail.CreatedDate)
@@ -482,7 +498,7 @@ namespace wleepay.Data.Repositories
                         (WPContext.Wallet
                             .Any(wallet => wallet.UserId == subscriber.Id &&
                                           (wallet.Id == transaction.FromWalletId || wallet.Id == transaction.ToWalletId))
-                         && transaction.CreatedDate >= thirtyDaysAgo))).Include(s=>s.UserDetail)
+                         && transaction.CreatedDate >= thirtyDaysAgo))).Include(s => s.UserDetail)
                 .ToList();
 
             return new UserDetailsResponseResource
@@ -520,8 +536,8 @@ namespace wleepay.Data.Repositories
 
         public async Task<UserDetailsResponseResource> GetSubscriberAndMemberListByWalletBalanceAsync(int currencyId, int role, double balance, int walletType)
         {
-            var listByWalletbalance = await WPContext.Users.Where(users => users.UserRoles.FirstOrDefault().Role.Name == ((Core.Enums.Role)role).ToString() && WPContext.Wallet.Any(w => w.UserId == users.Id && w.Balance >= balance && w.CurrencyId == currencyId && w.Type == walletType)).Include(s => s.UserDetail).Include(w=>w.Wallets).ToListAsync();
-            
+            var listByWalletbalance = await WPContext.Users.Where(users => users.UserRoles.FirstOrDefault().Role.Name == ((Core.Enums.Role)role).ToString() && WPContext.Wallet.Any(w => w.UserId == users.Id && w.Balance >= balance && w.CurrencyId == currencyId && w.Type == walletType)).Include(s => s.UserDetail).Include(w => w.Wallets).ToListAsync();
+
             return new UserDetailsResponseResource
             {
                 TotalCount = listByWalletbalance.Count(),
@@ -549,10 +565,10 @@ namespace wleepay.Data.Repositories
                 TotalCount = listByKYCLevel.Count(),
                 UserDetails = listByKYCLevel
             };
-        }  
+        }
         public async Task<UserDetailsResponseResource> GetAccountOpenedByDateRangeAsync(DateTime fromDate, DateTime toDate)
         {
-            var listByDateRange = await WPContext.Users.Where(users => users.UserRoles.FirstOrDefault().Role.Name == Role.Member.ToDescriptionString() && users.UserDetail.CreatedDate > fromDate && users.UserDetail.CreatedDate < toDate).Include(s => s.UserDetail).OrderByDescending(x=>x.UserDetail.CreatedDate).ToListAsync();
+            var listByDateRange = await WPContext.Users.Where(users => users.UserRoles.FirstOrDefault().Role.Name == Role.Member.ToDescriptionString() && users.UserDetail.CreatedDate > fromDate && users.UserDetail.CreatedDate < toDate).Include(s => s.UserDetail).OrderByDescending(x => x.UserDetail.CreatedDate).ToListAsync();
 
             return new UserDetailsResponseResource
             {
@@ -570,45 +586,39 @@ namespace wleepay.Data.Repositories
 
         public async Task<int> GetSubscribersCountByAgeAsync(int minAge, int maxAge)
         {
-            var currentDate = DateTime.UtcNow;
-
-            //var age = CalculateAge(DateTime.Now.AddYears(-24));
-            var subscriberCountByAgeRange = 0;
-
-
             DateTime today = DateTime.Today;
-            DateTime age18Threshold = today.AddYears(-18);
-            DateTime age45Threshold = today.AddYears(-45);
-
-            var age18Plus = WPContext.Set<UserDetail>()
-                .Where(u => u.DOB >= age18Threshold)
-                .ToList();
-
-            var age18To45 = WPContext.Set<UserDetail>()
-                .Where(u => u.DOB <= age18Threshold && u.DOB >= age45Threshold)
-                .ToList();
-
-            var age45Plus = WPContext.Set<UserDetail>()
-                .Where(u => u.DOB <= age45Threshold)
-                .ToList();
-
-            //DateTime today = DateTime.Today;
-
-            //// LINQ query to filter by age groups
-            //var age18Plus = WPContext.UserDetail.Where(user => CalculateAge((DateTime)user.DOB) >= 18).ToList();
-            //var age18To45 = WPContext.UserDetail.Where(user => CalculateAge((DateTime)user.DOB) >= 18 && CalculateAge((DateTime)user.DOB) <= 45).ToList();
-            //var age45Plus = WPContext.UserDetail.Where(user => CalculateAge((DateTime)user.DOB) > 45).ToList();
+            var subscriberCountByAgeRange = 0;
+            DateTime min = today.AddYears(-minAge);
+            if (maxAge != 0)
+            {
+                DateTime max = today.AddYears(-maxAge);
+                subscriberCountByAgeRange = await WPContext.Users
+                   .Include(s => s.UserDetail)
+                   .Where(users => users.UserDetail.DOB <= min && users.UserDetail.DOB >= max && users.UserRoles.FirstOrDefault().Role.Name == Role.Member.ToDescriptionString())
+                   .CountAsync();
+            }
+            else
+            {
+                subscriberCountByAgeRange = await WPContext.Users
+                   .Include(s => s.UserDetail)
+                   .Where(users => users.UserDetail.DOB <= min && users.UserRoles.FirstOrDefault().Role.Name == Role.Member.ToDescriptionString())
+                   .CountAsync();
+            }
 
 
             return subscriberCountByAgeRange;
         }
 
-        public static int CalculateAge(DateTime birthDate)
+        public async Task<PayBillCreditPurchaseCount> GetBillPayCreditPurchaseCount()
         {
-            var today = DateTime.Today;
-            int age = today.Year - birthDate.Year;
-            if (birthDate.Date > today.AddYears(-age)) age--;
-            return age;
+            var lECPurchaseCount = await WPContext.SochitelTransactions.Where(t => t.CreatedDate >= DateTime.Today.AddDays(-7) && t.CreatedDate <= DateTime.Today && t.TransactionType == "Bill Payment").CountAsync();
+            var mobileDataPurchaseCount = await WPContext.SochitelTransactions.Where(t => t.CreatedDate >= DateTime.Today.AddDays(-7) && t.CreatedDate <= DateTime.Today && t.TransactionType == "Mobile Recharge").CountAsync();
+
+            return new PayBillCreditPurchaseCount
+            {
+                LECPurchaseCount = lECPurchaseCount,
+                MobileDataPurchaseCount = mobileDataPurchaseCount
+            };
         }
 
     }

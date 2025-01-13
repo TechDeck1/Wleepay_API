@@ -21,6 +21,6 @@ namespace wleepay.Core.Models
         public virtual Transaction Transaction { get; set; }
         public virtual CreditCardTransactions CreditCardTransaction { get; set; }
 
-
+        public string MeterNumber { get; set; }
     }
 }

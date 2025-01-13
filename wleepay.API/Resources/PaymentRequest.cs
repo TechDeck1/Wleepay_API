@@ -18,6 +18,7 @@ namespace wleepay.API.Resources
     public class AgentPaymentRequest
     {
         public string? UserId { get; set; }
+        public string? Filterterm { get; set; }
         public Core.Enums.PaymentRequestType Type { get; set; }
         public Core.Enums.TransactionStatus TransferStatus { get; set; }
         public int TransferId {  get; set; }    

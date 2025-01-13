@@ -29,6 +29,7 @@ using wleepay.Communication.Templates;
 using Microsoft.IdentityModel.Tokens;
 using wleepay.Communication.Services;
 using wleepay.API.Helpers;
+using Status = wleepay.Core.Enums.Status;
 using Stripe;
 
 namespace wleepay.API.Controllers
@@ -182,6 +183,7 @@ namespace wleepay.API.Controllers
                     {
                         return BadRequest("Wallet not found.");
                     }
+
                     bool checkValidBalance = false;
                     if (fromWalletData.CurrencyId == (int)Currencies.LRD)
                     {
@@ -339,11 +341,13 @@ namespace wleepay.API.Controllers
             {
                 if (execTransactionRequest.FromWalletId != null)
                 {
+
                     var fromWalletData = await _walletService.GetWallet(execTransactionRequest.FromWalletId);
                     if (fromWalletData == null)
                     {
                         return BadRequest("Wallet not found.");
                     }
+
                     bool checkValidBalance = false;
                     if(fromWalletData.CurrencyId == (int)Currencies.LRD) 
                     {
@@ -424,7 +428,7 @@ namespace wleepay.API.Controllers
                                 UserReference = transactionResponse.Reference,
                                 CreatedDate = DateTime.UtcNow,
                                 ExtraInfo = transactionResponse?.Result?.Instructions ?? "",
-
+                                MeterNumber = execTransactionRequest.ExtraParameters.MeterNumber.Name
 
                             };
 
@@ -500,7 +504,7 @@ namespace wleepay.API.Controllers
                                 UserReference = transactionResponse.Reference,
                                 CreatedDate = DateTime.UtcNow,
                                 ExtraInfo = transactionResponse?.Result?.Instructions ?? "",
-
+                                MeterNumber = execTransactionRequest.ExtraParameters.MeterNumber.Name
 
                             };
 

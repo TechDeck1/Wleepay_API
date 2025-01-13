@@ -12,6 +12,7 @@ using wleepay.Core.Models;
 using AutoMapper;
 using wleepay.Core.DTO.Response;
 using wleepay.Core.Enums;
+using static DevExpress.XtraPrinting.Native.PageSizeInfo;
 
 namespace wleepay.API.Controllers
 {
@@ -126,7 +127,7 @@ namespace wleepay.API.Controllers
         [HttpPost("GetStaringBalance")]
         public async Task<IActionResult> GetStaringWalletBalance(GetWalletBalanceResponse getWalletBalanceResponse)
         {
-            var data = await _reportService.getStartingWalletBalance(DateTime.Now, getWalletBalanceResponse.WalletType);
+            var data = await _reportService.getStartingWalletBalance(getWalletBalanceResponse.DateTime, getWalletBalanceResponse.WalletType, getWalletBalanceResponse.CurrencyId);
 
             return Ok(data);
         }
@@ -134,7 +135,7 @@ namespace wleepay.API.Controllers
         [HttpPost("GetEndingBalance")]
         public async Task<IActionResult> GetEndingWalletBalance(GetWalletBalanceResponse getWalletBalanceResponse)
         {
-            var data = await _reportService.getEndingWalletBalance(DateTime.Now.AddDays(-30), getWalletBalanceResponse.WalletType);
+            var data = await _reportService.getEndingWalletBalance(getWalletBalanceResponse.DateTime, getWalletBalanceResponse.WalletType, getWalletBalanceResponse.CurrencyId);
 
             return Ok(data);
         }
@@ -151,6 +152,60 @@ namespace wleepay.API.Controllers
         public async Task<IActionResult> getDebitsForAgentAndMemberByWleepay()
         {
             var data = await _reportService.getDebitsForAgentAndMemberByWleepay();
+
+            return Ok(data);
+        }
+
+
+        [HttpPost("GetCashOnHandBalance")]
+        public IActionResult GetCashOnHandBalance(GetCashOnHandByWleepay getWalletBalanceResponse)
+        {
+            var data = _reportService.getCashOnHandByWleepay(getWalletBalanceResponse.FromDate, getWalletBalanceResponse.ToDate, getWalletBalanceResponse.WalletType, getWalletBalanceResponse.CurrencyType, getWalletBalanceResponse.PageSize, getWalletBalanceResponse.PageIndex);
+
+            return Ok(data);
+        }
+
+        [HttpPost("GetBillPaymentCommissionEarned")]
+        public IActionResult GetBillPaymentCommissionEarnedReport(GetBusinessReport getWalletBalanceResponse)
+        {
+            var data = _reportService.getBillPaymentCommissionEarnedReport(getWalletBalanceResponse.FromDate, getWalletBalanceResponse.ToDate, getWalletBalanceResponse.Type, getWalletBalanceResponse.PageIndex, getWalletBalanceResponse.PageSize, getWalletBalanceResponse.CurrencyType);
+
+            return Ok(data);
+        }
+
+        [HttpPost("GetCashOutCommissionEarned")]
+        public IActionResult GetCashOutCommissionEarnedReport(GetBusinessReport getWalletBalanceResponse)
+        {
+            var data = _reportService.getcashOutCommissionEarnedReport(getWalletBalanceResponse.FromDate, getWalletBalanceResponse.ToDate, getWalletBalanceResponse.Type, getWalletBalanceResponse.PageIndex, getWalletBalanceResponse.PageSize, getWalletBalanceResponse.CurrencyType);
+
+            return Ok(data);
+        }
+
+        [HttpPost("GetFloatAccountReport")]
+        public IActionResult GetFloatAccountReport(GetFloatAccount getWalletBalanceResponse)
+        {
+            var data = _reportService.getFloatAccountReport(getWalletBalanceResponse.FromDate, getWalletBalanceResponse.ToDate, getWalletBalanceResponse.WalletType, getWalletBalanceResponse.PageIndex, getWalletBalanceResponse.PageSize, getWalletBalanceResponse.CurrencyType);
+
+            return Ok(data);
+        }
+
+        [HttpPost("GetReconciliationReports")]
+        public IActionResult GetReconciliationReports(GetReconciliationReport getWalletBalanceResponse)
+        {
+            var data = _reportService.getReconciliationReport(getWalletBalanceResponse.PageIndex, getWalletBalanceResponse.PageSize, getWalletBalanceResponse.CurrencyType,getWalletBalanceResponse.DateTime, getWalletBalanceResponse.userId);
+
+            return Ok(data);
+        }
+
+        [HttpPost("GetReconciliationReportsByMonth")]
+        public IActionResult GetReconciliationReportsByMonth(GetReconciliationReport getWalletBalanceResponse)
+        {
+            var data = _reportService.getReconciliationReportByMonth(
+                getWalletBalanceResponse.PageIndex, 
+                getWalletBalanceResponse.PageSize, 
+                getWalletBalanceResponse.CurrencyType,
+                getWalletBalanceResponse.DateTime,
+                getWalletBalanceResponse.userId);
 
             return Ok(data);
         }

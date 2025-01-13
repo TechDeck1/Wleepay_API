@@ -9,7 +9,7 @@ namespace wleepay.Data.Context
     public class WPContext : IdentityDbContext<ApplicationUser, ApplicationRole, string, IdentityUserClaim<string>, ApplicationUserRole, IdentityUserLogin<string>, IdentityRoleClaim<string>, IdentityUserToken<string>>
     {
         public DbSet<UserDetail> UserDetail { get; set; }
-        public DbSet<KYCdocuments> KYCDocuments { get; set; }
+        public DbSet<KYCdocuments> KYCDocuments { get; set; } 
         public DbSet<KYCStatus> KYCStatus { get; set; }
         public DbSet<DocumentType> DocumentType { get; set; }
         public DbSet<County> County { get; set; }
@@ -29,6 +29,7 @@ namespace wleepay.Data.Context
         public DbSet<IssueType> IssueType { get; set; }
         public DbSet<CustomerTickets> CustomerTickets { get; set; }
         public DbSet<Notes> Notes { get; set; }
+        //public DbSet<UserNotes> UserNotes { get; set; }
         public DbSet<StaffRoles> StaffRoles { get; set; }
         public DbSet<StaffPermissionType> StaffPermissionType { get; set; }
         public DbSet<UsersStaffRole> UsersStaffRole { get; set; }
@@ -38,7 +39,6 @@ namespace wleepay.Data.Context
         public DbSet<UserDevices> UserDevices { get; set; }
         public DbSet<SochitelTransactions> SochitelTransactions { get; set; }
         public DbSet<CreditCardTransactions> CreditCardTransactions { get; set; }
-
 
         public WPContext(DbContextOptions<WPContext> options) : base(options)
         {

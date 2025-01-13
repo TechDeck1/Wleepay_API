@@ -9,6 +9,7 @@ using wleepay.Core.Enums;
 using wleepay.Core.Models;
 using wleepay.Core.Services;
 using static DevExpress.Xpo.Helpers.AssociatedCollectionCriteriaHelper;
+using static DevExpress.XtraPrinting.Native.PageSizeInfo;
 
 namespace wleepay.Services
 {
@@ -93,15 +94,15 @@ namespace wleepay.Services
             return result;
 
         }
-        public async Task<WalletsBeginingBalance> getStartingWalletBalance(DateTime reportStartDate, int walletType)
+        public async Task<WalletsBeginingBalance> getStartingWalletBalance(DateTime reportStartDate, int walletType,int currencyId)
         {
-            var result = await _unitOfWork.Wallet.getStartingWalletBalance(reportStartDate, walletType);
+            var result = await _unitOfWork.Wallet.getStartingWalletBalance(reportStartDate, walletType, currencyId);
             return result;
         }
 
-        public async Task<WalletsEndingBalance> getEndingWalletBalance(DateTime reportStartDate, int walletType)
+        public async Task<WalletsEndingBalance> getEndingWalletBalance(DateTime reportStartDate, int walletType, int currencyId)
         {
-            var result = await _unitOfWork.Wallet.getEndingWalletBalance(reportStartDate,walletType);
+            var result = await _unitOfWork.Wallet.getEndingWalletBalance(reportStartDate,walletType,currencyId);
             return result;
         }
         public async Task<CreditsByWleepay> getCreditsForAgentAndMemberByWleepay()
@@ -113,6 +114,42 @@ namespace wleepay.Services
         {
 
             var result = await _unitOfWork.Wallet.getDebitsForAgentAndMemberByWleepay();
+            return result;
+        }
+
+        public CashOnHandReponse getCashOnHandByWleepay(DateTime reportStartDate, DateTime reportEndDate, int walletType, int currencyType, int PageSize, int PageIndex)
+        {
+            var result = _unitOfWork.Wallet.getCashHandByWleepay(reportStartDate, reportEndDate, walletType, currencyType,PageSize,PageIndex);
+            return result;
+        }
+
+        public GetCashOutCommissionEarnedResponse getcashOutCommissionEarnedReport(DateTime reportStartDate, DateTime reportEndDate, string type, int pageIndex, int pageSize, int currencyId)
+        {
+            var result = _unitOfWork.Wallet.getcashOutCommissionEarnedReport(reportStartDate, reportEndDate, type, pageIndex,pageSize,currencyId);
+            return result;
+        }
+
+        public GetBillPaymentCommissionEarnedResponse getBillPaymentCommissionEarnedReport(DateTime reportStartDate, DateTime reportEndDate, string type, int pageIndex, int pageSize, int currencyId)
+        {
+            var result = _unitOfWork.Wallet.getBillPaymentCommissionEarnedReport(reportStartDate, reportEndDate, type,pageIndex,pageSize, currencyId);
+            return result;
+        }
+
+        public GetFloatAccountResponse getFloatAccountReport(DateTime reportStartDate, DateTime reportEndDate, int walletType, int pageIndex, int pageSize, int currencyId)
+        {
+            var result = _unitOfWork.Wallet.getFloatAccountReport(reportStartDate, reportEndDate, walletType, pageIndex, pageSize, currencyId);
+            return result;
+        }
+
+        public GetReconciliationResponse getReconciliationReport(int pageIndex, int pageSize, int currencyId, DateTime reportStartDate, string userId)
+        {
+            var result = _unitOfWork.Wallet.getReconciliationReport(pageIndex, pageSize, currencyId, reportStartDate,userId);
+            return result;
+        }
+
+        public List<GetReconciliationMonthlyBalance> getReconciliationReportByMonth(int pageIndex, int pageSize, int currencyId, DateTime reportStartDate, string userId)
+        {
+            var result = _unitOfWork.Wallet.getReconciliationReportByMonth(pageIndex, pageSize, currencyId, reportStartDate, userId);
             return result;
         }
     }

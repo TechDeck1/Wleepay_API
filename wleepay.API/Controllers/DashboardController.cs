@@ -3,6 +3,8 @@ using System.Threading.Tasks;
 using wleepay.Core.Services;
 using Microsoft.AspNetCore.Authorization;
 using wleepay.Services;
+using Microsoft.SqlServer.Management.Smo;
+using Stripe;
 
 
 namespace wleepay.API.Controllers
@@ -45,6 +47,19 @@ namespace wleepay.API.Controllers
         }
 
         [AllowAnonymous]
+        [HttpGet("EarnedCommission")]
+        public async Task<IActionResult> earnedCommission()
+        {
+            var mobileRechargeCommission = await _dashboardService.GetEarnedCommissionAsync("Mobile Recharge");
+            var billPayment = await _dashboardService.GetEarnedCommissionAsync("Bill Payment");
+            return Ok(new
+            {
+                mobileRechargeCommission,
+                billPayment
+            });
+        }
+
+        [AllowAnonymous]
         [HttpGet("TransactionAmountByMonth")]
         public async Task<IActionResult> GetTransactionAmountByMonth([FromQuery] int? monthId, int currencyId)
         {
@@ -72,6 +87,15 @@ namespace wleepay.API.Controllers
         {
 
             var walletData = await _dashboardService.GetWalletHistoryByWalletTypeAndCurrency(walletType, currencyId);
+            return Ok(walletData);
+        }
+
+        [AllowAnonymous]
+        [HttpGet("BillPayCreditPurchaseCount")]
+        public async Task<IActionResult> GetBillPayCreditPurchaseCount()
+        {
+
+            var walletData = await _dashboardService.GetBillPayCreditPurchaseCount();
             return Ok(walletData);
         }
 

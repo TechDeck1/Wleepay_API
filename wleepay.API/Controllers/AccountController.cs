@@ -288,8 +288,13 @@ namespace wleepay.API.Controllers
             // get user
             var userDetails = await _userDetailsService.GetUserDetailsByPhone(loginRequest.PhoneNo);
 
+            if(userDetails == null)
+            {
+                return BadRequest("Account does not exists.");
+            }
+
             // Check if the user is locked out
-            if (userDetails.FailedLoginAttempt >= 3)
+            if ( userDetails.FailedLoginAttempt >= 3)
             {
                 var lockoutDuration = DateTime.UtcNow - userDetails.UpdatedDate;
                 if (lockoutDuration.TotalMinutes < 30)  // Check if user is locked out
