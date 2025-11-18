@@ -31,6 +31,8 @@ using wleepay.Communication.Services;
 using wleepay.API.Helpers;
 using Status = wleepay.Core.Enums.Status;
 using Stripe;
+using wleepay.Core.DTO.Request;
+using wleepay.Core.DTO.Response;
 
 namespace wleepay.API.Controllers
 {
@@ -200,8 +202,7 @@ namespace wleepay.API.Controllers
                     }
                     if (fromWalletData.CurrencyId == (int)Currencies.USD)
                     {
-
-                        if (fromWalletData.Balance > execTransactionRequest.AmountInUsd)
+                       if (fromWalletData.Balance > execTransactionRequest.AmountInUsd)
                             checkValidBalance = true;
                         else
                         {
@@ -212,7 +213,6 @@ namespace wleepay.API.Controllers
 
                     if (checkValidBalance)
                     {
-
                         var exeTransactionToCreate = _mapper.Map<ExecTransactionRequest, SochitelTransactionRequest>(execTransactionRequest);
                         exeTransactionToCreate.Simulate = "0";
 
@@ -341,9 +341,8 @@ namespace wleepay.API.Controllers
             {
                 if (execTransactionRequest.FromWalletId != null)
                 {
-
-                    var fromWalletData = await _walletService.GetWallet(execTransactionRequest.FromWalletId);
-                    if (fromWalletData == null)
+                   var fromWalletData = await _walletService.GetWallet(execTransactionRequest.FromWalletId);
+                   if (fromWalletData == null)
                     {
                         return BadRequest("Wallet not found.");
                     }
@@ -550,6 +549,31 @@ namespace wleepay.API.Controllers
                 return StatusCode(500, "An error occurred while processing your request.");
             }
         }
+
+        [HttpGet("total-commission")]
+        public async Task<IActionResult> GetTotalCommissionEarned()
+        {
+            try
+            {
+                var fromDate = DateTime.UtcNow.AddMonths(-6);
+                var totalCommission = await _sochitelTransactionService.GetTotalCommissionEarnedAsync(fromDate);
+
+                return Ok(new
+                {
+                    fromDate = fromDate.ToString("yyyy-MM-dd"),
+                    toDate = DateTime.UtcNow.ToString("yyyy-MM-dd"),
+                    totalCommission
+                });
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, "Error calculating total commission");
+            }
+        }
+
+
+
+
 
         #region helper methods
         private string GetClientIpAddress()

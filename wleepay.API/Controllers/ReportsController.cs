@@ -234,5 +234,21 @@ namespace wleepay.API.Controllers
             return Ok(data);
         }
 
+        [HttpGet("GetLECTransactionReport")]
+        public async Task<IActionResult> GetLECTransactionReport(DateTime StartDate, DateTime EndDate)
+        {
+            try
+            {
+                var data = await _reportService.GetLecTransactionsByDates(StartDate, EndDate);
+                return Ok(data);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = "An error occurred while processing your request.", error = ex.Message });
+            }
+        }
+
+
+
     }
 }

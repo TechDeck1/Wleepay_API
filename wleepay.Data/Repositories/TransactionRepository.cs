@@ -1026,6 +1026,138 @@ namespace wleepay.Data.Repositories
 
         }
 
+        public async Task<IEnumerable<LecTransactionReportResponse>> GetTransactionsByDates(DateTime startDate, DateTime endDate)
+        {
+            return await WPContext.Transactions
+                .Where(t => t.CreatedDate >= startDate && t.CreatedDate <= endDate)
+                .Include(t => t.FromWallet)
+                    .ThenInclude(w => w.ApplicationUser)
+                        .ThenInclude(u => u.UserDetail)
+                .Include(t => t.TransactionStatus)
+                .Include(t => t.SochitelTransactions)
+                .Select(t => new LecTransactionReportResponse
+                {
+                    CreatedDate = t.CreatedDate,
+                    CustomerName = t.FromWallet != null &&
+                                   t.FromWallet.ApplicationUser != null &&
+                                   t.FromWallet.ApplicationUser.UserDetail != null
+                        ? t.FromWallet.ApplicationUser.UserDetail.FirstName + " " + t.FromWallet.ApplicationUser.UserDetail.LastName
+                        : "N/A",
+                    //CustomerAddress = t.FromWallet != null &&
+                    //                  t.FromWallet.ApplicationUser != null &&
+                    //                  t.FromWallet.ApplicationUser.UserDetail != null
+                    //    ? t.FromWallet.ApplicationUser.UserDetail.AddressLine1
+                    //    : "N/A",
+                    CreditAmountPurchased = (decimal)t.Amount,
+                    WleeSendFeeCharged = t.CommissionEarned.HasValue ? (decimal)t.CommissionEarned.Value : 0,
+                    ReceiverNumber = t.SochitelTransactions.FirstOrDefault().PhoneNumber ?? "N/A",
+                    //TransactionStatus = t.TransactionStatus != null ? t.TransactionStatus.Status : "Unknown"
+                })
+                .ToListAsync();
+        }
 
+
+
+        public async Task AddOrUpdateTransactionAsync(PaymentTransaction transaction)
+        {
+            if (string.IsNullOrEmpty(transaction.TransactionId))
+                return;
+
+            var existing = await WPContext.UserTransactions
+                .FirstOrDefaultAsync(t => t.TransactionId == transaction.TransactionId);
+
+            if (existing != null)
+            {
+                existing.Status = transaction.Status;
+                existing.Amount = transaction.Amount;
+                existing.ReceiverPhoneNumber = transaction.ReceiverPhoneNumber;
+                existing.TransferTypeId = transaction.TransferTypeId;
+                existing.CreatedAt = DateTime.UtcNow;
+                existing.Street = transaction.Street;
+                existing.City = transaction.City;
+                existing.ZipCode = transaction.ZipCode;
+
+                WPContext.UserTransactions.Update(existing);
+            }
+            else
+            {
+                await WPContext.UserTransactions.AddAsync(transaction);
+            }
+        }
+
+        public async Task<PaymentTransaction> GetByTransactionIdAsync(string transactionId)
+        {
+            return await WPContext.UserTransactions.FirstOrDefaultAsync(t => t.TransactionId == transactionId);
+        }
+
+        public async Task<int> GetTransactionCountAsync()
+        {
+            return await WPContext.UserTransactions.CountAsync();
+        }
+
+        public async Task<decimal> GetTotalTransactionVolumeAsync()
+        {
+            return await WPContext.UserTransactions
+                .Where(t => t.Status == "Success")
+                .SumAsync(t => t.Amount);
+        }
+
+        public async Task<PaginatedTransactionResult<TransactionHistory>> GetUserTransactionsAsync(string userId, int? transferTypeId, int pageNumber, int pageSize)
+        {
+            var query = from t in WPContext.UserTransactions
+                        join tt in WPContext.TransferTypes on t.TransferTypeId equals tt.Id
+                        where t.UserId == userId
+                        orderby t.CreatedAt descending
+                        select new TransactionHistory
+                        {
+                            TransactionId = t.TransactionId,
+                            Amount = t.Amount,
+                            Status = t.Status,
+                            CreatedAt = t.CreatedAt,
+                            ReceiverPhoneNumber = t.ReceiverPhoneNumber,
+                            TransferTypeName = tt.Name,
+                            TransferTypeId = t.TransferTypeId
+                        };
+
+            if (transferTypeId.HasValue)
+                query = query.Where(t => t.TransferTypeId == transferTypeId.Value);
+
+            var totalCount = await query.CountAsync();
+            var transactions = await query.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToListAsync();
+
+            return new PaginatedTransactionResult<TransactionHistory>
+            {
+                TotalCount = totalCount,
+                Data = transactions
+            };
+        }
+
+        public async Task<PaginatedTransactionResult<TransactionReport>> GetTransactionsByTypeAndDateRange(int transferTypeId, DateTime startDate, DateTime endDate, int pageNumber, int pageSize)
+        {
+            var query = from t in WPContext.UserTransactions
+                        join u in WPContext.UserDetail on t.UserId equals u.UserId
+                        where t.TransferTypeId == transferTypeId &&
+                              t.CreatedAt >= startDate && t.CreatedAt <= endDate.AddDays(1)
+                        orderby t.CreatedAt descending
+                        select new TransactionReport
+                        {
+                            TransactionId = t.TransactionId,
+                            Name = u.FirstName + " " + u.LastName,
+                            Amount = t.Amount,
+                            ReceiverNumber = t.ReceiverPhoneNumber,
+                            Status = t.Status,
+                            Date = t.CreatedAt,
+                            Address = t.Street + (t.City != null ? ", " + t.City : "")
+                        };
+
+            var totalCount = await query.CountAsync();
+            var data = await query.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToListAsync();
+
+            return new PaginatedTransactionResult<TransactionReport>
+            {
+                TotalCount = totalCount,
+                Data = data
+            };
+        }
     }
 }

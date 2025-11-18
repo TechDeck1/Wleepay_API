@@ -5,13 +5,16 @@ using wleepay.Core;
 using wleepay.Core.Repositories;
 using wleepay.Data.Context;
 using wleepay.Data.Repositories;
+using AutoMapper;
 
 namespace wleepay.Data
 {
     public class UnitOfWork : IUnitOfWork
     {
         private readonly WPContext _context;
+        private readonly IMapper _mapper;
         private UserDetailRepository _userDetailsRepository;
+        private WleeSendUserDetailRepository _sendUserDetailRepository;
         private KYCDocumentsRepository _kycDocumentsRepository;
         private CountyRepository _countyRepository;
         private DocumentTypeRepository _documentTypeRepository;
@@ -41,13 +44,17 @@ namespace wleepay.Data
         private ISochitelTransactionRepository _sochitelTransactionRepository;
         private ICreditCardTransactionRepository _creditCardTransactionRepository;
         private IDbContextTransaction _currentTransaction;
+        private IPaymentTransactionRepository _paymentTransactionRepository;
 
 
 
-        public UnitOfWork(WPContext context) {
-            this._context = context;
+        public UnitOfWork(WPContext context, IMapper mapper)
+        {
+            _context = context;
+            _mapper = mapper;
         }
         public IUserDetailsRepository UserDetail => _userDetailsRepository = _userDetailsRepository ?? new UserDetailRepository(_context);
+        public IWleeSendUserDetailsRepository WleeSendUserDetail => _sendUserDetailRepository = _sendUserDetailRepository ?? new WleeSendUserDetailRepository(_context);
         public IKYCDocumentsRepository KYCDocuments => _kycDocumentsRepository = _kycDocumentsRepository ?? new KYCDocumentsRepository(_context);
         public ICountyRepository County => _countyRepository = _countyRepository ?? new CountyRepository(_context);
         public IDocumentTypeRepository DocumentType => _documentTypeRepository = _documentTypeRepository ?? new DocumentTypeRepository(_context);
@@ -77,6 +84,9 @@ namespace wleepay.Data
         public ISochitelTransactionRepository SochitelTransaction => _sochitelTransactionRepository = _sochitelTransactionRepository ?? new SochitelTransactionRepository(_context);
 
         public ICreditCardTransactionRepository CreditCardTransaction => _creditCardTransactionRepository = _creditCardTransactionRepository ?? new CreditCardTransactionRepository(_context);
+
+        public IPaymentTransactionRepository PaymentTransactions => _paymentTransactionRepository ??= new PaymentTransactionRepository(_context,_mapper);
+
         public async Task<int> CommitAsync()
         {
             return await _context.SaveChangesAsync();

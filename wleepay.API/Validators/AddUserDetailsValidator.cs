@@ -35,10 +35,10 @@ namespace wleepay.API.Validators
                 .NotEmpty()
                 .NotNull();
 
-            //RuleFor(a => a.KYCLevel)
-            //    .NotEmpty()
-            //    .GreaterThan(0)
-            //    .NotNull();
+            RuleFor(a => a.KYCLevel)
+                .NotEmpty()
+                .GreaterThan(0)
+                .NotNull();
 
             if (role == "Staff")
             {
@@ -48,7 +48,6 @@ namespace wleepay.API.Validators
                    .NotEmpty()
                    .MinimumLength(12)
                    .MaximumLength(50);
-
             }
            
         }

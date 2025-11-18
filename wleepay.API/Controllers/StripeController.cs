@@ -20,6 +20,8 @@ using wleepay.Core.DTO.Request;
 using wleepay.Core.Enums;
 using wleepay.Core.Models;
 using wleepay.Core.Services;
+using wleepay.Core.DTO.Request;
+using wleepay.Core.DTO.Response;
 using static wleepay.Communication.EmailTemplates.EmailTemplates;
 
 namespace wleepay.API.Controllers

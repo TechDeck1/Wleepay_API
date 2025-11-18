@@ -1,4 +1,6 @@
-﻿namespace wleepay.API.Resources
+﻿using wleepay.Core.DTO.Request;
+
+namespace wleepay.API.Resources
 {
     public class PaymentRequestForStripe
     {

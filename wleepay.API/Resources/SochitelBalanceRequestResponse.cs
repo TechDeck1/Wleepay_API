@@ -1,4 +1,6 @@
-﻿namespace wleepay.API.Resources
+﻿using wleepay.Core.DTO.Response;
+namespace wleepay.API.Resources
+
 {
     public class BalanceResult
     {
@@ -8,7 +10,7 @@
 
     public class SochitelBalanceResponse
     {
-        public Status Status { get; set; }
+        public Statuss Status { get; set; }
         public string Command { get; set; }
         public long Timestamp { get; set; }
         public long Reference { get; set; }

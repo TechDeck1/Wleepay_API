@@ -134,7 +134,8 @@ namespace wleepay.API.Controllers
                     return BadRequest(Messages.PhoneAlreadyUsed.ToDescriptionString());
 
                 //create new user with identity
-                var newUser = new ApplicationUser() { UserName = userDetail.PhoneNumber, Id = Guid.NewGuid().ToString() };
+                var newUser = new ApplicationUser() 
+                { UserName = userDetail.PhoneNumber, Id = Guid.NewGuid().ToString() };
                 if (!string.IsNullOrEmpty(userDetail.EmailId))
                     newUser.Email = userDetail.EmailId;
 
@@ -499,6 +500,7 @@ namespace wleepay.API.Controllers
 
             return Ok();
         }
+
 
 
         #region helper methods

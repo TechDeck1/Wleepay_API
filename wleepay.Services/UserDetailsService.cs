@@ -59,6 +59,11 @@ namespace wleepay.Services
             return await _unitOfWork.UserDetail.GetUserDetailsByPhone(phone);
         }
 
+        //public async Task<WleeSendUserDetails> GetWleeSendUserDetailsByPhone(string phone)
+        //{
+        //    return await _unitOfWork.UserDetail.GetWleeSendUserDetailsByPhone(phone);
+        //}
+
         public async Task<bool> IsPhoneAlreadyRegistered(string phone)
         {
             return await _unitOfWork.UserDetail.IsPhoneAlreadyRegistered(phone);

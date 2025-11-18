@@ -1,6 +1,7 @@
 ﻿using Stripe;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using wleepay.Core;
@@ -172,5 +173,11 @@ namespace wleepay.Services
             var result = _unitOfWork.Wallet.getWalletBalancesReport(role, currency, pageIndex, pageSize);
             return result;
         }
+
+        public async Task<IEnumerable<LecTransactionReportResponse>> GetLecTransactionsByDates(DateTime startDate, DateTime endDate)
+        {
+            return await _unitOfWork.Transaction.GetTransactionsByDates(startDate, endDate);
+        }
+
     }
 }

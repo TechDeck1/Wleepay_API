@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using System.Reflection.Emit;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using wleepay.Core.Models;
@@ -9,6 +10,10 @@ namespace wleepay.Data.Context
     public class WPContext : IdentityDbContext<ApplicationUser, ApplicationRole, string, IdentityUserClaim<string>, ApplicationUserRole, IdentityUserLogin<string>, IdentityRoleClaim<string>, IdentityUserToken<string>>
     {
         public DbSet<UserDetail> UserDetail { get; set; }
+        public DbSet<WleeSendUserDetails> WleeSendUserDetail { get; set; }
+        public DbSet<WleeSendUser> WleeSendUsers { get; set; }
+        public DbSet<PaymentTransaction> UserTransactions { get; set; }
+
         public DbSet<KYCdocuments> KYCDocuments { get; set; } 
         public DbSet<KYCStatus> KYCStatus { get; set; }
         public DbSet<DocumentType> DocumentType { get; set; }
@@ -80,6 +85,9 @@ namespace wleepay.Data.Context
             builder.ApplyConfiguration(new SochitelTransactionConfiguration());
             builder.ApplyConfiguration(new CreditCardTransactionConfiguration());
             builder.ApplyConfiguration(new UserNotesConfiguration());
+            builder.ApplyConfiguration(new PaymentTransactionConfiguration());
+
+
 
         }
     }

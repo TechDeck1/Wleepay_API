@@ -20,5 +20,13 @@ namespace wleepay.Services
         {
             return _unitOfWork.SochitelTransaction.AddSochitelTransaction(sochitelTransactions);
         }
+
+        public async Task<double> GetTotalCommissionEarnedAsync(DateTime fromDate)
+        {
+            return await _unitOfWork.SochitelTransaction.GetTotalCommissionEarnedAsync(fromDate);
+        }
+
+
+
     }
 }

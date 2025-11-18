@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 using System.Web.Http;
-
+using wleepay.Core.DTO.Request;
 namespace wleepay.API.Resources
 {
     public class SochitelProductOperatorRequest

@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
-
+using wleepay.Core.DTO.Response;
 namespace wleepay.API.Resources
 {
     public class SochitelOperatorProductsResponse
     {
-        public Status Status { get; set; }
+        public Statuss Status { get; set; }
         public string Command { get; set; }
         public long Timestamp { get; set; }
         public long Reference { get; set; }

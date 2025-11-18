@@ -9,5 +9,8 @@ namespace wleepay.Core.Repositories
     public interface ISochitelTransactionRepository
     {
         public Task<SochitelTransactions> AddSochitelTransaction(SochitelTransactions sochitelTransactions);
+
+        Task<double> GetTotalCommissionEarnedAsync(DateTime fromDate);
+
     }
 }

@@ -8,6 +8,7 @@ namespace wleepay.Core
     public interface IUnitOfWork : IDisposable
     {
         IUserDetailsRepository UserDetail { get; }
+        public IWleeSendUserDetailsRepository WleeSendUserDetail { get; }
         IKYCDocumentsRepository KYCDocuments { get; }
         IDocumentTypeRepository DocumentType { get; }
         ICountyRepository County { get; }
@@ -36,6 +37,8 @@ namespace wleepay.Core
         IUserDeviceRepository UserDevice { get; }
         ISochitelTransactionRepository SochitelTransaction { get; }
         ICreditCardTransactionRepository CreditCardTransaction { get; }
+
+        IPaymentTransactionRepository PaymentTransactions { get; }
         Task<int> CommitAsync();
         Task BeginTransactionAsync(); // Begins the transaction
         Task CommitTransactionAsync(); // Commits the transaction

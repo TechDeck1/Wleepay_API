@@ -14,6 +14,7 @@ namespace wleepay.Core.Repositories
         Task<bool> IsPhoneAlreadyRegistered(string phone);
         Task<bool> IsAccountAlreadyExists(string accountNumber);
         Task<UserDetail> GetUserDetailsByPhone(string phone);
+        //Task<WleeSendUserDetails> GetWleeSendUserDetailsByPhone(string phone);
         Task<IEnumerable<ApplicationUser>> GetAllUsersByRole(int role);
         Task<UserDetailsResponseResource> GetUsers(Core.Enums.Role role, int pageIndex = 0, int pageSize = 10);
         Task<UserDetailsResponseResource> GetAllUsersById(Core.Enums.Role role, int pageIndex, int pageSize, string createdBy);

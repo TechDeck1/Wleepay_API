@@ -40,5 +40,8 @@ namespace wleepay.Core.Services
 
         GetWalletBalances getWalletBalancesReport(string role, int currency, int pageIndex, int pageSize);
 
+        Task<IEnumerable<LecTransactionReportResponse>> GetLecTransactionsByDates(DateTime startDate, DateTime endDate);
+
+
     }
 }

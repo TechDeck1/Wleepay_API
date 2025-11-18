@@ -1,5 +1,5 @@
 ﻿using Newtonsoft.Json;
-
+using wleepay.Core.DTO.Request;
 namespace wleepay.API.Resources
 {
     public class ExecTransactionRequest

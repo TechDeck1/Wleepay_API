@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using wleepay.Core.DTO.Request;
 
 namespace wleepay.API.Resources
 {

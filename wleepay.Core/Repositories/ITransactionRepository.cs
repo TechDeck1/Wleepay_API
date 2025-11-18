@@ -39,6 +39,7 @@ namespace wleepay.Core.Repositories
         Task<IList<TransactionSummaryResponseModel>> GetTransactionData(int monthId, int currencyId);
         Task<TransactionResponseResource> TransactionCountSummary(int role, int transaferType, DateTime fromDate, DateTime toDate);
         Task<SochitelTransactionResponseResource> SochitelCommisionTransactionSummary(int role, string transactionType, DateTime fromDate, DateTime toDate);
+        Task<IEnumerable<LecTransactionReportResponse>> GetTransactionsByDates(DateTime startDate, DateTime endDate);
 
     }
 }

@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using wleepay.Core.Common;
 using wleepay.Core.DTO.Response;
 using wleepay.Core.Enums;
 using wleepay.Core.Models;
@@ -16,7 +17,7 @@ namespace wleepay.Data.Repositories
 {
     public class WalletRepository : Repository<Wallet>, IWalletRepository
     {
-        public WalletRepository(DbContext context):base(context)
+        public WalletRepository(DbContext context) : base(context)
         {
 
         }
@@ -26,7 +27,7 @@ namespace wleepay.Data.Repositories
             get { return Context as WPContext; }
         }
 
-        public async Task<IEnumerable<Wallet>> GetWalletsByUserId(string userId, int currencyId = 0,int type = 0)
+        public async Task<IEnumerable<Wallet>> GetWalletsByUserId(string userId, int currencyId = 0, int type = 0)
         {
             var wallets = WPContext.Wallet.Where(w => w.UserId == userId).AsQueryable();
             if (currencyId > 0)
@@ -34,13 +35,13 @@ namespace wleepay.Data.Repositories
             if (type > 0)
                 wallets = wallets.Where(w => w.Type == type);
             var walletList = await wallets
-                .Include(w=>w.Currency)
-                .Include(w=>w.WalletType)
+                .Include(w => w.Currency)
+                .Include(w => w.WalletType)
                 .ToListAsync();
 
             return walletList;
         }
-        
+
         public async Task<Wallet> GetUserByWalletIdAndTransferType(long walletId, int type)
         {
             var wallet = WPContext.Wallet.Where(w => w.Id == walletId && w.Type == type).AsQueryable();
@@ -51,16 +52,16 @@ namespace wleepay.Data.Repositories
 
             return walletDetail;
         }
-        
+
         public async Task<Wallet> GetUserDetailsByWalletIdAndCurrency(long walletId)
         {
             return await WPContext.Wallet.Where(w => w.Id == walletId)
-                .Include(s=>s.Currency)
+                .Include(s => s.Currency)
                 .Include(s => s.ApplicationUser)
                 .ThenInclude(s => s.UserDetail)
                 .FirstOrDefaultAsync();
         }
-        
+
         public async Task<IEnumerable<Wallet>> GetWalletsBy(string userId, int currencyId = 0)
         {
             var wallets = WPContext.Wallet.Where(w => w.UserId == userId).AsQueryable();
@@ -100,10 +101,10 @@ namespace wleepay.Data.Repositories
         public async Task<Wallet> SetCashOnHand(double amount, int currencyId, int WalletTypeId)
         {
             var wallet = await WPContext.Wallet.Where(w => w.Type == WalletTypeId && w.CurrencyId == currencyId).FirstOrDefaultAsync();
-            if(wallet != null)
+            if (wallet != null)
             {
-                wallet.Balance = amount; 
-                wallet.CurrencyId=currencyId;
+                wallet.Balance = amount;
+                wallet.CurrencyId = currencyId;
             }
             await WPContext.SaveChangesAsync();
 
@@ -129,7 +130,7 @@ namespace wleepay.Data.Repositories
                 .Select(g => new WalletAmountHistoryByMonths
                 {
                     Name = new DateTime(g.Key.Year, g.Key.Month, 1).ToString("MMMM yyyy"), // Format after grouping
-                    Value = g.Sum(x => x.Amount).ToString(),  
+                    Value = g.Sum(x => x.Amount).ToString(),
                     TotalCount = g.Count(),
                 })
                 .OrderBy(g => g.Name)
@@ -139,7 +140,7 @@ namespace wleepay.Data.Repositories
 
         }
 
-        public async Task<WalletsBeginingBalance> getStartingWalletBalance(DateTime reportStartDate, int walletType,int currencyId)
+        public async Task<WalletsBeginingBalance> getStartingWalletBalance(DateTime reportStartDate, int walletType, int currencyId)
         {
             var transactions = await WPContext.Transactions
                 .Where(t => t.CreatedDate.Date >= reportStartDate.Date && t.FromWallet.CurrencyId == currencyId && t.FromWallet.Type == walletType)
@@ -163,6 +164,27 @@ namespace wleepay.Data.Repositories
                 .SumAsync(t => t.Balance);
 
             return (new WalletsEndingBalance { EndingBalance = currentBalance - transactions });
+        }
+
+        public async Task<WalletsBalanceResponse> getWalletBalance(DateTime reportStartDate, DateTime reportEndDate, int walletType, int currencyId)
+        {
+            var EndingTransactions = await WPContext.Transactions
+                    .Where(t => t.CreatedDate.Date >= reportEndDate.Date && t.FromWallet.CurrencyId == currencyId && t.FromWallet.Type == walletType)
+                    .SumAsync(t => t.Amount);
+
+            var StartingTransactions = await WPContext.Transactions
+                    .Where(t => t.CreatedDate.Date >= reportStartDate.Date && t.FromWallet.CurrencyId == currencyId && t.FromWallet.Type == walletType)
+                    .SumAsync(t => t.Amount);
+
+            var currentBalance = await WPContext.Wallet
+                .Where(t => t.CurrencyId == currencyId && t.Type == walletType)
+                .SumAsync(t => t.Balance);
+
+            return (new WalletsBalanceResponse
+            {
+                BeginningBalance = currentBalance - StartingTransactions,
+                EndingBalance = currentBalance - EndingTransactions
+            });
         }
 
         public async Task<CreditsByWleepay> getCreditsForAgentAndMemberByWleepay()
@@ -241,8 +263,8 @@ namespace wleepay.Data.Repositories
 
             return (new CashOnHandReponse
             {
-                total = result.Count(),
-                transacion = resultList
+                TotalCount = result.Count(),
+                Transaction = resultList
             });
         }
 
@@ -265,8 +287,8 @@ namespace wleepay.Data.Repositories
 
             return new GetCashOutCommissionEarnedResponse
             {
-                Total = cashOutCommission.Count(),
-                cashOutCommissionEarned = cashOut
+                TotalCount = cashOutCommission.Count(),
+                commissionEarned = cashOut
             };
 
         }
@@ -290,8 +312,8 @@ namespace wleepay.Data.Repositories
 
             return new GetBillPaymentCommissionEarnedResponse
             {
-               Total = CreditCommissionEarned.Count(),
-               billCommissionEarned = creditsList
+                TotalCount = CreditCommissionEarned.Count(),
+                commissionEarned = creditsList
             };
 
         }
@@ -306,7 +328,7 @@ namespace wleepay.Data.Repositories
             .Where(t => t.TransferTypeId == walletType
                && t.FromWallet.CurrencyId == currencyId
                            && t.CreatedDate.Date >= reportStartDate.Date
-        && t.CreatedDate.Date <= reportEndDate.Date
+                 && t.CreatedDate.Date <= reportEndDate.Date
                );
 
             var cashOut = transactions.Skip(skipCount).Take(takeCount)
@@ -315,7 +337,7 @@ namespace wleepay.Data.Repositories
 
             return new GetFloatAccountResponse
             {
-                Total = transactions.Count(),
+                TotalCount = transactions.Count(),
                 Transaction = cashOut
             };
         }
@@ -326,8 +348,8 @@ namespace wleepay.Data.Repositories
             int skipCount = pageIndex * pageSize;
 
             var reconciliationResult = WPContext.Wallet.Include(u => u.ApplicationUser).Include(w => w.WalletType)
-                .Where(t => t.CurrencyId == currencyId 
-                && t.ApplicationUser.UserDetail.UserId == userId 
+                .Where(t => t.CurrencyId == currencyId
+                && t.ApplicationUser.UserDetail.UserId == userId
                 && t.ApplicationUser.UserDetail.Status == Status.Active.GetHashCode());
 
             var reconciliationList = reconciliationResult.Skip(skipCount).Take(takeCount)
@@ -335,7 +357,7 @@ namespace wleepay.Data.Repositories
 
             return new GetReconciliationResponse
             {
-                Total = reconciliationResult.Count(),
+                TotalCount = reconciliationResult.Count(),
                 reconciliations = reconciliationList
             };
         }
@@ -398,6 +420,28 @@ namespace wleepay.Data.Repositories
 
             return lastSixMonthsBalances;
 
+        }
+
+
+        public GetWalletBalances getWalletBalancesReport(string role, int currency, int pageIndex, int pageSize)
+        {
+            int takeCount = pageSize;
+            int skipCount = pageIndex * pageSize;
+
+            var walletBalances = WPContext.Users
+                 .Where(s => s.UserRoles.FirstOrDefault().Role.Name == role)
+                .Include(s => s.UserDetail)
+                .Include(s => s.UserRoles)
+                .ThenInclude(s => s.Role)
+                .Include(s => s.Wallets).ThenInclude(w => w.Currency);
+
+
+            return new GetWalletBalances
+            {
+                TotalCount = walletBalances.Count(),
+                WalletBalances = walletBalances.Skip(skipCount).Take(takeCount)
+                .ToList()
+            };
         }
     }
 }

@@ -1,4 +1,4 @@
-using AutoMapper;
+﻿using AutoMapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -36,6 +36,10 @@ using FirebaseAdmin;
 using Google.Apis.Auth.OAuth2;
 using System.IO;
 using wleepay.API.SignalRHub;
+using wleepay.Core.Configurations;
+using Microsoft.Win32;
+using wleepay.Services.Account;
+using wleepay.Services.Auth;
 
 namespace wleepay.API
 {
@@ -58,7 +62,10 @@ namespace wleepay.API
         {
             //services.Configure<JwtConfig>(Configuration.GetSection("JwtConfig"));
             services.AddDbContext<WPContext>(options => options.UseSqlServer(Configuration.GetConnectionString("WleePayDataBase")));
-
+          
+            //Register Authorize.Net settings here
+            services.Configure<AuthorizeNetSettings>(Configuration.GetSection("AuthorizeNet"));
+           
             services.AddIdentity<ApplicationUser, ApplicationRole>(options =>
             {
                 options.Lockout.AllowedForNewUsers = true;
@@ -69,6 +76,7 @@ namespace wleepay.API
                    .AddDefaultTokenProviders();
 
             services.Configure<DataProtectionTokenProviderOptions>(opt =>
+
                 opt.TokenLifespan = TimeSpan.FromMinutes(5));
 
             services.AddSession(options =>
@@ -105,8 +113,10 @@ namespace wleepay.API
                     ValidateIssuerSigningKey = true,
                     ValidateLifetime = true,
                     RequireExpirationTime = true,
-                    RequireSignedTokens = true
+                    RequireSignedTokens = true,
+                    ClockSkew = TimeSpan.Zero
                 };
+
 
             });
 
@@ -155,6 +165,8 @@ namespace wleepay.API
 
             services.AddTransient<ITransactionService, TransactionService>();
             services.AddTransient<ITransferTypeService, TransferTypeService>();
+            services.AddTransient<IWleeSendUserDetailService, WleeSendUserDetailService>();
+
 
             services.AddTransient<ILookupService, LookupService>();
             services.AddTransient<ISmileIdentityJobService, SmileIdentityJobService>();
@@ -183,6 +195,25 @@ namespace wleepay.API
             services.AddTransient<ICreditCardTransactionService, CreditCardTransactionService>();
             services.AddTransient<IDashboardService, DashboardService>();
             services.AddTransient<IReportService, ReportService>();
+            services.AddTransient<IWleeSendUserDetailService, WleeSendUserDetailService>();
+
+           services.AddScoped<IAuthorizeNetService, AuthorizeNetService>();
+
+            services.AddScoped<IPaymentTransactionService, PaymentTransactionService>();
+            services.AddScoped<IPaymentTransactionRepository, PaymentTransactionRepository>();
+
+
+            services.AddScoped<IAccountService, AccountService>();
+            services.AddScoped<IUserService, UserService>();
+
+            services.AddScoped<IJwtTokenService, JwtTokenService>();
+
+            services.AddScoped<IValidationService, ValidationService>();
+            services.AddScoped<IJwtTokenService, JwtTokenService>();
+
+
+
+
 
 
 
@@ -225,19 +256,35 @@ namespace wleepay.API
                 });
             });
 
+
+
             // Setup Auto Mapper
             services.AddAutoMapper(typeof(Startup));
 
-            services.AddControllers().AddNewtonsoftJson(options =>
-            {
-                options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
-            });
+            //services.AddControllers().AddNewtonsoftJson(options =>
+            //{
+            //    options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+            //});
 
             services.AddControllers(options =>
             {
                 options.Filters.Add<OtpExceptionFilter>();
-            });
 
+            });
+                services.AddControllers(options =>
+                {
+                    options.SuppressImplicitRequiredAttributeForNonNullableReferenceTypes = true;
+                })
+                         
+                .ConfigureApiBehaviorOptions(options =>
+             {
+                 options.SuppressModelStateInvalidFilter = true;
+             })
+            .AddNewtonsoftJson(options =>
+            {
+                options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+            });
+            services.AddMemoryCache();
             services.AddHttpClient();
 
         }
@@ -264,14 +311,16 @@ namespace wleepay.API
 
             app.UseDefaultFiles();
             app.UseStaticFiles();
-
+            app.UseMiddleware<ExceptionMiddleware>();
             app.UseRouting();
+            app.UseCors("AllowAllHeaders");
+            app.UseAuthentication();
+
 
             app.UseAuthorization();
 
-            app.UseAuthentication();
             //add cors
-            app.UseCors("AllowAllHeaders");
+         
 
             app.UseEndpoints(endpoints =>
             {

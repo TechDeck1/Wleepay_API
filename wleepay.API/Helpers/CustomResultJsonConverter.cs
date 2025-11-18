@@ -4,19 +4,22 @@ using Newtonsoft.Json.Linq;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using wleepay.Core.DTO.Response;
 using static DevExpress.Xpo.Helpers.AssociatedCollectionCriteriaHelper;
+
+using CoreResult = wleepay.Core.DTO.Response.Result; //alias 
 
 namespace wleepay.API.Helpers
 {
-    public class CustomResultJsonConverter : JsonConverter<Resources.Result>
+    public class CustomResultJsonConverter : JsonConverter<CoreResult>
     {
-        public override Resources.Result ReadJson(JsonReader reader, Type objectType, Resources.Result existingValue, bool hasExistingValue, JsonSerializer serializer)
+        public override CoreResult ReadJson(JsonReader reader, Type objectType, CoreResult existingValue, bool hasExistingValue, JsonSerializer serializer)
         {
             if (reader.TokenType == JsonToken.StartObject)
             {
                 // If the result is an object, deserialize it as a Result object
                 JObject obj = JObject.Load(reader);
-                return obj.ToObject<Resources.Result>();
+                return obj.ToObject<CoreResult>();
             }
             else if (reader.TokenType == JsonToken.StartArray)
             {
@@ -30,7 +33,7 @@ namespace wleepay.API.Helpers
             throw new JsonSerializationException("Unexpected token type for result property");
         }
 
-        public override void WriteJson(JsonWriter writer, Resources.Result value, JsonSerializer serializer)
+        public override void WriteJson(JsonWriter writer, CoreResult value, JsonSerializer serializer)
         {
             if (value == null)
             {

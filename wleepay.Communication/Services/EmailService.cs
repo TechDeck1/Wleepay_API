@@ -71,5 +71,24 @@ namespace wleepay.Communication.Services
 
         }
 
+        public async Task<string> SendEmailToUserAsync(string userEmail, string subject, string htmlContent)
+        {
+            var apiKey = _configuration.GetSection("SendGrid:WleePaySendGridApiKey").Value.ToString();
+            var client = new SendGridClient(apiKey);
+            var msg = new SendGridMessage()
+            {
+                From = new EmailAddress(_senderEmail, _senderName),
+                Subject = subject,
+                PlainTextContent = "",
+                HtmlContent = htmlContent
+            };
+            msg.AddTo(new EmailAddress(userEmail));
+            var response = await client.SendEmailAsync(msg);
+            var responseBody = await response.Body.ReadAsStringAsync(); 
+            var status = response.StatusCode;
+  
+            return response.IsSuccessStatusCode ? "Email queued successfully!" : "Something went wrong!";
+        }
+
     }
 }

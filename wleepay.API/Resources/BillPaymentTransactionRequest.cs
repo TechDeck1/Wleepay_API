@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using wleepay.Core.DTO.Request;
 
 namespace wleepay.API.Resources
 {
@@ -47,8 +48,8 @@ namespace wleepay.API.Resources
         [JsonProperty("operator")]
         public string Operator { get; set; }
 
-        //[JsonProperty("msisdn")]
-        //public string Msisdn { get; set; }
+        [JsonProperty("msisdn")]
+        public string Msisdn { get; set; }
 
         [JsonProperty("amount")]
         public string Amount { get; set; }
@@ -56,8 +57,8 @@ namespace wleepay.API.Resources
         [JsonProperty("simulate")]
         public string Simulate { get; set; }
 
-        //[JsonProperty("userReference")]
-        //public string UserReference { get; set; }
+        [JsonProperty("userReference")]
+        public string UserReference { get; set; }
 
         [JsonProperty("productId")]
         public string ProductId { get; set; }
@@ -65,8 +66,19 @@ namespace wleepay.API.Resources
         [JsonProperty("accountId")]
         public string AccountId { get; set; }
 
-        //[JsonProperty("extraParameters")]
-        //public ExtraParameters ExtraParameters { get; set; }
+
+        [JsonProperty("amountOperator")]
+        public string AmountOperator { get; set; }
+
+
+        [JsonProperty("extraParameters")]
+        public object extraParameters {  get; set; }
+
+        [JsonProperty("extraParameter")]
+        public ExtraParameters ExtraParameters { get; set; }
+
+
+
     }
 
 

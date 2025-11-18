@@ -5,6 +5,10 @@ using System.Threading.Tasks;
 using wleepay.Core.Models;
 using wleepay.Core.Repositories;
 using wleepay.Data.Context;
+using Microsoft.EntityFrameworkCore;
+using System.Linq;
+
+
 
 namespace wleepay.Data.Repositories
 {
@@ -16,6 +20,7 @@ namespace wleepay.Data.Repositories
 
         private WPContext WPContext
         {
+
             get { return Context as WPContext; }
         }
 
@@ -25,6 +30,33 @@ namespace wleepay.Data.Repositories
             WPContext.SaveChanges();
             return transaction;
         }
+
+
+        public async Task<double> GetTotalCommissionEarnedAsync(DateTime fromDate)
+        {
+            var list = await WPContext.SochitelTransactions
+                .Where(t => t.CreatedDate >= fromDate)
+                .ToListAsync();
+
+            double total = 0;
+
+            foreach (var item in list)
+            {
+                if (!string.IsNullOrEmpty(item.CommissionRate))
+                {
+                    double value;
+                    if (double.TryParse(item.CommissionRate, out value))
+                    {
+                        total += value;
+                    }
+                }
+            }
+
+            return total;
+        }
+
+
+
     }
-    
+
 }

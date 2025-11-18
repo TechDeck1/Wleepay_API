@@ -9,5 +9,7 @@ namespace wleepay.Core.Enums
         Member = 2,
         Staff = 3,
         SystemAdmin = 4,
+        WleeSendAdmin = 5,
+        WleeSendUser = 6
     }
 }

@@ -16,9 +16,9 @@ namespace wleepay.Communication.Services
         public SMSService(IConfiguration configuration)
         {
             _configuration = configuration;
-            string accountSid = configuration.GetSection("Twillio:SID").Value.ToString();
-            string authToken = configuration.GetSection("Twillio:Token").Value.ToString();
-            _fromNumber = configuration.GetSection("Twillio:FromNumber").Value.ToString();
+            string accountSid = configuration.GetSection("Twilio:SID").Value.ToString();
+            string authToken = configuration.GetSection("Twilio:Token").Value.ToString();
+            _fromNumber = configuration.GetSection("Twilio:FromNumber").Value.ToString();
             TwilioClient.Init(accountSid, authToken);
         }
 

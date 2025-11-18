@@ -734,7 +734,6 @@ namespace wleepay.API.Areas.Portal.Controllers
 
                 throw new CustomException("Sorry, we're having trouble reset your password. Please contact support.");
             }
-
         }
 
         [HttpPost("LoginSetup")]

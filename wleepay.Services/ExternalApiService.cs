@@ -4,6 +4,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
@@ -65,13 +66,13 @@ namespace wleepay.Services
             try
             {
                 var client = new HttpClient();
-                var request = new HttpRequestMessage(HttpMethod.Get, "https://artx.sochitel.com/api.php");
+                var request = new HttpRequestMessage(HttpMethod.Post, "https://artx.sochitel.com/api.php");
                 string json = JsonConvert.SerializeObject(data);
                 //System.Text.Json.JsonSerializer.Serialize(data)
                 request.Content = new StringContent(JsonConvert.SerializeObject(data), Encoding.UTF8, "application/json");
                 var response = await client.SendAsync(request);
                 response.EnsureSuccessStatusCode();
-                var ffhg= await response.Content.ReadAsStringAsync();
+                var ffhg = await response.Content.ReadAsStringAsync();
                 Console.WriteLine(ffhg);
                 return ffhg;
             }
@@ -81,6 +82,39 @@ namespace wleepay.Services
                 throw;
             }
         }
+
+
+
+        //public async Task<string> PostDataAsync<T>(T data)
+        //{
+        //    try
+        //    {
+        //        using var client = new HttpClient();
+        //        var json = JsonConvert.SerializeObject(data, Formatting.Indented, new JsonSerializerSettings
+        //        {
+        //            NullValueHandling = NullValueHandling.Ignore
+        //        });
+
+        //        Console.WriteLine("Sending JSON to Sochitel:\n" + json);
+
+        //        var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+        //        var response = await client.PostAsync("https://artx.sochitel.com/api.php", content);
+        //        var result = await response.Content.ReadAsStringAsync();
+
+        //        Console.WriteLine("Response:\n" + result);
+        //        return result;
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        Console.WriteLine("PostDataAsync error: " + ex.Message);
+        //        throw;
+        //    }
+        //}
+
+
+
+
 
     }
 }

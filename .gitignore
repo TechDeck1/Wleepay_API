@@ -248,6 +248,9 @@ _Pvt_Extensions
 # FAKE - F# Make
 .fake/
 
+# Add rules to ignore .txt and .dll files
+*.txt
+*.dll
 
 wleepay.API/.vs/wleepay.API/v17/.suo
 wleepay.API/.vs/wleepay.API/v17/.suo
