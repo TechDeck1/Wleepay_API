@@ -71,13 +71,13 @@ namespace wleepay.API.Controllers
         [HttpPost("WleeSend-Login")]
         public async Task<IActionResult> Login([FromBody] LoginRequest loginRequest)
         {
-            if (string.IsNullOrWhiteSpace(loginRequest.PhoneNo))
+            if (string.IsNullOrWhiteSpace(loginRequest.Email))
                 return BadRequest("Phone number is required.");
 
             if (string.IsNullOrWhiteSpace(loginRequest.Pin) || loginRequest.Pin.Length != 4)
                 return BadRequest("Pin should be 4 characters long.");
 
-            var userDetails = await _wleeSendUserDetailsService.GetWleeSendUserDetailsByPhone(loginRequest.PhoneNo);
+            var userDetails = await _wleeSendUserDetailsService.GetWleeSendUserDetailsByPhone(loginRequest.Email);
             if (userDetails == null)
                 return BadRequest("Account does not exist.");
 

@@ -20,15 +20,44 @@ namespace wleepay.Communication.Services
         private Int32 timestamp = 0;
         private string secKey = string.Empty;
         private string partnerId = string.Empty;
+
         public SmileIdentityService(IConfiguration configuration, IHTTPService httpService)
         {
-            _configuration = configuration;
-            _httpService = httpService;
-            string accountSid = configuration.GetSection("Twillio:SID").Value.ToString();
-            string authToken = configuration.GetSection("Twillio:Token").Value.ToString();
+            _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
+            _httpService = httpService ?? throw new ArgumentNullException(nameof(httpService));
+
+            // Safely get the Twillio SID and Token
+            string accountSid = _configuration["Twilio:SID"];
+            string authToken = _configuration["Twilio:Token"];
+
+            if (string.IsNullOrWhiteSpace(accountSid))
+            {
+                // Log or throw an informative exception
+                throw new InvalidOperationException("Configuration missing: Twilio:SID");
+            }
+
+            if (string.IsNullOrWhiteSpace(authToken))
+            {
+                throw new InvalidOperationException("Configuration missing: Twilio:Token");
+            }
+
+            // Initialize remaining fields
             partnerId = "693";
             secKey = GenerateSecKey(out timestamp, partnerId);
+
+            // If needed, you can store accountSid and authToken in private fields for later use
+            // _accountSid = accountSid;
+            // _authToken = authToken;
         }
+        //public SmileIdentityService(IConfiguration configuration, IHTTPService httpService)
+        //{
+        //    _configuration = configuration;
+        //    _httpService = httpService;
+        //    string accountSid = configuration.GetSection("Twilio:SID").Value.ToString();
+        //    string authToken = configuration.GetSection("Twilio:Token").Value.ToString();
+        //    partnerId = "693";
+        //    secKey = GenerateSecKey(out timestamp, partnerId);
+        //}
 
         public async Task<bool> ReEnrollUser(string userId)
         {

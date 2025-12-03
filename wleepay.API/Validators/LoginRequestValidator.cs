@@ -11,7 +11,7 @@ namespace wleepay.API.Validators
     {
         public LoginRequestValidator()
         {
-            RuleFor(a => a.PhoneNo)
+            RuleFor(a => a.Email)
                 .NotEmpty()
                 .NotNull()
                 .MaximumLength(13);

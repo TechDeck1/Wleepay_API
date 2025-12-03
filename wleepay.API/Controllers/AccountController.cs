@@ -103,12 +103,79 @@ namespace wleepay.API.Controllers
             _verificationService = verificationService;
         }
 
+
+
+
+
+
+
         [AllowAnonymous]
         [HttpPost("Registration")]
         public async Task<IActionResult> Register([FromBody] AddUserDetailsResource userDetail)
         {
             try
             {
+        //        var users = new[]
+        //{
+        //          new { Role="WleeSendAdmin", Phone="9000000006", Email="wleesendadmin@test.com", First="WleeSend", Last="Admin" },
+        //          new { Role="WleeSendUser", Phone="9000000007", Email="wleesenduser@test.com",  First="WleeSend", Last="User" }
+        //          new { Role="SystemAdmin", Phone="9000000005", Email="systemadmin@test.com", First="System", Last="Admin" },
+        //          new { Role="SuperAdmin", Phone="9000000001", Email="superadmin@test.com", First="Super", Last="Admin" },
+        //          new { Role="Member", Phone="9000000002", Email="member@test.com", First="Default", Last="Member" },
+        //          new { Role="Agent", Phone="9000000003", Email="agent@test.com", First="Default", Last="Agent" },
+        //          new { Role="Staff", Phone="9000000004", Email="staff@test.com", First="Default", Last="Staff" },
+
+
+
+
+        //        };
+
+        //        foreach (var u in users)
+        //        {
+        //            // check if already exists
+        //            var existing = await _userManager.FindByEmailAsync(u.Email);
+        //            if (existing != null) continue;
+
+        //            // identity user
+        //            var user = new ApplicationUser
+        //            {
+        //                Id = Guid.NewGuid().ToString(),
+        //                UserName = u.Phone,
+        //                Email = u.Email
+        //            };
+
+        //            var result = await _userManager.CreateAsync(user, "Test123#");
+        //            if (!result.Succeeded) continue;
+
+        //            await _userManager.AddToRoleAsync(user, u.Role);
+
+        //            // user detail
+        //            var detail = new UserDetail
+        //            {
+        //                UserId = user.Id,
+        //                FirstName = u.First,
+        //                LastName = u.Last,
+        //                PhoneNumber = u.Phone,
+        //                Gender = "Male",
+        //                Status = 1,
+        //                KYCStatusId = 1,
+        //                CountyId = 1,
+        //                KYCLevel = 1,
+        //                CreatedDate = DateTime.UtcNow,
+        //                UpdatedDate = DateTime.UtcNow,
+        //                AccountNumber = "100" + new Random().Next(100000, 999999)
+        //            };
+
+        //            await _userDetailsService.AddOrUpdateUserDetails(detail);
+
+        //            // wallets
+        //            if (u.Role == "Member")
+        //                await _walletService.CreateCustomerWallet(user.Id);
+        //            else if (u.Role == "Agent")
+        //                await _walletService.CreateAgentWallet(user.Id);
+        //        }
+
+                //        return Ok("Default users created successfully.");
                 var baseUrl = _configuration.GetSection("BaseUrl").Value;
                 var validator = new AddUserDetailsValidator(userDetail.Role.ToString());
                 var validationResult = await validator.ValidateAsync(userDetail);
@@ -264,121 +331,156 @@ namespace wleepay.API.Controllers
         [HttpPost("Login")]
         public async Task<IActionResult> Login([FromBody] LoginRequest loginRequest)
         {
-            var validator = new LoginRequestValidator();
-            var validationResult = await validator.ValidateAsync(loginRequest);
-            if(validationResult.Errors.Count>0)
+            try
             {
-                if (validationResult.Errors[0].ErrorMessage[3].ToString() == "m")
+                //throw new Exception("This is a mock exception for testing!");
+                var validator = new LoginRequestValidator();
+                var validationResult = await validator.ValidateAsync(loginRequest);
+                if (validationResult.Errors.Count > 0)
                 {
-                    validationResult.Errors[0].ErrorMessage = "Pin should be 4 characters long.";
-                }
-                //validationResult.Errors[0].ErrorMessage = "Pin should be 4 characters long.";
-                validationResult.Errors[0].ErrorMessage = validationResult.Errors[0].ErrorMessage;
-            }
-            
-            if (!validationResult.IsValid)
-                return BadRequest(validationResult.Errors);
-
-            var user = await _userManager.FindByNameAsync(loginRequest.PhoneNo);
-            if (user == null)
-                return BadRequest("Account does not exists.");
-
-
-            var result = await _signInManager.PasswordSignInAsync(user, loginRequest.Pin.ToString(), false, true);
-
-            // get user
-            var userDetails = await _userDetailsService.GetUserDetailsByPhone(loginRequest.PhoneNo);
-
-            if(userDetails == null)
-            {
-                return BadRequest("Account does not exists.");
-            }
-
-            // Check if the user is locked out
-            if ( userDetails.FailedLoginAttempt >= 3)
-            {
-                var lockoutDuration = DateTime.UtcNow - userDetails.UpdatedDate;
-                if (lockoutDuration.TotalMinutes < 30)  // Check if user is locked out
-                {
-                    return BadRequest("Your account is locked. Please try again after 30 minutes.");
-                } else
-                {
-                    await _userDetailsService.UpdateUserLoggedInStatus(userDetails.UserId, false, 0);
-                }
-            }
-
-            if (result.Succeeded)
-            {
-                if (userDetails.Status == Core.Enums.Status.DeActive.GetHashCode())
-                {
-                    var failedAttempt = userDetails.FailedLoginAttempt + 1;
-                    await _userDetailsService.UpdateUserLoggedInStatus(userDetails.UserId, false, failedAttempt);
-                    return BadRequest(new
+                    if (validationResult.Errors[0].ErrorMessage[3].ToString() == "m")
                     {
-                        Success = false,
-                        Message = Messages.AccountDeActivated.ToDescriptionString(),
-                    });
+                        validationResult.Errors[0].ErrorMessage = "Pin should be 4 characters long.";
+                    }
+                    //validationResult.Errors[0].ErrorMessage = "Pin should be 4 characters long.";
+                    validationResult.Errors[0].ErrorMessage = validationResult.Errors[0].ErrorMessage;
                 }
-                //generate token
-                var token = GenerateJSONWebToken(userDetails);
 
-                //get role details
-                var userRole = await _userManager.GetRolesAsync(user);
-                //get wallet details for user
-                var wallet = await _walletService.GetWalletsByUserId(userDetails.UserId);
+                //if (!validationResult.IsValid)
+                //    return BadRequest(validationResult.Errors);
 
-                if (wallet.Count() < 1 && userRole[0] == ((Core.Enums.Role)Core.Enums.Role.Member.GetHashCode()).ToString())
+                var user = await _userManager.FindByEmailAsync(loginRequest.Email);
+                if (user == null)
+                    return BadRequest("Account does not exists.");
+
+
+                var result = await _signInManager.PasswordSignInAsync(user, loginRequest.Pin.ToString(), false, true);
+
+                // get user
+                var userDetails = await _userDetailsService.GetUserDetailsByPhone(user.UserName);
+
+                if (userDetails == null)
                 {
-                    //create new wallet
-                    wallet = await _walletService.CreateCustomerWallet(userDetails.UserId);
+                    return BadRequest("Account does not exists.");
                 }
-                //create wallet for register user by role
 
-                var usdBalance = wallet.FirstOrDefault(w => w.CurrencyId == Core.Enums.Currencies.USD.GetHashCode())?.Balance;
-                var lrdBalance = wallet.FirstOrDefault(w => w.CurrencyId == Core.Enums.Currencies.LRD.GetHashCode())?.Balance;
-                var response = new
+                // Check if the user is locked out
+                if (userDetails.FailedLoginAttempt >= 3)
                 {
-                    UserId = user.Id,
-                    Success = true,
-                    Token = token,
-                    IsLoggedInVerified = userDetails.IsLoggedIn,
-                    FirstName = userDetails.FirstName,
-                    LastName = userDetails.LastName,
-                    //ProfilePic = System.Convert.ToBase64String((System.IO.File.ReadAllBytes(userDetails.Image))),
-                    ProfilePic = System.IO.File.Exists(userDetails.Image) ? System.Convert.ToBase64String((System.IO.File.ReadAllBytes(userDetails.Image))) : userDetails.Image,
-                    //ProfilePic = userDetails.Image,
-                    PhoneNumber = userDetails.PhoneNumber,
-                    AccountNumber = userDetails.AccountNumber,
-                    KYCLevel = userDetails.KYCLevelDetail.Name,
-                    USDBalance = usdBalance,
-                    lrdBalance = lrdBalance,
-                    Role = userRole?[0]
-                };
-                //set logged in status to true if first log in
-                string userId = userDetails.UserId;
-                
-                await _userDetailsService.UpdateUserLoggedInStatus(userId, true, 0);
-
-                return Ok(response);
-            }
-            else
-            {
-                if (user != null)
-                {
-                    if (userDetails != null)
+                    var lockoutDuration = DateTime.UtcNow - userDetails.UpdatedDate;
+                    if (lockoutDuration.TotalMinutes < 30)  // Check if user is locked out
                     {
-                        if (userDetails.FailedLoginAttempt >= 3) // Threshold for sending SMS
-                        {
-                            var sendSms = _smsService.sendMessage("Multiple failed login attempts detected.", userDetails.PhoneNumber);
-                        }
+                        return BadRequest("Your account is locked. Please try again after 30 minutes.");
+                    }
+                    else
+                    {
+                        await _userDetailsService.UpdateUserLoggedInStatus(userDetails.UserId, false, 0);
+                    }
+                }
 
+                if (result.Succeeded)
+                {
+                    if (userDetails.Status == Core.Enums.Status.DeActive.GetHashCode())
+                    {
                         var failedAttempt = userDetails.FailedLoginAttempt + 1;
                         await _userDetailsService.UpdateUserLoggedInStatus(userDetails.UserId, false, failedAttempt);
+                        return BadRequest(new
+                        {
+                            Success = false,
+                            Message = Messages.AccountDeActivated.ToDescriptionString(),
+                        });
                     }
-                    return BadRequest("Invalid login request.");
+                    //generate token
+                    var token = GenerateJSONWebToken(userDetails);
+
+                    //get role details
+                    var userRole = await _userManager.GetRolesAsync(user);
+                    //get wallet details for user
+                    var wallet = await _walletService.GetWalletsByUserId(userDetails.UserId);
+
+                    if (wallet.Count() < 1 && userRole[0] == ((Core.Enums.Role)Core.Enums.Role.Member.GetHashCode()).ToString())
+                    {
+                        //create new wallet
+                        wallet = await _walletService.CreateCustomerWallet(userDetails.UserId);
+                    }
+                    //create wallet for register user by role
+
+                    var usdBalance = wallet.FirstOrDefault(w => w.CurrencyId == Core.Enums.Currencies.USD.GetHashCode())?.Balance;
+                    var lrdBalance = wallet.FirstOrDefault(w => w.CurrencyId == Core.Enums.Currencies.LRD.GetHashCode())?.Balance;
+                    var response = new
+                    {
+                        UserId = user.Id,
+                        Success = true,
+                        Token = token,
+                        IsLoggedInVerified = userDetails.IsLoggedIn,
+                        FirstName = userDetails.FirstName,
+                        LastName = userDetails.LastName,
+                        //ProfilePic = System.Convert.ToBase64String((System.IO.File.ReadAllBytes(userDetails.Image))),
+                        ProfilePic = System.IO.File.Exists(userDetails.Image) ? System.Convert.ToBase64String((System.IO.File.ReadAllBytes(userDetails.Image))) : userDetails.Image,
+                        //ProfilePic = userDetails.Image,
+                        PhoneNumber = userDetails.PhoneNumber,
+                        AccountNumber = userDetails.AccountNumber,
+                        KYCLevel = userDetails.KYCLevelDetail.Name,
+                        USDBalance = usdBalance,
+                        lrdBalance = lrdBalance,
+                        Role = userRole?[0]
+                    };
+                    //set logged in status to true if first log in
+                    string userId = userDetails.UserId;
+
+                    await _userDetailsService.UpdateUserLoggedInStatus(userId, true, 0);
+
+                    return Ok(response);
                 }
+                else
+                {
+                    if (user != null)
+                    {
+                        if (userDetails != null)
+                        {
+                            if (userDetails.FailedLoginAttempt >= 3) // Threshold for sending SMS
+                            {
+                                var sendSms = _smsService.sendMessage("Multiple failed login attempts detected.", userDetails.PhoneNumber);
+                            }
+
+                            var failedAttempt = userDetails.FailedLoginAttempt + 1;
+                            await _userDetailsService.UpdateUserLoggedInStatus(userDetails.UserId, false, failedAttempt);
+                        }
+                        return BadRequest("Invalid login request.");
+                    }
+                }
+                return BadRequest("Invalid login request.");
             }
-            return BadRequest("Invalid login request.");
+            catch (Exception ex)
+            {
+                string logDir = @"C:\API_LOGS";
+
+                // Ensure directory exists
+                if (!Directory.Exists(logDir))
+                    Directory.CreateDirectory(logDir);
+
+                string logFilePath = Path.Combine(logDir, "logs.txt");
+
+                string logMessage = $@"
+--------------------------------------------
+Date: {DateTime.Now}
+Message: {ex.Message}
+Stack Trace: {ex.StackTrace}
+Inner: {ex.InnerException?.Message}
+--------------------------------------------
+";
+
+                // Write log
+                System.IO.File.AppendAllText(logFilePath, logMessage);
+
+                return StatusCode(500, new
+                {
+                    error = ex.Message,
+                    stack = ex.StackTrace,
+                    inner = ex.InnerException?.Message
+                });
+            }
+            
         }
 
         [AllowAnonymous]
@@ -393,7 +495,7 @@ namespace wleepay.API.Controllers
             try
             {
                 string message = MessagesTemplates.ValidateNumberOTPMessage(otpRequest.Pin.ToString());
-                var smsStatus = _smsService.sendMessage(message, otpRequest.PhoneNo);
+                var smsStatus = _smsService.sendMessage(message, otpRequest.Email);
 
                 //if status is not qued then it's will be an error message
                 if (smsStatus.Trim().Length > 7)
@@ -418,7 +520,7 @@ namespace wleepay.API.Controllers
 
             try
             {
-                var userDetail = await _userDetailsService.GetUserDetailsByPhone(updatePinRequest.PhoneNo);
+                var userDetail = await _userDetailsService.GetUserDetailsByPhone(updatePinRequest.Email);
                 //update pin 
                 if (userDetail == null)
                     return BadRequest("Account does not exist.");

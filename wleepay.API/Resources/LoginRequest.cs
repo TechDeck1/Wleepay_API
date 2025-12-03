@@ -7,7 +7,8 @@ namespace wleepay.API.Resources
 {
     public class LoginRequest
     {
-        public string PhoneNo { get; set; }
+        
+        public string Email { get; set; }
         public string Pin { get; set; }
     }
 }

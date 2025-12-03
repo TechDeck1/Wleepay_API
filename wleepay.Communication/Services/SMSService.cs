@@ -13,12 +13,36 @@ namespace wleepay.Communication.Services
     {
         private readonly IConfiguration _configuration;
         private readonly string _fromNumber;
+        //public SMSService(IConfiguration configuration)
+        //{
+        //    _configuration = configuration;
+        //    string accountSid = configuration.GetSection("Twillio:SID").Value.ToString();
+        //    string authToken = configuration.GetSection("Twillio:Token").Value.ToString();
+        //    _fromNumber = configuration.GetSection("Twillio:FromNumber").Value.ToString();
+        //    TwilioClient.Init(accountSid, authToken);
+        //}
+
+
         public SMSService(IConfiguration configuration)
         {
-            _configuration = configuration;
-            string accountSid = configuration.GetSection("Twilio:SID").Value.ToString();
-            string authToken = configuration.GetSection("Twilio:Token").Value.ToString();
-            _fromNumber = configuration.GetSection("Twilio:FromNumber").Value.ToString();
+            _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
+
+            // Safely read Twilio configuration values
+            string accountSid = _configuration["Twilio:SID"];
+            string authToken = _configuration["Twilio:Token"];
+            _fromNumber = _configuration["Twilio:FromNumber"];
+
+            // Validate configuration
+            if (string.IsNullOrWhiteSpace(accountSid))
+                throw new InvalidOperationException("Configuration missing: Twilio:SID");
+
+            if (string.IsNullOrWhiteSpace(authToken))
+                throw new InvalidOperationException("Configuration missing: Twilio:Token");
+
+            if (string.IsNullOrWhiteSpace(_fromNumber))
+                throw new InvalidOperationException("Configuration missing: Twilio:FromNumber");
+
+            // Initialize Twilio client
             TwilioClient.Init(accountSid, authToken);
         }
 

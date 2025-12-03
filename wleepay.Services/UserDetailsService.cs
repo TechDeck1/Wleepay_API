@@ -1,4 +1,5 @@
 ﻿using MailKit.Search;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.SqlServer.Management.Smo;
 using System;
 using System.Collections.Generic;
@@ -14,6 +15,11 @@ namespace wleepay.Services
 {
     public class UserDetailsService : IUserDetailService
     {
+
+        
+
+
+
         private readonly IUnitOfWork _unitOfWork;
         private readonly ITransactionService _transactionService;
         public UserDetailsService(IUnitOfWork unitOfWork, ITransactionService transactionService)
@@ -43,6 +49,8 @@ namespace wleepay.Services
             return await _unitOfWork.UserDetail.GetUserDetailsById(detail.UserId);
         }
 
+
+
         public async Task<UserDetail> GetUserDetailsById(string userId)
         {
             var userDetails = await _unitOfWork.UserDetail.GetUserDetailsById(userId);
@@ -69,7 +77,7 @@ namespace wleepay.Services
             return await _unitOfWork.UserDetail.IsPhoneAlreadyRegistered(phone);
         }
 
-        public async Task<UserDetail> UpdateUserLoggedInStatus(string userId, bool status, int? failedLoginAttemps)
+        public async Task<UserDetail> UpdateUserLoggedInStatus(string userId, bool status, int? failedLoginAttemps = 0)
         {
             var userToUpdate = await _unitOfWork.UserDetail.GetUserDetailsById(userId);
             if (userToUpdate != null)

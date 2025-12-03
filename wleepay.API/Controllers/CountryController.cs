@@ -29,7 +29,7 @@ namespace wleepay.API.Controllers
         }
 
         [AllowAnonymous]
-        [HttpGet]
+        [HttpGet("GetAllCountries")]
         public async Task<IEnumerable<LookupResource>> GetAllCounties()
         {
             try

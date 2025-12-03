@@ -13,6 +13,7 @@ using wleepay.Core.DTO.Request;
 using wleepay.Core.DTO.Response;
 using AutoMapper;
 using wleepay.Communication.Interface;
+using AuthorizeNet.APICore;
 
 namespace wleepay.Services
 {
@@ -33,13 +34,13 @@ namespace wleepay.Services
             _sochitelTransactionService = sochitelTransactionService;
             _transactionService = transactionService;
             _smsService = smsService;
-            ApiOperationBase<ANetApiRequest, ANetApiResponse>.RunEnvironment =
+            ApiOperationBase<AuthorizeNet.Api.Contracts.V1.ANetApiRequest, AuthorizeNet.Api.Contracts.V1.ANetApiResponse>.RunEnvironment =
                 _settings.Environment == "SANDBOX" ? AuthorizeNet.Environment.SANDBOX : AuthorizeNet.Environment.PRODUCTION;
 
-            ApiOperationBase<ANetApiRequest, ANetApiResponse>.MerchantAuthentication = new merchantAuthenticationType()
+            ApiOperationBase<AuthorizeNet.Api.Contracts.V1.ANetApiRequest, AuthorizeNet.Api.Contracts.V1.ANetApiResponse>.MerchantAuthentication = new AuthorizeNet.Api.Contracts.V1.merchantAuthenticationType()
             {
                 name = _settings.ApiLoginId,
-                ItemElementName = ItemChoiceType.transactionKey,
+                ItemElementName = AuthorizeNet.Api.Contracts.V1.ItemChoiceType.transactionKey,
                 Item = _settings.TransactionKey
             };
         }
@@ -62,14 +63,14 @@ namespace wleepay.Services
                 CurrencyId = (int)Currencies.USD
             };
 
-            var creditCard = new creditCardType
+            var creditCard = new AuthorizeNet.Api.Contracts.V1.creditCardType
             {
                 cardNumber = request.CardNumber,
                 expirationDate = DateTime.Parse(request.Expiration).ToString("yyyy-MM"),
                 cardCode = request.CVV
             };
 
-            var billingAddress = new customerAddressType
+            var billingAddress = new AuthorizeNet.Api.Contracts.V1.customerAddressType
             {
                 firstName = request.NameOnCard,
                 address = request.StreetAddress,
@@ -78,17 +79,17 @@ namespace wleepay.Services
                 country = "USA"
             };
 
-            var paymentType = new paymentType { Item = creditCard };
+            var paymentType = new AuthorizeNet.Api.Contracts.V1.paymentType { Item = creditCard };
 
-            var transactionRequest = new transactionRequestType
+            var transactionRequest = new AuthorizeNet.Api.Contracts.V1.transactionRequestType
             {
-                transactionType = transactionTypeEnum.authOnlyTransaction.ToString(),
+                transactionType = AuthorizeNet.Api.Contracts.V1.transactionTypeEnum.authOnlyTransaction.ToString(),
                 amount = request.Amount,
                 payment = paymentType,
                 billTo = billingAddress
             };
 
-            var apiRequest = new createTransactionRequest { transactionRequest = transactionRequest };
+            var apiRequest = new AuthorizeNet.Api.Contracts.V1.createTransactionRequest { transactionRequest = transactionRequest };
             var transactionHandler = new createTransactionController(apiRequest);
             transactionHandler.Execute();
 
@@ -96,7 +97,7 @@ namespace wleepay.Services
             string fullResponseJson = JsonConvert.SerializeObject(apiResponse, Formatting.Indented);
             Console.WriteLine("API Response:\n" + fullResponseJson);
 
-            if (apiResponse != null && apiResponse.messages.resultCode == messageTypeEnum.Ok)
+            if (apiResponse != null && apiResponse.messages.resultCode == AuthorizeNet.Api.Contracts.V1.messageTypeEnum.Ok)
             {
                 var transactionResponse = apiResponse.transactionResponse;
                 if (transactionResponse?.responseCode == "1")
@@ -127,13 +128,13 @@ namespace wleepay.Services
 
         public async Task<PaymentTransaction> CapturePaymentAsync(string transactionId)
         {
-            var transactionRequest = new transactionRequestType
+            var transactionRequest = new AuthorizeNet.Api.Contracts.V1.transactionRequestType
             {
-                transactionType = transactionTypeEnum.priorAuthCaptureTransaction.ToString(),
+                transactionType = AuthorizeNet.Api.Contracts.V1.transactionTypeEnum.priorAuthCaptureTransaction.ToString(),
                 refTransId = transactionId
             };
 
-            var apiRequest = new createTransactionRequest { transactionRequest = transactionRequest };
+            var apiRequest = new AuthorizeNet.Api.Contracts.V1.createTransactionRequest { transactionRequest = transactionRequest };
             var controller = new createTransactionController(apiRequest);
             controller.Execute();
 
@@ -141,7 +142,7 @@ namespace wleepay.Services
             var existingTransaction = await _transactionService.GetByTransactionIdAsync(transactionId);
 
 
-            if (response != null && response.messages.resultCode == messageTypeEnum.Ok)
+            if (response != null && response.messages.resultCode == AuthorizeNet.Api.Contracts.V1.messageTypeEnum.Ok)
             {
                 if (response.transactionResponse?.responseCode == "1")
                 {
@@ -170,20 +171,20 @@ namespace wleepay.Services
 
         public async Task<PaymentTransaction> VoidPaymentAsync(string transactionId)
         {
-            var request = new transactionRequestType
+            var request = new AuthorizeNet.Api.Contracts.V1.transactionRequestType
             {
-                transactionType = transactionTypeEnum.voidTransaction.ToString(),
+                transactionType = AuthorizeNet.Api.Contracts.V1.transactionTypeEnum.voidTransaction.ToString(),
                 refTransId = transactionId
             };
 
-            var apiRequest = new createTransactionRequest { transactionRequest = request };
+            var apiRequest = new AuthorizeNet.Api.Contracts.V1.createTransactionRequest { transactionRequest = request };
             var controller = new createTransactionController(apiRequest);
             controller.Execute();
 
             var response = controller.GetApiResponse();
             var transaction = await _transactionService.GetByTransactionIdAsync(transactionId);
 
-            if (response != null && response.messages.resultCode == messageTypeEnum.Ok)
+            if (response != null && response.messages.resultCode == AuthorizeNet.Api.Contracts.V1.messageTypeEnum.Ok)
             {
                 if (response.transactionResponse?.responseCode == "1")
                 {
@@ -209,7 +210,24 @@ namespace wleepay.Services
 
         public async Task<PaymentTransaction> ProcessMobileRechargeAsync(PaymentRequests request, string userId)
         {
+            // Development Purpose
+            //ApiOperationBase<AuthorizeNet.Api.Contracts.V1.ANetApiRequest, AuthorizeNet.Api.Contracts.V1.ANetApiResponse>.RunEnvironment 
+            //    = AuthorizeNet.Environment.SANDBOX;
+            //ApiOperationBase<AuthorizeNet.Api.Contracts.V1.ANetApiRequest, AuthorizeNet.Api.Contracts.V1.ANetApiResponse>.MerchantAuthentication 
+            //    = new AuthorizeNet.Api.Contracts.V1.merchantAuthenticationType { 
+            //        name = _settings.ApiLoginId, 
+            //        Item = _settings.TransactionKey, 
+            //        ItemElementName = AuthorizeNet.Api.Contracts.V1.ItemChoiceType.transactionKey 
+            //    };
+
+            //Production Purpose
+            ApiOperationBase<AuthorizeNet.Api.Contracts.V1.ANetApiRequest, AuthorizeNet.Api.Contracts.V1.ANetApiResponse>.MerchantAuthentication = new AuthorizeNet.Api.Contracts.V1.merchantAuthenticationType { name = _settings.ApiLoginId, Item = _settings.TransactionKey, ItemElementName = AuthorizeNet.Api.Contracts.V1.ItemChoiceType.transactionKey };
+
+            // Plus Transaction fees
+            request.Amount = Math.Round(request.Amount * 1.18m, 2);
+
             var transaction = await AuthorizePaymentAsync(request, userId);
+
             if (string.IsNullOrEmpty(transaction?.TransactionId))
                 return transaction;
             try
@@ -289,6 +307,23 @@ namespace wleepay.Services
 
         public async Task<PaymentTransaction> ProcessLecRechargeAsync(LecCreditPaymentRequest request, string userId)
         {
+            // Development Purpose
+            //ApiOperationBase<AuthorizeNet.Api.Contracts.V1.ANetApiRequest, AuthorizeNet.Api.Contracts.V1.ANetApiResponse>.RunEnvironment
+            //    = AuthorizeNet.Environment.SANDBOX;
+            //ApiOperationBase<AuthorizeNet.Api.Contracts.V1.ANetApiRequest, AuthorizeNet.Api.Contracts.V1.ANetApiResponse>.MerchantAuthentication
+            //    = new AuthorizeNet.Api.Contracts.V1.merchantAuthenticationType
+            //    {
+            //        name = _settings.ApiLoginId,
+            //        Item = _settings.TransactionKey,
+            //        ItemElementName = AuthorizeNet.Api.Contracts.V1.ItemChoiceType.transactionKey
+            //    };
+
+            // Production Purpose
+            ApiOperationBase<AuthorizeNet.Api.Contracts.V1.ANetApiRequest, AuthorizeNet.Api.Contracts.V1.ANetApiResponse>.MerchantAuthentication = new AuthorizeNet.Api.Contracts.V1.merchantAuthenticationType { name = _settings.ApiLoginId, Item = _settings.TransactionKey, ItemElementName = AuthorizeNet.Api.Contracts.V1.ItemChoiceType.transactionKey };
+
+            // Plus Transaction fees
+            request.Payment.Amount = Math.Round(request.Payment.Amount * 1.18m, 2);
+            
             var paymentRequest = new PaymentRequests
             {
                 CardNumber = request.Payment.CardNumber,

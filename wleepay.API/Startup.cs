@@ -48,7 +48,7 @@ namespace wleepay.API
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
-            
+
             FirebaseApp.Create(new AppOptions()
             {
                 Credential = GoogleCredential.FromFile(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "wleepay-84b9f-firebase-adminsdk-rimd0-a5dbd3a972.json")),
@@ -62,10 +62,10 @@ namespace wleepay.API
         {
             //services.Configure<JwtConfig>(Configuration.GetSection("JwtConfig"));
             services.AddDbContext<WPContext>(options => options.UseSqlServer(Configuration.GetConnectionString("WleePayDataBase")));
-          
+
             //Register Authorize.Net settings here
             services.Configure<AuthorizeNetSettings>(Configuration.GetSection("AuthorizeNet"));
-           
+
             services.AddIdentity<ApplicationUser, ApplicationRole>(options =>
             {
                 options.Lockout.AllowedForNewUsers = true;
@@ -122,13 +122,29 @@ namespace wleepay.API
 
             services.AddSignalR();
 
-            services.AddCors(options => {
-                options.AddPolicy("AllowAllHeaders",
-                    builder =>  builder.AllowAnyMethod()
-                    .AllowAnyHeader()
-                    .AllowCredentials()
-                    .SetIsOriginAllowed((hosts) => true));
-        });
+            //services.AddCors(options =>
+            //{
+            //    options.AddPolicy("AllowAllHeaders",
+            //        builder => builder.AllowAnyMethod()
+            //        .AllowAnyHeader()
+            //        .AllowCredentials()
+            //        .SetIsOriginAllowed((hosts) => true));
+            //});
+
+
+
+            // server
+            services.AddCors(options =>
+            {
+                options.AddPolicy("RestrictedCors", builder =>
+                {
+                    builder.WithOrigins("https://wleesend.arielsoftwares.in")
+                           .AllowAnyHeader()
+                           .AllowAnyMethod()
+                           .AllowCredentials();
+                });
+            });
+
 
             services.Configure<IdentityOptions>(options =>
             {
@@ -140,7 +156,7 @@ namespace wleepay.API
                 options.Password.RequireUppercase = false;
 
                 // Lockout settings
-              
+
                 options.Lockout.AllowedForNewUsers = true;
                 options.Lockout.DefaultLockoutTimeSpan = TimeSpan.Zero;
                 options.Lockout.MaxFailedAccessAttempts = 3;
@@ -197,11 +213,10 @@ namespace wleepay.API
             services.AddTransient<IReportService, ReportService>();
             services.AddTransient<IWleeSendUserDetailService, WleeSendUserDetailService>();
 
-           services.AddScoped<IAuthorizeNetService, AuthorizeNetService>();
+            services.AddScoped<IAuthorizeNetService, AuthorizeNetService>();
 
             services.AddScoped<IPaymentTransactionService, PaymentTransactionService>();
             services.AddScoped<IPaymentTransactionRepository, PaymentTransactionRepository>();
-
 
             services.AddScoped<IAccountService, AccountService>();
             services.AddScoped<IUserService, UserService>();
@@ -210,12 +225,6 @@ namespace wleepay.API
 
             services.AddScoped<IValidationService, ValidationService>();
             services.AddScoped<IJwtTokenService, JwtTokenService>();
-
-
-
-
-
-
 
             //swagger config
             services.AddSwaggerGen(c =>
@@ -256,8 +265,6 @@ namespace wleepay.API
                 });
             });
 
-
-
             // Setup Auto Mapper
             services.AddAutoMapper(typeof(Startup));
 
@@ -271,19 +278,19 @@ namespace wleepay.API
                 options.Filters.Add<OtpExceptionFilter>();
 
             });
-                services.AddControllers(options =>
-                {
-                    options.SuppressImplicitRequiredAttributeForNonNullableReferenceTypes = true;
-                })
-                         
-                .ConfigureApiBehaviorOptions(options =>
-             {
-                 options.SuppressModelStateInvalidFilter = true;
-             })
-            .AddNewtonsoftJson(options =>
+            services.AddControllers(options =>
             {
-                options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
-            });
+                options.SuppressImplicitRequiredAttributeForNonNullableReferenceTypes = true;
+            })
+
+            .ConfigureApiBehaviorOptions(options =>
+         {
+             options.SuppressModelStateInvalidFilter = true;
+         })
+        .AddNewtonsoftJson(options =>
+        {
+            options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+        });
             services.AddMemoryCache();
             services.AddHttpClient();
 
@@ -292,11 +299,59 @@ namespace wleepay.API
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory)
         {
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-
             }
+            app.UseSwagger();
+            app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "wleepay.API v1"));
+
+            app.Use(async (context, next) =>
+            {
+                context.Response.Headers["Strict-Transport-Security"] = "max-age=31536000; includeSubDomains; preload";
+                context.Response.Headers["X-Content-Type-Options"] = "nosniff";
+                context.Response.Headers["Referrer-Policy"] = "no-referrer";
+                context.Response.Headers["Permissions-Policy"] = "geolocation=()";
+                context.Response.Headers["Cross-Origin-Opener-Policy"] = "same-origin";
+                context.Response.Headers["Cross-Origin-Embedder-Policy"] = "unsafe-none";
+                context.Response.Headers["X-Frame-Options"] = "SAMEORIGIN";
+                context.Response.Headers["X-XSS-Protection"] = "0";
+                context.Response.Headers["Content-Security-Policy"] =
+                    "default-src 'self'; " +
+                    "script-src 'self' https://ajax.googleapis.com https://cdnjs.cloudflare.com; " +
+                    "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; " +
+                    "font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com; " +
+                    "img-src 'self' data:; " +
+                    "connect-src 'self' https://wleesend.arielsoftwares.in https://wleepapi.arielsoftwares.in wss://wleepapi.arielsoftwares.in; " +
+                    "object-src 'none'; " +
+                    // if you never embed the site in frames, prefer 'none'; if you need same origin use 'self'
+                    "frame-ancestors 'self'; " +
+                    "upgrade-insecure-requests;";
+
+                await next();
+            });
+
+
+
+            // server
+            //app.Use(async (context, next) =>
+            //{
+            //    context.Response.Headers.Add("Strict-Transport-Security", "max-age=31536000; includeSubDomains; preload");
+            //    context.Response.Headers.Add("X-Content-Type-Options", "nosniff");
+            //    context.Response.Headers.Add("X-Frame-Options", "DENY");
+            //    context.Response.Headers.Add("X-XSS-Protection", "0");
+            //    context.Response.Headers.Add("Referrer-Policy", "no-referrer");
+            //    context.Response.Headers.Add("Content-Security-Policy",
+            //        "default-src 'self'; " +
+            //        "script-src 'self'; " +
+            //        "style-src 'self'; " +
+            //        "img-src 'self' data:; " +
+            //        "connect-src 'self' https://wleesend.arielsoftwares.in https://wleepapi.arielsoftwares.in wss://wleepapi.arielsoftwares.in;");
+            //    await next();
+            //});
+
+
 
             //app.UseStaticFiles(new StaticFileOptions()
             //{
@@ -306,22 +361,14 @@ namespace wleepay.API
             //});
 
             app.UseSession();
-
-            // app.UseHttpsRedirection();
-
+            app.UseHttpsRedirection();
             app.UseDefaultFiles();
             app.UseStaticFiles();
             app.UseMiddleware<ExceptionMiddleware>();
             app.UseRouting();
-            app.UseCors("AllowAllHeaders");
+            app.UseCors("RestrictedCors");
             app.UseAuthentication();
-
-
             app.UseAuthorization();
-
-            //add cors
-         
-
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
@@ -334,9 +381,6 @@ namespace wleepay.API
                      );
 
             });
-
-            app.UseSwagger();
-            app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "wleepay.API v1"));
         }
     }
 }
