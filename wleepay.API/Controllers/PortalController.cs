@@ -75,7 +75,7 @@ namespace wleepay.API.Controllers
                 UserDetail updatedUser = null;
                 //set logged in status to true if first log in
                 if (!userDetails.IsLoggedIn)
-                    updatedUser = await _userDetailsService.UpdateUserLoggedInStatus(userDetails.UserId, true);
+                    updatedUser = await _userDetailsService.UpdateUserLoggedInStatus(userDetails.UserId, true, 0);
 
                 return Ok(new
                 {

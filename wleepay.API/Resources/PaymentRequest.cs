@@ -13,6 +13,19 @@ namespace wleepay.API.Resources
         public int PageSize { get; set; }
         public int PageIndex { get; set; }
 
-        //index current,page size
+    }
+
+    public class AgentPaymentRequest
+    {
+        public string? UserId { get; set; }
+        public string? Filterterm { get; set; }
+        public Core.Enums.PaymentRequestType Type { get; set; }
+        public Core.Enums.TransactionStatus TransferStatus { get; set; }
+
+        public string TransferId { get; set; }
+        //public int TransferId {  get; set; }    
+        public int PageSize { get; set; }
+        public int PageIndex { get; set; }
+
     }
 }

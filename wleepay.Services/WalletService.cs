@@ -7,6 +7,8 @@ using wleepay.Core.Models;
 using wleepay.Core.Services;
 using System.Linq;
 using wleepay.Core.Enums;
+using Microsoft.SqlServer.Management.Smo;
+using wleepay.Core.DTO.Response;
 
 namespace wleepay.Services
 {
@@ -52,12 +54,10 @@ namespace wleepay.Services
             return wallet;
         }
 
-        public async Task<Wallet> GetWallet(int id)
+        public async Task<Wallet> GetWallet(long id)
         {
             return await _unitOfWork.Wallet.GetByIdAsync(id);
         }
-
-        
 
         public async Task<IEnumerable<Wallet>> GetWalletsByUserId(string userId, int currencyId = 0)
         {
@@ -168,5 +168,59 @@ namespace wleepay.Services
         {
             return await _unitOfWork.Wallet.GetUserDetailsByWalletIdAndCurrency(walletId);
         }
+
+        public async Task<IEnumerable<Wallet>> CreateSystemAdminWallet(string userId)
+        {
+            List<Wallet> newWallet = new List<Wallet>();
+            if (!string.IsNullOrEmpty(userId))
+            {
+                //create wallet for different currencies(For now it's USD and LRD)
+
+                var liberainWallet = new Wallet()
+                {
+                    Balance = 0,
+                    CreatedDate = DateTime.Now,
+                    UpdatedDate = DateTime.Now,
+                    Type = (int)WalletTypes.SystemWallet,
+                    CurrencyId = (int)Currencies.LRD,
+                    UserId = userId
+                };
+
+                newWallet.Add(liberainWallet);
+
+                var usdWallet = new Wallet()
+                {
+                    Balance = 0,
+                    CreatedDate = DateTime.Now,
+                    UpdatedDate = DateTime.Now,
+                    Type = (int)WalletTypes.SystemWallet,
+                    CurrencyId = (int)Currencies.USD,
+                    UserId = userId
+                };
+
+                newWallet.Add(usdWallet);
+
+                await _unitOfWork.Wallet.AddRangeAsync(newWallet);
+                await _unitOfWork.CommitAsync();
+            }
+
+            return newWallet;
+
+        }
+
+        public async Task<IEnumerable<Wallet>> GetWalletByWalletTypeId(long walletTypeId)
+        {
+            return await _unitOfWork.Wallet.GetWalletByWalletTypeId(walletTypeId);
+        }
+        public async Task<IEnumerable<Wallet>> GetWalletByWalletTypeIdAndUserId(string userId, long walletTypeId)
+        {
+            return await _unitOfWork.Wallet.GetWalletByWalletTypeIdAndUserId(userId, walletTypeId);
+        }
+
+        public async Task<Wallet> SetCashOnHand(double amount, int currencyId, int WalletTypeId)
+        {
+            return await _unitOfWork.Wallet.SetCashOnHand(amount,currencyId,WalletTypeId);
+        }
+       
     }
 }

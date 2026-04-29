@@ -1,9 +1,13 @@
-﻿using System;
+﻿using MailKit.Search;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.SqlServer.Management.Smo;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using wleepay.Core;
+using wleepay.Core.DTO.Response;
 using wleepay.Core.Models;
 using wleepay.Core.Services;
 
@@ -11,6 +15,11 @@ namespace wleepay.Services
 {
     public class UserDetailsService : IUserDetailService
     {
+
+        
+
+
+
         private readonly IUnitOfWork _unitOfWork;
         private readonly ITransactionService _transactionService;
         public UserDetailsService(IUnitOfWork unitOfWork, ITransactionService transactionService)
@@ -23,7 +32,6 @@ namespace wleepay.Services
             UserDetail userDetail = new UserDetail();
             if (detail.Id > 0)
             {
-                userDetail = await _unitOfWork.UserDetail.GetUserDetailsById(detail.UserId);
                 if (userDetail != null)
                 {
                     userDetail = detail;
@@ -37,13 +45,18 @@ namespace wleepay.Services
             }
 
             await _unitOfWork.CommitAsync();
+            var data = await _unitOfWork.UserDetail.GetUserDetailsById(detail.UserId);
             return await _unitOfWork.UserDetail.GetUserDetailsById(detail.UserId);
         }
 
+
+
         public async Task<UserDetail> GetUserDetailsById(string userId)
         {
-            return await _unitOfWork.UserDetail.GetUserDetailsById(userId);
+            var userDetails = await _unitOfWork.UserDetail.GetUserDetailsById(userId);
+            return userDetails;
         }
+
         public async Task<ApplicationUser> GetApplicationUserById(string userId)
         {
             return await _unitOfWork.UserDetail.GetApplicationUser(userId, string.Empty, string.Empty, true, true);
@@ -54,16 +67,22 @@ namespace wleepay.Services
             return await _unitOfWork.UserDetail.GetUserDetailsByPhone(phone);
         }
 
+        //public async Task<WleeSendUserDetails> GetWleeSendUserDetailsByPhone(string phone)
+        //{
+        //    return await _unitOfWork.UserDetail.GetWleeSendUserDetailsByPhone(phone);
+        //}
+
         public async Task<bool> IsPhoneAlreadyRegistered(string phone)
         {
             return await _unitOfWork.UserDetail.IsPhoneAlreadyRegistered(phone);
         }
 
-        public async Task<UserDetail> UpdateUserLoggedInStatus(string userId, bool status)
+        public async Task<UserDetail> UpdateUserLoggedInStatus(string userId, bool status, int? failedLoginAttemps = 0)
         {
             var userToUpdate = await _unitOfWork.UserDetail.GetUserDetailsById(userId);
             if (userToUpdate != null)
             {
+                userToUpdate.FailedLoginAttempt = failedLoginAttemps ?? 0;
                 userToUpdate.UpdatedDate = DateTime.Now;
                 userToUpdate.IsLoggedIn = status;
                 await _unitOfWork.CommitAsync();
@@ -106,12 +125,12 @@ namespace wleepay.Services
             return await _unitOfWork.UserDetail.GetApplicationUser(string.Empty, string.Empty, phone, true, false, role);
         }
 
-        public async Task<IEnumerable<ApplicationUser>> GetUserByRole(int role)
+        public async Task<IEnumerable<ApplicationUser>> GetAllUsersByRole(int role)
         {
-            return await _unitOfWork.UserDetail.GetUserDetailsByRole(role);
+            return await _unitOfWork.UserDetail.GetAllUsersByRole(role);
         }
 
-        public async Task<IEnumerable<ApplicationUser>> GetUsers(Core.Enums.Role role, int pageIndex, int pageSize)
+        public async Task<UserDetailsResponseResource> GetUsers(Core.Enums.Role role, int pageIndex, int pageSize)
         {
             return await _unitOfWork.UserDetail.GetUsers(role, pageIndex, pageSize);
         }
@@ -126,15 +145,88 @@ namespace wleepay.Services
             return await _unitOfWork.UserDetail.IsAccountAlreadyExists(accountNumber);
         }
 
-        public async Task<IEnumerable<Transaction>> GetIncomingOutGoingPaymentRequest(string userId, Core.Enums.PaymentRequestType type, Core.Enums.TransactionStatus transactionStatus,int pageSize, int pageIndex) {
+        public async Task<IEnumerable<Transaction>> GetIncomingOutGoingPaymentRequest(string userId, Core.Enums.PaymentRequestType type, Core.Enums.TransactionStatus transactionStatus, int pageSize, int pageIndex)
+        {
             var user = await _unitOfWork.UserDetail.GetApplicationUser(userId, string.Empty, string.Empty, true);
             if (user == null)
                 return null;
             //get user wallets
 
-            var paymentRequest = await _transactionService.GetPaymentRequestByStatus(user.Wallets.Select(s => s.Id), type, transactionStatus,  pageSize,  pageIndex);
+            var paymentRequest = await _transactionService.GetPaymentRequestByStatus(user.Wallets.Select(s => s.Id), type, transactionStatus, pageSize, pageIndex);
 
             return paymentRequest;
         }
+
+        public async Task<TransactionResponseResource> GetIncomingOutGoingAgentPaymentRequest(string userId, Core.Enums.PaymentRequestType type, Core.Enums.TransactionStatus transactionStatus,string transferTypeId, int pageSize, int pageIndex)
+        {
+            var user = await _unitOfWork.UserDetail.GetApplicationUser(userId, string.Empty, string.Empty, true);
+            if (user == null)
+                return null;
+            //get user wallets
+
+            var paymentRequest = await _transactionService.GetIncomingOutgoingPaymentRequest(user.Wallets.Select(s => s.Id), type, transactionStatus, transferTypeId, pageSize, pageIndex);
+
+            return paymentRequest;
+        }
+
+        public async Task<UserDetail> UpdateUserVerificationCode(string userId, string VerificationCode)
+        {
+            var userToUpdate = await _unitOfWork.UserDetail.GetUserDetailsById(userId);
+            if (userToUpdate != null)
+            {
+                userToUpdate.VerificationCode = VerificationCode;
+                userToUpdate.VerificationExpiry = DateTime.UtcNow;
+                await _unitOfWork.CommitAsync();
+            }
+            return userToUpdate;
+        }
+
+        public async Task<UserDetail> UpdateUserStatus(string userId, int status)
+        {
+            var userToUpdate = await _unitOfWork.UserDetail.GetUserDetailsById(userId);
+            if (userToUpdate != null)
+            {
+                userToUpdate.UpdatedDate = DateTime.Now;
+                userToUpdate.Status = status;
+                await _unitOfWork.CommitAsync();
+            }
+            return userToUpdate;
+        }
+
+        public async Task<UserDetailsResponseResource> GetAllUsersById(Core.Enums.Role role, int pageIndex, int pageSize, string createdBy)
+        {
+            return await _unitOfWork.UserDetail.GetAllUsersById(role, pageIndex, pageSize, createdBy);
+        }
+
+        public async Task<UserDetailsResponseResource> SearchUsersByEmail(string searchText, Core.Enums.Role role, int index, int size, int filterType)
+        {
+            return await _unitOfWork.UserDetail.SearchApplicationUserByEmail(searchText, role, index, size,filterType);
+        }
+
+        public async Task<TransactionAndUserResponseResource> VerifyUserAccountByPhone(string phone)
+        {
+            return await _unitOfWork.UserDetail.VerifyUserAccountByPhone(phone);
+        }
+
+        public async Task<ApplicationUser> GetStaffPermissionsById(string userId)
+        {
+            return await _unitOfWork.UserDetail.GetStaffPermissionsById(userId);
+        }
+
+        public async Task<UserDetail> AddDeviceIdAndToken(string deviceId, string token, string userId)
+        {
+            return await _unitOfWork.UserDetail.AddDeviceIdAndToken(deviceId, token,userId);
+        }
+
+        public async Task<UserNotes> AddUserNotes(string userId, string addBy, string description, string note, MessageType messageType)
+        {
+            return await _unitOfWork.UserDetail.AddUserNotes(userId, addBy, description, note, messageType);
+        }
+
+        public async Task<UserNotesReponse> GetUserNotes(string userId,int messageType)
+        {
+            return await _unitOfWork.UserDetail.GetUserNotes(userId, messageType);
+        }
+
     }
 }

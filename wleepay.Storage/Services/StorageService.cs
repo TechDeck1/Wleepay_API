@@ -102,7 +102,9 @@ namespace wleepay.Storage.Services
         }
 
         public async Task<string> UploadImageWithURL(string imageURL, string containerName, string id)
-        {            try            {
+        {
+            try
+            {
                 //var header = new BlobHttpHeaders();
                 var fileExactPath = imageURL.Split("?")?[0];
                 var fileExtension = Path.GetExtension(fileExactPath);
@@ -188,24 +190,54 @@ namespace wleepay.Storage.Services
                         //await cloudBlockBlob.UploadFromStreamAsync(ms);
                     }
                 }
-                return (Path.Combine(folderPath, id + fileExtension));                //return ($"{containerName}/{cloudBlockBlob.Name}");            }            catch (Exception ex)            {                throw ex.InnerException;            }        }
+                return (Path.Combine(folderPath, id + fileExtension));
+                //return ($"{containerName}/{cloudBlockBlob.Name}");
+            }
+            catch (Exception ex)
+            {
+                throw ex.InnerException;
+            }
+        }
 
         public string UploadKYCDocument(string docData, string userId)
         {
             try
             {
                 var docFolderPath = Path.Combine(_hostingEnvironment.WebRootPath, "KYCDocument");
+                int commaIndex = docData.IndexOf(',');
+                if (commaIndex >= 0)
+                {
+                    docData = docData.Substring(commaIndex + 1);
+                }
                 byte[] image = Convert.FromBase64String(docData);
                 File.WriteAllBytes(Path.Combine(docFolderPath,$"{userId}.jpg"), image);
                 return Path.Combine(docFolderPath, $"{userId}.jpg");
             }
             catch(Exception ex)
             {
-                return "";
+                return ex.Message;
             }
             
         }
 
-
+        public string UploadUserProfileImage(string imageData, string userId)
+        {
+            try
+            {
+                var docFolderPath = Path.Combine(_hostingEnvironment.WebRootPath, "Images");
+                int commaIndex = imageData.IndexOf(',');
+                if (commaIndex >= 0)
+                {
+                    imageData = imageData.Substring(commaIndex + 1);
+                }
+                byte[] image = Convert.FromBase64String(imageData);
+                File.WriteAllBytes(Path.Combine(docFolderPath, $"{userId}.jpg"), image);
+                return Path.Combine(docFolderPath, $"{userId}.jpg");
+            }
+            catch (Exception ex)
+            {
+                return ex.Message;
+            }
+        }
     }
 }

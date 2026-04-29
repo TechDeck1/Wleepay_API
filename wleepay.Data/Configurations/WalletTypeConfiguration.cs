@@ -80,6 +80,13 @@ namespace wleepay.Data.Configurations
                 Name = "WleePay Merchant Account",
                 Description = "User Account"
             });
+
+            builder.HasData(new WalletType
+            {
+                Id = 9,
+                Name = "System Wallet",
+                Description = "System Account"
+            });
         }
     }
 }

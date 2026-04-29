@@ -27,9 +27,31 @@ namespace wleepay.Services
             return await _unitOfWork.DocumentType.GetAllAsync();
         }
 
+        public async Task<IEnumerable<IssueType>> GetAllIssueTypes()
+        {
+            return await _unitOfWork.IssueType.GetAllAsync();
+        }
+
         public async Task<IEnumerable<KYCStatus>> GetAllKYCStatus()
         {
             return await _unitOfWork.KYCStatus.GetAllAsync();
         }
+
+        public async Task<IEnumerable<SecurityQuestions>> GetAllSecurityQuestions()
+        {
+            return await _unitOfWork.SecurityQuestions.GetAllAsync();
+        }
+
+        public async Task<IEnumerable<StaffPermissionType>> GetAllStaffPermissions()
+        {
+            return await _unitOfWork.StaffPermissionType.GetAllAsync();
+        }
+
+        public async Task<IEnumerable<StaffRoles>> GetAllStaffRoles()
+        {
+            return await _unitOfWork.StaffRoles.GetAllAsync();
+        }
+
+        
     }
 }

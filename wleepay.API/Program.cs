@@ -38,11 +38,18 @@ namespace wleepay.API
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
-                .UseNLog() // NLog: Setup NLog for Dependency injection;
+                .UseNLog()// NLog: Setup NLog for Dependency injection;
+                .UseDefaultServiceProvider(opt =>
+                {
+                    // this overrides the default service provider options
+                    // so that it doesn't validate the service collection (which raises exceptions)
+                })
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();
                 });
+
+        
        
     }
 }

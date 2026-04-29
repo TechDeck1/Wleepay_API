@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using wleepay.Core;
-using wleepay.Core.Models;
+
 using wleepay.Core.Services;
 using System.Linq;
+using wleepay.Core.DTO.Response;
+using wleepay.Core.Models;
 
 namespace wleepay.Services
 {
@@ -17,7 +19,22 @@ namespace wleepay.Services
         {
             this._unitOfWork = unitOfWork;
         }
-       
+
+        public async Task<TransferFee> AddTransferFee(TransferFee transferFee)
+        {
+            return await _unitOfWork.TransferFee.AddTaxRates(transferFee);
+        }
+
+        public async Task<TaxRatesResponse> GetAllTransferFees(int index, int pageSize)
+        {
+            return await _unitOfWork.TransferFee.GetAllTransferFeeAsync(index, pageSize);
+        }
+
+        public async Task<TransferFee> GetTransferFeeByDesc()
+        {
+            return await _unitOfWork.TransferFee.GetTransferFeeDesc();
+        }
+
         public async Task<TransferFee> GetTransferFeeById(int id)
         {
             return await _unitOfWork.TransferFee.GetByIdAsync(id);

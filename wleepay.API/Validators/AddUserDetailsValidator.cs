@@ -9,16 +9,11 @@ namespace wleepay.API.Validators
 {
     public class AddUserDetailsValidator: AbstractValidator<AddUserDetailsResource>
     {
-        public AddUserDetailsValidator()
+        public AddUserDetailsValidator(string role)
         {
             RuleFor(a => a.FirstName)
                 .NotEmpty()
                 .NotNull();
-
-            RuleFor(a => a.Pin.ToString())
-                .NotNull()
-                .NotEmpty()
-                .Length(4);
 
             RuleFor(a => a.PhoneNumber)
                 .NotEmpty()
@@ -26,24 +21,52 @@ namespace wleepay.API.Validators
                 .MinimumLength(10)
                 .MaximumLength(13);
 
-            RuleFor(a => a.CountyId)
+            RuleFor(a => a.EmailId)
                 .NotEmpty()
-                .GreaterThan(0)
-                .NotNull();
+                .NotNull()
+                .EmailAddress();
 
             RuleFor(a => a.KYCStatusId)
                 .NotEmpty()
                 .GreaterThan(0)
                 .NotNull();
 
-            RuleFor(a => a.Gender)
+            RuleFor(a => a.KYCLevel)
+                .NotEmpty()
+                .GreaterThan(0)
+                .NotNull();
+
+            RuleFor(a => a.Pin)
                 .NotEmpty()
                 .NotNull();
 
-            //RuleFor(a => a.KYCLevel)
-            //    .NotEmpty()
-            //    .GreaterThan(0)
-            //    .NotNull();
+            When(a => !string.IsNullOrWhiteSpace(a.Pin), () =>
+            {
+                RuleFor(a => a.ConfirmPin)
+                    .NotEmpty()
+                    .NotNull()
+                    .Equal(a => a.Pin)
+                    .WithMessage("Pin and Confirm Pin must match.");
+            });
+
+            if (role == "Staff")
+            {
+                RuleFor(a => a.Pin)
+                    .NotNull()
+                    .NotEmpty()
+                    .MinimumLength(12)
+                    .MaximumLength(50);
+            }
+            else
+            {
+                When(a => !string.IsNullOrWhiteSpace(a.Pin), () =>
+                {
+                    RuleFor(a => a.Pin)
+                        .MinimumLength(4)
+                        .MaximumLength(50);
+                });
+            }
+           
         }
     }
 }

@@ -33,5 +33,26 @@ namespace wleepay.Data.Repositories
                 .Where(t => t.FromWalletType == fromWalletTypeId && t.ToWalletType == toWalletTypeId)
                 .FirstOrDefaultAsync();
         }
+
+        public async Task<IList<TransferType>> GetTransferTypeList(int fromWalletTypeId, int toWalletTypeId)
+        {
+            return await WPContext.TransferTypes
+                .Where(t => t.FromWalletType == fromWalletTypeId && t.ToWalletType == toWalletTypeId)
+                .ToListAsync();
+        }
+
+        public async Task<TransferType> UpdateTransferTypeById(TransferType transferType)
+        {
+            if(transferType != null)
+            {
+                //var result = await WPContext.TransferTypes.Where(x => x.Id == transferType.Id)
+                //                                           .FirstOrDefaultAsync();
+                //result.TransferFee = transferType.TransferFee;
+                await WPContext.SaveChangesAsync();
+            }
+            return transferType;
+
+
+        }
     }
 }

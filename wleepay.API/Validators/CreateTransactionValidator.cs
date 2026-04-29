@@ -13,8 +13,9 @@ namespace wleepay.API.Validators
         {
 
             RuleFor(a => a.Amount)
-             .NotNull()
-             .GreaterThan(0);
+                .NotNull()
+                .WithMessage("amount cannot be null")
+                .GreaterThan(0).WithMessage("amount should be greater than 0");
 
             RuleFor(a => a.FromWalletId)
                 .NotNull()
@@ -25,8 +26,8 @@ namespace wleepay.API.Validators
                 .NotEmpty();
 
             RuleFor(a => a.TransferTypeId)
-                    .NotNull()
-                    .NotEmpty();
+                .NotNull()
+                .NotEmpty();
         }
     }
 }

@@ -10,6 +10,7 @@ namespace wleepay.Core.Models
         public Wallet() {
             TransactionTo = new Collection<Transaction>();
             TransactionFrom = new Collection<Transaction>();
+            CashFlowHistory= new Collection<CashFlowHistory>();
             //TransferTypes = new Collection<TransferType>();
         }
         public long Id { get; set; }
@@ -24,8 +25,11 @@ namespace wleepay.Core.Models
         public virtual Currency Currency { get; set; }
         public virtual WalletType WalletType { get; set; }
 
+
         public virtual ICollection<Transaction> TransactionTo { get; set; }
         public virtual ICollection<Transaction> TransactionFrom { get; set; }
+        public virtual ICollection<CashFlowHistory> CashFlowHistory { get;}
+
         //public virtual ICollection<TransferType> TransferTypes { get; set; }
     }
 }

@@ -11,5 +11,7 @@ namespace wleepay.API.Resources
         public double TaxAmount { get; set; }
         public double OrganizationFee { get; set; }
         public double AgentCommission { get; set; }
+        public string Description { get; set; }
+
     }
 }

@@ -13,7 +13,16 @@ namespace wleepay.Core.Enums
         WleeTransfer = 5,
         TopUp = 6,
         FillAgent = 7,
-        AgentCommissionCashout = 8
+        AgentCommissionCashout = 8,
+        TopUpSystemWallet = 9,
+        MobileRechargeTransfer = 10,
+        BillPayment = 11,
+        InHandWithdrawl = 12,
+        InHandCredit = 13,
+        AgentCashout = 14,
+        MemberTopUpByWleePay = 15,
+        MemberCashOutByWleePay = 16,
+
     }
 
 }

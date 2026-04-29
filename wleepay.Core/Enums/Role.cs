@@ -6,6 +6,10 @@ namespace wleepay.Core.Enums
     {
         SuperAdmin = 0,
         Agent = 1,
-        Member = 2
+        Member = 2,
+        Staff = 3,
+        SystemAdmin = 4,
+        WleeSendAdmin = 5,
+        WleeSendUser = 6
     }
 }

@@ -13,15 +13,24 @@ namespace wleepay.Core.Models
             KYCdocuments = new Collection<KYCdocuments>();
             Wallets = new Collection<Wallet>();
             SmileIdentityJobs = new Collection<SmileIdentityJob>();
+            UsersStaffRole=new Collection<UsersStaffRole>();
+            UserDevices = new HashSet<UserDevices>();
+            UserNotes = new HashSet<UserNotes>();
+
         }
+
 
         public IList<ApplicationUserRole> UserRoles { get; set; }
         public virtual UserDetail UserDetail { get; set; }
-
         public virtual Address Address { get; set; }
         public virtual ICollection<KYCdocuments> KYCdocuments { get; set; }
         public virtual ICollection<Wallet> Wallets { get; set; }
         public virtual ICollection<SmileIdentityJob> SmileIdentityJobs { get; set; }
+        public virtual ICollection<UsersStaffRole> UsersStaffRole { get; set; }
+        public virtual ICollection<UserDevices> UserDevices { get; set; }
+        public virtual ICollection<UserNotes> UserNotes { get; set; }
+
+
 
     }
 }

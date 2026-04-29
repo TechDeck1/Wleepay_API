@@ -9,6 +9,8 @@ namespace wleepay.Core.Repositories
     public interface ITransferTypeRepository : IRepository<TransferType>
     {
         Task<TransferType> GetTransferTypeById(int id);
+        Task<TransferType> UpdateTransferTypeById(TransferType transferType);
         Task<TransferType> GetTransferTypeForTransaction(int fromWalletTypeId, int toWalletTypeId);
+        Task<IList<TransferType>> GetTransferTypeList(int fromWalletTypeId, int toWalletTypeId);
     }
 }

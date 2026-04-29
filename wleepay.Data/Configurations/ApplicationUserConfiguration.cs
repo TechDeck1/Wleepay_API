@@ -17,12 +17,12 @@ namespace wleepay.Data.Configurations
             builder.HasData(new ApplicationUser
             {
                 Id = "07ac193d-26e7-4039-9440-fbb53988b878",
-                UserName = "admin@wlee.com",
-                NormalizedEmail = "ADMIN@WLEE.COM",
-                NormalizedUserName = "ADMIN@WLEE.COM",
-                Email = "admin@wlee.com",
+                UserName = "wleeadmin@wleepay.com",
+                NormalizedEmail = "WLEEADMIN@WLEEPAY.COM",
+                NormalizedUserName = "WLEEADMIN@WLEEPAY.COM",
+                Email = "wleeadmin@wleepay.com",
                 EmailConfirmed = true,
-                PasswordHash = hasher.HashPassword(null, "1111"),
+                PasswordHash = hasher.HashPassword(null, "11118888wleePay@"),
                 SecurityStamp = Guid.NewGuid().ToString("D"),
             });
         }

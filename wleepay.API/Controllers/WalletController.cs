@@ -1,28 +1,36 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.SqlServer.Management.Smo;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using wleepay.API.Resources;
 using wleepay.API.Validators;
+using wleepay.Core.DTO.Response;
 using wleepay.Core.Models;
 using wleepay.Core.Services;
+using wleepay.Services;
 
 namespace wleepay.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    //[Authorize(AuthenticationSchemes = "Bearer")]
+    [Authorize(AuthenticationSchemes = "Bearer")]
+    //[AllowAnonymous]
+
     public class WalletController : Controller
     {
         private readonly IMapper _mapper;
         private readonly IWalletService _walletService;
-        public WalletController(IMapper mapper, IWalletService walletService)
+        private readonly IUserDetailService _userDetailService;
+        public WalletController(IMapper mapper, IWalletService walletService, IUserDetailService userDetailService)
         {
             _mapper = mapper;
             _walletService = walletService;
+            _userDetailService = userDetailService;
         }
         
         [HttpPost]
@@ -42,6 +50,7 @@ namespace wleepay.API.Controllers
             return Ok(wallet);
         }
 
+        [AllowAnonymous]
         [HttpGet("{userId}")]
         public async Task<IActionResult> GetUserWallet(string userId)
         {
@@ -53,5 +62,39 @@ namespace wleepay.API.Controllers
 
             return Ok(walletListResource);
         }
+
+        [HttpGet("{walletTypeId}/walletType")]
+        [AllowAnonymous]
+        public async Task<IActionResult> GetWalletByWalletTypeId(long walletTypeId, [FromQuery] string userId)
+        {
+            if (walletTypeId == null)
+                return BadRequest("Please select userId.");
+
+            IEnumerable<Wallet> walletData = new List<Wallet>();
+            if (userId == null)
+            {
+               walletData = await _walletService.GetWalletByWalletTypeId(walletTypeId);
+            }
+            else
+            {
+               walletData = await _walletService.GetWalletByWalletTypeIdAndUserId(userId, walletTypeId);
+            }
+
+            var walletListResource = _mapper.Map<IEnumerable<Wallet>, IEnumerable<WalletResource>>(walletData);
+
+            return Ok(walletListResource);
+        }
+
+        [HttpGet("{userId}/{walletTypeId}/walletType")]
+        public async Task<IActionResult> GetWalletByWalletTypeId(string userId, long walletTypeId)
+        {
+            if (walletTypeId == null || userId == null)
+                return BadRequest("Please select userId.");
+           
+            var walletData = await _walletService.GetWalletByWalletTypeIdAndUserId(userId, walletTypeId);
+            var walletListResource = _mapper.Map<IEnumerable<Wallet>, IEnumerable<WalletResource>>(walletData);
+            return Ok(walletListResource);
+        }
+
     }
 }

@@ -129,6 +129,28 @@ namespace wleepay.Data.Configurations
                 CreatedDate = DateTime.Now,
                 UpdatedDate = DateTime.Now
             });
+
+            builder.HasData(new Wallet
+            {
+                Id = 7,
+                UserId = "07ac193d-26e7-4039-9440-fbb53988b878",
+                CurrencyId = Core.Enums.Currencies.LRD.GetHashCode(),
+                Type = Core.Enums.WalletTypes.SystemWallet.GetHashCode(),
+                Balance = 0,
+                CreatedDate = DateTime.Now,
+                UpdatedDate = DateTime.Now
+            });
+
+            builder.HasData(new Wallet
+            {
+                Id = 8,
+                UserId = "07ac193d-26e7-4039-9440-fbb53988b878",
+                CurrencyId = Core.Enums.Currencies.USD.GetHashCode(),
+                Type = Core.Enums.WalletTypes.SystemWallet.GetHashCode(),
+                Balance = 0,
+                CreatedDate = DateTime.Now,
+                UpdatedDate = DateTime.Now
+            });
         }
     }
 }

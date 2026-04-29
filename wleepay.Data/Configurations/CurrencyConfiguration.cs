@@ -31,14 +31,14 @@ namespace wleepay.Data.Configurations
             builder.HasData(new Currency
             {
                 Id = 1,
-                Name = "Liberian Dollar",
+                Name = "LRD",
                 Symbol = "L$"
             });
             
             builder.HasData(new Currency
             {
                 Id = 2,
-                Name = "United State Of America Dollar",
+                Name = "USD",
                 Symbol = "$"
             });
         }

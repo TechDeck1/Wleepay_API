@@ -61,7 +61,7 @@ namespace wleepay.Data.Configurations
                 Name = "Cash Out",
                 FromWalletType = 7,
                 ToWalletType = 6,
-                Description = "Transfer from member a/c to agent a/c",
+                Description = "Transfer to agent a/c from member a/c ",
                 TransferFee = 1
             });
 
@@ -71,7 +71,7 @@ namespace wleepay.Data.Configurations
                 Name = "Generated Agent Commission",
                 FromWalletType = 7,
                 ToWalletType = 5,
-                Description = "Transfer from memeber to agent commission account",
+                Description = "Transfer to agent commision a/c from memeber account",
                 TransferFee = null
             });
 
@@ -111,7 +111,7 @@ namespace wleepay.Data.Configurations
                 Name = "Top Up",
                 FromWalletType = 6,
                 ToWalletType = 7,
-                Description = "TopUp member wallet from agent a/c",
+                Description = "TopUp to member wallet from agent a/c",
                 TransferFee = null
             });
 
@@ -119,19 +119,93 @@ namespace wleepay.Data.Configurations
             {
                 Id = 7,
                 Name = "Fill Agent",
-                FromWalletType = 1,
+                FromWalletType = 9,
                 ToWalletType = 6,
                 Description = "Fill Agent a/c from system float n a/c",
                 TransferFee = null
             });
+
 
             builder.HasData(new TransferType
             {
                 Id = 8,
                 Name = "Cashout Agent Commission",
                 FromWalletType = 5,
+                ToWalletType = 9,
+                Description = "Transfer to system float n a/c from Agent Commission a/c",
+                TransferFee = null
+            });
+
+            builder.HasData(new TransferType
+            {
+                Id = 9,
+                Name = "Top Up System Wallet",
+                FromWalletType = 1,
+                ToWalletType = 9,
+                Description = "Transfer from cash on hand a/c to sytem wallet",
+                TransferFee = null
+            });
+            builder.HasData(new TransferType
+            {
+                Id = 10,
+                Name = "Mobile Recharge Transfer",
+                FromWalletType = 7,
+                ToWalletType = 9,
+                Description = "Transfer from member a/c to system float a/c",
+                TransferFee = null
+            });
+            builder.HasData(new TransferType
+            {
+                Id = 11,
+                Name = "Bill Payment Transfer",
+                FromWalletType = 7,
+                ToWalletType = 9,
+                Description = "Transfer from member a/c to system float a/c",
+                TransferFee = null
+            });
+            builder.HasData(new TransferType
+            {
+                Id = 12,
+                Name = "In hand Withdrawl",
+                FromWalletType = 1,
+                ToWalletType = null,
+                Description = "Transfer from agent a/c to general cash account float a/c",
+                TransferFee = null
+            });
+            builder.HasData(new TransferType
+            {
+                Id = 13,
+                Name = "In hand Credit",
+                FromWalletType = null,
                 ToWalletType = 1,
-                Description = "Transfer from Agent Commission a/c to system float n a/c",
+                Description = "Transfer from agent a/c to general cash account float a/c",
+                TransferFee = null
+            });
+            builder.HasData(new TransferType
+            {
+                Id = 14,
+                Name = "Agent Cash Out",
+                FromWalletType = 6,
+                ToWalletType = 9,
+                Description = "Transfer from agent a/c to sytem wallet a/c",
+                TransferFee = null
+            });
+            builder.HasData(new TransferType
+            {
+                Id = 15,
+                Name = "Member Top Up By WleePay",
+                FromWalletType = 9,
+                ToWalletType = 7,
+                Description = "Transfer from system a/c to member wallet a/c",
+                TransferFee = null
+            });
+            builder.HasData(new TransferType
+            {
+                Id = 16,
+                Name = "Member Cash Out By Wleepay",
+                FromWalletType = 7,
+                ToWalletType = 9,
+                Description = "Transfer from member a/c to sytem wallet a/c",
                 TransferFee = null
             });
         }

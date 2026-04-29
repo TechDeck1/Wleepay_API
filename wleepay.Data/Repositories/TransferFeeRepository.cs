@@ -4,9 +4,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using wleepay.Core.DTO.Response;
 using wleepay.Core.Models;
 using wleepay.Core.Repositories;
 using wleepay.Data.Context;
+using static DevExpress.Xpo.Helpers.AssociatedCollectionCriteriaHelper;
+using static DevExpress.XtraPrinting.Native.PageSizeInfo;
 
 namespace wleepay.Data.Repositories
 {
@@ -20,6 +23,50 @@ namespace wleepay.Data.Repositories
         private WPContext WPContext
         {
             get { return Context as WPContext; }
+        }
+
+        public async Task<TransferFee> GetTransferFeeDesc()
+        {
+            return await  WPContext.TransferFees.OrderByDescending(x=>x.CreatedDate).FirstOrDefaultAsync();
+        }
+
+        public async Task<IEnumerable<TransferFee>> GetAllTransferFee()
+        {
+            var pageSize = 0;
+            var pageIndex = 0;
+            int takeCount = pageSize;
+            int skipCount = pageIndex * pageSize;
+            var result = await WPContext.TransferFees.OrderByDescending(x => x.CreatedDate)
+                .Skip(skipCount)
+                .Take(takeCount)
+                .ToListAsync();
+            return result;
+        }
+
+        public async Task<TransferFee> AddTaxRates(TransferFee transferFee)
+        {
+            transferFee.CreatedDate= DateTime.Now;
+            transferFee.IsDeleted = false;
+            await WPContext.AddAsync(transferFee);
+            WPContext.SaveChanges();
+            return transferFee;
+           // return await WPContext.TransferFees.OrderByDescending(x => x.CreatedDate).FirstOrDefaultAsync();
+        }
+
+        public async Task<TaxRatesResponse> GetAllTransferFeeAsync(int pageIndex, int pageSize)
+        {
+            int takeCount = pageSize;
+            int skipCount = pageIndex * pageSize;
+            var result = await WPContext.TransferFees.OrderByDescending(x => x.CreatedDate)
+                .Skip(skipCount)
+                .Take(takeCount)
+                .ToListAsync();
+
+            return new TaxRatesResponse {
+                TotalCount = await WPContext.TransferFees.CountAsync(),
+                TaxRates = result
+            };
+
         }
     }
 }

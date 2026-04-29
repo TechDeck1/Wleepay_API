@@ -27,11 +27,25 @@ namespace wleepay.Core.Models
         public DateTime CreatedDate { get; set; }
         public DateTime UpdatedDate { get; set; }
 
+        [NotMapped]
+        public DateTime? LastTransactionDate { get; set; }
         public string KYCDocumentImage { get; set; }
-
+        public string VerificationCode { get; set; }
+        public DateTime? VerificationExpiry { get; set; }
+        public int Status { get; set; }
+        public string WleePhoneNumber { get; set; }
+        public DateTime? HireDate { get; set; }
+        public DateTime? TraningCompletionDate { get; set; }
+        public string Merchandise { get; set; }
+        public int SecurityQuestionId { get; set; }
+        public string SecurityAnswerText { get; set; }
+        public string CreatedBy { get; set; }
+        public string Permissions { get; set; } 
+        public int FailedLoginAttempt { get; set; }
         public virtual ApplicationUser ApplicationUser { get; set; }
         public virtual KYCStatus KYCStatus { get; set; }
         public virtual County County { get; set; }
         public virtual KYCLevel KYCLevelDetail { get; set; }
+
     }
 }

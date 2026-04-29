@@ -15,6 +15,8 @@ namespace wleepay.Core.Models
         public double OrganizationFee { get; set; }
         public double AgentCommission { get; set; }
         public string Description { get; set; }
+        public DateTime CreatedDate { get; set; }
+        public bool IsDeleted { get; set; }
         public virtual ICollection<TransferType> TransferTypes { get; set; }
 
     }

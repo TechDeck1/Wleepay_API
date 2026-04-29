@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
+using wleepay.Core.Enums;
 using wleepay.Core.Models;
 
 namespace wleepay.Data.Configurations
@@ -55,15 +56,58 @@ namespace wleepay.Data.Configurations
                 .Property(u => u.Image);
 
             builder
+              .Property(u => u.KYCDocumentImage);
+
+            builder
                 .Property(u => u.CountyId)
                 .IsRequired();
 
             builder
                 .Property(u => u.KYCLevel);
 
+
             builder
-            .Property(u => u.IsLoggedIn)
-            .IsRequired();
+                .Property(u => u.CreatedDate);
+
+            builder
+               .Property(u => u.UpdatedDate);
+
+            builder
+                .Property(u => u.IsLoggedIn)
+                .IsRequired();
+
+            builder
+                .Property(u => u.VerificationCode);
+
+            builder.Property(u => u.VerificationExpiry);
+
+            builder.Property(u => u.SecurityQuestionId);
+
+            builder.Property(u => u.SecurityAnswerText).HasMaxLength(50);
+
+            builder.Property(u => u.Status);
+
+            builder
+               .Property(u => u.HireDate);
+
+            builder
+               .Property(u => u.Merchandise);
+
+            builder
+               .Property(u => u.TraningCompletionDate);
+
+            builder.Property(u => u.AccountNumber);
+
+            builder
+               .Property(u => u.WleePhoneNumber);
+
+            builder.Property(u => u.CreatedBy);
+
+            builder.Property(u => u.Permissions);
+
+            builder.Property(u => u.FailedLoginAttempt)
+                    .IsRequired()
+                    .HasDefaultValue(0);
 
             builder
                 .HasOne(u => u.ApplicationUser)
@@ -89,6 +133,7 @@ namespace wleepay.Data.Configurations
                  .OnDelete(DeleteBehavior.ClientNoAction)
                  .HasForeignKey(u => u.KYCLevel);
 
+
             builder.HasData(new UserDetail
             {
                 Id = 1,
@@ -103,7 +148,8 @@ namespace wleepay.Data.Configurations
                 PhoneNumber = "+919845654543",
                 CreatedDate = DateTime.Now,
                 UpdatedDate = DateTime.Now,
-                AccountNumber = "50285368"
+                AccountNumber = "50285368",
+                Status = Status.Active.GetHashCode()
             });
         }
     }

@@ -1,26 +1,45 @@
-﻿using AutoMapper;
+using AutoMapper;
 using DevExpress.Xpo.Logger;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Microsoft.SqlServer.Management.Smo;
+using Microsoft.SqlServer.Management.Smo.Broker;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
+using System.Web;
+using wleepay.API.Helpers;
+using wleepay.API.Middleware;
 using wleepay.API.Resources;
 using wleepay.API.Validators;
+using wleepay.Communication.EmailTemplates;
+using wleepay.Communication.Interface;
+using wleepay.Communication.Services;
+using wleepay.Communication.Templates;
+using wleepay.Core.Common;
+using wleepay.Core.DTO.Request;
+using wleepay.Core.DTO.Response;
+using wleepay.Core.Enums;
 using wleepay.Core.Models;
 using wleepay.Core.Services;
 using wleepay.Storage.Interface;
+using wleepay.Storage.Services;
+using static AutoMapper.Internal.ExpressionFactory;
+using static wleepay.Communication.EmailTemplates.EmailTemplates;
 
 namespace wleepay.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    //[Authorize(AuthenticationSchemes = "Bearer")]
+    [Authorize(AuthenticationSchemes = "Bearer")]
     public class UserController : Controller
     {
 
@@ -32,6 +51,12 @@ namespace wleepay.API.Controllers
         private readonly ISmileIdentityJobService _smileIdentityJobService;
         private readonly IMapper _mapper;
         private readonly ILogger<UserController> _logger;
+        private readonly IUsersStaffRoleService _usersStaffRoleService;
+        private readonly IUploadDocument _storageService;
+        private readonly IUserDeviceService _userDeviceService;
+        private readonly ISMSService _sMSService;
+        private readonly IExternalApiService _externalApiService;
+        private readonly IEmailSender _emailSender;
 
         public UserController(UserManager<ApplicationUser> userManager,
             IUserDetailService userDetailsService,
@@ -40,7 +65,11 @@ namespace wleepay.API.Controllers
             IKYCDocumentsService kycDocumentsService,
             ISmileIdentityJobService smileIdentityJobService,
             IMapper mapper,
-            ILogger<UserController> logger)
+            ILogger<UserController> logger, 
+            IUsersStaffRoleService usersStaffRoleService,
+            IUploadDocument storageService,
+            IUserDeviceService userDeviceService, ISMSService sMSService, IExternalApiService externalApiService, IEmailSender emailSender)
+
         {
             _userManager = userManager;
             _userDetailsService = userDetailsService;
@@ -50,29 +79,51 @@ namespace wleepay.API.Controllers
             _smileIdentityJobService = smileIdentityJobService;
             _mapper = mapper;
             _logger = logger;
+            _usersStaffRoleService = usersStaffRoleService;
+            _storageService = storageService;
+            _userDeviceService = userDeviceService;
+            _sMSService = sMSService;
+            _externalApiService = externalApiService;
+            _emailSender = emailSender;
         }
 
         [HttpGet("{userId}")]
         public async Task<IActionResult> GetById(string userId)
         {
-            var userDetail = await _userDetailsService.GetUserDetailsById(userId);
-            var userResource = _mapper.Map<UserDetail, UserDetailResource>(userDetail);
-            return Ok(userResource);
+            try
+            {
+                var userDetail = await _userDetailsService.GetUserDetailsById(userId);
+                var userResource = _mapper.Map<UserDetail, UserDetailResource>(userDetail);
+                return Ok(userResource);
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+            
         }
 
+        [AllowAnonymous]
         [HttpGet("{userId}/extraInfo")]
         public async Task<IActionResult> GetApplicationUserById(string userId)
         {
             try
             {
             var userDetail = await _userDetailsService.GetApplicationUserById(userId);
-                if (System.IO.File.Exists(userDetail.UserDetail.Image))
+                if (System.IO.File.Exists(userDetail?.UserDetail?.Image))
                 {
                     userDetail.UserDetail.Image = System.Convert.ToBase64String((System.IO.File.ReadAllBytes(userDetail.UserDetail.Image)));
                 }
-                if (System.IO.File.Exists(userDetail.UserDetail.KYCDocumentImage))
+                if (System.IO.File.Exists(userDetail?.UserDetail?.KYCDocumentImage))
                 {
                     userDetail.UserDetail.KYCDocumentImage = System.Convert.ToBase64String((System.IO.File.ReadAllBytes(userDetail.UserDetail.KYCDocumentImage)));
+                }
+                if (userDetail?.KYCdocuments.Count > 0) {
+                    if (System.IO.File.Exists(userDetail?.KYCdocuments?.FirstOrDefault().DocumentImage))
+                    {
+                        userDetail.KYCdocuments.FirstOrDefault().DocumentImage = System.Convert.ToBase64String((System.IO.File.ReadAllBytes(userDetail.KYCdocuments.FirstOrDefault().DocumentImage)));
+                    }
                 }
 
                 var userResource = _mapper.Map<ApplicationUser, ApplicationUserResource>(userDetail);
@@ -94,24 +145,43 @@ namespace wleepay.API.Controllers
             else if (!string.IsNullOrEmpty(request.LoginName))
                 userDetail = await _userDetailsService.GetUserAccountByName(request.LoginName);
 
-            var userDetailResource = _mapper.Map<ApplicationUser, UserAccountResource>(userDetail);
+            var userDetailResource = _mapper.Map<ApplicationUser, ApplicationUserResource>(userDetail);
             return Ok(userDetailResource != null ? userDetailResource : string.Empty);
         }
 
         [HttpGet("nearByAgent")]
         public async Task<IActionResult> GetNearByAgent()
         {
-            var agentList = await _userDetailsService.GetUserByRole(Core.Enums.Role.Agent.GetHashCode());
+            var agentList = await _userDetailsService.GetAllUsersByRole(Core.Enums.Role.Agent.GetHashCode());
             var agentListResource = _mapper.Map<IEnumerable<ApplicationUser>, IEnumerable<UserAccountResource>>(agentList);
-            return Ok(agentListResource);
+
+            var result = agentListResource.Where(agent => agent.UserDetail.Status == 1).ToArray();
+            return Ok(result);
         }
 
         [HttpPost("all")]
         public async Task<IActionResult> GetUserList([FromBody] PagingRequest request)
         {
-            var userList = await _userDetailsService.GetUsers(request.Role, request.Index, request.Size);
-            var userListResource = _mapper.Map<IEnumerable<ApplicationUser>, IEnumerable<ApplicationUserResource>>(userList);
-            return Ok(userListResource);
+            if (!string.IsNullOrEmpty(request.SearchText))
+            {
+                var result = await _userDetailsService.SearchUsersByEmail(request.SearchText, request.Role, request.Index, request.Size,request.FilterType);
+                var userDetailResource = _mapper.Map<IEnumerable<ApplicationUser>, IEnumerable<ApplicationUserResource>>(result.UserDetails);
+                return Ok(new
+                {
+                    TotalCount = result.TotalCount,
+                    UserDetails = userDetailResource
+                });
+            }
+            else
+            {
+                var userList = await _userDetailsService.GetUsers(request.Role, request.Index, request.Size);
+                var userListResource = _mapper.Map<IEnumerable<ApplicationUser>, IEnumerable<ApplicationUserResource>>(userList.UserDetails);
+                return Ok(new
+                {
+                    userDetails = userListResource,
+                    TotalCount = userList.TotalCount
+                });
+            }
         }
 
         [HttpPut("phoneNumber")]
@@ -160,15 +230,38 @@ namespace wleepay.API.Controllers
             if (applicationUser != null)
                 return BadRequest("Email is already registered.");
 
-            //update email id for user
-            applicationUserToUpdate.Email = requestResource.EmailId;
-            applicationUserToUpdate.NormalizedEmail = requestResource.EmailId;
+            var emailChangeToken = await _userManager.GenerateChangeEmailTokenAsync(applicationUserToUpdate, requestResource.EmailId);
+            var encodedToken = HttpUtility.UrlEncode(emailChangeToken);
+            var callbackUrl = $"{Request.Scheme}://{Request.Host}/api/User/emailAddress/confirm?userId={applicationUserToUpdate.Id}&email={requestResource.EmailId}&token={encodedToken}";
 
-            var result = await _userManager.UpdateAsync(applicationUserToUpdate);
-            if (result.Succeeded)
-                return Ok("Email Id Updated");
-            else
-                return BadRequest(result.Errors.FirstOrDefault());
+            var userDetail = await _userDetailsService.GetUserDetailsById(applicationUserToUpdate.Id);
+            var displayName = userDetail?.FirstName ?? applicationUserToUpdate.UserName ?? "User";
+            var template = new EmailHtmlTemplates().EmailTemplateForEmailChange(callbackUrl, displayName, requestResource.EmailId);
+            await _emailSender.SendEmailAsync(requestResource.EmailId, template, displayName, "Confirm your email change");
+
+            return Ok("Verification email sent to the new address. Please confirm to complete the change.");
+        }
+
+        [AllowAnonymous]
+        [HttpGet("emailAddress/confirm")]
+        public async Task<IActionResult> ConfirmEmailChange(string userId, string email, string token)
+        {
+            if (string.IsNullOrWhiteSpace(userId) || string.IsNullOrWhiteSpace(email) || string.IsNullOrWhiteSpace(token))
+                return BadRequest("Invalid email change request.");
+
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null)
+                return BadRequest("User not found.");
+
+            var decodedToken = HttpUtility.UrlDecode(token);
+            var result = await _userManager.ChangeEmailAsync(user, email, decodedToken);
+            if (!result.Succeeded)
+                return BadRequest(result.Errors.FirstOrDefault()?.Description ?? "Invalid email change token.");
+
+            user.EmailConfirmed = true;
+            await _userManager.UpdateAsync(user);
+
+            return Ok("Email updated successfully.");
         }
 
         [HttpPost("profileImage")]
@@ -203,7 +296,7 @@ namespace wleepay.API.Controllers
             
         }
 
-
+        [AllowAnonymous]
         [HttpPost("DocumentKYCImage")]
         public async Task<IActionResult> DocumentKYCImage(documentKycImage documentKycImage)
         {
@@ -269,6 +362,8 @@ namespace wleepay.API.Controllers
             if (string.IsNullOrEmpty(imageUrl))
                 return BadRequest("Can't upload image");
 
+            //userDetail.Image = imageUrl.ToString();
+            //var updateUser =  await _userDetailsService.AddOrUpdateUserDetails(userDetail);
             //update document url
             var kycDocumentToUpdate = await _kycDocumentsService.GetKYCDocumentByUserId(userId);
             if (kycDocumentToUpdate == null)
@@ -337,11 +432,429 @@ namespace wleepay.API.Controllers
         {
             var paymentRequest = await _userDetailsService.GetIncomingOutGoingPaymentRequest(paymentRequestParam.UserId, paymentRequestParam.Type,paymentRequestParam.TransferStatus,paymentRequestParam.PageSize,paymentRequestParam.PageIndex);
 
-            if (paymentRequest == null)
+          if (paymentRequest == null)
                 return Ok(new List<TransactionResource>());
            
             var transactionResource = _mapper.Map<IEnumerable<Transaction>, IEnumerable<TransactionHistoryResource>>(paymentRequest);
-            return Ok(transactionResource);
+          foreach (var item in transactionResource)
+          {
+             var time = Helpers.Common.ConvertISTtoLiberiaTime(item.CreatedDate);
+             item.CreatedDate = time;
+          }
+             return Ok(transactionResource);
+        }
+
+        [HttpGet("{userId}/createdBy")]
+        public async Task<IActionResult> GetAllUsersById(string userId, int roleId , int pageIndex, int pageSize)
+        {
+            Role role = (Role)roleId;
+            var userList = await _userDetailsService.GetAllUsersById(role, pageIndex, pageSize, userId);
+            var userListResource = _mapper.Map<IEnumerable<ApplicationUser>, IEnumerable<ApplicationUserResource>>(userList.UserDetails);
+            return Ok(new
+            {
+                TotalCount=userList.TotalCount,
+                UserDetails= userListResource
+            });
+        }
+
+        [HttpGet("{phoneNumber}/VerifyAccountByPhone")]
+        public async Task<IActionResult> VerifyUserAccountByPhoneAsync(string phoneNumber)
+        {
+            TransactionAndUserResponseResource result = null;
+            if (!string.IsNullOrEmpty(phoneNumber))
+                result = await _userDetailsService.VerifyUserAccountByPhone(phoneNumber);
+          
+            object userDetails = null;
+           
+            if (result == null) 
+            return Ok(new 
+            {
+                userDetails,
+                status =false,
+                message="Phone Number does not exists" 
+            });
+
+            var userDetailResource = _mapper.Map<ApplicationUser, ApplicationUserResource>(result.UserDetails);
+            var transactionResourceList = _mapper.Map<IEnumerable<Transaction>, IEnumerable<TransactionHistoryResource>>(result.Transactions);
+
+            return Ok(new {
+            status=true,
+            userDetails = (new
+            {
+                userDetail = userDetailResource,
+                transactions = transactionResourceList
+            }),
+            });
+
+        }
+
+        [HttpGet("{userId}/staffSession")]
+        public async Task<IActionResult> GetStaffPermissionsById(string userId)
+        {
+            try
+            {
+                var userDetail = await _userDetailsService.GetUserDetailsById(userId);
+                var userResource = _mapper.Map<UserDetail, UserDetailResource>(userDetail);
+                string[] deserializedNumbers = System.Text.Json.JsonSerializer.Deserialize<string[]>(userResource?.Permissions);
+
+                if (!string.IsNullOrEmpty(userResource?.Permissions))
+                {
+                    string jsonString = System.Text.Json.JsonSerializer.Serialize(deserializedNumbers);
+
+                    var secretKey = "1234567890123456";
+
+                    userResource.Permissions = Common.Encrypt(jsonString, secretKey).ToString();
+                }
+                return Ok(new
+                {
+                    userResource,
+                    session = userResource.Permissions
+                });
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        [SystemLock]
+        [HttpPut("edit")]
+        public async Task<IActionResult> EditUserDetails(EditUserDetailResource editUserDetailResource)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(editUserDetailResource.UserId))
+                {
+                    return BadRequest(Messages.NotFound.ToDescriptionString());
+                }
+
+                var applicationUser = await _userManager.FindByIdAsync(editUserDetailResource.UserId);
+            
+                if(applicationUser == null)
+                {
+                    return BadRequest(Messages.NotFound.ToDescriptionString());
+                }
+                var userDetail = await _userDetailsService.GetUserDetailsById(applicationUser.Id);
+                if (userDetail == null)
+                {
+                    return BadRequest(Messages.NotFound.ToDescriptionString());
+                }
+                if(userDetail.PhoneNumber!= editUserDetailResource.PhoneNumber) 
+                {
+                    var userExistWithPhone = await _userDetailsService.IsPhoneAlreadyRegistered(editUserDetailResource.PhoneNumber);
+                    if (userExistWithPhone == true)
+                        return BadRequest(Messages.PhoneAlreadyUsed.ToDescriptionString());
+
+                    applicationUser.PhoneNumber = editUserDetailResource.PhoneNumber;
+                    applicationUser.UserName = editUserDetailResource.PhoneNumber;
+                }
+
+                var isUserUpdated = await _userManager.UpdateAsync(applicationUser);
+                if (isUserUpdated.Succeeded)
+                {
+
+                   _mapper.Map<EditUserDetailResource, UserDetail>(editUserDetailResource);
+                    var combinedUserData= _mapper.Map(editUserDetailResource, userDetail);
+
+                    if (!string.IsNullOrEmpty(userDetail.Image))
+                    {
+                        var profileURL = _storageService.UploadUserProfileImage(userDetail.Image, userDetail.UserId);
+                        userDetail.Image = profileURL;
+                    }
+
+                    if (!string.IsNullOrEmpty(userDetail.KYCDocumentImage))
+                    {
+                        var documentURL = _storageService.UploadKYCDocument(userDetail.KYCDocumentImage, userDetail.UserId);
+                        userDetail.KYCDocumentImage = documentURL.ToString();
+                    }
+                    if (editUserDetailResource.City != null)
+                    {
+                        var address = await _addressService.GetAddressByUserId(userDetail.UserId);
+                        if (address != null)
+                        {
+                            address.City = editUserDetailResource.City;
+                            address.District = editUserDetailResource.District;
+                            await _addressService.AddOrUpdateAddress(address);
+                        }
+                    }
+                    //kyc document is optional in registration
+                    if (editUserDetailResource.DocumentTypeId.HasValue)
+                    {
+                        //insert data in kyc document
+                        var kycDetailsToAdd = _mapper.Map<EditUserDetailResource, KYCdocuments>(editUserDetailResource);
+                        kycDetailsToAdd.UserId = combinedUserData.UserId;
+                        kycDetailsToAdd.UpdatedDate = DateTime.Now;
+                        kycDetailsToAdd.DocumentImage = userDetail.KYCDocumentImage;
+
+                        await _kycDocumentsService.UpdateKYCDocument(kycDetailsToAdd);
+                    }
+                    await _userDetailsService.AddOrUpdateUserDetails(combinedUserData);
+                    if (editUserDetailResource.StaffRoleId != 0 )
+                    {
+                        UsersStaffRole usersStaffRole = new UsersStaffRole();
+                        usersStaffRole.UserId = applicationUser.Id;
+                        usersStaffRole.UpdatedDate = DateTime.UtcNow;
+                        usersStaffRole.StaffRoleId = editUserDetailResource.StaffRoleId;
+                        await _usersStaffRoleService.UpdateUserStaffRole(usersStaffRole);
+                    }
+
+                }
+
+                return Ok(new
+                {
+                    Success = true,
+                    UserId = editUserDetailResource.UserId,
+                    FirstName = editUserDetailResource.FirstName,
+                    LastName = editUserDetailResource.LastName,
+                    Message = Messages.InfoUpdated.ToDescriptionString()
+
+                });
+            }
+            catch (Exception ex)
+            {
+                throw new CustomException("Sorry, we're having trouble in editing info. Please contact support.");
+            }
+
+        }
+
+        [AllowAnonymous]
+        [HttpPost("AddDevice")]
+        public async Task<IActionResult> AddDeviceIdAndToken(FirebaseAddDeviceRequest request)
+        {
+            if (request.DeviceId == null || request.UserId == null)
+            {
+                return BadRequest("DeviceId and UserId are required.");
+            }
+
+            try
+            {
+                var device = await _userDeviceService.GetUserDevice(request.UserId, request.DeviceId);
+                if (device != null)
+                {
+                    device.FcmToken = request.DeviceToken;
+                }
+                else
+                {
+                    
+                    device = new UserDevices
+                    {
+                        UserId = request.UserId,
+                        DeviceId = request.DeviceId,
+                        FcmToken = request.DeviceToken,
+                        AddedDate = DateTime.UtcNow,
+                        IsActive = true,
+                    };
+
+                    var allDevices = await _userDeviceService.GetUserDeviceByUserId(request.UserId);
+                    if (allDevices.Count != 0)
+                    {
+                        var checkExistingDevice = allDevices.Contains(device);
+                        if (!checkExistingDevice)
+                        {
+                            var userDeatail = await _userDetailsService.GetUserDetailsById(request.UserId);
+                            var message = Messages.UserLoggedInOtherDevice.ToDescriptionString();
+                            var sendSms = _sMSService.sendMessage(message, userDeatail.PhoneNumber);
+                        }
+                    }
+                }
+
+                var response = await _userDeviceService.AddOrUpdateUserDevices(device);
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                // Log exception (logging mechanism not shown)
+                return StatusCode(500, "Internal server error.");
+            }
+        }
+
+        [AllowAnonymous]
+        [HttpPost("DeleteDevice")]
+        public async Task<IActionResult> DeleteDeviceIdAndToken(FirebaseDeleteDeviceRequest request)
+        {
+            if (request.DeviceId == null || request.UserId == null)
+            {
+                return BadRequest("DeviceId and UserId are required.");
+            }
+
+            try
+            {
+                var device = await _userDeviceService.DeleteUserDevice(request.UserId, request.DeviceId);
+                return Ok(new { status = device});
+            }
+            catch (Exception ex)
+            {
+                // Log exception (logging mechanism not shown)
+                return StatusCode(500, "Internal server error.");
+            }
+        }
+
+        [AllowAnonymous]
+        [HttpPost("sendMessage")]
+        public async Task<IActionResult> SendSmsToUsers(SendSmsRequestModel request)
+        {
+            if (request.Note == null || request.PhoneNumber == null)
+            {
+                return BadRequest("Note and Email are required.");
+            }
+
+            try
+            {
+                var response = _sMSService.sendMessage(request.Note, request.PhoneNumber);
+                if (response == "success")
+                {
+                    await _userDetailsService.AddUserNotes(request.userId, request.AddedBy, "SMS sent", request.Note,Core.Models.MessageType.SMS);
+
+             
+                    return Ok(new{
+                        message="Message sent successfully!",
+                        success=true
+                    });
+                }
+                else 
+                {
+                    return BadRequest(new
+                    {
+                        message = "Something went wrong!",
+                        success = false
+                    });
+                };
+                
+            }
+            catch (Exception ex)
+            {
+                // Log exception (logging mechanism not shown)
+                return StatusCode(500, "Internal server error.");
+            }
+        }
+
+        [AllowAnonymous]
+        [HttpPost("sendEmailSmsAlert")]
+        public async Task<IActionResult> sendMailAndSmsAlertToAll(SendEmailSmsAlertModel request)
+        {
+            try
+            {
+                if (request.Note == null)
+                {
+                    return BadRequest("Note is required.");
+                }
+                var allAgents = await _userDetailsService.GetAllUsersByRole((int)Role.Agent);
+                var allMembers = await _userDetailsService.GetAllUsersByRole((int)Role.Member);
+
+
+                string response = "";
+
+                EmailHtmlTemplates emailTemplates = new EmailHtmlTemplates();
+                if (request.SendTo == "Agent")
+                {
+
+
+                    if (request.AlertType == "Email")
+                    {
+                        var template = emailTemplates.EmailTemplateForSendAlert(request.Note, "Agent");
+
+                        foreach (var agent in allAgents)
+                        {
+                            response = await _emailSender.SendEmailAsync(agent.Email, template, agent.UserDetail.FirstName, "Email Alert");
+                        }
+                    }
+                    else
+                    {
+                        foreach (var agent in allAgents)
+                        {
+                            response = _sMSService.sendMessage(request.Note, agent.UserDetail.PhoneNumber);
+                        }
+
+                    }
+
+                    return Ok(new
+                    {
+                        message = Messages.smsSentToAgents.ToDescriptionString(),
+                        success = true
+                    });
+                }
+                else
+                {
+                    if (request.AlertType == "Email")
+                    {
+                        var template = emailTemplates.EmailTemplateForSendAlert(request.Note, "User");
+
+                        foreach (var member in allMembers)
+                        {
+                            response = await _emailSender.SendEmailAsync(member.Email, template, member.UserDetail.FirstName, "Email Alert");
+                        }
+                    }
+                    else
+                    {
+                        foreach (var member in allMembers)
+                        {
+                            response = _sMSService.sendMessage(request.Note, member.UserDetail.PhoneNumber);
+                        }
+
+                    }
+
+                    return Ok(new
+                    {
+                        message = Messages.smsSentToSubscribers.ToDescriptionString(),
+                        success = true
+                    });
+
+                }
+
+            }
+            catch (Exception ex)
+            {
+                // Log exception (logging mechanism not shown)
+                return StatusCode(500, "Internal server error.");
+            }
+        }
+
+        [AllowAnonymous]
+        [HttpPost("PaymentRequestByUserId")]
+        public async Task<IActionResult> GetIncomingOutGoingAgentRequests([FromBody] AgentPaymentRequest paymentRequestParam)
+        {
+            var paymentRequest = await _userDetailsService.GetIncomingOutGoingAgentPaymentRequest(paymentRequestParam.UserId, paymentRequestParam.Type, paymentRequestParam.TransferStatus,paymentRequestParam.TransferId, paymentRequestParam.PageSize, paymentRequestParam.PageIndex);
+
+            if (paymentRequest == null)
+                return Ok(new List<TransactionResource>());
+
+            var transactionResource = _mapper.Map<IEnumerable<Transaction>, IEnumerable<TransactionHistoryResource>>(paymentRequest.Transactions);
+            foreach (var item in transactionResource)
+            {
+                var time = Helpers.Common.ConvertISTtoLiberiaTime(item.CreatedDate);
+                item.CreatedDate = time;
+            }
+            return Ok(new 
+            {
+                transactionResource=transactionResource,
+                totalCount=paymentRequest.TotalCount
+            });
+        }
+
+        [AllowAnonymous]
+        [HttpPost("UserNotes")]
+        public async Task<IActionResult> SaveUserNotes([FromBody] UserNotesRequest userNotes)
+        {
+            var userDetail = await _userDetailsService.GetUserDetailsById(userNotes.UserId);
+            if (userDetail == null)
+                return BadRequest("No user found");
+
+            var response = await _userDetailsService.AddUserNotes(userNotes.UserId, userNotes.AddedBy, userNotes.Description, userNotes.UserNote,Core.Models.MessageType.Note);
+
+
+
+            _sMSService.sendMessage(userNotes.UserNote, userDetail.PhoneNumber);
+
+            return Ok(response);
+        }
+
+        [AllowAnonymous]
+        [HttpGet("GetUserNotes")]
+        public async Task<IActionResult> GetUserNotes(string userId,int messageType)
+        {
+            var response = await _userDetailsService.GetUserNotes(userId, messageType);
+
+            return Ok(response);
         }
 
         #region helper methods

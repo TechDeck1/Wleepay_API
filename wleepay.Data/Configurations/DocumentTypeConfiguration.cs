@@ -26,23 +26,45 @@ namespace wleepay.Data.Configurations
                 .HasMaxLength(20)
                 .IsRequired();
 
-            builder.HasData(new DocumentType
-            {
-                Id = 1,
-                Name = "National ID Card"
-            });
+        
 
             builder.HasData(new DocumentType
             {
-                Id = 2,
+                Id = 1,
                 Name = "Driver’s License"
             });
 
             builder.HasData(new DocumentType
             {
+                Id = 2,
+                Name = "National ID Card"
+            });
+
+            builder.HasData(new DocumentType
+            {
                 Id = 3,
+                Name = "No Id"
+            });
+
+            builder.HasData(new DocumentType
+            {
+                Id = 4,
+                Name = "Passport"
+            });
+
+            builder.HasData(new DocumentType
+            {
+                Id = 5,
                 Name = "Voter Card"
             });
+
+            builder.HasData(new DocumentType
+            {
+                Id = 6,
+                Name = "Business License"
+            });
+
+
         }
     }
 }
