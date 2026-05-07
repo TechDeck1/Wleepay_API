@@ -1,5 +1,14 @@
-2026-04-29 15:41:11 PM||DEBUG|wleepay.API.Program|init main 
-2026-04-29 15:41:21 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: https://localhost:5001 
-2026-04-29 15:41:21 PM||INFO|Microsoft.Hosting.Lifetime|Application started. Press Ctrl+C to shut down. 
-2026-04-29 15:41:21 PM||INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development 
-2026-04-29 15:41:21 PM||INFO|Microsoft.Hosting.Lifetime|Content root path: D:\Officials\wleepay\Wleepay_API\wleepay.API 
+2026-05-05 11:18:16 AM||DEBUG|wleepay.API.Program|init main 
+2026-05-05 11:18:41 AM||INFO|Microsoft.Hosting.Lifetime|Now listening on: https://localhost:5001 
+2026-05-05 11:18:41 AM||INFO|Microsoft.Hosting.Lifetime|Application started. Press Ctrl+C to shut down. 
+2026-05-05 11:18:41 AM||INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development 
+2026-05-05 11:18:41 AM||INFO|Microsoft.Hosting.Lifetime|Content root path: D:\Officials\wleepay\Wleepay_API\wleepay.API 
+2026-05-05 11:18:59 AM||DEBUG|wleepay.API.Program|init main 
+2026-05-05 11:19:01 AM||INFO|Microsoft.Hosting.Lifetime|Now listening on: https://localhost:5001 
+2026-05-05 11:19:01 AM||INFO|Microsoft.Hosting.Lifetime|Application started. Press Ctrl+C to shut down. 
+2026-05-05 11:19:01 AM||INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development 
+2026-05-05 11:19:01 AM||INFO|Microsoft.Hosting.Lifetime|Content root path: D:\Officials\wleepay\Wleepay_API\wleepay.API 
+2026-05-05 11:19:58 AM||WARN|Microsoft.AspNetCore.Identity.UserManager|Invalid password for user. 
+2026-05-05 11:19:58 AM|2|WARN|Microsoft.AspNetCore.Identity.SignInManager|User failed to provide the correct password. 
+2026-05-05 11:19:59 AM|10102|WARN|Microsoft.EntityFrameworkCore.Query|The query uses a row limiting operator ('Skip'/'Take') without an 'OrderBy' operator. This may lead to unpredictable results. 
+2026-05-05 11:19:59 AM|10102|WARN|Microsoft.EntityFrameworkCore.Query|The query uses a row limiting operator ('Skip'/'Take') without an 'OrderBy' operator. This may lead to unpredictable results. 
