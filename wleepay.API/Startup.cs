@@ -334,7 +334,7 @@ namespace wleepay.API
                     "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; " +
                     "font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com; " +
                     "img-src 'self' data:; " +
-                    "connect-src 'self' https://wleesend.arielsoftwares.in https://wleepapi.arielsoftwares.in wss://wleepapi.arielsoftwares.in; " +
+                    "connect-src 'self' https://wleesend.com https://wleepapi.arielsoftwares.in wss://wleepapi.arielsoftwares.in; " +
                     "object-src 'none'; " +
                     // if you never embed the site in frames, prefer 'none'; if you need same origin use 'self'
                     "frame-ancestors 'self'; " +
