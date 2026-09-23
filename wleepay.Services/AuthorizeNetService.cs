@@ -15,6 +15,8 @@ using AutoMapper;
 using wleepay.Communication.Interface;
 using Microsoft.Extensions.Logging;
 using wleepay.Communication.Templates;
+using Newtonsoft.Json.Linq;
+using System.Globalization;
 using System.Text.RegularExpressions;
 
 
@@ -236,10 +238,24 @@ namespace wleepay.Services
             // 1. Authorize.Net Configuration
             // ================================
 
-            ConfigureAuthorizeNet();
-
             // Plus Transaction fees
             request.Amount = Math.Round(request.Amount * 1.12m, 2);
+
+            var balanceValidationError = await ValidateSochitelBalanceAsync(request.RechargeData, request.RechargeData.Amount);
+            if (!string.IsNullOrEmpty(balanceValidationError))
+            {
+                return new PaymentTransaction
+                {
+                    UserId = userId,
+                    Amount = request.Amount,
+                    ReceiverPhoneNumber = request.ReceiverPhoneNumber,
+                    TransferTypeId = request.TransferTypeId,
+                    CurrencyId = (int)Currencies.USD,
+                    Status = "Failed",
+                    ErrorMessage = balanceValidationError,
+                    CreatedAt = DateTime.UtcNow
+                };
+            }
 
             var transaction = await AuthorizePaymentAsync(request, userId);
 
@@ -397,11 +413,24 @@ namespace wleepay.Services
             //        ItemElementName = AuthorizeNet.Api.Contracts.V1.ItemChoiceType.transactionKey
             //    };
 
-            // Production Purpose
-            ApiOperationBase<AuthorizeNet.Api.Contracts.V1.ANetApiRequest, AuthorizeNet.Api.Contracts.V1.ANetApiResponse>.MerchantAuthentication = new AuthorizeNet.Api.Contracts.V1.merchantAuthenticationType { name = _settings.ApiLoginId, Item = _settings.TransactionKey, ItemElementName = AuthorizeNet.Api.Contracts.V1.ItemChoiceType.transactionKey };
-
             // Plus Transaction fees
             request.Payment.Amount = Math.Round(request.Payment.Amount * 1.12m, 2);
+
+            var balanceValidationError = await ValidateSochitelBalanceAsync(request.Payment.RechargeData, request.AmountOperator);
+            if (!string.IsNullOrEmpty(balanceValidationError))
+            {
+                return new PaymentTransaction
+                {
+                    UserId = userId,
+                    Amount = request.Payment.Amount,
+                    ReceiverPhoneNumber = request.Payment.ReceiverPhoneNumber,
+                    TransferTypeId = request.Payment.TransferTypeId,
+                    CurrencyId = (int)Currencies.USD,
+                    Status = "Failed",
+                    ErrorMessage = balanceValidationError,
+                    CreatedAt = DateTime.UtcNow
+                };
+            }
             
             var paymentRequest = new PaymentRequests
             {
@@ -528,6 +557,53 @@ namespace wleepay.Services
 
             var updatedTransaction = await _transactionService.GetByTransactionIdAsync(transaction.TransactionId);
             return updatedTransaction;
+        }
+
+        private async Task<string> ValidateSochitelBalanceAsync(RechargeRequestDetails rechargeData, decimal requestedAmount)
+        {
+            if (rechargeData == null)
+                return "Missing recharge data";
+
+            var balanceRequest = new
+            {
+                auth = new SochitelAuth
+                {
+                    username = rechargeData.username,
+                    salt = rechargeData.salt,
+                    password = rechargeData.password
+                },
+                version = 5,
+                command = "getBalance"
+            };
+
+            var balanceJson = await _externalApiService.PostDataAsync(balanceRequest);
+            var balanceResponse = JObject.Parse(balanceJson);
+            var statusName = balanceResponse["status"]?["name"]?.ToString();
+
+            if (!string.Equals(statusName, "Successful", StringComparison.OrdinalIgnoreCase))
+                return "Unable to validate Sochitel balance.";
+
+            var balanceValue = balanceResponse["result"]?["value"]?.ToString();
+            if (!TryParseSochitelBalance(balanceValue, out var currentBalance))
+                return "Unable to read Sochitel balance.";
+
+            if (currentBalance < requestedAmount)
+                return "There is no enough balance in Sochitel to make transaction";
+
+            return null;
+        }
+
+        private static bool TryParseSochitelBalance(string balance, out decimal value)
+        {
+            value = 0;
+            if (string.IsNullOrWhiteSpace(balance))
+                return false;
+
+            if (decimal.TryParse(balance, NumberStyles.Number, CultureInfo.InvariantCulture, out value))
+                return true;
+
+            var match = Regex.Match(balance, @"-?\d+(\.\d+)?");
+            return match.Success && decimal.TryParse(match.Value, NumberStyles.Number, CultureInfo.InvariantCulture, out value);
         }
 
         private static InstructionDetails ParseInstructions(string instructions)
