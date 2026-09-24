@@ -22,9 +22,6 @@ jobs:
       - name: Publish
         run: dotnet publish wleepay.API/wleepay.API.csproj -c Release -o publish
 
-      # appsettings.json / appsettings.Development.json are excluded on purpose:
-      # the real production connection string lives ONLY on the server, never in git.
-      # This prevents CI from ever overwriting it with a dev/local value.
       # SSH_PRIVATE_KEY secret must contain the base64-encoded private key
       # (generate with: base64 -w0 ~/.ssh/deploy_key_rsa) to avoid paste corruption.
       - name: Setup SSH key
@@ -35,7 +32,7 @@ jobs:
           ssh-keyscan -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
 
       - name: Deploy build to server
-        run: rsync -avzr --delete --exclude=appsettings.json --exclude=appsettings.Development.json -e "ssh -i ~/.ssh/deploy_key" publish/ ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/var/www/wleepay/wleepayApi.arielsoftwares.com/
+        run: rsync -avzr --delete -e "ssh -i ~/.ssh/deploy_key" publish/ ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/var/www/wleepay/wleepayApi.arielsoftwares.com/
 
       - name: Fix ownership and restart service
         run: |
