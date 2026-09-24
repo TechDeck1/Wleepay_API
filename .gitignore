@@ -283,3 +283,5 @@ wleepay.API/obj/Debug/net5.0/wleepay.API.pdb
 *.pdb
 *.dll
 *.cache
+appsettings.json
+appsettings.Development.json
