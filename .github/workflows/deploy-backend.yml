@@ -25,23 +25,18 @@ jobs:
       # appsettings.json / appsettings.Development.json are excluded on purpose:
       # the real production connection string lives ONLY on the server, never in git.
       # This prevents CI from ever overwriting it with a dev/local value.
+      # SSH_PRIVATE_KEY secret must contain the base64-encoded private key
+      # (generate with: base64 -w0 ~/.ssh/deploy_key_rsa) to avoid paste corruption.
+      - name: Setup SSH key
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" | base64 -d > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          ssh-keyscan -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
+
       - name: Deploy build to server
-        uses: burnett01/rsync-deployments@7.0.1
-        with:
-          switches: -avzr --delete --exclude=appsettings.json --exclude=appsettings.Development.json
-          path: publish/
-          remote_path: /var/www/wleepay/wleepayApi.arielsoftwares.com/
-          remote_host: ${{ secrets.SSH_HOST }}
-          remote_user: ${{ secrets.SSH_USER }}
-          remote_key: ${{ secrets.SSH_PRIVATE_KEY }}
+        run: rsync -avzr --delete --exclude=appsettings.json --exclude=appsettings.Development.json -e "ssh -i ~/.ssh/deploy_key" publish/ ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/var/www/wleepay/wleepayApi.arielsoftwares.com/
 
       - name: Fix ownership and restart service
-        uses: appleboy/ssh-action@v1.0.3
-        with:
-          host: ${{ secrets.SSH_HOST }}
-          username: ${{ secrets.SSH_USER }}
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
-          script: |
-            chown -R root:root /var/www/wleepay/wleepayApi.arielsoftwares.com/
-            systemctl restart wleepay.service
-            systemctl status wleepay.service --no-pager
+        run: |
+          ssh -i ~/.ssh/deploy_key ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "chown -R root:root /var/www/wleepay/wleepayApi.arielsoftwares.com/ && systemctl restart wleepay.service && systemctl status wleepay.service --no-pager"
