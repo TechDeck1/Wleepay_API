@@ -66,6 +66,8 @@ namespace wleepay.API
 
             //Register Authorize.Net settings here
             services.Configure<AuthorizeNetSettings>(Configuration.GetSection("AuthorizeNet"));
+            services.Configure<SochitelSettings>(Configuration.GetSection("Sochitel"));
+
 
             services.AddIdentity<ApplicationUser, ApplicationRole>(options =>
             {

@@ -12,3 +12,361 @@
 2026-05-05 11:19:58 AM|2|WARN|Microsoft.AspNetCore.Identity.SignInManager|User failed to provide the correct password. 
 2026-05-05 11:19:59 AM|10102|WARN|Microsoft.EntityFrameworkCore.Query|The query uses a row limiting operator ('Skip'/'Take') without an 'OrderBy' operator. This may lead to unpredictable results. 
 2026-05-05 11:19:59 AM|10102|WARN|Microsoft.EntityFrameworkCore.Query|The query uses a row limiting operator ('Skip'/'Take') without an 'OrderBy' operator. This may lead to unpredictable results. 
+2026-10-05 09:56:50 AM||DEBUG|wleepay.API.Program|init main 
+2026-10-05 09:56:54 AM||INFO|Microsoft.Hosting.Lifetime|Now listening on: https://localhost:5001 
+2026-10-05 09:56:54 AM||INFO|Microsoft.Hosting.Lifetime|Application started. Press Ctrl+C to shut down. 
+2026-10-05 09:56:54 AM||INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development 
+2026-10-05 09:56:54 AM||INFO|Microsoft.Hosting.Lifetime|Content root path: D:\Wleepay\Wleepay_API\wleepay.API 
+2026-10-05 09:57:50 AM||DEBUG|wleepay.API.Program|init main 
+2026-10-05 09:57:55 AM||INFO|Microsoft.Hosting.Lifetime|Now listening on: https://localhost:5001 
+2026-10-05 09:57:55 AM||INFO|Microsoft.Hosting.Lifetime|Application started. Press Ctrl+C to shut down. 
+2026-10-05 09:57:55 AM||INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development 
+2026-10-05 09:57:55 AM||INFO|Microsoft.Hosting.Lifetime|Content root path: D:\Wleepay\Wleepay_API\wleepay.API 
+2026-10-05 10:10:40 AM||DEBUG|wleepay.API.Program|init main 
+2026-10-05 10:10:44 AM||INFO|Microsoft.Hosting.Lifetime|Now listening on: https://localhost:5001 
+2026-10-05 10:10:44 AM||INFO|Microsoft.Hosting.Lifetime|Application started. Press Ctrl+C to shut down. 
+2026-10-05 10:10:44 AM||INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development 
+2026-10-05 10:10:44 AM||INFO|Microsoft.Hosting.Lifetime|Content root path: D:\Wleepay\Wleepay_API\wleepay.API 
+2026-10-05 10:29:01 AM|20102|ERROR|Microsoft.EntityFrameworkCore.Database.Command|Failed executing DbCommand (486ms) [Parameters=[@p0='?' (Size = 4000), @p1='?' (DbType = DateTime2), @p2='?' (Size = 4000), @p3='?' (Size = 4000), @p4='?' (Size = 4000), @p5='?' (Size = 4000)], CommandType='Text', CommandTimeout='30']
+SET NOCOUNT ON;
+INSERT INTO [SystemActivities] ([Action], [CreatedDate], [Description], [Email], [IpAddress], [UserId])
+VALUES (@p0, @p1, @p2, @p3, @p4, @p5);
+SELECT [Id]
+FROM [SystemActivities]
+WHERE @@ROWCOUNT = 1 AND [Id] = scope_identity(); 
+2026-10-05 10:29:01 AM|10000|ERROR|Microsoft.EntityFrameworkCore.Update|An exception occurred in the database while saving changes for context type 'wleepay.Data.Context.WPContext'.
+Microsoft.EntityFrameworkCore.DbUpdateException: An error occurred while updating the entries. See the inner exception for details.
+ ---> Microsoft.Data.SqlClient.SqlException (0x80131904): Cannot insert the value NULL into column 'UserId', table 'wleepay.dbo.SystemActivities'; column does not allow nulls. INSERT fails.
+The statement has been terminated.
+   at Microsoft.Data.SqlClient.SqlConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at Microsoft.Data.SqlClient.SqlInternalConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at Microsoft.Data.SqlClient.TdsParser.ThrowExceptionAndWarning(TdsParserStateObject stateObj, Boolean callerHasConnectionLock, Boolean asyncClose)
+   at Microsoft.Data.SqlClient.TdsParser.TryRun(RunBehavior runBehavior, SqlCommand cmdHandler, SqlDataReader dataStream, BulkCopySimpleResultSet bulkCopyHandler, TdsParserStateObject stateObj, Boolean& dataReady)
+   at Microsoft.Data.SqlClient.SqlDataReader.TryConsumeMetaData()
+   at Microsoft.Data.SqlClient.SqlDataReader.get_MetaData()
+   at Microsoft.Data.SqlClient.SqlCommand.FinishExecuteReader(SqlDataReader ds, RunBehavior runBehavior, String resetOptionsString, Boolean isInternal, Boolean forDescribeParameterEncryption, Boolean shouldCacheForAlwaysEncrypted)
+   at Microsoft.Data.SqlClient.SqlCommand.RunExecuteReaderTds(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, Boolean isAsync, Int32 timeout, Task& task, Boolean asyncWrite, Boolean inRetry, SqlDataReader ds, Boolean describeParameterEncryptionRequest)
+   at Microsoft.Data.SqlClient.SqlCommand.RunExecuteReader(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, TaskCompletionSource`1 completion, Int32 timeout, Task& task, Boolean& usedCache, Boolean asyncWrite, Boolean inRetry, String method)
+   at Microsoft.Data.SqlClient.SqlCommand.RunExecuteReader(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, String method)
+   at Microsoft.Data.SqlClient.SqlCommand.ExecuteReader(CommandBehavior behavior)
+   at Microsoft.Data.SqlClient.SqlCommand.ExecuteDbDataReader(CommandBehavior behavior)
+   at System.Data.Common.DbCommand.ExecuteReader()
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReader(RelationalCommandParameterObject parameterObject)
+   at Microsoft.EntityFrameworkCore.Update.ReaderModificationCommandBatch.Execute(IRelationalConnection connection)
+ClientConnectionId:1345dfdb-4acf-4b7a-a36d-16a8d543681c
+Error Number:515,State:2,Class:16
+   --- End of inner exception stack trace ---
+   at Microsoft.EntityFrameworkCore.Update.ReaderModificationCommandBatch.Execute(IRelationalConnection connection)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.Execute(IEnumerable`1 commandBatches, IRelationalConnection connection)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalDatabase.SaveChanges(IList`1 entries)
+   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChanges(IList`1 entriesToSave)
+   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChanges(DbContext _, Boolean acceptAllChangesOnSuccess)
+   at Microsoft.EntityFrameworkCore.SqlServer.Storage.Internal.SqlServerExecutionStrategy.Execute[TState,TResult](TState state, Func`3 operation, Func`3 verifySucceeded)
+   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChanges(Boolean acceptAllChangesOnSuccess)
+   at Microsoft.EntityFrameworkCore.DbContext.SaveChanges(Boolean acceptAllChangesOnSuccess) Microsoft.EntityFrameworkCore.DbUpdateException: An error occurred while updating the entries. See the inner exception for details.
+ ---> Microsoft.Data.SqlClient.SqlException (0x80131904): Cannot insert the value NULL into column 'UserId', table 'wleepay.dbo.SystemActivities'; column does not allow nulls. INSERT fails.
+The statement has been terminated.
+   at Microsoft.Data.SqlClient.SqlConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at Microsoft.Data.SqlClient.SqlInternalConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at Microsoft.Data.SqlClient.TdsParser.ThrowExceptionAndWarning(TdsParserStateObject stateObj, Boolean callerHasConnectionLock, Boolean asyncClose)
+   at Microsoft.Data.SqlClient.TdsParser.TryRun(RunBehavior runBehavior, SqlCommand cmdHandler, SqlDataReader dataStream, BulkCopySimpleResultSet bulkCopyHandler, TdsParserStateObject stateObj, Boolean& dataReady)
+   at Microsoft.Data.SqlClient.SqlDataReader.TryConsumeMetaData()
+   at Microsoft.Data.SqlClient.SqlDataReader.get_MetaData()
+   at Microsoft.Data.SqlClient.SqlCommand.FinishExecuteReader(SqlDataReader ds, RunBehavior runBehavior, String resetOptionsString, Boolean isInternal, Boolean forDescribeParameterEncryption, Boolean shouldCacheForAlwaysEncrypted)
+   at Microsoft.Data.SqlClient.SqlCommand.RunExecuteReaderTds(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, Boolean isAsync, Int32 timeout, Task& task, Boolean asyncWrite, Boolean inRetry, SqlDataReader ds, Boolean describeParameterEncryptionRequest)
+   at Microsoft.Data.SqlClient.SqlCommand.RunExecuteReader(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, TaskCompletionSource`1 completion, Int32 timeout, Task& task, Boolean& usedCache, Boolean asyncWrite, Boolean inRetry, String method)
+   at Microsoft.Data.SqlClient.SqlCommand.RunExecuteReader(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, String method)
+   at Microsoft.Data.SqlClient.SqlCommand.ExecuteReader(CommandBehavior behavior)
+   at Microsoft.Data.SqlClient.SqlCommand.ExecuteDbDataReader(CommandBehavior behavior)
+   at System.Data.Common.DbCommand.ExecuteReader()
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReader(RelationalCommandParameterObject parameterObject)
+   at Microsoft.EntityFrameworkCore.Update.ReaderModificationCommandBatch.Execute(IRelationalConnection connection)
+ClientConnectionId:1345dfdb-4acf-4b7a-a36d-16a8d543681c
+Error Number:515,State:2,Class:16
+   --- End of inner exception stack trace ---
+   at Microsoft.EntityFrameworkCore.Update.ReaderModificationCommandBatch.Execute(IRelationalConnection connection)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.Execute(IEnumerable`1 commandBatches, IRelationalConnection connection)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalDatabase.SaveChanges(IList`1 entries)
+   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChanges(IList`1 entriesToSave)
+   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChanges(DbContext _, Boolean acceptAllChangesOnSuccess)
+   at Microsoft.EntityFrameworkCore.SqlServer.Storage.Internal.SqlServerExecutionStrategy.Execute[TState,TResult](TState state, Func`3 operation, Func`3 verifySucceeded)
+   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChanges(Boolean acceptAllChangesOnSuccess)
+   at Microsoft.EntityFrameworkCore.DbContext.SaveChanges(Boolean acceptAllChangesOnSuccess)
+2026-10-05 10:29:02 AM||ERROR|wleepay.API.Controllers.AccountController|Failed to write signup system log. Action: Signup Failed - Phone Already Used Microsoft.EntityFrameworkCore.DbUpdateException: An error occurred while updating the entries. See the inner exception for details.
+ ---> Microsoft.Data.SqlClient.SqlException (0x80131904): Cannot insert the value NULL into column 'UserId', table 'wleepay.dbo.SystemActivities'; column does not allow nulls. INSERT fails.
+The statement has been terminated.
+   at Microsoft.Data.SqlClient.SqlConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at Microsoft.Data.SqlClient.SqlInternalConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at Microsoft.Data.SqlClient.TdsParser.ThrowExceptionAndWarning(TdsParserStateObject stateObj, Boolean callerHasConnectionLock, Boolean asyncClose)
+   at Microsoft.Data.SqlClient.TdsParser.TryRun(RunBehavior runBehavior, SqlCommand cmdHandler, SqlDataReader dataStream, BulkCopySimpleResultSet bulkCopyHandler, TdsParserStateObject stateObj, Boolean& dataReady)
+   at Microsoft.Data.SqlClient.SqlDataReader.TryConsumeMetaData()
+   at Microsoft.Data.SqlClient.SqlDataReader.get_MetaData()
+   at Microsoft.Data.SqlClient.SqlCommand.FinishExecuteReader(SqlDataReader ds, RunBehavior runBehavior, String resetOptionsString, Boolean isInternal, Boolean forDescribeParameterEncryption, Boolean shouldCacheForAlwaysEncrypted)
+   at Microsoft.Data.SqlClient.SqlCommand.RunExecuteReaderTds(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, Boolean isAsync, Int32 timeout, Task& task, Boolean asyncWrite, Boolean inRetry, SqlDataReader ds, Boolean describeParameterEncryptionRequest)
+   at Microsoft.Data.SqlClient.SqlCommand.RunExecuteReader(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, TaskCompletionSource`1 completion, Int32 timeout, Task& task, Boolean& usedCache, Boolean asyncWrite, Boolean inRetry, String method)
+   at Microsoft.Data.SqlClient.SqlCommand.RunExecuteReader(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, String method)
+   at Microsoft.Data.SqlClient.SqlCommand.ExecuteReader(CommandBehavior behavior)
+   at Microsoft.Data.SqlClient.SqlCommand.ExecuteDbDataReader(CommandBehavior behavior)
+   at System.Data.Common.DbCommand.ExecuteReader()
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReader(RelationalCommandParameterObject parameterObject)
+   at Microsoft.EntityFrameworkCore.Update.ReaderModificationCommandBatch.Execute(IRelationalConnection connection)
+ClientConnectionId:1345dfdb-4acf-4b7a-a36d-16a8d543681c
+Error Number:515,State:2,Class:16
+   --- End of inner exception stack trace ---
+   at Microsoft.EntityFrameworkCore.Update.ReaderModificationCommandBatch.Execute(IRelationalConnection connection)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.Execute(IEnumerable`1 commandBatches, IRelationalConnection connection)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalDatabase.SaveChanges(IList`1 entries)
+   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChanges(IList`1 entriesToSave)
+   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChanges(DbContext _, Boolean acceptAllChangesOnSuccess)
+   at Microsoft.EntityFrameworkCore.SqlServer.Storage.Internal.SqlServerExecutionStrategy.Execute[TState,TResult](TState state, Func`3 operation, Func`3 verifySucceeded)
+   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChanges(Boolean acceptAllChangesOnSuccess)
+   at Microsoft.EntityFrameworkCore.DbContext.SaveChanges(Boolean acceptAllChangesOnSuccess)
+   at Microsoft.EntityFrameworkCore.DbContext.SaveChanges()
+   at wleepay.Data.Repositories.SystemActivityLogsRepository.AddActivityLog(SystemActivityLog systemActivityLog) in D:\Wleepay\Wleepay_API\wleepay.Data\Repositories\SystemActivityLogsRepository.cs:line 34
+   at wleepay.Services.SystemActivityLogService.AddSystemLogs(SystemActivityLog systemActivityLog) in D:\Wleepay\Wleepay_API\wleepay.Services\SystemActivityLogService.cs:line 24
+   at wleepay.API.Controllers.AccountController.LogSignupErrorAsync(String action, String description, String userId) in D:\Wleepay\Wleepay_API\wleepay.API\Controllers\AccountController.cs:line 918
+2026-10-05 10:29:10 AM|10102|WARN|Microsoft.EntityFrameworkCore.Query|The query uses a row limiting operator ('Skip'/'Take') without an 'OrderBy' operator. This may lead to unpredictable results. 
+2026-10-05 10:29:10 AM|10102|WARN|Microsoft.EntityFrameworkCore.Query|The query uses a row limiting operator ('Skip'/'Take') without an 'OrderBy' operator. This may lead to unpredictable results. 
+2026-10-05 10:29:43 AM||WARN|Microsoft.AspNetCore.Identity.UserManager|Invalid password for user. 
+2026-10-05 10:29:43 AM|2|WARN|Microsoft.AspNetCore.Identity.SignInManager|User failed to provide the correct password. 
+2026-10-05 10:30:38 AM||INFO|wleepay.API.Controllers.AuthorizeNetController|Received Mobile Recharge request for MSISDN: +231888008771 
+2026-10-05 10:36:14 AM||DEBUG|wleepay.API.Program|init main 
+2026-10-05 10:36:20 AM||INFO|Microsoft.Hosting.Lifetime|Now listening on: https://localhost:5001 
+2026-10-05 10:36:20 AM||INFO|Microsoft.Hosting.Lifetime|Application started. Press Ctrl+C to shut down. 
+2026-10-05 10:36:20 AM||INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development 
+2026-10-05 10:36:20 AM||INFO|Microsoft.Hosting.Lifetime|Content root path: D:\Wleepay\Wleepay_API\wleepay.API 
+2026-10-05 10:37:34 AM||INFO|wleepay.API.Controllers.AuthorizeNetController|Received Mobile Recharge request for MSISDN: +231888008771 
+2026-10-05 10:37:54 AM||INFO|wleepay.Services.AuthorizeNetService|Sending Recharge Payload: {"auth":{"username":"weepay..api.usd","salt":"KDLsNq1GmL5oDXcQxqcmAbsZrozsJ8dy5mieJyIy","password":"979f103263374901d064b3866ebcd7a7d20b9dd4"},"version":5,"command":"execTransaction","operator":"10","msisdn":"+231888008771","amount":"1.00","simulate":"0","userReference":"wleeb7de1d","productId":"19"} 
+2026-10-05 10:37:55 AM||INFO|wleepay.Services.AuthorizeNetService|Recharge Provider Response: {"status":{"id":69,"name":"Duplicate salt","type":2,"typeName":"Failure"},"command":"execTransaction","timestamp":1791176876,"reference":1399181598,"result":[]} 
+2026-10-05 10:40:18 AM||ERROR|wleepay.Services.AuthorizeNetService|An error occurred during recharge process for User b4a0a1fa-b200-499b-aefa-4ae7b5408798 Newtonsoft.Json.JsonSerializationException: Cannot deserialize the current JSON array (e.g. [1,2,3]) into type 'wleepay.Core.DTO.Response.Result' because the type requires a JSON object (e.g. {"name":"value"}) to deserialize correctly.
+To fix this error either change the JSON to a JSON object (e.g. {"name":"value"}) or change the deserialized type to an array or a type that implements a collection interface (e.g. ICollection, IList) like List<T> that can be deserialized from a JSON array. JsonArrayAttribute can also be added to the type to force it to deserialize from a JSON array.
+Path 'result', line 1, position 158.
+   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.EnsureArrayContract(JsonReader reader, Type objectType, JsonContract contract)
+   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.CreateList(JsonReader reader, Type objectType, JsonContract contract, JsonProperty member, Object existingValue, String id)
+   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.CreateValueInternal(JsonReader reader, Type objectType, JsonContract contract, JsonProperty member, JsonContainerContract containerContract, JsonProperty containerMember, Object existingValue)
+   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.SetPropertyValue(JsonProperty property, JsonConverter propertyConverter, JsonContainerContract containerContract, JsonProperty containerProperty, JsonReader reader, Object target)
+   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.PopulateObject(Object newObject, JsonReader reader, JsonObjectContract contract, JsonProperty member, String id)
+   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.CreateObject(JsonReader reader, Type objectType, JsonContract contract, JsonProperty member, JsonContainerContract containerContract, JsonProperty containerMember, Object existingValue)
+   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.CreateValueInternal(JsonReader reader, Type objectType, JsonContract contract, JsonProperty member, JsonContainerContract containerContract, JsonProperty containerMember, Object existingValue)
+   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.Deserialize(JsonReader reader, Type objectType, Boolean checkAdditionalContent)
+   at Newtonsoft.Json.JsonSerializer.DeserializeInternal(JsonReader reader, Type objectType)
+   at Newtonsoft.Json.JsonSerializer.Deserialize(JsonReader reader, Type objectType)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject(String value, Type type, JsonSerializerSettings settings)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject[T](String value, JsonSerializerSettings settings)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject[T](String value)
+   at wleepay.Services.AuthorizeNetService.ProcessMobileRechargeAsync(PaymentRequests request, String userId) in D:\Wleepay\Wleepay_API\wleepay.Services\AuthorizeNetService.cs:line 289
+2026-10-05 10:40:58 AM||INFO|wleepay.API.Controllers.AuthorizeNetController|Received Mobile Recharge request for MSISDN: +231888008771 
+2026-10-05 10:41:11 AM||INFO|wleepay.Services.AuthorizeNetService|Sending Recharge Payload: {"auth":{"username":"weepay..api.usd","salt":"MekT94ZyW2EY8DLDsfqtzSYPXo86lbOBv5QbCNdN","password":"2cc6e6123d08a73ed0e140bba929bb4176139941"},"version":5,"command":"execTransaction","operator":"10","msisdn":"+231888008771","amount":"1.00","simulate":"0","userReference":"wleedc1c3f","productId":"19"} 
+2026-10-05 10:41:14 AM||INFO|wleepay.Services.AuthorizeNetService|Recharge Provider Response: {"status":{"id":69,"name":"Duplicate salt","type":2,"typeName":"Failure"},"command":"execTransaction","timestamp":1791177075,"reference":1099999895,"result":[]} 
+2026-10-05 10:44:08 AM||ERROR|wleepay.Services.AuthorizeNetService|An error occurred during recharge process for User b4a0a1fa-b200-499b-aefa-4ae7b5408798 Newtonsoft.Json.JsonSerializationException: Cannot deserialize the current JSON array (e.g. [1,2,3]) into type 'wleepay.Core.DTO.Response.Result' because the type requires a JSON object (e.g. {"name":"value"}) to deserialize correctly.
+To fix this error either change the JSON to a JSON object (e.g. {"name":"value"}) or change the deserialized type to an array or a type that implements a collection interface (e.g. ICollection, IList) like List<T> that can be deserialized from a JSON array. JsonArrayAttribute can also be added to the type to force it to deserialize from a JSON array.
+Path 'result', line 1, position 158.
+   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.EnsureArrayContract(JsonReader reader, Type objectType, JsonContract contract)
+   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.CreateList(JsonReader reader, Type objectType, JsonContract contract, JsonProperty member, Object existingValue, String id)
+   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.CreateValueInternal(JsonReader reader, Type objectType, JsonContract contract, JsonProperty member, JsonContainerContract containerContract, JsonProperty containerMember, Object existingValue)
+   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.SetPropertyValue(JsonProperty property, JsonConverter propertyConverter, JsonContainerContract containerContract, JsonProperty containerProperty, JsonReader reader, Object target)
+   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.PopulateObject(Object newObject, JsonReader reader, JsonObjectContract contract, JsonProperty member, String id)
+   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.CreateObject(JsonReader reader, Type objectType, JsonContract contract, JsonProperty member, JsonContainerContract containerContract, JsonProperty containerMember, Object existingValue)
+   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.CreateValueInternal(JsonReader reader, Type objectType, JsonContract contract, JsonProperty member, JsonContainerContract containerContract, JsonProperty containerMember, Object existingValue)
+   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.Deserialize(JsonReader reader, Type objectType, Boolean checkAdditionalContent)
+   at Newtonsoft.Json.JsonSerializer.DeserializeInternal(JsonReader reader, Type objectType)
+   at Newtonsoft.Json.JsonSerializer.Deserialize(JsonReader reader, Type objectType)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject(String value, Type type, JsonSerializerSettings settings)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject[T](String value, JsonSerializerSettings settings)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject[T](String value)
+   at wleepay.Services.AuthorizeNetService.ProcessMobileRechargeAsync(PaymentRequests request, String userId) in D:\Wleepay\Wleepay_API\wleepay.Services\AuthorizeNetService.cs:line 289
+2026-10-05 10:47:04 AM||INFO|wleepay.API.Controllers.AuthorizeNetController|Received Mobile Recharge request for MSISDN: +231888008771 
+2026-10-05 10:47:27 AM||INFO|wleepay.Services.AuthorizeNetService|Sending Recharge Payload: {"auth":{"username":"weepay..api.usd","salt":"MrjRbH3M4SQYUTCkF9TM8eW62dJsHn2qA0E4ytN6","password":"4b1815145869f0d85128b3ad1aededcb743eb856"},"version":5,"command":"execTransaction","operator":"10","msisdn":"+231888008771","amount":"1.00","simulate":"0","userReference":"wleeb3e871","productId":"19"} 
+2026-10-05 10:50:09 AM||INFO|wleepay.Services.AuthorizeNetService|Recharge Provider Response: {"status":{"id":69,"name":"Duplicate salt","type":2,"typeName":"Failure"},"command":"execTransaction","timestamp":1791177609,"reference":1520098195,"result":[]} 
+2026-10-05 10:52:38 AM||ERROR|wleepay.Services.AuthorizeNetService|An error occurred during recharge process for User b4a0a1fa-b200-499b-aefa-4ae7b5408798 Newtonsoft.Json.JsonSerializationException: Cannot deserialize the current JSON array (e.g. [1,2,3]) into type 'wleepay.Core.DTO.Response.Result' because the type requires a JSON object (e.g. {"name":"value"}) to deserialize correctly.
+To fix this error either change the JSON to a JSON object (e.g. {"name":"value"}) or change the deserialized type to an array or a type that implements a collection interface (e.g. ICollection, IList) like List<T> that can be deserialized from a JSON array. JsonArrayAttribute can also be added to the type to force it to deserialize from a JSON array.
+Path 'result', line 1, position 158.
+   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.EnsureArrayContract(JsonReader reader, Type objectType, JsonContract contract)
+   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.CreateList(JsonReader reader, Type objectType, JsonContract contract, JsonProperty member, Object existingValue, String id)
+   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.CreateValueInternal(JsonReader reader, Type objectType, JsonContract contract, JsonProperty member, JsonContainerContract containerContract, JsonProperty containerMember, Object existingValue)
+   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.SetPropertyValue(JsonProperty property, JsonConverter propertyConverter, JsonContainerContract containerContract, JsonProperty containerProperty, JsonReader reader, Object target)
+   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.PopulateObject(Object newObject, JsonReader reader, JsonObjectContract contract, JsonProperty member, String id)
+   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.CreateObject(JsonReader reader, Type objectType, JsonContract contract, JsonProperty member, JsonContainerContract containerContract, JsonProperty containerMember, Object existingValue)
+   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.CreateValueInternal(JsonReader reader, Type objectType, JsonContract contract, JsonProperty member, JsonContainerContract containerContract, JsonProperty containerMember, Object existingValue)
+   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.Deserialize(JsonReader reader, Type objectType, Boolean checkAdditionalContent)
+   at Newtonsoft.Json.JsonSerializer.DeserializeInternal(JsonReader reader, Type objectType)
+   at Newtonsoft.Json.JsonSerializer.Deserialize(JsonReader reader, Type objectType)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject(String value, Type type, JsonSerializerSettings settings)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject[T](String value, JsonSerializerSettings settings)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject[T](String value)
+   at wleepay.Services.AuthorizeNetService.ProcessMobileRechargeAsync(PaymentRequests request, String userId) in D:\Wleepay\Wleepay_API\wleepay.Services\AuthorizeNetService.cs:line 289
+2026-10-05 10:53:13 AM||INFO|wleepay.API.Controllers.AuthorizeNetController|Received Mobile Recharge request for MSISDN: +231888008771 
+2026-10-05 10:53:28 AM||INFO|wleepay.Services.AuthorizeNetService|Sending Recharge Payload: {"auth":{"username":"weepay..api.usd","salt":"gAiuQjsTaR3SVS3CbxixeMIEwA2oppT0YWyODTtD","password":"54fddbe4a74fae89954951aae29e54b91dfd9176"},"version":5,"command":"execTransaction","operator":"10","msisdn":"+231888008771","amount":"1.00","simulate":"0","userReference":"wleec84b2b","productId":"19"} 
+2026-10-05 10:53:34 AM||INFO|wleepay.Services.AuthorizeNetService|Recharge Provider Response: {"status":{"id":69,"name":"Duplicate salt","type":2,"typeName":"Failure"},"command":"execTransaction","timestamp":1791177814,"reference":1947276183,"result":[]} 
+2026-10-05 10:54:54 AM||DEBUG|wleepay.API.Program|init main 
+2026-10-05 10:54:58 AM||INFO|Microsoft.Hosting.Lifetime|Now listening on: https://localhost:5001 
+2026-10-05 10:54:58 AM||INFO|Microsoft.Hosting.Lifetime|Application started. Press Ctrl+C to shut down. 
+2026-10-05 10:54:58 AM||INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development 
+2026-10-05 10:54:58 AM||INFO|Microsoft.Hosting.Lifetime|Content root path: D:\Wleepay\Wleepay_API\wleepay.API 
+2026-10-05 10:58:01 AM||INFO|wleepay.API.Controllers.AuthorizeNetController|Received Mobile Recharge request for MSISDN: +231888008771 
+2026-10-05 10:58:19 AM||INFO|wleepay.Services.AuthorizeNetService|Sending Recharge Payload: {"auth":{"username":"weepay..api.usd","salt":"5DJ6byY1zmhhEcNPAUFSe7TqYcDfGlNpe14TAqHk","password":"6ac07c09de53b35bf3061085584a77d0588e1025"},"version":5,"command":"execTransaction","operator":"10","msisdn":"+231888008771","amount":"1.00","simulate":"0","userReference":"wleed224dd","productId":"19"} 
+2026-10-05 10:58:22 AM||INFO|wleepay.Services.AuthorizeNetService|Recharge Provider Response: {"status":{"id":69,"name":"Duplicate salt","type":2,"typeName":"Failure"},"command":"execTransaction","timestamp":1791178103,"reference":1632831779,"result":[]} 
+2026-10-05 11:00:21 AM||ERROR|wleepay.Services.AuthorizeNetService|An error occurred during recharge process for User b4a0a1fa-b200-499b-aefa-4ae7b5408798 Newtonsoft.Json.JsonSerializationException: Cannot deserialize the current JSON array (e.g. [1,2,3]) into type 'wleepay.Core.DTO.Response.Result' because the type requires a JSON object (e.g. {"name":"value"}) to deserialize correctly.
+To fix this error either change the JSON to a JSON object (e.g. {"name":"value"}) or change the deserialized type to an array or a type that implements a collection interface (e.g. ICollection, IList) like List<T> that can be deserialized from a JSON array. JsonArrayAttribute can also be added to the type to force it to deserialize from a JSON array.
+Path 'result', line 1, position 158.
+   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.EnsureArrayContract(JsonReader reader, Type objectType, JsonContract contract)
+   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.CreateList(JsonReader reader, Type objectType, JsonContract contract, JsonProperty member, Object existingValue, String id)
+   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.CreateValueInternal(JsonReader reader, Type objectType, JsonContract contract, JsonProperty member, JsonContainerContract containerContract, JsonProperty containerMember, Object existingValue)
+   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.SetPropertyValue(JsonProperty property, JsonConverter propertyConverter, JsonContainerContract containerContract, JsonProperty containerProperty, JsonReader reader, Object target)
+   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.PopulateObject(Object newObject, JsonReader reader, JsonObjectContract contract, JsonProperty member, String id)
+   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.CreateObject(JsonReader reader, Type objectType, JsonContract contract, JsonProperty member, JsonContainerContract containerContract, JsonProperty containerMember, Object existingValue)
+   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.CreateValueInternal(JsonReader reader, Type objectType, JsonContract contract, JsonProperty member, JsonContainerContract containerContract, JsonProperty containerMember, Object existingValue)
+   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.Deserialize(JsonReader reader, Type objectType, Boolean checkAdditionalContent)
+   at Newtonsoft.Json.JsonSerializer.DeserializeInternal(JsonReader reader, Type objectType)
+   at Newtonsoft.Json.JsonSerializer.Deserialize(JsonReader reader, Type objectType)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject(String value, Type type, JsonSerializerSettings settings)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject[T](String value, JsonSerializerSettings settings)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject[T](String value)
+   at wleepay.Services.AuthorizeNetService.ProcessMobileRechargeAsync(PaymentRequests request, String userId) in D:\Wleepay\Wleepay_API\wleepay.Services\AuthorizeNetService.cs:line 289
+2026-10-05 11:00:38 AM|10102|WARN|Microsoft.EntityFrameworkCore.Query|The query uses a row limiting operator ('Skip'/'Take') without an 'OrderBy' operator. This may lead to unpredictable results. 
+2026-10-05 11:00:38 AM|10102|WARN|Microsoft.EntityFrameworkCore.Query|The query uses a row limiting operator ('Skip'/'Take') without an 'OrderBy' operator. This may lead to unpredictable results. 
+2026-10-05 11:01:13 AM||INFO|wleepay.API.Controllers.AuthorizeNetController|Received Mobile Recharge request for MSISDN: +231888008771 
+2026-10-05 11:01:28 AM||INFO|wleepay.Services.AuthorizeNetService|Sending Recharge Payload: {"auth":{"username":"weepay..api.usd","salt":"OW5dTTQLjDoES1mHPrKXRQVeZJCWck5N1E2nmVlq","password":"e858cf378a3e11b07eab71799c4c8cad542dd780"},"version":5,"command":"execTransaction","operator":"10","msisdn":"+231888008771","amount":"1.00","simulate":"0","userReference":"wlee8212a8","productId":"19"} 
+2026-10-05 11:01:37 AM||INFO|wleepay.Services.AuthorizeNetService|Recharge Provider Response: {"status":{"id":69,"name":"Duplicate salt","type":2,"typeName":"Failure"},"command":"execTransaction","timestamp":1791178298,"reference":1469382663,"result":[]} 
+2026-10-05 11:03:42 AM||ERROR|wleepay.Services.AuthorizeNetService|An error occurred during recharge process for User b4a0a1fa-b200-499b-aefa-4ae7b5408798 Newtonsoft.Json.JsonSerializationException: Cannot deserialize the current JSON array (e.g. [1,2,3]) into type 'wleepay.Core.DTO.Response.Result' because the type requires a JSON object (e.g. {"name":"value"}) to deserialize correctly.
+To fix this error either change the JSON to a JSON object (e.g. {"name":"value"}) or change the deserialized type to an array or a type that implements a collection interface (e.g. ICollection, IList) like List<T> that can be deserialized from a JSON array. JsonArrayAttribute can also be added to the type to force it to deserialize from a JSON array.
+Path 'result', line 1, position 158.
+   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.EnsureArrayContract(JsonReader reader, Type objectType, JsonContract contract)
+   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.CreateList(JsonReader reader, Type objectType, JsonContract contract, JsonProperty member, Object existingValue, String id)
+   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.CreateValueInternal(JsonReader reader, Type objectType, JsonContract contract, JsonProperty member, JsonContainerContract containerContract, JsonProperty containerMember, Object existingValue)
+   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.SetPropertyValue(JsonProperty property, JsonConverter propertyConverter, JsonContainerContract containerContract, JsonProperty containerProperty, JsonReader reader, Object target)
+   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.PopulateObject(Object newObject, JsonReader reader, JsonObjectContract contract, JsonProperty member, String id)
+   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.CreateObject(JsonReader reader, Type objectType, JsonContract contract, JsonProperty member, JsonContainerContract containerContract, JsonProperty containerMember, Object existingValue)
+   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.CreateValueInternal(JsonReader reader, Type objectType, JsonContract contract, JsonProperty member, JsonContainerContract containerContract, JsonProperty containerMember, Object existingValue)
+   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.Deserialize(JsonReader reader, Type objectType, Boolean checkAdditionalContent)
+   at Newtonsoft.Json.JsonSerializer.DeserializeInternal(JsonReader reader, Type objectType)
+   at Newtonsoft.Json.JsonSerializer.Deserialize(JsonReader reader, Type objectType)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject(String value, Type type, JsonSerializerSettings settings)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject[T](String value, JsonSerializerSettings settings)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject[T](String value)
+   at wleepay.Services.AuthorizeNetService.ProcessMobileRechargeAsync(PaymentRequests request, String userId) in D:\Wleepay\Wleepay_API\wleepay.Services\AuthorizeNetService.cs:line 289
+2026-10-05 11:03:48 AM||DEBUG|wleepay.API.Program|init main 
+2026-10-05 11:03:55 AM||INFO|Microsoft.Hosting.Lifetime|Now listening on: https://localhost:5001 
+2026-10-05 11:03:55 AM||INFO|Microsoft.Hosting.Lifetime|Application started. Press Ctrl+C to shut down. 
+2026-10-05 11:03:55 AM||INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development 
+2026-10-05 11:03:55 AM||INFO|Microsoft.Hosting.Lifetime|Content root path: D:\Wleepay\Wleepay_API\wleepay.API 
+2026-10-05 11:04:13 AM|10102|WARN|Microsoft.EntityFrameworkCore.Query|The query uses a row limiting operator ('Skip'/'Take') without an 'OrderBy' operator. This may lead to unpredictable results. 
+2026-10-05 11:04:13 AM|10102|WARN|Microsoft.EntityFrameworkCore.Query|The query uses a row limiting operator ('Skip'/'Take') without an 'OrderBy' operator. This may lead to unpredictable results. 
+2026-10-05 11:11:11 AM||DEBUG|wleepay.API.Program|init main 
+2026-10-05 11:11:15 AM||INFO|Microsoft.Hosting.Lifetime|Now listening on: https://localhost:5001 
+2026-10-05 11:11:15 AM||INFO|Microsoft.Hosting.Lifetime|Application started. Press Ctrl+C to shut down. 
+2026-10-05 11:11:15 AM||INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development 
+2026-10-05 11:11:15 AM||INFO|Microsoft.Hosting.Lifetime|Content root path: D:\Wleepay\Wleepay_API\wleepay.API 
+2026-10-05 11:12:37 AM|10102|WARN|Microsoft.EntityFrameworkCore.Query|The query uses a row limiting operator ('Skip'/'Take') without an 'OrderBy' operator. This may lead to unpredictable results. 
+2026-10-05 11:12:37 AM|10102|WARN|Microsoft.EntityFrameworkCore.Query|The query uses a row limiting operator ('Skip'/'Take') without an 'OrderBy' operator. This may lead to unpredictable results. 
+2026-10-05 11:13:02 AM||INFO|wleepay.API.Controllers.AuthorizeNetController|Received Mobile Recharge request for MSISDN: +231888008771 
+2026-10-05 11:13:09 AM||INFO|wleepay.Services.AuthorizeNetService|Sending Recharge Payload: {"auth":{"username":"weepay..api.usd","salt":"JZZzxmogv0MyYma0lU52G8OfIKUZ65OMbrjTUlDI","password":"aaa32b2de762eaefa85fe75d847b16a2b6464565"},"version":5,"command":"execTransaction","operator":"10","msisdn":"+231888008771","amount":"1.00","simulate":"0","userReference":"wlee5d342d","productId":"19"} 
+2026-10-05 11:13:11 AM||INFO|wleepay.Services.AuthorizeNetService|Recharge Provider Response: {"status":{"id":69,"name":"Duplicate salt","type":2,"typeName":"Failure"},"command":"execTransaction","timestamp":1791178992,"reference":1757641918,"result":[]} 
+2026-10-05 11:25:26 AM||DEBUG|wleepay.API.Program|init main 
+2026-10-05 11:29:06 AM||DEBUG|wleepay.API.Program|init main 
+2026-10-05 11:29:10 AM||INFO|Microsoft.Hosting.Lifetime|Now listening on: https://localhost:5001 
+2026-10-05 11:29:10 AM||INFO|Microsoft.Hosting.Lifetime|Application started. Press Ctrl+C to shut down. 
+2026-10-05 11:29:10 AM||INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development 
+2026-10-05 11:29:10 AM||INFO|Microsoft.Hosting.Lifetime|Content root path: D:\Wleepay\Wleepay_API\wleepay.API 
+2026-10-05 11:30:18 AM||INFO|wleepay.API.Controllers.AuthorizeNetController|Received Mobile Recharge request for MSISDN: +231888008771 
+2026-10-05 11:30:18 AM||INFO|wleepay.Services.AuthorizeNetService|Sochitel auth built for getBalance, salt=jLByzGj35L6rER5fXwt9gvl3kJ9ssJkSYqoe6YeE 
+2026-10-05 11:30:19 AM||WARN|wleepay.Services.AuthorizeNetService|Sochitel getBalance failed. Status Invalid call format. Raw: {"status":{"id":11,"name":"Invalid call format","type":2,"typeName":"Failure"},"command":"getBalance","timestamp":1791180019,"reference":1161078012,"result":[]} 
+2026-10-05 11:30:30 AM||INFO|wleepay.API.Controllers.AuthorizeNetController|Received Mobile Recharge request for MSISDN: +231888008771 
+2026-10-05 11:30:30 AM||INFO|wleepay.Services.AuthorizeNetService|Sochitel auth built for getBalance, salt=5TyYeN7AmLQhOn9ZJQwXvDIBLulay65wF94k2AzA 
+2026-10-05 11:30:30 AM||WARN|wleepay.Services.AuthorizeNetService|Sochitel getBalance failed. Status Invalid call format. Raw: {"status":{"id":11,"name":"Invalid call format","type":2,"typeName":"Failure"},"command":"getBalance","timestamp":1791180031,"reference":1675919458,"result":[]} 
+2026-10-05 11:30:45 AM||INFO|wleepay.API.Controllers.AuthorizeNetController|Received Mobile Recharge request for MSISDN: +231888008771 
+2026-10-05 11:31:10 AM||INFO|wleepay.Services.AuthorizeNetService|Sochitel auth built for getBalance, salt=e0AfAiN9ZQfNErYCeqOAaCDnTYbMkDXZDMd0fsb0 
+2026-10-05 11:31:10 AM||WARN|wleepay.Services.AuthorizeNetService|Sochitel getBalance failed. Status Invalid call format. Raw: {"status":{"id":11,"name":"Invalid call format","type":2,"typeName":"Failure"},"command":"getBalance","timestamp":1791180071,"reference":1581285958,"result":[]} 
+2026-10-05 11:31:39 AM||INFO|wleepay.API.Controllers.AuthorizeNetController|Received Mobile Recharge request for MSISDN: +231888008771 
+2026-10-05 11:31:41 AM||INFO|wleepay.Services.AuthorizeNetService|Sochitel auth built for getBalance, salt=qnrffrywTzb5MfouawqgBEkTkzqXpIgBcd3nj7a3 
+2026-10-05 11:31:42 AM||WARN|wleepay.Services.AuthorizeNetService|Sochitel getBalance failed. Status Invalid call format. Raw: {"status":{"id":11,"name":"Invalid call format","type":2,"typeName":"Failure"},"command":"getBalance","timestamp":1791180103,"reference":1998353203,"result":[]} 
+2026-10-05 11:32:03 AM||INFO|wleepay.API.Controllers.AuthorizeNetController|Received Mobile Recharge request for MSISDN: +231888008771 
+2026-10-05 11:32:09 AM||INFO|wleepay.Services.AuthorizeNetService|Sochitel auth built for getBalance, salt=UF6voY8OjKCTnqXn8EvendYHFaCAXQQuNrioW7NG 
+2026-10-05 11:42:11 AM||DEBUG|wleepay.API.Program|init main 
+2026-10-05 11:42:14 AM||INFO|Microsoft.Hosting.Lifetime|Now listening on: https://localhost:5001 
+2026-10-05 11:42:14 AM||INFO|Microsoft.Hosting.Lifetime|Application started. Press Ctrl+C to shut down. 
+2026-10-05 11:42:14 AM||INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development 
+2026-10-05 11:42:14 AM||INFO|Microsoft.Hosting.Lifetime|Content root path: D:\Wleepay\Wleepay_API\wleepay.API 
+2026-10-05 11:42:31 AM||INFO|wleepay.API.Controllers.AuthorizeNetController|Received Mobile Recharge request for MSISDN: +231888008771 
+2026-10-05 11:42:38 AM||INFO|wleepay.Services.AuthorizeNetService|Sochitel auth built for getBalance, salt=hdolxjPoYGtBrjq8TggEip949aq1aiPmpPGi2AiU 
+2026-10-05 11:42:56 AM||INFO|wleepay.Services.AuthorizeNetService|Sochitel auth built for execTransaction, salt=0Y6GSoi6VPN1U1lQTxM6Rlo0dLgRXtzitoghPemE 
+2026-10-05 11:42:56 AM||INFO|wleepay.Services.AuthorizeNetService|Sending recharge. UserRef=wlee9cf3eebe8888 Operator=10 Msisdn=+231888008771 Product=19 Amount=1.00 Simulate=0 
+2026-10-05 11:43:03 AM||INFO|wleepay.Services.AuthorizeNetService|Recharge Provider Response (UserRef wlee9cf3eebe8888): {"status":{"id":0,"name":"Successful","type":0,"typeName":"Success"},"command":"execTransaction","timestamp":1791180784,"reference":1207173650,"result":{"id":"207315992354876118","operator":{"id":"10","name":"Liberia MTN","reference":null},"country":{"id":"LR","name":"Liberia"},"amount":{"operator":"1.00","user":"1.00"},"currency":{"user":"USD","operator":"USD"},"productId":"19","productType":"1","simulation":false,"userReference":"wlee9cf3eebe8888","msisdn":"231888008771","balance":{"initial":"500.48","transaction":"1.00","commission":"0.04","commissionPercentage":"4.00","final":"499.52","currency":"USD"}}} 
+2026-10-05 11:43:23 AM|10102|WARN|Microsoft.EntityFrameworkCore.Query|The query uses a row limiting operator ('Skip'/'Take') without an 'OrderBy' operator. This may lead to unpredictable results. 
+2026-10-05 11:43:24 AM|10102|WARN|Microsoft.EntityFrameworkCore.Query|The query uses a row limiting operator ('Skip'/'Take') without an 'OrderBy' operator. This may lead to unpredictable results. 
+2026-10-05 11:43:24 AM|10102|WARN|Microsoft.EntityFrameworkCore.Query|The query uses a row limiting operator ('Skip'/'Take') without an 'OrderBy' operator. This may lead to unpredictable results. 
+2026-10-05 11:43:24 AM|10102|WARN|Microsoft.EntityFrameworkCore.Query|The query uses a row limiting operator ('Skip'/'Take') without an 'OrderBy' operator. This may lead to unpredictable results. 
+2026-10-05 11:51:49 AM||DEBUG|wleepay.API.Program|init main 
+2026-10-05 11:51:53 AM||INFO|Microsoft.Hosting.Lifetime|Now listening on: https://localhost:5001 
+2026-10-05 11:51:53 AM||INFO|Microsoft.Hosting.Lifetime|Application started. Press Ctrl+C to shut down. 
+2026-10-05 11:51:53 AM||INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development 
+2026-10-05 11:51:53 AM||INFO|Microsoft.Hosting.Lifetime|Content root path: D:\Wleepay\Wleepay_API\wleepay.API 
+2026-10-05 11:52:14 AM|10102|WARN|Microsoft.EntityFrameworkCore.Query|The query uses a row limiting operator ('Skip'/'Take') without an 'OrderBy' operator. This may lead to unpredictable results. 
+2026-10-05 11:52:14 AM|10102|WARN|Microsoft.EntityFrameworkCore.Query|The query uses a row limiting operator ('Skip'/'Take') without an 'OrderBy' operator. This may lead to unpredictable results. 
+2026-10-05 11:55:11 AM||INFO|wleepay.API.Controllers.AuthorizeNetController|Received Mobile Recharge request for MSISDN: +231888008771 
+2026-10-05 11:55:16 AM||INFO|wleepay.Services.AuthorizeNetService|Sending recharge. UserRef=wlee8614a68cb146 Operator=10 Msisdn=+231888008771 Product=19 Amount=1.00 Simulate=0 
+2026-10-05 11:55:19 AM||INFO|wleepay.Services.AuthorizeNetService|Recharge Provider Response (UserRef wlee8614a68cb146): {"status":{"id":0,"name":"Successful","type":0,"typeName":"Success"},"command":"execTransaction","timestamp":1791181520,"reference":1539819686,"result":{"id":"207311524195716235","operator":{"id":"10","name":"Liberia MTN","reference":null},"country":{"id":"LR","name":"Liberia"},"amount":{"operator":"1.00","user":"1.00"},"currency":{"user":"USD","operator":"USD"},"productId":"19","productType":"1","simulation":false,"userReference":"wlee8614a68cb146","msisdn":"231888008771","balance":{"initial":"499.52","transaction":"1.00","commission":"0.04","commissionPercentage":"4.00","final":"498.56","currency":"USD"}}} 
+2026-10-05 11:55:36 AM||DEBUG|wleepay.API.Program|init main 
+2026-10-05 11:55:42 AM||INFO|Microsoft.Hosting.Lifetime|Now listening on: https://localhost:5001 
+2026-10-05 11:55:42 AM||INFO|Microsoft.Hosting.Lifetime|Application started. Press Ctrl+C to shut down. 
+2026-10-05 11:55:42 AM||INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development 
+2026-10-05 11:55:42 AM||INFO|Microsoft.Hosting.Lifetime|Content root path: D:\Wleepay\Wleepay_API\wleepay.API 
+2026-10-05 12:01:57 PM||INFO|wleepay.Services.AuthorizeNetService|Sending LEC recharge. Operator=2470 Account=30970290414 Amount=1.00 Simulate=0 
+2026-10-05 12:02:06 PM||INFO|wleepay.Services.AuthorizeNetService|LEC Provider Response (AuthNet 120091237245): {"status":{"id":24,"name":"Recharge fail","type":2,"typeName":"Failure"},"command":"execTransaction","timestamp":1791181927,"reference":1480067924,"result":{"id":"207311656985117447","operator":{"id":"2470","name":"Liberia LEC","reference":null},"country":{"id":"LR","name":"Liberia"},"amount":{"operator":"1.00","user":"1.00"},"currency":{"user":"USD","operator":"USD"},"productId":"14028","productType":"3","simulation":false,"userReference":null,"accountId":"30970290414"}} 
+2026-10-05 12:02:06 PM||WARN|wleepay.Services.AuthorizeNetService|Sochitel rejected LEC recharge. AuthNet 120091237245, Status Recharge fail. Raw: {"status":{"id":24,"name":"Recharge fail","type":2,"typeName":"Failure"},"command":"execTransaction","timestamp":1791181927,"reference":1480067924,"result":{"id":"207311656985117447","operator":{"id":"2470","name":"Liberia LEC","reference":null},"country":{"id":"LR","name":"Liberia"},"amount":{"operator":"1.00","user":"1.00"},"currency":{"user":"USD","operator":"USD"},"productId":"14028","productType":"3","simulation":false,"userReference":null,"accountId":"30970290414"}} 
+2026-10-05 12:03:20 PM||INFO|wleepay.Services.AuthorizeNetService|Sending LEC recharge. Operator=2470 Account=30970290414 Amount=1.00 Simulate=0 
+2026-10-05 12:03:24 PM||INFO|wleepay.Services.AuthorizeNetService|LEC Provider Response (AuthNet 120091237297): {"status":{"id":3,"name":"Invalid destination","type":2,"typeName":"Failure"},"command":"execTransaction","timestamp":1791182005,"reference":1135400254,"result":{"id":"207317009291727373","operator":{"id":"2470","name":"Liberia LEC","reference":null,"hint":{"id":null,"name":null}},"country":{"id":"LR","name":"Liberia"},"amount":{"operator":"1.00","user":"1.00"},"currency":{"user":"USD","operator":"USD"},"productId":"14028","productType":"3","simulation":false,"userReference":null,"accountId":"30970290414"}} 
+2026-10-05 12:06:56 PM||WARN|wleepay.Services.AuthorizeNetService|Sochitel rejected LEC recharge. AuthNet 120091237297, Status Invalid destination. Raw: {"status":{"id":3,"name":"Invalid destination","type":2,"typeName":"Failure"},"command":"execTransaction","timestamp":1791182005,"reference":1135400254,"result":{"id":"207317009291727373","operator":{"id":"2470","name":"Liberia LEC","reference":null,"hint":{"id":null,"name":null}},"country":{"id":"LR","name":"Liberia"},"amount":{"operator":"1.00","user":"1.00"},"currency":{"user":"USD","operator":"USD"},"productId":"14028","productType":"3","simulation":false,"userReference":null,"accountId":"30970290414"}} 
+2026-10-05 12:13:53 PM||INFO|wleepay.Services.AuthorizeNetService|Sending LEC recharge. Operator=2470 Account=0887333525 Amount=1.00 Simulate=0 
+2026-10-05 12:13:56 PM||INFO|wleepay.Services.AuthorizeNetService|LEC Provider Response (AuthNet 120091237723): {"status":{"id":3,"name":"Invalid destination","type":2,"typeName":"Failure"},"command":"execTransaction","timestamp":1791182637,"reference":1284115036,"result":{"id":"207317365623229807","operator":{"id":"2470","name":"Liberia LEC","reference":null,"hint":{"id":null,"name":null}},"country":{"id":"LR","name":"Liberia"},"amount":{"operator":"1.00","user":"1.00"},"currency":{"user":"USD","operator":"USD"},"productId":"14028","productType":"3","simulation":false,"userReference":null,"accountId":"0887333525"}} 
+2026-10-05 12:18:36 PM||WARN|wleepay.Services.AuthorizeNetService|Sochitel rejected LEC recharge. AuthNet 120091237723, Status Invalid destination. Raw: {"status":{"id":3,"name":"Invalid destination","type":2,"typeName":"Failure"},"command":"execTransaction","timestamp":1791182637,"reference":1284115036,"result":{"id":"207317365623229807","operator":{"id":"2470","name":"Liberia LEC","reference":null,"hint":{"id":null,"name":null}},"country":{"id":"LR","name":"Liberia"},"amount":{"operator":"1.00","user":"1.00"},"currency":{"user":"USD","operator":"USD"},"productId":"14028","productType":"3","simulation":false,"userReference":null,"accountId":"0887333525"}} 
+2026-10-05 12:18:43 PM||INFO|wleepay.Services.AuthorizeNetService|Sending LEC recharge. Operator=2470 Account=0887333527 Amount=1.00 Simulate=0 
+2026-10-05 12:18:47 PM||INFO|wleepay.Services.AuthorizeNetService|LEC Provider Response (AuthNet 120091237868): {"status":{"id":3,"name":"Invalid destination","type":2,"typeName":"Failure"},"command":"execTransaction","timestamp":1791182928,"reference":1172150655,"result":{"id":"207319496970408198","operator":{"id":"2470","name":"Liberia LEC","reference":null,"hint":{"id":null,"name":null}},"country":{"id":"LR","name":"Liberia"},"amount":{"operator":"1.00","user":"1.00"},"currency":{"user":"USD","operator":"USD"},"productId":"14028","productType":"3","simulation":false,"userReference":null,"accountId":"0887333527"}} 
+2026-10-05 12:20:21 PM||WARN|wleepay.Services.AuthorizeNetService|Sochitel rejected LEC recharge. AuthNet 120091237868, Status Invalid destination. Raw: {"status":{"id":3,"name":"Invalid destination","type":2,"typeName":"Failure"},"command":"execTransaction","timestamp":1791182928,"reference":1172150655,"result":{"id":"207319496970408198","operator":{"id":"2470","name":"Liberia LEC","reference":null,"hint":{"id":null,"name":null}},"country":{"id":"LR","name":"Liberia"},"amount":{"operator":"1.00","user":"1.00"},"currency":{"user":"USD","operator":"USD"},"productId":"14028","productType":"3","simulation":false,"userReference":null,"accountId":"0887333527"}} 
+2026-10-05 12:23:02 PM||INFO|wleepay.Services.AuthorizeNetService|Sending LEC recharge. Operator=2470 Account=1234567890 Amount=1.00 Simulate=0 
+2026-10-05 12:23:05 PM||INFO|wleepay.Services.AuthorizeNetService|LEC Provider Response (AuthNet 120091238058): {"status":{"id":3,"name":"Invalid destination","type":2,"typeName":"Failure"},"command":"execTransaction","timestamp":1791183186,"reference":1295410857,"result":{"id":"207318436428310718","operator":{"id":"2470","name":"Liberia LEC","reference":null,"hint":{"id":"252","name":"USA T-Mobile"}},"country":{"id":"LR","name":"Liberia"},"amount":{"operator":"1.00","user":"1.00"},"currency":{"user":"USD","operator":"USD"},"productId":"14028","productType":"3","simulation":false,"userReference":null,"accountId":"1234567890"}} 
+2026-10-05 12:27:01 PM||DEBUG|wleepay.API.Program|init main 
+2026-10-05 12:27:06 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: https://localhost:5001 
+2026-10-05 12:27:06 PM||INFO|Microsoft.Hosting.Lifetime|Application started. Press Ctrl+C to shut down. 
+2026-10-05 12:27:06 PM||INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development 
+2026-10-05 12:27:06 PM||INFO|Microsoft.Hosting.Lifetime|Content root path: D:\Wleepay\Wleepay_API\wleepay.API 
+2026-10-05 12:27:17 PM|10102|WARN|Microsoft.EntityFrameworkCore.Query|The query uses a row limiting operator ('Skip'/'Take') without an 'OrderBy' operator. This may lead to unpredictable results. 
+2026-10-05 12:27:17 PM|10102|WARN|Microsoft.EntityFrameworkCore.Query|The query uses a row limiting operator ('Skip'/'Take') without an 'OrderBy' operator. This may lead to unpredictable results. 
+2026-10-05 12:34:59 PM||INFO|wleepay.Services.AuthorizeNetService|Sending LEC recharge. Operator=2470 Account=30970290414 Amount=1.00 Simulate=0 
+2026-10-05 12:35:22 PM||INFO|wleepay.Services.AuthorizeNetService|LEC Provider Response (AuthNet 120091239353): {"status":{"id":24,"name":"Recharge fail","type":2,"typeName":"Failure"},"command":"execTransaction","timestamp":1791183923,"reference":1853069138,"result":{"id":"207314077004797724","operator":{"id":"2470","name":"Liberia LEC","reference":null},"country":{"id":"LR","name":"Liberia"},"amount":{"operator":"1.00","user":"1.00"},"currency":{"user":"USD","operator":"USD"},"productId":"14028","productType":"3","simulation":false,"userReference":null,"accountId":"30970290414"}} 
+2026-10-05 12:39:01 PM||INFO|wleepay.Services.AuthorizeNetService|LEC Provider Response (AuthNet 120091239353): {"status":{"id":69,"name":"Duplicate salt","type":2,"typeName":"Failure"},"command":"execTransaction","timestamp":1791184142,"reference":1257566244,"result":[]} 
+2026-10-05 12:39:14 PM||INFO|wleepay.Services.AuthorizeNetService|Sending LEC recharge. Operator=2470 Account=30970290414 Amount=1.00 Simulate=0 
+2026-10-05 12:40:21 PM||DEBUG|wleepay.API.Program|init main 
+2026-10-05 12:40:25 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: https://localhost:5001 
+2026-10-05 12:40:25 PM||INFO|Microsoft.Hosting.Lifetime|Application started. Press Ctrl+C to shut down. 
+2026-10-05 12:40:25 PM||INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development 
+2026-10-05 12:40:25 PM||INFO|Microsoft.Hosting.Lifetime|Content root path: D:\Wleepay\Wleepay_API\wleepay.API 
+2026-10-05 12:57:13 PM||INFO|wleepay.Services.AuthorizeNetService|Sending LEC recharge. Operator=2470 Account=30970290414 Amount=1.00 Simulate=0 
+2026-10-05 12:57:22 PM||INFO|wleepay.Services.AuthorizeNetService|LEC Provider Response (AuthNet 120091241567): {"status":{"id":24,"name":"Recharge fail","type":2,"typeName":"Failure"},"command":"execTransaction","timestamp":1791185243,"reference":1373962653,"result":{"id":"207317881950717796","operator":{"id":"2470","name":"Liberia LEC","reference":null},"country":{"id":"LR","name":"Liberia"},"amount":{"operator":"1.00","user":"1.00"},"currency":{"user":"USD","operator":"USD"},"productId":"14028","productType":"3","simulation":false,"userReference":null,"accountId":"30970290414"}} 
+2026-10-05 12:59:12 PM||WARN|wleepay.Services.AuthorizeNetService|Sochitel rejected LEC recharge. AuthNet 120091241567, Status Recharge fail. Raw: {"status":{"id":24,"name":"Recharge fail","type":2,"typeName":"Failure"},"command":"execTransaction","timestamp":1791185243,"reference":1373962653,"result":{"id":"207317881950717796","operator":{"id":"2470","name":"Liberia LEC","reference":null},"country":{"id":"LR","name":"Liberia"},"amount":{"operator":"1.00","user":"1.00"},"currency":{"user":"USD","operator":"USD"},"productId":"14028","productType":"3","simulation":false,"userReference":null,"accountId":"30970290414"}} 
+2026-10-05 13:01:27 PM||INFO|wleepay.Services.AuthorizeNetService|Sending LEC recharge. Operator=2470 Account=30970290414 Amount=10.00 Simulate=0 
+2026-10-05 13:01:35 PM||INFO|wleepay.Services.AuthorizeNetService|LEC Provider Response (AuthNet 120091241939): {"status":{"id":0,"name":"Successful","type":0,"typeName":"Success"},"command":"execTransaction","timestamp":1791185496,"reference":1484326913,"result":{"id":"207317761255321030","operator":{"id":"2470","name":"Liberia LEC","reference":"99502026100518396023"},"country":{"id":"LR","name":"Liberia"},"amount":{"operator":"10.00","user":"10.00"},"currency":{"user":"USD","operator":"USD"},"productId":"14028","productType":"3","simulation":false,"userReference":null,"accountId":"30970290414","instructions":"Amount: 10.00\r\nDate: 2026-10-05\r\nDescription: Total Payment:10.0|Debt Payment: 0.00|Units Payment:10.00|Units:31.1 Kwh|Acc Bal:0.0\r\nTax: 1.15\r\nUnits: 31.1\r\nReceipt Number: 99502026100518396023\r\nAccount Number: 702297381\r\nMeter Number: 30970290414\r\nCustomer Name: BEATRICE KONNEH\r\n==========\r\nTOKENS:\r\nToken Type: Credit\r\nToken: 66172673805320330307\r\n----------\r\n","balance":{"initial":"498.56","transaction":"10.00","commission":"0.05","commissionPercentage":"0.50","final":"488.61","currency":"USD"}}} 
+2026-10-05 13:02:10 PM||DEBUG|wleepay.API.Program|init main 
+2026-10-05 13:02:15 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: https://localhost:5001 
+2026-10-05 13:02:15 PM||INFO|Microsoft.Hosting.Lifetime|Application started. Press Ctrl+C to shut down. 
+2026-10-05 13:02:15 PM||INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development 
+2026-10-05 13:02:15 PM||INFO|Microsoft.Hosting.Lifetime|Content root path: D:\Wleepay\Wleepay_API\wleepay.API 
+2026-10-05 13:13:54 PM||INFO|wleepay.API.Controllers.AuthorizeNetController|Received Mobile Recharge request for MSISDN: +231888008771 
+2026-10-05 13:14:12 PM||INFO|wleepay.Services.AuthorizeNetService|Sending recharge. UserRef=wleeb9fb1ecc07fa Operator=10 Msisdn=+231888008771 Product=19 Amount=12.00 Simulate=0 
+2026-10-05 13:14:16 PM||INFO|wleepay.Services.AuthorizeNetService|Recharge Provider Response (UserRef wleeb9fb1ecc07fa): {"status":{"id":0,"name":"Successful","type":0,"typeName":"Success"},"command":"execTransaction","timestamp":1791186257,"reference":1001203749,"result":{"id":"207316318376997546","operator":{"id":"10","name":"Liberia MTN","reference":null},"country":{"id":"LR","name":"Liberia"},"amount":{"operator":"12.00","user":"12.00"},"currency":{"user":"USD","operator":"USD"},"productId":"19","productType":"1","simulation":false,"userReference":"wleeb9fb1ecc07fa","msisdn":"231888008771","balance":{"initial":"488.61","transaction":"12.00","commission":"0.48","commissionPercentage":"4.00","final":"477.09","currency":"USD"}}} 
+2026-10-05 13:14:54 PM||DEBUG|wleepay.API.Program|init main 
+2026-10-05 13:15:02 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: https://localhost:5001 
+2026-10-05 13:15:02 PM||INFO|Microsoft.Hosting.Lifetime|Application started. Press Ctrl+C to shut down. 
+2026-10-05 13:15:02 PM||INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development 
+2026-10-05 13:15:02 PM||INFO|Microsoft.Hosting.Lifetime|Content root path: D:\Wleepay\Wleepay_API\wleepay.API 
+2026-10-05 13:24:09 PM||INFO|wleepay.API.Controllers.AuthorizeNetController|Received Mobile Recharge request for MSISDN: +231888008771 
+2026-10-05 13:31:39 PM||DEBUG|wleepay.API.Program|init main 
+2026-10-05 13:31:45 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: https://localhost:5001 
+2026-10-05 13:31:45 PM||INFO|Microsoft.Hosting.Lifetime|Application started. Press Ctrl+C to shut down. 
+2026-10-05 13:31:45 PM||INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development 
+2026-10-05 13:31:45 PM||INFO|Microsoft.Hosting.Lifetime|Content root path: D:\Wleepay\Wleepay_API\wleepay.API 
+2026-10-05 13:34:32 PM||DEBUG|wleepay.API.Program|init main 
+2026-10-05 13:34:37 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: https://localhost:5001 
+2026-10-05 13:34:37 PM||INFO|Microsoft.Hosting.Lifetime|Application started. Press Ctrl+C to shut down. 
+2026-10-05 13:34:37 PM||INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development 
+2026-10-05 13:34:37 PM||INFO|Microsoft.Hosting.Lifetime|Content root path: D:\Wleepay\Wleepay_API\wleepay.API 

@@ -11,4 +11,10 @@ namespace wleepay.Core.Configurations
         public string Environment { get; set; }
 
     }
+
+    public class SochitelSettings
+    {
+        public string Username { get; set; }
+        public string Password { get; set; }
+    }
 }
