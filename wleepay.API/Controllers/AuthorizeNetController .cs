@@ -1,25 +1,10 @@
-﻿using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using wleepay.API.Resources;
-using wleepay.Core.Services;
-using wleepay.Core.Models;
-using Microsoft.AspNetCore.Authorization;
-using System;
-using System.Security.Claims;
-using wleepay.Services;
-using Newtonsoft.Json;
-using AutoMapper;
-using System.Runtime.CompilerServices;
-using DevExpress.Xpo.Logger;
-using System.Diagnostics;
-using System.IO;
 using Microsoft.Extensions.Logging;
-using wleepay.Core.DTO.Response;
-using wleepay.Core.DTO.Request;
-using wleepay.Core.Enums;
-using wleepay.Services.Auth;
-using NLog;
+using System;
+using System.Threading.Tasks;
+using wleepay.Core.Models;
+using wleepay.Core.Services;
 
 namespace wleepay.API.Controllers
 {
