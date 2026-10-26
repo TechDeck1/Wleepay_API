@@ -26,7 +26,7 @@ namespace wleepay.Core.DTO.Request
         public string AmountOperator { get; set; }
 
         [JsonProperty("simulate")]
-        public string Simulate { get; set; }
+        public bool Simulate { get; set; }
 
         //[JsonProperty("productId")]
         //public string ProductId { get; set; }

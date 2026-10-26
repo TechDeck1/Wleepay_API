@@ -123,7 +123,7 @@ namespace wleepay.API.Areas.Portal.Controllers
         {
             try
             {
-                var baseUrl = _configuration.GetSection("BaseUrl").Value;
+                var baseUrl = _configuration["AppSettings:BaseUrl"];
                 var validator = new AddStaffDetailsValidator();
                 var validationResult = await validator.ValidateAsync(userDetail);
 
@@ -280,7 +280,7 @@ namespace wleepay.API.Areas.Portal.Controllers
         {
             try
             {
-                var baseUrl = _configuration.GetSection("BaseUrl").Value;
+                var baseUrl = _configuration["AppSettings:BaseUrl"];
                 var validator = new AddSystemAdminDetailsValidator();
                 var validationResult = await validator.ValidateAsync(userDetail);
 
@@ -435,7 +435,7 @@ namespace wleepay.API.Areas.Portal.Controllers
         {
             try
             {
-                var baseUrl = _configuration.GetSection("BaseUrl").Value;
+                var baseUrl = _configuration["AppSettings:BaseUrl"];
                 var validator = new AddAgentDetailsValidator();
                 var validationResult = await validator.ValidateAsync(userDetail);
 
@@ -1079,7 +1079,7 @@ namespace wleepay.API.Areas.Portal.Controllers
                 {
                     //generated the token
                     var token = await _userManager.GeneratePasswordResetTokenAsync(user);
-                    var baseUrl = _configuration.GetSection("BaseUrl").Value;
+                    var baseUrl = _configuration["AppSettings:BaseUrl"];
                     var secretKey = _configuration.GetSection("SecretKeyForEncryptAndDecrypt").Value; //secret key
                     string encryptedEmail = Common.Encrypt(forgotPinResourceSystemAdmin.Email, secretKey);
                     var EncodedEncryptedEmail = HttpUtility.UrlEncode(encryptedEmail);

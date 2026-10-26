@@ -104,7 +104,7 @@ namespace wleepay.API.Controllers
 
                 var products = JsonConvert.DeserializeObject<SochitelOperatorResponse>(result);
 
-                List<Operator> operators = new List<Operator>();
+                List<wleepay.Core.DTO.Response.Operator> operators = new();
                 foreach (var kvp in products.Result)
                 {
                     var product = kvp.Value;

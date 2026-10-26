@@ -147,8 +147,8 @@ namespace wleepay.Services.Account
                 var payload = $"{newUser.Id}|{emailToken}|{DateTime.UtcNow:o}";
                 var packedToken = _emailVerificationProtector.Protect(payload);
                 var encodedToken = HttpUtility.UrlEncode(packedToken);
-                var webBaseUrl = _configuration["WleeSendWebUrl"] ?? _configuration["BaseUrl"];
-                var verifyUrl = $"{webBaseUrl}/#/account/verify?token={encodedToken}";
+                var webBaseUrl = _configuration["AppSettings:BaseUrl"];
+                var verifyUrl = $"{webBaseUrl}/account/verify?token={encodedToken}";
                 var emailTemplate = new EmailTemplates.EmailHtmlTemplates().EmailTemplateForEmailVerification(verifyUrl, updatedDetails.FirstName);
                 await _emailSender.SendEmailAsync(newUser.Email, emailTemplate, updatedDetails.FirstName, "Verify your email");
             }
@@ -159,7 +159,7 @@ namespace wleepay.Services.Account
             {
                 Email = userDetail.EmailId,
                 PhoneNumber = userDetail.PhoneNumber,
-                ClientURI = _configuration["BaseUrl"] + "/agent-account-setup"
+                ClientURI = _configuration["AppSettings:BaseUrl"] + "/agent-account-setup"
             };
             await GenerateLinkForComleteSignUp(completeSignUpModel);
 

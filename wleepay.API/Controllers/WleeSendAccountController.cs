@@ -112,7 +112,7 @@ namespace wleepay.API.Controllers
         {
             try
             {
-                var baseUrl = _configuration.GetSection("BaseUrl").Value;
+                var baseUrl = _configuration["AppSettings:BaseUrl"];
                 var validator = new AddUserDetailsValidator(userDetail.Role.ToString());
                 var validationResult = await validator.ValidateAsync(userDetail);
 

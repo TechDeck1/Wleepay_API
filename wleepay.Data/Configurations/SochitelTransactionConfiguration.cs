@@ -71,8 +71,7 @@ namespace wleepay.Data.Configurations
                 .OnDelete(DeleteBehavior.ClientNoAction)
                 .HasForeignKey(k => k.CreditCardTransactionId);
 
-            builder
-             .Property(u => u.CurrencyId);
+            
 
             builder
                 .HasOne(u => u.Currency)

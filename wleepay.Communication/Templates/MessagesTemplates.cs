@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Net;
 using System.Text;
 
 namespace wleepay.Communication.Templates
@@ -150,6 +151,7 @@ namespace wleepay.Communication.Templates
         // ADD THIS: HTML Template for Mobile Recharge Receipt
         public static string MobileRechargeReceiptEmail(string customerName, string totalAmount, string creditAmount, string msisdn, string txId, string refId, string date, string operatorName, string productType, string token, string validUntil)
         {
+            string H(string value) => WebUtility.HtmlEncode(value ?? string.Empty);
             return $@"
             <html>
             <head>
@@ -164,19 +166,19 @@ namespace wleepay.Communication.Templates
             <body>
                 <div class='container'>
                     <h2>Transaction Receipt</h2>
-                    <p>Dear {customerName},</p>
+                    <p>Dear {H(customerName)},</p>
                     <p>Your mobile airtime recharge was <strong>Successful</strong>.</p>
                     
                     <div class='details'>
-                        <p><span class='label'>Date:</span> {date}</p>
-                        <p><span class='label'>Transaction ID:</span> {txId}</p>
-                        <p><span class='label'>Reference:</span> {refId}</p>
-                        <p><span class='label'>Receiver Phone Number:</span> {msisdn}</p>
-                        <p><span class='label'>Credit Type:</span> {operatorName} - {productType}</p>
-                        <p><span class='label'>Credit Amount:</span> ${creditAmount}</p>
-                        <p><span class='label'>Airtime Token:</span> {token}</p>
-                        <p><span class='label'>Valid Until:</span> {validUntil}</p>
-                        <p><span class='label'>Total Amount:</span> ${totalAmount}</p>
+                        <p><span class='label'>Date:</span> {H(date)}</p>
+                        <p><span class='label'>Transaction ID:</span> {H(txId)}</p>
+                        <p><span class='label'>Reference:</span> {H(refId)}</p>
+                        <p><span class='label'>Receiver Phone Number:</span> {H(msisdn)}</p>
+                        <p><span class='label'>Credit Type:</span> {H(operatorName)} - {H(productType)}</p>
+                        <p><span class='label'>Credit Amount:</span> ${H(creditAmount)}</p>
+                        <p><span class='label'>Airtime Token:</span> {H(token)}</p>
+                        <p><span class='label'>Valid Until:</span> {H(validUntil)}</p>
+                        <p><span class='label'>Total Amount:</span> ${H(totalAmount)}</p>
                     </div>
 
                     <p>Thank you for using WleeSend.</p>
@@ -188,6 +190,7 @@ namespace wleepay.Communication.Templates
         // ADD THIS: HTML Template for LEC Credit Receipt
         public static string LecCreditReceiptEmail(string customerName, string totalAmount, string creditAmount, string receiverPhoneNumber, string token, string meterNumber, string units, string txId, string date)
         {
+            string H(string value) => WebUtility.HtmlEncode(value ?? string.Empty);
             return $@"
             <html>
             <head>
@@ -202,21 +205,21 @@ namespace wleepay.Communication.Templates
             <body>
                 <div class='container'>
                     <h2>LEC Credit Receipt</h2>
-                    <p>Dear {customerName},</p>
+                    <p>Dear {H(customerName)},</p>
                     <p>Your LEC Credit Purchase was <strong>Successful</strong>.</p>
 
                     <div class='token-box'>
-                        TOKEN: {token}
+                        TOKEN: {H(token)}
                     </div>
                     
                     <div class='details'>
-                        <p><span class='label'>Date:</span> {date}</p>
-                        <p><span class='label'>Transaction ID:</span> {txId}</p>
-                        <p><span class='label'>Receiver Phone Number:</span> {receiverPhoneNumber}</p>
-                        <p><span class='label'>Meter Number:</span> {meterNumber}</p>
-                        <p><span class='label'>Units:</span> {units} kWh</p>
-                        <p><span class='label'>Credit Amount:</span> ${creditAmount}</p>
-                        <p><span class='label'>Total Amount:</span> ${totalAmount}</p>
+                        <p><span class='label'>Date:</span> {H(date)}</p>
+                        <p><span class='label'>Transaction ID:</span> {H(txId)}</p>
+                        <p><span class='label'>Receiver Phone Number:</span> {H(receiverPhoneNumber)}</p>
+                        <p><span class='label'>Meter Number:</span> {H(meterNumber)}</p>
+                        <p><span class='label'>Units:</span> {H(units)} kWh</p>
+                        <p><span class='label'>Credit Amount:</span> ${H(creditAmount)}</p>
+                        <p><span class='label'>Total Amount:</span> ${H(totalAmount)}</p>
                     </div>
 
                     <p>Thank you for using WleeSend.</p>

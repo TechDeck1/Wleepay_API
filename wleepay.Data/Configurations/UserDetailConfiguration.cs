@@ -40,10 +40,10 @@ namespace wleepay.Data.Configurations
                 .HasMaxLength(20)
                 .IsRequired();
 
-            builder
-                .Property(u => u.PhoneNumber)
-                .HasMaxLength(13)
-                .IsRequired();
+                builder
+                    .Property(u => u.PhoneNumber)
+                    .HasMaxLength(13)
+                    .IsRequired();
 
             builder
                 .Property(u => u.DOB);

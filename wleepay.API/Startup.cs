@@ -41,6 +41,7 @@ using wleepay.Core.Configurations;
 using Microsoft.Win32;
 using wleepay.Services.Account;
 using wleepay.Services.Auth;
+using wleepay.Core.Services.wleepay.Services.Interfaces;
 
 namespace wleepay.API
 {
@@ -238,6 +239,18 @@ namespace wleepay.API
 
             services.AddScoped<IValidationService, ValidationService>();
             services.AddScoped<IJwtTokenService, JwtTokenService>();
+            services.AddScoped<IProductRepository, ProductRepository>();
+            services.AddScoped<IProductService, ProductService>();
+            services.AddScoped<ICouponCodeService, CouponCodeService>();
+            services.AddScoped<ICouponCodeRepository, CouponCodeRepository>();
+            services.AddScoped<IWebhookService, WebhookService>();
+
+
+            services.AddSingleton<IWebhookQueue, WebhookQueue>();
+            services.AddHostedService<WebhookProcessor>();
+
+
+
 
             //swagger config
             services.AddSwaggerGen(c =>
@@ -388,6 +401,7 @@ namespace wleepay.API
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapFallbackToFile("index.html");
                 endpoints.MapHub<StatusHubClient>("/status");
                 endpoints.MapHub<TicketsNotificationHubClient>("/notification");
                 endpoints.MapHub<PortalNotificationHubClient>("/portalNotification");  // SignalR Hub Endpoint

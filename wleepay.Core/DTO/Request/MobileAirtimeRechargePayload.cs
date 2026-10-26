@@ -26,7 +26,7 @@ namespace wleepay.Core.DTO.Request
         public string Amount { get; set; }
 
         [JsonProperty("simulate")]
-        public string Simulate { get; set; }
+        public bool Simulate { get; set; }
 
         [JsonProperty("userReference")]
         public string UserReference { get; set; }

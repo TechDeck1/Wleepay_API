@@ -8,7 +8,9 @@ namespace wleepay.API.Resources
         public SochitelAuth auth { get; set; }
         public string version { get; set; }
         public string command { get; set; }
-       
+
+        public string category { get; set; }
+
         [JsonProperty("operator")]
         public string Operator { get; set; }
     }

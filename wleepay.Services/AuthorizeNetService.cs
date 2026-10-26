@@ -584,7 +584,7 @@ namespace wleepay.Services
                 Msisdn = data.Msisdn.Trim(),
                 Simulate = data.Simulate,
                 UserReference = userRef,
-                ProductId = data.ProductId,
+                ProductId = data.ProductId.ToString(), 
                 Version = 5,
                 Amount = Money(data.Amount)
             };
@@ -601,7 +601,7 @@ namespace wleepay.Services
                 TransactionAmount = Money(request.RechargeData.Amount),
                 CommissionRate = response?.Result?.Balance?.Commission ?? "0",
                 OperatorId = request.RechargeData.Operator,
-                ProductId = request.RechargeData.ProductId,
+                ProductId = request.RechargeData.ProductId.ToString(),
                 PhoneNumber = request.RechargeData.Msisdn,
                 UserReference = response?.Reference ?? userRef,
                 CreatedDate = DateTime.UtcNow,
@@ -767,11 +767,11 @@ namespace wleepay.Services
             return new SochitelTransactions
             {
                 TransactionId = response?.Result?.Id ?? "0",
-                TransactionType = "Bill Payment Transfer",
+                TransactionType = "Bill Payment",
                 TransactionAmount = Money(request.Payment.Amount),
                 CommissionRate = response?.Result?.Balance?.Commission ?? "0",
                 OperatorId = request.Payment.RechargeData.Operator,
-                ProductId = request.Payment.RechargeData.ProductId,
+                ProductId = request.Payment.RechargeData.ToString(),
                 PhoneNumber = request.Payment.ReceiverPhoneNumber,
                 UserReference = response?.Reference,
                 CreatedDate = DateTime.UtcNow,

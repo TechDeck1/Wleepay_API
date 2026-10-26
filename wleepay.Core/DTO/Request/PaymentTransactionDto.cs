@@ -10,7 +10,7 @@ namespace wleepay.Core.DTO.Request
         public decimal Amount { get; set; }
         public string Status { get; set; }
         public DateTime CreatedAt { get; set; }
-        public string ReceiverPhoneNumber { get; set; }
+        public string? ReceiverPhoneNumber { get; set; }
         public int TransferTypeId { get; set; }
         public string Street { get; set; }
         public string City { get; set; }

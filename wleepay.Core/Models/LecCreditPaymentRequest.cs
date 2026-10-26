@@ -13,7 +13,7 @@ namespace wleepay.Core.Models
 
         public decimal AmountOperator { get; set; } 
         public string AccountId { get; set; }
-
+        public string OperatorId { get; set; }
         public object ExtraParameters { get; set; }
     }
 

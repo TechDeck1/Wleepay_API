@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace wleepay.Core.Models
+﻿namespace wleepay.Core.Models
 {
     public class RechargeRequestDetails
     {
@@ -10,12 +6,14 @@ namespace wleepay.Core.Models
         public string salt { get; set; }
         public string password { get; set; }
         public string Operator { get; set; }
-        public string ProductId { get; set; }           // For mobile
+        public string ProductId { get; set; }      
+        public int OperatorId { get; set; }
 
-        public string Msisdn { get; set; }       // For mobile
-        public string Simulate { get; set; }     
-        public string? UserReference { get; set; }        // For mobile
-        public decimal Amount { get; set; }              // For mobile
+
+        public string Msisdn { get; set; }      
+        public bool Simulate { get; set; }     
+        public string? UserReference { get; set; }       
+        public decimal Amount { get; set; }             
         public string Command { get; set; }             
 
 

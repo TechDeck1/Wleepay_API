@@ -1,18 +1,12 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
-using Microsoft.SqlServer.Management.Smo;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using wleepay.API.Resources;
 using wleepay.API.Validators;
-using wleepay.Core.DTO.Response;
 using wleepay.Core.Models;
 using wleepay.Core.Services;
-using wleepay.Services;
 
 namespace wleepay.API.Controllers
 {

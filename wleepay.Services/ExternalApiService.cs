@@ -28,6 +28,7 @@ namespace wleepay.Services
             _httpClient = httpClient;
             _logger = logger;
             _apiKey = configuration["exchangerateApiKey"];
+            _sochitelUrl = configuration["SochitelUrl"] ?? "https://artx.sochitel.com/api.php";
         }
 
         public async Task<decimal> GetConvertedCurrency(decimal amount)
@@ -63,23 +64,20 @@ namespace wleepay.Services
 
         public async Task<string> PostDataAsync<T>(T data)
         {
-            try
+            using (var request = new HttpRequestMessage(HttpMethod.Post, _sochitelUrl))
             {
-                var client = new HttpClient();
-                var request = new HttpRequestMessage(HttpMethod.Post, "https://artx.sochitel.com/api.php");
-                string json = JsonConvert.SerializeObject(data);
-                //System.Text.Json.JsonSerializer.Serialize(data)
                 request.Content = new StringContent(JsonConvert.SerializeObject(data), Encoding.UTF8, "application/json");
-                var response = await client.SendAsync(request);
-                response.EnsureSuccessStatusCode();
-                var ffhg = await response.Content.ReadAsStringAsync();
-                Console.WriteLine(ffhg);
-                return ffhg;
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError($"Unexpected error: {ex.Message}");
-                throw;
+                using (var response = await _httpClient.SendAsync(request))
+                {
+                    var responseBody = await response.Content.ReadAsStringAsync();
+                    if (!response.IsSuccessStatusCode)
+                    {
+                        _logger.LogError("Sochitel request failed with HTTP {StatusCode} ({ReasonPhrase}).", (int)response.StatusCode, response.ReasonPhrase);
+                        throw new HttpRequestException("Sochitel returned HTTP " + (int)response.StatusCode + ".");
+                    }
+
+                    return responseBody;
+                }
             }
         }
 

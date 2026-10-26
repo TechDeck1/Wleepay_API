@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.SqlServer.Management.Smo;
+using System;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Text;
-using Microsoft.SqlServer.Management.Smo;
 
 namespace wleepay.Core.Models
 {
@@ -22,7 +19,7 @@ namespace wleepay.Core.Models
 
         public DateTime CreatedAt { get; set; }
 
-        public string ReceiverPhoneNumber { get; set; }
+        public string? ReceiverPhoneNumber { get; set; }
 
         public int TransferTypeId { get; set; }
 

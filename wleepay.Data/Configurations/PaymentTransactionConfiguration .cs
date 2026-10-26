@@ -13,12 +13,16 @@ public class PaymentTransactionConfiguration : IEntityTypeConfiguration<PaymentT
         builder.Property(p => p.Amount)
                .HasColumnType("decimal(18,2)");
 
-        builder.Property(p => p.Street).HasMaxLength(200);  
+        builder.Property(p => p.ReceiverPhoneNumber)
+               .IsRequired(false)
+               .HasMaxLength(20);
+
+        builder.Property(p => p.Street).HasMaxLength(200);
         builder.Property(p => p.City).HasMaxLength(100);
         builder.Property(p => p.ZipCode).HasMaxLength(20);
 
         builder.HasOne(p => p.User)
-               .WithMany() 
+               .WithMany()
                .HasForeignKey(p => p.UserId)
                .OnDelete(DeleteBehavior.ClientNoAction);
 

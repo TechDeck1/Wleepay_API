@@ -1,372 +1,306 @@
-﻿using AutoMapper;
-using FirebaseAdmin.Messaging;
-using Google.Apis.Util;
-using Microsoft.AspNetCore.Http;
+using System;
+using System.Linq;
+using System.Security.Claims;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
-using Microsoft.IdentityModel.Tokens;
-using Newtonsoft.Json;
-using Stripe;
-using System;
-using System.Threading.Tasks;
-using System.Web.Http;
-using wleepay.API.Helpers;
 using wleepay.API.Resources;
-using wleepay.Communication.Interface;
-using wleepay.Communication.Services;
-using wleepay.Communication.Templates;
-using wleepay.Core.Common;
 using wleepay.Core.DTO.Request;
-using wleepay.Core.Enums;
 using wleepay.Core.Models;
 using wleepay.Core.Services;
-using wleepay.Core.DTO.Request;
-using wleepay.Core.DTO.Response;
-using static wleepay.Communication.EmailTemplates.EmailTemplates;
+using wleepay.Core.Services.wleepay.Services.Interfaces;
 
 namespace wleepay.API.Controllers
 {
-    [Microsoft.AspNetCore.Mvc.Route("api/[controller]")]
+    [Route("api/[controller]")]
     [ApiController]
     public class StripeController : Controller
     {
+        private const decimal FeeMultiplier = 1.08m;
+        private const string TaxCode = "txcd_10000000";
+
         private readonly IConfiguration _configuration;
         private readonly IStripeService _stripeService;
-        private readonly ISochitelTransactionService _sochitelTransactionService;
-        private readonly IMapper _mapper;
-        private readonly IExternalApiService _externalApiService;
-        private readonly ISMSService _sMSService;
-        private readonly ISystemActivityLogsService _systemActivityLogsService;
-        private readonly IUserDetailService _userDetailService;
-        private readonly IUserDeviceService _userDeviceService;
-        private readonly IFirebaseNotification _firebaseNotification;
-        private readonly ICreditCardTransactionService _creditCardTransactionService;
-        private readonly IEmailSender _emailSender;
+        private readonly IProductService _productService;
+        private readonly ISystemActivityLogsService _activityLogService;
 
-        public StripeController(IConfiguration configuration, IStripeService stripeService, ISochitelTransactionService sochitelTransactionService, IMapper mapper, IExternalApiService externalApiService, ISMSService sMSService, ISystemActivityLogsService systemActivityLogsService, IUserDetailService userDetailService, IUserDeviceService userDeviceService, IFirebaseNotification firebaseNotification, ICreditCardTransactionService creditCardTransactionService, IEmailSender emailSender)
+        public StripeController(
+            IConfiguration configuration,
+            IStripeService stripeService,
+            IProductService productService,
+            ISystemActivityLogsService activityLogService)
         {
             _configuration = configuration;
             _stripeService = stripeService;
-            _sochitelTransactionService = sochitelTransactionService;
-            _mapper = mapper;
-            _externalApiService = externalApiService;
-            _sMSService = sMSService;
-            _systemActivityLogsService = systemActivityLogsService;
-            _userDetailService = userDetailService;
-            _userDeviceService = userDeviceService;
-            _firebaseNotification = firebaseNotification;
-            _creditCardTransactionService = creditCardTransactionService;
-            _emailSender = emailSender;
+            _productService = productService;
+            _activityLogService = activityLogService;
         }
 
-        [Microsoft.AspNetCore.Mvc.HttpPost]
-        public async Task<IActionResult> CreatePaymentForMobileRecharge([Microsoft.AspNetCore.Mvc.FromBody] PaymentRequestForStripe paymentRequest)
-        {
-            StripeConfiguration.ApiKey = _configuration["Stripe:SecretKey"];
-
-            var options = new ChargeCreateOptions
+        [HttpPost("createCheckoutSession-mobile")]
+        [AllowAnonymous]
+        public async Task<IActionResult> CheckoutSessionForMobileRecharge(MobileCheckoutPayload payload)
             {
-                Amount = paymentRequest.Amount * 100, // amount in cents
-                Currency = "usd",
-                Description = MessagesForAirtimeLEC.MobileRecharge.ToDescriptionString(),
-                Source = paymentRequest.Token
-            };
-
-            var exeTransactionToCreate = _mapper.Map<PaymentRequestForStripe, SochitelTransactionRequest>(paymentRequest);
-            exeTransactionToCreate.Simulate = "0";
-            //exeTransactionToCreate.UserReference = "9876543";
-
-            var result = await _externalApiService.PostDataAsync<SochitelTransactionRequest>(exeTransactionToCreate);
-
-            SochitelTransactionResponse transactionResponse = JsonConvert.DeserializeObject<SochitelTransactionResponse>(result);
-
-            if (transactionResponse.Status.Name == ResponseStatusForSochitel.Successful.ToDescriptionString())
+            try
             {
-                var service = new ChargeService();
-
-                Charge charge = await service.CreateAsync(options);
-
-                if (charge.Status == ResponseStatusForSochitel.Succeeded.ToDescriptionString())
-                {
-                    CreditCardTransactions creditTransactions = new CreditCardTransactions
-                    {
-                        Amount = paymentRequest.Amount,
-                        StripeTransactionId = charge.Id,
-                        Status = charge.Status,
-                        PaymentMethod = charge.PaymentMethod,
-                        BalanceTransactionId = charge.BalanceTransactionId,
-                        CreatedDate = DateTime.UtcNow,
-                        ExtraInfo = MessagesForAirtimeLEC.MobileRecharge.ToDescriptionString()
-
-                    };
-                    var creditCardTransactions = await _creditCardTransactionService.AddCreditCardTransactions(creditTransactions);
-
-                    SochitelTransactions sochitelTransactions = new SochitelTransactions
-                    {
-                        TransactionId = transactionResponse?.Result?.Id,
-                        TransactionType = MessagesForAirtimeLEC.MobileRecharge.ToDescriptionString(),
-                        CreditCardTransactionId = creditCardTransactions.Id,
-                        TransactionAmount = paymentRequest.Amount.ToString(),
-                        CommissionRate = (transactionResponse?.Result?.Balance?.Commission == null ? "0" : transactionResponse?.Result?.Balance?.Commission),
-                        OperatorId = paymentRequest.Operator,
-                        ProductId = paymentRequest.ProductId,
-                        PhoneNumber = paymentRequest.Msisdn,
-                        UserReference = exeTransactionToCreate.UserReference,
-                        CreatedDate = DateTime.UtcNow
-
-
-                    };
-
-                    var sTansaction = _sochitelTransactionService.AddSochitelTransactions(sochitelTransactions);
-                   
-                    var message = MessagesTemplates.AirtimeAndLecPaymentTemplate(transactionResponse.Result.Operator.Name, transactionResponse.Result.Id, transactionResponse.Reference.ToString(), DateTime.UtcNow.ToString(), paymentRequest.Amount.ToString());
-
-                    _sMSService.sendMessage(message, paymentRequest.Msisdn);
-
-
-                    EmailHtmlTemplates emailHtml = new EmailHtmlTemplates();
-                    var template = emailHtml.EmailTemplateForBillPaymentAndRecharge(charge.ReceiptUrl,"User",transactionResponse.Result.Id, transactionResponse.Reference);
-                   
-                    _emailSender.SendEmailAsync(paymentRequest.Email, template, "User", "Receipt for mobile recharge");
-
-                    var userDetail = await _userDetailService.GetUserAccountByPhone(paymentRequest.Msisdn);
-
-                    SystemActivityLog systemActivityLog = new SystemActivityLog();
-                    systemActivityLog.UserId = userDetail.Id;
-                    systemActivityLog.Email = userDetail.Email;
-                    systemActivityLog.IpAddress = GetClientIpAddress();
-                    systemActivityLog.Action = ActionsForSystemLogs.MobileRecharge.ToDescriptionString();
-                    systemActivityLog.Description = GenericMessagesForSystemLogs.MobileRecharge.ToDescriptionString();
-                    var addLogs = await _systemActivityLogsService.AddSystemLogs(systemActivityLog);
-
-                    FirebaseMessageRequest firebaseMessageRequest = new FirebaseMessageRequest();
-
-                    var device = await _userDeviceService.GetUserDeviceByUserId(userDetail.Id);
-
-                    if (device != null)
-                    {
-                        foreach (var item in device)
-                        {
-                            firebaseMessageRequest.DeviceId = item.DeviceId;
-                            firebaseMessageRequest.DeviceToken = item.FcmToken;
-                            firebaseMessageRequest.Body = "Mobile recharge approved for $" + paymentRequest.Amount;
-                            firebaseMessageRequest.Title = "Mobile Recharge";
-                            try
-                            {
-                                var sendNotification = _firebaseNotification.SendFirebaseMessageRequest(firebaseMessageRequest);
-                            }
-                            catch (AggregateException ex)
-                            {
-                                foreach (var innerEx in ex.InnerExceptions)
-                                {
-                                    if (innerEx is FirebaseMessagingException fme)
-                                    {
-                                        // Handle Firebase specific exceptions
-                                        Console.WriteLine($"Firebase error: {fme.Message}");
-                                    }
-                                    else
-                                    {
-                                        Console.WriteLine($"General error: {innerEx.Message}");
-                                    }
-                                }
-                            }
-                        }
-                    }
-
-                    return Ok(new
-                    {
-                        success = true,
-                        amount = charge.Amount,
-                        stripeTransactionId = charge.Id,
-                        receiptUrl = charge.ReceiptUrl,
-                        transactionResponse
-                    });
-                }
-
-                return BadRequest(Messages.PaymentFailed.ToDescriptionString());
+                return await CreateProductCheckoutAsync(payload, RechargeFlows.Mobile);
             }
-            return Ok(new { transactionResponse });
-
+            catch (InvalidOperationException ex)
+            {
+                return NotFound(new { success = false, message = ex.Message });
+            }
+            catch (Stripe.StripeException ex)
+            {
+                await LogFailureAsync("Payment Failed", $"Stripe error while creating mobile recharge checkout session for product {payload?.ProductId}. Error: {ex.Message}");
+                return BadRequest(new { success = false, message = $"Stripe error: {ex.Message}" });
+            }
+            catch (Exception ex)
+            {
+                await LogFailureAsync("Payment Failed", $"Failed to create mobile recharge checkout session for product {payload?.ProductId}. Error: {ex.Message}");
+                return StatusCode(500, new { success = false, message = "An error occurred while creating the checkout session." });
+            }
         }
 
-
-        [Microsoft.AspNetCore.Mvc.HttpPost("billPayment")]
-        public async Task<IActionResult> CreatePaymentForBillPayment([Microsoft.AspNetCore.Mvc.FromBody] PaymentRequestForStripe paymentRequest)
+        [HttpPost("createCheckoutSession-voucher")]
+        [AllowAnonymous]
+        public async Task<IActionResult> CheckoutSessionForGiftVoucher([FromBody] MobileCheckoutPayload payload)
         {
-            StripeConfiguration.ApiKey = _configuration["Stripe:SecretKey"];
-
-            var options = new ChargeCreateOptions
+            try
             {
-                Amount = paymentRequest.Amount * 100, // amount in cents
+                var validation = ValidateRequest(payload);
+                if (validation != null)
+                    return validation;
+
+                if (string.IsNullOrWhiteSpace(payload.ProductId.ToString()) || string.IsNullOrWhiteSpace(payload.ReturnUrl) || string.IsNullOrWhiteSpace(payload.Operator))
+                    return BadRequest(new { success = false, message = "Product ID, operator, and return URL are required." });
+
+                payload.Command = "execTransaction";
+                payload.TransferTypeId = (int)wleepay.Core.Enums.TransferTypes.VoucherCodeTransfer;
+                return await CreateProductCheckoutAsync(payload, RechargeFlows.Voucher);
+            }
+            catch (InvalidOperationException ex)
+            {
+                return NotFound(new { success = false, message = ex.Message });
+            }
+            catch (Stripe.StripeException ex)
+            {
+                await LogFailureAsync("Payment Failed", $"Stripe error while creating voucher checkout session for product {payload?.ProductId}. Error: {ex.Message}");
+                return BadRequest(new { success = false, message = $"Stripe error: {ex.Message}" });
+            }
+            catch (Exception ex)
+            {
+                await LogFailureAsync("Payment Failed", $"Failed to create voucher checkout session for product {payload?.ProductId}. Error: {ex.Message}");
+                return StatusCode(500, new { success = false, message = "Could not create voucher checkout session." });
+            }
+        }
+
+        [HttpPost("createCheckoutSession-billPayment")]
+        [AllowAnonymous]
+        public async Task<IActionResult> CheckoutSessionForBillPayment(BillPaymentCheckoutPayload payload)
+        {
+            try
+            {
+                var validation = ValidateRequest(payload);
+                if (validation != null)
+                    return validation;
+
+                var billValidation = ValidateBillPaymentRequest(payload);
+                if (billValidation != null)
+                    return billValidation;
+
+                var apiKey = _configuration["Stripe:SecretKey"];
+                if (string.IsNullOrWhiteSpace(apiKey))
+                    return StatusCode(500, new { success = false, message = "Stripe configuration is missing." });
+
+                var checkoutRequest = new CreateCheckoutSessionRequest
+                {
+                    Amount = decimal.Round(payload.Amount * FeeMultiplier, 2, MidpointRounding.AwayFromZero),
+                    Currency = "usd",
+                    ProductName = $"Electricity Bill Payment - Meter {payload.MeterNumber}",
+                    TaxCode = TaxCode,
+                    PromotionCodeId = payload.CouponCode,
+                    ReturnUrl = payload.ReturnUrl
+                };
+
+                var recharge = new RechargeCheckoutContext
+                {
+                    Flow = RechargeFlows.Lec,
+                    UserId = User.FindFirstValue(ClaimTypes.NameIdentifier),
+                    ReceiverPhoneNumber = payload.ReceiverPhoneNumber,
+                    TransferTypeId = payload.TransferTypeId,
+                    AccountId = payload.MeterNumber,
+                    AmountOperator = payload.Amount,
+                    Recharge = new RechargeRequestDetails
+                    {
+                        Command = payload.Command,
+                        ProductId = payload.ProductId.ToString(),
+                        OperatorId = payload.OperatorId,
+                        Amount = payload.Amount,
+                        Simulate = GetSimulateFlag()
+                    }
+                };
+
+                var response = await _stripeService.CreateEmbeddedCheckoutSessionAsync(checkoutRequest, apiKey, recharge);
+                return response.Success ? Ok(response) : BadRequest(response);
+            }
+            catch (Stripe.StripeException ex)
+            {
+                await LogFailureAsync("Payment Failed", $"Stripe error while creating bill payment checkout session for meter {payload?.MeterNumber}. Error: {ex.Message}");
+                return BadRequest(new { success = false, message = $"Stripe error: {ex.Message}" });
+            }
+            catch (Exception ex)
+            {
+                await LogFailureAsync("Payment Failed", $"Failed to create bill payment checkout session for meter {payload?.MeterNumber}. Error: {ex.Message}");
+                return StatusCode(500, new { success = false, message = "An error occurred while creating the checkout session." });
+            }
+        }
+
+        #region Shared flow for mobile recharge and voucher
+
+        private async Task<IActionResult> CreateProductCheckoutAsync(MobileCheckoutPayload payload, string flow)
+        {
+            var validation = ValidateRequest(payload);
+            if (validation != null)
+                return validation;
+
+            if (string.IsNullOrWhiteSpace(payload.ProductId.ToString()) || string.IsNullOrWhiteSpace(payload.ReturnUrl))
+                return BadRequest(new { success = false, message = "Product ID and return URL are required." });
+
+            if (flow == RechargeFlows.Mobile && string.IsNullOrWhiteSpace(payload.PhoneNumber))
+                return BadRequest(new { success = false, message = "Phone number is required." });
+
+            var apiKey = _configuration["Stripe:SecretKey"];
+            if (string.IsNullOrWhiteSpace(apiKey))
+                return StatusCode(500, new { success = false, message = "Stripe configuration is missing." });
+
+            var product = await _productService.GetProductByIdAsync(payload.StripeProductId.ToString());
+            if (product == null)
+                return NotFound(new { success = false, message = "Product not found." });
+
+            var amounts = ValidateAndGetAmounts(payload, product);
+            if (amounts.Error != null)
+                return amounts.Error;
+
+            string productName = product.Name;
+
+            var checkoutRequest = new CreateCheckoutSessionRequest
+            {
+                Amount = amounts.Charge,
                 Currency = "usd",
-                Description = "Bill payment",
-                Source = paymentRequest.Token
+                ProductName = productName,
+                TaxCode = TaxCode,
+                PromotionCodeId = payload.CouponCode,
+                ReturnUrl = payload.ReturnUrl
             };
 
-            var exeTransactionToCreate = _mapper.Map<PaymentRequestForStripe, SochitelBillPaymentTransactionRequest>(paymentRequest);
-            exeTransactionToCreate.Simulate = "0";
-            //exeTransactionToCreate.UserReference = paymentRequest.ExtraParameters.MeterNumber.Name;
-
-            var result = await _externalApiService.PostDataAsync<SochitelBillPaymentTransactionRequest>(exeTransactionToCreate);
-
-            SochitelTransactionResponse transactionResponse = JsonConvert.DeserializeObject<SochitelTransactionResponse>(result);
-
-            if (transactionResponse.Status.Name == ResponseStatusForSochitel.Successful.ToDescriptionString())
+            var recharge = new RechargeCheckoutContext
             {
-                var service = new ChargeService();
-
-                Charge charge = await service.CreateAsync(options);
-
-                if (charge.Status == "succeeded")
+                Flow = flow,
+                UserId = User.FindFirstValue(ClaimTypes.NameIdentifier),
+                ReceiverPhoneNumber = payload.PhoneNumber,
+                TransferTypeId = payload.TransferTypeId,
+                ProductName = productName,
+                Recharge = new RechargeRequestDetails
                 {
-
-                    CreditCardTransactions creditTransactions = new CreditCardTransactions
-                    {
-                        Amount = paymentRequest.Amount,
-                        StripeTransactionId = charge.Id,
-                        Status = charge.Status,
-                        PaymentMethod = charge.PaymentMethod,
-                        BalanceTransactionId = charge.BalanceTransactionId,
-                        CreatedDate = DateTime.UtcNow,
-                        ExtraInfo = "Bill Payment"
-
-                    };
-                    var creditCardTransactions = await _creditCardTransactionService.AddCreditCardTransactions(creditTransactions);
-
-
-
-                    SochitelTransactions sochitelTransactions = new SochitelTransactions
-                    {
-                        TransactionId = transactionResponse?.Result?.Id ?? "12345",
-                        TransactionType = "Bill Payment",
-                        CreditCardTransactionId = creditCardTransactions.Id,
-                        TransactionAmount = paymentRequest.Amount.ToString(),
-                        CommissionRate = (transactionResponse?.Result?.Balance?.Commission == null ? "0" : transactionResponse?.Result?.Balance?.Commission),
-                        OperatorId = paymentRequest.Operator,
-                        ProductId = paymentRequest.ProductId,
-                        PhoneNumber = paymentRequest.Msisdn,
-                        UserReference = transactionResponse.Reference,
-                        CreatedDate = DateTime.UtcNow,
-                        ExtraInfo = transactionResponse.Result.Instructions
-
-                    };
-
-                    var sTansaction = _sochitelTransactionService.AddSochitelTransactions(sochitelTransactions);
-
-                    InstructionDetails instructionDetails = new InstructionDetails();
-                    if (!transactionResponse.Result.Instructions.IsNullOrEmpty())
-                    {
-                        instructionDetails = Common.DeserializeInstructions(transactionResponse.Result.Instructions);
-                    }
-
-                    var message = MessagesTemplates.LecCreditPurchaseReceiptTemplate(instructionDetails.Amount.ToString(), instructionDetails.Units.ToString(), instructionDetails.Token, instructionDetails.AccountNumber, instructionDetails.CustomerName, transactionResponse.Result.Id, instructionDetails.ReceiptNumber, DateTime.UtcNow.ToString());
-                    _sMSService.sendMessage(message, paymentRequest.Msisdn);
-
-                    EmailHtmlTemplates emailHtml = new EmailHtmlTemplates();
-                    var template = emailHtml.EmailTemplateForBillPayment("User", instructionDetails?.Units.ToString(), instructionDetails?.Amount.ToString(), instructionDetails?.Token, instructionDetails?.AccountNumber, transactionResponse?.Result?.Id, DateTime.UtcNow.ToString(), charge.ReceiptUrl);
-                    _emailSender.SendEmailAsync(paymentRequest.Email, template, "User", "Receipt for bill payment");
-
-                    var userDetail = await _userDetailService.GetUserAccountByPhone(paymentRequest.Msisdn);
-                    SystemActivityLog systemActivityLog = new SystemActivityLog();
-                    systemActivityLog.UserId = userDetail.Id;
-                    systemActivityLog.Email = userDetail.Email;
-                    systemActivityLog.IpAddress = GetClientIpAddress();
-                    systemActivityLog.Action = ActionsForSystemLogs.BillPayment.ToDescriptionString();
-                    systemActivityLog.Description = GenericMessagesForSystemLogs.BillPayment.ToDescriptionString();
-                    var addLogs = await _systemActivityLogsService.AddSystemLogs(systemActivityLog);
-
-                    FirebaseMessageRequest firebaseMessageRequest = new FirebaseMessageRequest();
-
-                    var device = await _userDeviceService.GetUserDeviceByUserId(userDetail.Id);
-                    if (device != null)
-                    {
-                        foreach (var item in device)
-                        {
-                            firebaseMessageRequest.DeviceId = item.DeviceId;
-                            firebaseMessageRequest.DeviceToken = item.FcmToken;
-                            firebaseMessageRequest.Body = "Bill payment approved for $" + paymentRequest.Amount;
-                            firebaseMessageRequest.Title = "Bill Payment";
-                            try
-                            {
-                                var sendNotification = _firebaseNotification.SendFirebaseMessageRequest(firebaseMessageRequest);
-                            }
-                            catch (AggregateException ex)
-                            {
-                                foreach (var innerEx in ex.InnerExceptions)
-                                {
-                                    if (innerEx is FirebaseMessagingException fme)
-                                    {
-                                        // Handle Firebase specific exceptions
-                                        Console.WriteLine($"Firebase error: {fme.Message}");
-                                    }
-                                    else
-                                    {
-                                        Console.WriteLine($"General error: {innerEx.Message}");
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    return Ok(new
-                    {
-                        success = true,
-                        amount = paymentRequest.Amount,
-                        stripeTransactionId = charge.Id,
-                        receiptUrl = charge.ReceiptUrl,
-                        Token = instructionDetails?.Token ?? "",
-                        transactionResponse
-                    });
-
+                    Command = payload.Command,
+                    Operator = payload.Operator,
+                    Msisdn = payload.PhoneNumber,
+                    ProductId = payload.ProductId,
+                    Amount = amounts.Recharge,
+                    Simulate = GetSimulateFlag()
                 }
-                else
-                {
-                    return BadRequest("Payment is failed.");
-                }
+            };
 
-            }
+            var response = await _stripeService.CreateEmbeddedCheckoutSessionAsync(checkoutRequest, apiKey, recharge);
+            return response.Success ? Ok(response) : BadRequest(response);
+        }
 
-            if (transactionResponse.Status.Name == ResponseStatusForSochitel.InvalidDestination.ToDescriptionString())
+        // Both amounts are computed on the server:
+        //   Recharge = what the customer receives, Charge = what the customer pays (Recharge + 8% fee).
+        private (IActionResult Error, decimal Charge, decimal Recharge) ValidateAndGetAmounts(
+            MobileCheckoutPayload payload, dynamic product)
+        {
+            decimal recharge;
+
+            if (string.Equals((string)product.PriceType, "range", StringComparison.OrdinalIgnoreCase))
             {
-                transactionResponse.Status.Name = Messages.MeterNumberIncorrect.ToDescriptionString();
-                return Ok(new
-                {
-                    success = false,
-                    amount = string.Empty,
-                    stripeTransactionId = string.Empty,
-                    receiptUrl = string.Empty,
-                    Token = string.Empty,
-                    transactionResponse
-                });
+                if (payload.Amount <= 0)
+                    return (BadRequest(new { success = false, message = "Amount must be greater than zero." }), 0m, 0m);
+
+                recharge = decimal.Round(payload.Amount / FeeMultiplier, 2, MidpointRounding.AwayFromZero);
+
+                decimal min = product.PriceMin;
+                decimal max = product.PriceMax;
+                if (recharge < min || recharge > max)
+                    return (BadRequest(new { success = false, message = $"Amount must be between {min} and {max}." }), 0m, 0m);
             }
             else
             {
-                return Ok(new { transactionResponse });
+                recharge = product.Price;
+                if (recharge <= 0)
+                    return (BadRequest(new { success = false, message = "Invalid product price." }), 0m, 0m);
             }
 
+            var charge = decimal.Round(recharge * FeeMultiplier, 2, MidpointRounding.AwayFromZero);
+            return (null, charge, recharge);
         }
 
+        #endregion
 
-        [Microsoft.AspNetCore.Mvc.HttpPost("createPaymentLink")]
-        [System.Web.Http.AllowAnonymous]
-        public async Task<IActionResult> CreatePaymentLink(CreatePaymentLink createPaymentLink)
+        #region Helper Methods
+
+        // Never taken from the client. Set "Sochitel:Simulate": true in test environments only.
+        private bool GetSimulateFlag() => bool.TryParse(_configuration["Sochitel:Simulate"], out var simulate) && simulate;
+
+        private async Task LogFailureAsync(string action, string description)
         {
-            string apiKey = _configuration["Stripe:SecretKey"];
-            var paymentLink = await _stripeService.CreatePaymentLinkAsync(createPaymentLink.Amount, apiKey);
-            return Ok(new { url = paymentLink });
-        }
-
-
-        #region helper methods
-        private string GetClientIpAddress()
-        {
-            if (HttpContext.Connection.RemoteIpAddress != null)
+            try
             {
-                return HttpContext.Connection.RemoteIpAddress.ToString();
+                await _activityLogService.AddSystemLogs(new SystemActivityLog
+                {
+                    UserId = User.FindFirstValue(ClaimTypes.NameIdentifier),
+                    Action = action,
+                    Description = description,
+                    CreatedDate = DateTime.UtcNow
+                });
             }
-            return "Unknown";
+            catch
+            {
+                // A logging failure must never change the response returned to the caller.
+            }
         }
+
+        private IActionResult ValidateRequest<TPayload>(TPayload payload) where TPayload : class
+        {
+            if (payload == null)
+                return BadRequest(new { success = false, message = "Request body is required." });
+
+            if (!ModelState.IsValid)
+            {
+                var errors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage);
+                return BadRequest(new { success = false, message = "Validation failed", errors });
+            }
+
+            return null;
+        }
+
+        private IActionResult ValidateBillPaymentRequest(BillPaymentCheckoutPayload payload)
+        {
+            if (string.IsNullOrWhiteSpace(payload.MeterNumber))
+                return BadRequest(new { success = false, message = "Meter number is required." });
+
+            if (payload.Amount <= 0)
+                return BadRequest(new { success = false, message = "Amount must be greater than zero." });
+
+            if (string.IsNullOrWhiteSpace(payload.ReceiverPhoneNumber))
+                return BadRequest(new { success = false, message = "Receiver phone number is required." });
+
+            if (string.IsNullOrWhiteSpace(payload.ReturnUrl))
+                return BadRequest(new { success = false, message = "Return URL is required." });
+
+            return null;
+        }
+
         #endregion
     }
-
 }
-

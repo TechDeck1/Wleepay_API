@@ -1,5 +1,4 @@
-﻿using System.Reflection.Emit;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using wleepay.Core.Models;
@@ -44,6 +43,11 @@ namespace wleepay.Data.Context
         public DbSet<UserDevices> UserDevices { get; set; }
         public DbSet<SochitelTransactions> SochitelTransactions { get; set; }
         public DbSet<CreditCardTransactions> CreditCardTransactions { get; set; }
+        public DbSet<CouponCode> CouponCodes { get; set; }
+        public DbSet<Operator> Operators { get; set; }
+        public DbSet<Product> Products { get; set; }
+
+
 
         public WPContext(DbContextOptions<WPContext> options) : base(options)
         {
@@ -86,7 +90,9 @@ namespace wleepay.Data.Context
             builder.ApplyConfiguration(new CreditCardTransactionConfiguration());
             builder.ApplyConfiguration(new UserNotesConfiguration());
             builder.ApplyConfiguration(new PaymentTransactionConfiguration());
-
+            builder.ApplyConfiguration(new CouponCodeConfiguration());
+            builder.ApplyConfiguration(new ProductConfiguration());
+            builder.ApplyConfiguration(new OperatorConfiguration());
 
 
         }

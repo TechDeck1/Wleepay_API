@@ -11,6 +11,8 @@ namespace wleepay.Communication.Interface
         Task<string> EmailForPaymentRecieved(string messageText, string email);
         Task<string> SendEmailAsync(string email,string template, string username, string mailSubject);
 
+        Task<string> SendEmailWithInlineImageAsync(string email, string template, string username, string mailSubject, string imageName, byte[] imageContent, string contentId);
+
         Task<string> SendEmailToUserAsync(string userEmail, string subject, string htmlContent);  // added 
 
     }

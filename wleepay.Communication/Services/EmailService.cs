@@ -71,6 +71,37 @@ namespace wleepay.Communication.Services
 
         }
 
+        public async Task<string> SendEmailWithInlineImageAsync(
+            string email, string template, string name, string mailSubject,
+            string imageName, byte[] imageContent, string contentId)
+        {
+            if (imageContent == null || imageContent.Length == 0)
+                throw new ArgumentException("Inline image content is required.", nameof(imageContent));
+            if (string.IsNullOrWhiteSpace(contentId))
+                throw new ArgumentException("Inline image content ID is required.", nameof(contentId));
+
+            var apiKey = _configuration.GetSection("SendGrid:WleePaySendGridApiKey").Value.ToString();
+            var client = new SendGridClient(apiKey);
+            var msg = new SendGridMessage
+            {
+                From = new EmailAddress(_senderEmail, _senderName),
+                Subject = mailSubject,
+                PlainTextContent = "",
+                HtmlContent = template
+            };
+
+            msg.AddTo(new EmailAddress(email, name));
+            msg.AddAttachment(
+                imageName,
+                Convert.ToBase64String(imageContent),
+                "image/png",
+                "inline",
+                contentId);
+
+            var response = await client.SendEmailAsync(msg);
+            return response.IsSuccessStatusCode ? "Email queued successfully!" : "Something went wrong!";
+        }
+
         public async Task<string> SendEmailToUserAsync(string userEmail, string subject, string htmlContent)
         {
             var apiKey = _configuration.GetSection("SendGrid:WleePaySendGridApiKey").Value.ToString();
