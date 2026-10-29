@@ -263,7 +263,7 @@ namespace wleepay.API.Controllers
                             var packedToken = _emailVerificationProtector.Protect(payload);
                             var encodedToken = HttpUtility.UrlEncode(packedToken);
                             var webBaseUrl = _configuration["WleeSendWebUrl"] ?? baseUrl;
-                            var verifyUrl = $"{webBaseUrl}/#/account/verify?token={encodedToken}";
+                            var verifyUrl = $"{webBaseUrl}/account/verify?token={encodedToken}";
                             var emailTemplate = new EmailHtmlTemplates().EmailTemplateForEmailVerification(verifyUrl, updatedDetails.FirstName);
                             await _emailSender.SendEmailAsync(newUser.Email, emailTemplate, updatedDetails.FirstName, "Verify your WleeSend email");
                         }
@@ -700,7 +700,7 @@ namespace wleepay.API.Controllers
                 var packedToken = _emailVerificationProtector.Protect(payload);
                 var encodedToken = HttpUtility.UrlEncode(packedToken);
                 var webBaseUrl = _configuration["WleeSendWebUrl"] ?? _configuration["BaseUrl"];
-                var verifyUrl = $"{webBaseUrl}/#/account/verify?token={encodedToken}";
+                var verifyUrl = $"{webBaseUrl}/account/verify?token={encodedToken}";
                 var emailTemplate = new EmailHtmlTemplates().EmailTemplateForEmailVerification(verifyUrl, firstName);
                 await _emailSender.SendEmailAsync(user.Email, emailTemplate, firstName, "Verify your WleeSend email");
 

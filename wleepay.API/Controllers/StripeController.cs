@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using FirebaseAdmin.Messaging;
-using Google.Apis.Util;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -13,15 +12,13 @@ using System.Web.Http;
 using wleepay.API.Helpers;
 using wleepay.API.Resources;
 using wleepay.Communication.Interface;
-using wleepay.Communication.Services;
 using wleepay.Communication.Templates;
 using wleepay.Core.Common;
 using wleepay.Core.DTO.Request;
+using wleepay.Core.DTO.Response;
 using wleepay.Core.Enums;
 using wleepay.Core.Models;
 using wleepay.Core.Services;
-using wleepay.Core.DTO.Request;
-using wleepay.Core.DTO.Response;
 using static wleepay.Communication.EmailTemplates.EmailTemplates;
 
 namespace wleepay.API.Controllers
@@ -127,7 +124,7 @@ namespace wleepay.API.Controllers
                     EmailHtmlTemplates emailHtml = new EmailHtmlTemplates();
                     var template = emailHtml.EmailTemplateForBillPaymentAndRecharge(charge.ReceiptUrl,"User",transactionResponse.Result.Id, transactionResponse.Reference);
                    
-                    _emailSender.SendEmailAsync(paymentRequest.Email, template, "User", "Receipt for mobile recharge");
+                    await _emailSender.SendEmailAsync(paymentRequest.Email, template, "User", "Receipt for mobile recharge");
 
                     var userDetail = await _userDetailService.GetUserAccountByPhone(paymentRequest.Msisdn);
 
@@ -264,7 +261,7 @@ namespace wleepay.API.Controllers
 
                     EmailHtmlTemplates emailHtml = new EmailHtmlTemplates();
                     var template = emailHtml.EmailTemplateForBillPayment("User", instructionDetails?.Units.ToString(), instructionDetails?.Amount.ToString(), instructionDetails?.Token, instructionDetails?.AccountNumber, transactionResponse?.Result?.Id, DateTime.UtcNow.ToString(), charge.ReceiptUrl);
-                    _emailSender.SendEmailAsync(paymentRequest.Email, template, "User", "Receipt for bill payment");
+                     await _emailSender.SendEmailAsync(paymentRequest.Email, template, "User", "Receipt for bill payment");
 
                     var userDetail = await _userDetailService.GetUserAccountByPhone(paymentRequest.Msisdn);
                     SystemActivityLog systemActivityLog = new SystemActivityLog();
