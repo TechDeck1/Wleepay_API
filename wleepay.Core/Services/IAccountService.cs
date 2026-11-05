@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using wleepay.Core.DTO.Request;
 using wleepay.Core.DTO.Response;
-using Microsoft.AspNetCore.Mvc;
+using wleepay.Core.Models;
 
 namespace wleepay.Core.Services
 {
@@ -14,6 +11,9 @@ namespace wleepay.Core.Services
         Task<AuthenticationResponse> RegisterAsync(RegisterUserRequest request);
         Task<GenericResponse> ResetPinAsync(ResetPinRequest request, string userId);
         Task<GenericResponse> ForgotPinAsync(ForgotPinRequest request);
+
+        Task<GenericResponse> SendDualEmailOtpAsync(SendDualEmailOtpRequest request);
+        Task<GenericResponse> VerifyDualEmailOtpAsync(VerifyDualEmailOtpRequest request);
     }
 
 }

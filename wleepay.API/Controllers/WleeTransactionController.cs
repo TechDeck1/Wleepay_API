@@ -1,14 +1,15 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+using wleepay.Core.DTO.Response;
 using wleepay.Core.Models;
 using wleepay.Core.Services;
-using Microsoft.EntityFrameworkCore;
 using wleepay.Services;
 
 
@@ -36,6 +37,16 @@ namespace wleepay.API.Controllers
         {
             var userId = _userService.GetCurrentUserId();
             var result = await _transactionService.GetTransactionsByUserIdAsync(userId, transferTypeId, pageNumber, pageSize);
+            return Ok(result);
+        }
+
+        [HttpGet("mobile/transactions")]
+        public async Task<ActionResult<MobileTransactionPage>> GetMobileTransactions(
+      [FromQuery] string kind, [FromQuery] int page = 1, [FromQuery] int pageSize = 20)
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var result = await _transactionService.GetMobileTransactionsAsync(
+                userId, kind, page, Math.Clamp(pageSize, 1, 50));
             return Ok(result);
         }
 

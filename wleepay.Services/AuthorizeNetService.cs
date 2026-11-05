@@ -39,6 +39,9 @@ namespace wleepay.Services
 
         private static readonly string[] LineSeparators = { "\r\n", "\n" };
 
+        private const string LecLookupCommand = "accountLookup";
+        private const string MeterNotFoundMessage = "Meter number is incorrect.";
+
         #endregion
 
         #region Fields and Constructor
@@ -828,6 +831,53 @@ namespace wleepay.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Failed to send LEC SMS for User {UserId}", userId);
+            }
+        }
+
+        public async Task<VerifyLecMeterResponse> VerifyLecMeterAsync(string meterNumber, string operatorId)
+        {
+            if (string.IsNullOrWhiteSpace(meterNumber) || string.IsNullOrWhiteSpace(operatorId))
+                return new VerifyLecMeterResponse { IsValid = false, Message = "Meter number and operator are required." };
+
+            try
+            {
+                var payload = new
+                {
+                    auth = BuildFreshAuth(),
+                    version = 5,
+                    command = LecLookupCommand,
+                    @operator = 2470,                 
+                    accountId = meterNumber.Trim(),
+                    extraParameters = new { accountType = "OFFLINE_PREPAID" }
+                };
+
+
+                var json = await _externalApiService.PostDataAsync(payload);
+                var statusName = GetStatusName(json);
+
+                if (string.Equals(statusName, "Successful", StringComparison.OrdinalIgnoreCase))
+                {
+                    string details = null;
+                    try { details = JObject.Parse(json)["result"]?.ToString(Formatting.None); }
+                    catch (JsonReaderException) { }
+
+                    return new VerifyLecMeterResponse { IsValid = true, Message = "Meter verified.", Details = details };
+                }
+
+                _logger.LogWarning("Sochitel meter lookup rejected {Meter}. Status {Status}. Raw: {Json}",
+                    meterNumber, statusName, json);
+
+                return new VerifyLecMeterResponse { IsValid = false, Message = MeterNotFoundMessage };
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Sochitel meter lookup threw for {Meter}", meterNumber);
+                return new VerifyLecMeterResponse
+                {
+                    IsValid = false,
+                    ProviderError = true,
+                    Message = ProviderUnavailableMessage
+                };
             }
         }
 

@@ -56,13 +56,13 @@ namespace wleepay.API.Areas.Portal.Controllers
         private readonly IKYCDocumentsService _kycDocumentsService;
         private readonly ISMSService _smsService;
         private readonly IWalletService _walletService;
-        private readonly IUploadDocument _storageService;
+        private readonly IStorageService _storageService;
         private readonly IAddressService _addressService;
         private readonly ILogger<AccountController> _logger;
         private readonly IMapper _mapper;
         private readonly IConfiguration _configuration;
         public readonly  IHostingEnvironment _hostingEnvironment;
-        private readonly IUploadDocument _documentUploaderService;
+        private readonly IStorageService _documentUploaderService;
         private readonly IEmailSender _emailSender;
         private readonly ISystemActivityLogsService _systemActivityLogsService;
         private readonly IUsersStaffRoleService _usersStaffRoleService;
@@ -77,14 +77,14 @@ namespace wleepay.API.Areas.Portal.Controllers
             SignInManager<ApplicationUser> signInManager,
             IUserDetailService userDetailsService,
             IWalletService walletService,
-            IUploadDocument storageService,
+            IStorageService storageService,
             ILogger<AccountController> logger,
             IKYCDocumentsService kycDocumentsService,
             IAddressService addressService,
             ISMSService smsService,
             IConfiguration configuration,
             IMapper mapper,
-            IUploadDocument uploadDocument,
+            IStorageService uploadDocument,
             IHostingEnvironment hostingEnvironment,
             IEmailSender emailSender,
             ISystemActivityLogsService systemActivityLogsService,

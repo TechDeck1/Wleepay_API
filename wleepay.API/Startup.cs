@@ -201,7 +201,7 @@ namespace wleepay.API
             services.AddTransient<ILookupService, LookupService>();
             services.AddTransient<ISmileIdentityJobService, SmileIdentityJobService>();
 
-            services.AddTransient<IUploadDocument, StorageService>();
+            services.AddTransient<IStorageService, StorageService>();
             services.AddTransient<ISmileIdentityService, SmileIdentityService>();
             services.AddTransient<IKYCLevelService, KYCLevelService>();
             services.AddTransient<ITransferFeeService, TransferFeeService>();

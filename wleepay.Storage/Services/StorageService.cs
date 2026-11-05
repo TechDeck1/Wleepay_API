@@ -1,21 +1,17 @@
 ﻿using Azure.Storage.Blobs.Models;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using Microsoft.WindowsAzure.Storage;
-using Microsoft.WindowsAzure.Storage.Blob;
 using System;
 using System.IO;
 using System.Net;
 using System.Net.Http;
-using System.Net.Mime;
 using System.Threading.Tasks;
 using wleepay.Storage.Interface;
 
 namespace wleepay.Storage.Services
 {
-     public class StorageService : IUploadDocument
+     public class StorageService : IStorageService
     {
         public readonly IHostingEnvironment _hostingEnvironment;
         private readonly ILogger <StorageService> _logger;

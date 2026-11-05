@@ -1,29 +1,21 @@
 using AutoMapper;
-using DevExpress.Xpo.Logger;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Microsoft.SqlServer.Management.Smo;
-using Microsoft.SqlServer.Management.Smo.Broker;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
-using System.Text.Json;
 using System.Threading.Tasks;
 using System.Web;
 using wleepay.API.Helpers;
 using wleepay.API.Middleware;
 using wleepay.API.Resources;
 using wleepay.API.Validators;
-using wleepay.Communication.EmailTemplates;
 using wleepay.Communication.Interface;
-using wleepay.Communication.Services;
-using wleepay.Communication.Templates;
 using wleepay.Core.Common;
 using wleepay.Core.DTO.Request;
 using wleepay.Core.DTO.Response;
@@ -31,8 +23,6 @@ using wleepay.Core.Enums;
 using wleepay.Core.Models;
 using wleepay.Core.Services;
 using wleepay.Storage.Interface;
-using wleepay.Storage.Services;
-using static AutoMapper.Internal.ExpressionFactory;
 using static wleepay.Communication.EmailTemplates.EmailTemplates;
 
 namespace wleepay.API.Controllers
@@ -45,33 +35,36 @@ namespace wleepay.API.Controllers
 
         private readonly IUserDetailService _userDetailsService;
         private readonly UserManager<ApplicationUser> _userManager;
-        private readonly IUploadDocument _documentUploaderService;
+        private readonly IStorageService _documentUploaderService;
         private readonly IKYCDocumentsService _kycDocumentsService;
         private readonly IAddressService _addressService;
         private readonly ISmileIdentityJobService _smileIdentityJobService;
         private readonly IMapper _mapper;
         private readonly ILogger<UserController> _logger;
         private readonly IUsersStaffRoleService _usersStaffRoleService;
-        private readonly IUploadDocument _storageService;
+        private readonly IStorageService _storageService;
         private readonly IUserDeviceService _userDeviceService;
         private readonly ISMSService _sMSService;
         private readonly IExternalApiService _externalApiService;
         private readonly IEmailSender _emailSender;
+        private readonly IWebHostEnvironment _webHostEnvironment;
 
         public UserController(UserManager<ApplicationUser> userManager,
             IUserDetailService userDetailsService,
-            IUploadDocument uploadDocument,
+            IWebHostEnvironment webHostEnvironment,
+            IStorageService uploadDocument,
             IAddressService addressService,
             IKYCDocumentsService kycDocumentsService,
             ISmileIdentityJobService smileIdentityJobService,
             IMapper mapper,
             ILogger<UserController> logger, 
             IUsersStaffRoleService usersStaffRoleService,
-            IUploadDocument storageService,
+            IStorageService storageService,
             IUserDeviceService userDeviceService, ISMSService sMSService, IExternalApiService externalApiService, IEmailSender emailSender)
 
         {
             _userManager = userManager;
+            _webHostEnvironment = webHostEnvironment;
             _userDetailsService = userDetailsService;
             _documentUploaderService = uploadDocument;
             _addressService = addressService;
@@ -877,6 +870,64 @@ namespace wleepay.API.Controllers
                 _logger.LogError("Error in uploadDocument helper method");
                 throw Ex.InnerException;
             }
+        }
+
+        [HttpDelete("profileImage")]
+        public async Task<IActionResult> RemoveUserProfileImage(string userId)
+        {
+            try
+            {
+                if (string.IsNullOrWhiteSpace(userId))
+                    return BadRequest("User id is required.");
+
+                var userDetail = await _userDetailsService.GetUserDetailsById(userId);
+                if (userDetail == null)
+                    return BadRequest("No user found");
+
+                var existingImagePath = userDetail.Image;
+                if (string.IsNullOrEmpty(existingImagePath))
+                    return Ok(new { message = "No profile image to remove.", image = (string?)null });
+
+                // Clear the DB value first, so a file-system failure can't leave a dangling path.
+                userDetail.Image = null;
+                var updatedUserDetail = await _userDetailsService.AddOrUpdateUserDetails(userDetail);
+
+                // Best-effort file cleanup. Failure here is logged but doesn't fail the request.
+                try
+                {
+                    DeleteProfileImageFile(existingImagePath);
+                }
+                catch (Exception fileEx)
+                {
+                    _logger.LogWarning(fileEx, "Could not delete profile image file {Path}", existingImagePath);
+                }
+
+                var resource = _mapper.Map<UserDetail, UserDetailResource>(updatedUserDetail);
+                resource.Image = string.Empty; // do NOT call ReadAllBytes here, there is no file anymore
+                return Ok(resource);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.ToString());
+                return BadRequest("Could not remove the profile image.");
+            }
+        }
+
+        private void DeleteProfileImageFile(string imagePath)
+        {
+            // Only delete files inside the web root, so a bad DB value can never delete arbitrary files.
+            var webRoot = Path.GetFullPath(_webHostEnvironment.WebRootPath)
+                .TrimEnd(Path.DirectorySeparatorChar) + Path.DirectorySeparatorChar;
+            var fullPath = Path.GetFullPath(imagePath);
+
+            if (!fullPath.StartsWith(webRoot, StringComparison.OrdinalIgnoreCase))
+            {
+                _logger.LogWarning("Refusing to delete file outside web root: {Path}", fullPath);
+                return;
+            }
+
+            if (System.IO.File.Exists(fullPath))
+                System.IO.File.Delete(fullPath);
         }
         #endregion
     }

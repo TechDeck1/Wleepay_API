@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Threading.Tasks;
+using wleepay.Core.DTO.Request;
 using wleepay.Core.Models;
 using wleepay.Core.Services;
 
@@ -252,5 +253,16 @@ namespace wleepay.API.Controllers
             return StatusCode(500, transaction.ErrorMessage ?? "Recharge failed");
         }
 
+
+        [HttpPost("verify-meter")]
+        public async Task<IActionResult> VerifyMeter([FromBody] VerifyLecMeterRequest request)
+        {
+            var result = await _authorizeService.VerifyLecMeterAsync(request.MeterNumber, request.Operator);
+
+            if (result.ProviderError)
+                return StatusCode(503, result);
+
+            return Ok(result);
+        }
     }
 }

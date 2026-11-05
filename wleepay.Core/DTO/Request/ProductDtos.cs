@@ -8,6 +8,9 @@
         public string TaxCode { get; set; } = "txcode_80000000";
         public string PromotionCodeId { get; set; }
         public string ReturnUrl { get; set; }
+        public bool HostedCheckout { get; set; }
+        public string SuccessUrl { get; set; }
+        public string CancelUrl { get; set; }
     }
 
     // CheckoutSessionResponse.cs
@@ -16,6 +19,16 @@
         public bool Success { get; set; }
         public string ClientSecret { get; set; }
         public string SessionId { get; set; }
+        public string Message { get; set; }
+        public string Url { get; set; }
+    }
+
+    public class MobilePaymentIntentResponse
+    {
+        public bool Success { get; set; }
+        public string PaymentIntentClientSecret { get; set; }
+        public string PaymentIntentId { get; set; }
+        public string PublishableKey { get; set; }
         public string Message { get; set; }
     }
 

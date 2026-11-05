@@ -46,8 +46,8 @@ namespace wleepay.Services
         private const string MetaProductName = "productName";
         private const string MetaAccountId = "accountId";            // LEC only
         private const string MetaAmountOperator = "amountOperator";  // LEC only
-        private const string MetaOperatorId = "accountId";
-        private const string MetaProductId = "accountId";
+        private const string MetaOperatorId = "operatorId";
+        private const string MetaProductId = "productId";
         private static readonly string[] LineSeparators = { "\r\n", "\n" };
 
         #endregion
@@ -159,10 +159,12 @@ namespace wleepay.Services
 
                 var options = new SessionCreateOptions
                 {
-                    UiMode = "embedded_page",
+                    UiMode = request.HostedCheckout ? null : "embedded_page",
                     Mode = "payment",
                     BillingAddressCollection = isRecharge && recharge.Flow == RechargeFlows.Voucher ? "auto" : "required",
-                    ReturnUrl = $"{baseUrl}/{request.ReturnUrl}",
+                    ReturnUrl = request.HostedCheckout ? null : $"{baseUrl}/{request.ReturnUrl}",
+                    SuccessUrl = request.HostedCheckout ? request.SuccessUrl : null,
+                    CancelUrl = request.HostedCheckout ? request.CancelUrl : null,
                     LineItems = new List<SessionLineItemOptions>
                     {
                         new SessionLineItemOptions
@@ -182,11 +184,21 @@ namespace wleepay.Services
                     }
                 };
 
-                if (isRecharge && recharge.Flow == RechargeFlows.Voucher && !string.IsNullOrWhiteSpace(recharge.UserId))
+                if (isRecharge)
                 {
-                    var user = await _userDetailsService.GetApplicationUserById(recharge.UserId);
-                    if (!string.IsNullOrWhiteSpace(user?.Email))
-                        options.CustomerEmail = user.Email;
+                    // Older production JWTs contain an email claim but no user ID.
+                    // Use that signed claim so Stripe can prefill email even when
+                    // the optional user lookup cannot be performed.
+                    if (!string.IsNullOrWhiteSpace(recharge.CustomerEmail))
+                    {
+                        options.CustomerEmail = recharge.CustomerEmail;
+                    }
+                    else if (!string.IsNullOrWhiteSpace(recharge.UserId))
+                    {
+                        var user = await _userDetailsService.GetApplicationUserById(recharge.UserId);
+                        if (!string.IsNullOrWhiteSpace(user?.Email))
+                            options.CustomerEmail = user.Email;
+                    }
                 }
 
                 if (isRecharge)
@@ -221,6 +233,7 @@ namespace wleepay.Services
                     Success = true,
                     ClientSecret = session.ClientSecret,
                     SessionId = session.Id,
+                    Url = session.Url,
                     Message = "Checkout session created successfully"
                 };
             }
@@ -238,6 +251,65 @@ namespace wleepay.Services
                 _logger.LogError(ex, "Unexpected error while creating checkout session.");
                 return Fail(isRecharge ? GenericFailureMessage : $"An error occurred: {ex.Message}");
             }
+        }
+
+        public async Task<MobilePaymentIntentResponse> CreateMobilePaymentIntentAsync(decimal amount, RechargeCheckoutContext recharge, string apiKey = null)
+        {
+            ValidateRecharge(recharge);
+            if (amount <= 0) throw new ArgumentException("Payment amount must be greater than zero.");
+            var key = string.IsNullOrWhiteSpace(apiKey) ? _defaultApiKey : apiKey;
+            ValidateApiKey(key);
+            var requested = recharge.Flow == RechargeFlows.Lec ? recharge.AmountOperator : recharge.Recharge.Amount;
+            var balanceError = await ValidateSochitelBalanceAsync(recharge.Recharge, requested);
+            if (!string.IsNullOrEmpty(balanceError)) return new MobilePaymentIntentResponse { Success = false, Message = balanceError };
+
+            var metadata = BuildMetadata(recharge);
+            var intent = await _paymentIntents.CreateAsync(new PaymentIntentCreateOptions
+            {
+                Amount = ToCents(amount),
+                Currency = "usd",
+                CaptureMethod = "manual",
+                Description = recharge.ProductName ?? "Wleesend mobile recharge",
+                ReceiptEmail = recharge.CustomerEmail,
+                Metadata = metadata,
+                AutomaticPaymentMethods = new PaymentIntentAutomaticPaymentMethodsOptions
+                {
+                    Enabled = true,
+                    AllowRedirects = "never"
+                }
+            }, Opts(key));
+
+            return new MobilePaymentIntentResponse
+            {
+                Success = true,
+                PaymentIntentClientSecret = intent.ClientSecret,
+                PaymentIntentId = intent.Id,
+                PublishableKey = _configuration["Stripe:Publishablekey"]
+            };
+        }
+
+        public Task<Session> GetCheckoutSessionAsync(string sessionId)
+        {
+            if (string.IsNullOrWhiteSpace(sessionId) || !sessionId.StartsWith("cs_", StringComparison.Ordinal))
+                throw new ArgumentException("Invalid checkout session ID.", nameof(sessionId));
+
+            ValidateApiKey(_defaultApiKey);
+            return _sessions.GetAsync(sessionId, null, Opts());
+        }
+
+        public async Task<(Session Session, bool PaymentConfirmed)> GetCheckoutSessionStatusAsync(string sessionId)
+        {
+            var session = await GetCheckoutSessionAsync(sessionId);
+            if (!string.Equals(session.Status, "complete", StringComparison.OrdinalIgnoreCase) ||
+                string.IsNullOrWhiteSpace(session.PaymentIntentId) ||
+                session.Metadata == null ||
+                !session.Metadata.TryGetValue(MetaFlow, out var flow) ||
+                !IsKnownFlow(flow))
+                return (session, false);
+
+            var paymentIntent = await _paymentIntents.GetAsync(session.PaymentIntentId, null, Opts());
+            var confirmed = paymentIntent.Status == "requires_capture" || paymentIntent.Status == "succeeded";
+            return (session, confirmed);
         }
 
         private static CheckoutSessionResponse Fail(string message)
@@ -260,6 +332,11 @@ namespace wleepay.Services
                 throw new ArgumentException("Product name is required");
             if (string.IsNullOrWhiteSpace(request.TaxCode))
                 throw new ArgumentException("Tax code is required");
+            if (request.HostedCheckout &&
+                (string.IsNullOrWhiteSpace(request.SuccessUrl) || string.IsNullOrWhiteSpace(request.CancelUrl) ||
+                 !Uri.TryCreate(request.SuccessUrl, UriKind.Absolute, out var successUrl) || successUrl.Scheme != Uri.UriSchemeHttps ||
+                 !Uri.TryCreate(request.CancelUrl, UriKind.Absolute, out var cancelUrl) || cancelUrl.Scheme != Uri.UriSchemeHttps))
+                throw new ArgumentException("Hosted checkout requires valid HTTPS return URLs.");
         }
 
         private static void ValidateApiKey(string apiKey)
@@ -297,9 +374,12 @@ namespace wleepay.Services
                 [MetaProductName] = c.ProductName,
                 [MetaAccountId] = c.AccountId,
                 [MetaProductId] = c.Recharge.ProductId.ToString(),
-                [MetaOperatorId] = c.Recharge.ProductId.ToString(),
+                [MetaOperatorId] = c.Flow == RechargeFlows.Lec
+                    ? c.Recharge.OperatorId.ToString(CultureInfo.InvariantCulture)
+                    : c.Recharge.Operator,
                 [MetaAmountOperator] = c.Flow == RechargeFlows.Lec ? Money(c.AmountOperator) : null
             };
+            if (c.NativePaymentSheet) m["paymentSource"] = "mobile_payment_sheet";
 
             foreach (var emptyKey in m.Where(kv => string.IsNullOrEmpty(kv.Value)).Select(kv => kv.Key).ToList())
                 m.Remove(emptyKey);
@@ -424,6 +504,20 @@ namespace wleepay.Services
                         RechargeData = recharge
                     });
             }
+        }
+
+        public Task HandlePaymentIntentAuthorizedAsync(PaymentIntent paymentIntent)
+        {
+            if (paymentIntent == null || paymentIntent.Status != "requires_capture") return Task.CompletedTask;
+            var metadata = paymentIntent.Metadata ?? new Dictionary<string, string>();
+            if (!metadata.TryGetValue("paymentSource", out var source) || source != "mobile_payment_sheet") return Task.CompletedTask;
+            if (!metadata.TryGetValue(MetaFlow, out var flow) || !IsKnownFlow(flow)) return Task.CompletedTask;
+            return HandleCheckoutCompletedAsync(new Session
+            {
+                Id = paymentIntent.Id,
+                PaymentIntentId = paymentIntent.Id,
+                Metadata = metadata
+            });
         }
 
         // payment_intent.payment_failed: card declined or authentication failed.
@@ -857,9 +951,8 @@ namespace wleepay.Services
                     "Sending {Flow}. UserRef={UserRef} Operator={Operator} Msisdn={Msisdn} Product={ProductId} Amount={Amount} Simulate={Simulate}",
                     flowName, userRef, payload.Operator, payload.Msisdn, payload.ProductId, payload.Amount, payload.Simulate);
 
-                var rechargeResponseJson = payload.Simulate
-                    ? BuildSimulatedTopupResponseJson(payload, isVoucher, transaction.TransactionId)
-                    : await _externalApiService.PostDataAsync(payload);
+                var rechargeResponseJson = BuildSimulatedTopupResponseJson(payload, isVoucher, transaction.TransactionId);
+                //var rechargeResponseJson = await _externalApiService.PostDataAsync(payload);
 
                 var statusName = GetStatusName(rechargeResponseJson);
                 var providerStatusId = GetStatusId(rechargeResponseJson);

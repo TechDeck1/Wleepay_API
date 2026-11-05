@@ -24,6 +24,13 @@ namespace wleepay.Services
 
             switch (stripeEvent.Type)
             {
+                case "payment_intent.amount_capturable_updated":
+                    if (stripeEvent.Data.Object is PaymentIntent authorized)
+                        await _stripe.HandlePaymentIntentAuthorizedAsync(authorized);
+                    else
+                        _logger.LogWarning("Event {Id}: object is not a PaymentIntent.", stripeEvent.Id);
+                    break;
+
                 case "checkout.session.completed":
                     {
                         if (!(stripeEvent.Data.Object is Session session))

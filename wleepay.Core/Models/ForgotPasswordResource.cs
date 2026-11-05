@@ -65,4 +65,21 @@ namespace wleepay.Core.Models
         public string? Email { get; set; }
 
     }
+
+        public class SendDualEmailOtpRequest
+        {
+            public string FirstEmail { get; set; }
+            public string SecondEmail { get; set; }
+        }
+
+        public class VerifyDualEmailOtpRequest
+        {
+            public string FirstEmail { get; set; }
+            public string FirstOtp { get; set; }
+
+            public string SecondEmail { get; set; }
+            public string SecondOtp { get; set; }
+        }
+
+   
 }

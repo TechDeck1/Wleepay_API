@@ -1,32 +1,25 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
-using System.Security.Claims;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using System.Web;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using Microsoft.IdentityModel.Tokens;
-using wleepay.Communication.Interface;
-using wleepay.Communication.Services;
-using wleepay.Communication.Templates;
+using System;
+using System.Linq;
+using System.Net.Mail;
+using System.Security.Cryptography;
+using System.Text;
+using System.Threading.Tasks;
+using System.Web;
 using wleepay.Communication.EmailTemplates;
-using Microsoft.AspNetCore.DataProtection;
+using wleepay.Communication.Interface;
+using wleepay.Communication.Templates;
 using wleepay.Core.Common;
 using wleepay.Core.DTO.Request;
 using wleepay.Core.DTO.Response;
 using wleepay.Core.Enums;
 using wleepay.Core.Models;
 using wleepay.Core.Services;
-using AutoMapper;
-using Microsoft.AspNetCore.Mvc;
-using wleepay.Core.Common;
-using static Azure.Core.HttpHeader;
 
 namespace wleepay.Services.Account
 {
@@ -44,7 +37,12 @@ namespace wleepay.Services.Account
         private readonly IMemoryCache _cache;
         private readonly IMapper _mapper;
         private readonly IDataProtector _emailVerificationProtector;
-        
+
+        // ---- Dual email OTP settings ----
+        private const string DualOtpCachePrefix = "DUAL_EMAIL_OTP_";
+        private const int DualOtpExpiryMinutes = 10;
+        private const int DualOtpMaxAttempts = 5;
+
         public AccountService(
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
@@ -247,14 +245,14 @@ namespace wleepay.Services.Account
 
             var user = await _userManager.FindByEmailAsync(request.Email);
             if (user == null)
-            return new GenericResponse(true, "If the email exists, a code has been sent."); 
+                return new GenericResponse(true, "If the email exists, a code has been sent.");
 
             string cacheKey = $"PIN_{user.Id}";
 
             if (!string.IsNullOrEmpty(request.NewPin) && !string.IsNullOrEmpty(request.ConfirmPin))
             {
                 if (request.NewPin != request.ConfirmPin)
-                return new GenericResponse(false, "Passwords do not match.");
+                    return new GenericResponse(false, "Passwords do not match.");
 
                 var pinError = _validationService.ValidatePin(request.NewPin);
                 if (pinError != null)
@@ -345,77 +343,255 @@ namespace wleepay.Services.Account
         }
 
 
+        public async Task<GenericResponse> SendDualEmailOtpAsync(SendDualEmailOtpRequest request)
+        {
+            if (request == null)
+                return new GenericResponse(false, "Request is required.");
 
-        //private string ValidateUserInput(RegisterUserRequest request)
-        //{
-        //    if (string.IsNullOrWhiteSpace(request.FirstName) ||
-        //        string.IsNullOrWhiteSpace(request.LastName) ||
-        //        string.IsNullOrWhiteSpace(request.EmailId) ||
-        //        string.IsNullOrWhiteSpace(request.PhoneNumber) ||
-        //        string.IsNullOrWhiteSpace(request.Gender) ||
-        //        request.CountyId == 0 ||
-        //        string.IsNullOrWhiteSpace(request.Pin))
-        //    {
-        //        return "All fields are required.";
-        //    }
+            var currentEmail = NormalizeEmail(request.FirstEmail);
+            var newEmail = NormalizeEmail(request.SecondEmail);
 
-        //    if (!Regex.IsMatch(request.EmailId, @"^[^@\s]+@[^@\s]+\.[^@\s]+$"))
-        //    {
-        //        return "Invalid email format.";
-        //    }
+            if (string.IsNullOrEmpty(currentEmail) || string.IsNullOrEmpty(newEmail))
+                return new GenericResponse(false, "Both emails are required.");
 
-        //    var pinError = ValidatePin(request.Pin);
-        //    return pinError;
-        //}
+            if (!IsValidEmail(currentEmail))
+                return new GenericResponse(false, "First email is not valid.");
 
-        //private string ValidatePin(string pin)
-        //{
-        //    if (string.IsNullOrWhiteSpace(pin))
-        //        return "PIN is required.";
+            if (!IsValidEmail(newEmail))
+                return new GenericResponse(false, "Second email is not valid.");
 
-        //    if (pin.Length < 8)
-        //        return "PIN must be at least 8 characters.";
+            if (currentEmail == newEmail)
+                return new GenericResponse(false, "Both emails must be different.");
 
-        //    if (!Regex.IsMatch(pin, @"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@#$%^&*]).{8,}$"))
-        //        return "PIN must contain uppercase, lowercase, number, and special character.";
+            // Current email must belong to an existing account
+            var currentUser = await _userManager.FindByEmailAsync(currentEmail);
+            if (currentUser == null)
+                return new GenericResponse(false, "No account found with the current email.");
 
-        //    return null;
-        //}
+            // New email must NOT already exist in the DB
+            var existingNewEmailUser = await _userManager.FindByEmailAsync(newEmail);
+            if (existingNewEmailUser != null)
+                return new GenericResponse(false, Messages.EmailAlreadyUsed.ToDescriptionString());
 
-        //private string GenerateJSONWebToken(UserDetail userInfo)
-        //{
-        //    var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:Secret"]));
-        //    var authClaims = new List<Claim>
-        //    {
-        //        new Claim(ClaimTypes.Name, userInfo.FirstName),
-        //        new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-        //        new Claim(ClaimTypes.Email, userInfo.ApplicationUser.Email),
-        //        new Claim("UserId", userInfo.UserId),
-        //        new Claim(ClaimTypes.NameIdentifier, userInfo.UserId)
-        //    };
+            var currentOtp = GenerateSecureOtp();
+            var newOtp = GenerateSecureOtp();
 
-        //    var appUser = _userManager.FindByIdAsync(userInfo.UserId).Result;
-        //    if (appUser != null)
-        //    {
-        //        var roles = _userManager.GetRolesAsync(appUser).Result;
-        //        var role = roles.FirstOrDefault();
-        //        if (!string.IsNullOrEmpty(role))
-        //        {
-        //            authClaims.Add(new Claim(ClaimTypes.Role, role));
-        //        }
-        //    }
+            var expiry = TimeSpan.FromMinutes(DualOtpExpiryMinutes);
 
-        //    var token = new JwtSecurityToken(
-        //        issuer: _configuration["JWT:ValidIssuer"],
-        //        audience: _configuration["JWT:ValidAudience"],
-        //        expires: DateTime.UtcNow.AddHours(3),
-        //        claims: authClaims,
-        //        signingCredentials: new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256)
-        //    );
+            // Set (overwrites any previous OTP for the same email and resets attempts)
+            _cache.Set(GetDualOtpCacheKey(currentEmail), new DualOtpEntry(currentOtp), expiry);
+            _cache.Set(GetDualOtpCacheKey(newEmail), new DualOtpEntry(newOtp), expiry);
 
-        //    return new JwtSecurityTokenHandler().WriteToken(token);
-        //}
+            var firstResult = await _emailSender.SendEmailToUserAsync(
+                currentEmail, "Your verification code", BuildDualOtpEmailBody(currentOtp));
 
-    }
+            var secondResult = await _emailSender.SendEmailToUserAsync(
+                newEmail, "Your verification code", BuildDualOtpEmailBody(newOtp));
+
+            const string queuedMessage = "Email queued successfully!";
+
+            if (firstResult != queuedMessage || secondResult != queuedMessage)
+            {
+                // Don't leave half-usable OTPs behind if either email failed
+                _cache.Remove(GetDualOtpCacheKey(currentEmail));
+                _cache.Remove(GetDualOtpCacheKey(newEmail));
+
+                _logger.LogWarning(
+                    "Dual email OTP sending failed. First: {FirstResult}, Second: {SecondResult}",
+                    firstResult, secondResult);
+
+                return new GenericResponse(false, "Failed to send OTP to one or both emails. Please try again.");
+            }
+
+            return new GenericResponse(true, $"OTP sent to both emails. It is valid for {DualOtpExpiryMinutes} minutes.");
+        }
+     
+        public async Task<GenericResponse> VerifyDualEmailOtpAsync(VerifyDualEmailOtpRequest request)
+        {
+            if (request == null)
+                return new GenericResponse(false, "Request is required.");
+
+            var currentEmail = NormalizeEmail(request.FirstEmail);
+            var newEmail = NormalizeEmail(request.SecondEmail);
+            var currentOtp = request.FirstOtp?.Trim();
+            var newOtp = request.SecondOtp?.Trim();
+
+            if (string.IsNullOrEmpty(currentEmail) || string.IsNullOrEmpty(newEmail))
+                return new GenericResponse(false, "Both emails are required.");
+
+            if (string.IsNullOrEmpty(currentOtp) || string.IsNullOrEmpty(newOtp))
+                return new GenericResponse(false, "Both OTPs are required.");
+
+            if (currentEmail == newEmail)
+                return new GenericResponse(false, "Both emails must be different.");
+
+            // 1) Verify both OTPs (nothing is consumed yet)
+            var firstCheck = CheckDualOtp(currentEmail, currentOtp);
+            var secondCheck = CheckDualOtp(newEmail, newOtp);
+
+            if (firstCheck != DualOtpCheckResult.Valid)
+                return new GenericResponse(false, DescribeDualOtpFailure("First", firstCheck));
+
+            if (secondCheck != DualOtpCheckResult.Valid)
+                return new GenericResponse(false, DescribeDualOtpFailure("Second", secondCheck));
+
+            // 2) Re-check DB state (it may have changed since the OTPs were sent)
+            var user = await _userManager.FindByEmailAsync(currentEmail);
+            if (user == null)
+                return new GenericResponse(false, "No account found with the current email.");
+
+            var existingNewEmailUser = await _userManager.FindByEmailAsync(newEmail);
+            if (existingNewEmailUser != null && existingNewEmailUser.Id != user.Id)
+            {
+                // Someone took the new email in the meantime -> OTPs are useless now
+                _cache.Remove(GetDualOtpCacheKey(currentEmail));
+                _cache.Remove(GetDualOtpCacheKey(newEmail));
+                return new GenericResponse(false, Messages.EmailAlreadyUsed.ToDescriptionString());
+            }
+
+            // 3) Update the email in the DB
+            //    ChangeEmailAsync sets Email + NormalizedEmail, marks EmailConfirmed = true
+            //    (the new email was just verified by OTP) and refreshes the security stamp.
+            var oldEmail = user.Email;
+            var changeToken = await _userManager.GenerateChangeEmailTokenAsync(user, newEmail);
+            var changeResult = await _userManager.ChangeEmailAsync(user, newEmail, changeToken);
+
+            if (!changeResult.Succeeded)
+            {
+                var error = changeResult.Errors.FirstOrDefault()?.Description ?? "Failed to update email.";
+                _logger.LogWarning("Dual email OTP: ChangeEmailAsync failed for user {UserId}: {Error}", user.Id, error);
+                return new GenericResponse(false, error);
+            }
+
+            // If the username is the email (accounts created through RegisterAsync), keep it in sync
+            // so the user can still sign in. Phone-based usernames are left untouched.
+            if (string.Equals(user.UserName, oldEmail, StringComparison.OrdinalIgnoreCase))
+            {
+                var userNameResult = await _userManager.SetUserNameAsync(user, newEmail);
+                if (!userNameResult.Succeeded)
+                {
+                    _logger.LogError(
+                        "Dual email OTP: SetUserNameAsync failed for user {UserId}: {Errors}. Rolling back email.",
+                        user.Id, string.Join("; ", userNameResult.Errors.Select(e => e.Description)));
+
+                    // Best-effort rollback so email and username don't end up out of sync
+                    var rollbackToken = await _userManager.GenerateChangeEmailTokenAsync(user, oldEmail);
+                    await _userManager.ChangeEmailAsync(user, oldEmail, rollbackToken);
+
+                    return new GenericResponse(false, "Failed to update email. Please try again.");
+                }
+            }
+
+            // 4) Success -> consume both OTPs so they can't be reused
+            _cache.Remove(GetDualOtpCacheKey(currentEmail));
+            _cache.Remove(GetDualOtpCacheKey(newEmail));
+
+            _logger.LogInformation("Email changed via dual OTP for user {UserId}", user.Id);
+
+            return new GenericResponse(true, "Email verified and updated successfully. You can now log in with your new email.");
+        }
+
+
+        private enum DualOtpCheckResult
+        {
+            Valid,
+            ExpiredOrNotFound,
+            Invalid,
+            TooManyAttempts
+        }
+
+        private sealed class DualOtpEntry
+        {
+            public DualOtpEntry(string code)
+            {
+                Code = code;
+            }
+
+            public string Code { get; }
+            public int Attempts { get; set; }
+            public object SyncRoot { get; } = new object();
+        }
+
+        private DualOtpCheckResult CheckDualOtp(string email, string otp)
+        {
+            var key = GetDualOtpCacheKey(email);
+
+            if (!_cache.TryGetValue(key, out DualOtpEntry entry) || entry == null)
+                return DualOtpCheckResult.ExpiredOrNotFound;
+
+            lock (entry.SyncRoot)
+            {
+                if (entry.Attempts >= DualOtpMaxAttempts)
+                {
+                    _cache.Remove(key);
+                    return DualOtpCheckResult.TooManyAttempts;
+                }
+
+                // Constant-time comparison
+                var expected = Encoding.UTF8.GetBytes(entry.Code);
+                var provided = Encoding.UTF8.GetBytes(otp);
+                var isMatch = expected.Length == provided.Length &&
+                              CryptographicOperations.FixedTimeEquals(expected, provided);
+
+                if (!isMatch)
+                {
+                    entry.Attempts++;
+                    if (entry.Attempts >= DualOtpMaxAttempts)
+                    {
+                        _cache.Remove(key);
+                        return DualOtpCheckResult.TooManyAttempts;
+                    }
+
+                    return DualOtpCheckResult.Invalid;
+                }
+            }
+
+            return DualOtpCheckResult.Valid;
+        }
+
+        private static string DescribeDualOtpFailure(string which, DualOtpCheckResult result)
+        {
+            return result switch
+            {
+                DualOtpCheckResult.ExpiredOrNotFound => $"{which} email OTP is expired or was not requested.",
+                DualOtpCheckResult.TooManyAttempts => $"Too many invalid attempts for {which.ToLower()} email. Please request new OTPs.",
+                _ => $"{which} email OTP is invalid."
+            };
+        }
+
+        private static string GetDualOtpCacheKey(string normalizedEmail)
+            => $"{DualOtpCachePrefix}{normalizedEmail}";
+
+        private static string NormalizeEmail(string email)
+            => string.IsNullOrWhiteSpace(email) ? string.Empty : email.Trim().ToLowerInvariant();
+
+        private static bool IsValidEmail(string email)
+        {
+            try
+            {
+                var addr = new MailAddress(email);
+                return addr.Address == email;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        // Cryptographically secure 6-digit OTP (100000 - 999999)
+        private static string GenerateSecureOtp()
+            => RandomNumberGenerator.GetInt32(100000, 1000000).ToString();
+
+        private static string BuildDualOtpEmailBody(string otp)
+        {
+            return $@"<p>Dear User, your verification code is:</p><h2 style='color:#2d8fdd;'><strong>{otp}</strong></h2>
+                <p>This code is valid for <strong>{DualOtpExpiryMinutes} minutes</strong>. Do not share it with anyone.</p>
+                <p>Thank you,<br/>WleeSend Support Team</p>";
+        }
+}
 }
 
+
+
+
+    

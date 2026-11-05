@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using wleepay.Core.DTO.Request;
+using wleepay.Core.DTO.Response;
 using wleepay.Core.Models;
 
 namespace wleepay.Core.Services
@@ -16,7 +17,7 @@ namespace wleepay.Core.Services
         Task<decimal> GetTotalTransactionVolumeAsync();
 
         Task<PaginatedTransactionResult<TransactionHistory>> GetTransactionsByUserIdAsync(string userId, int? transferTypeId, int pageNumber, int pageSize);
-       
+        Task<MobileTransactionPage> GetMobileTransactionsAsync(string userId, string kind, int pageNumber, int pageSize);
         Task<PaginatedTransactionResult<TransactionReport>> GetTransactionsByTypeAndDateRange(int transferTypeId, DateTime startDate, DateTime endDate, int pageNumber, int pageSize);
 
     }

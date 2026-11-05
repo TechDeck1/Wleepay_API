@@ -15,8 +15,8 @@ namespace wleepay.API.Controllers
     [Authorize(AuthenticationSchemes = "Bearer")]
     public class DocumentController : Controller
     {
-        private readonly IUploadDocument _documentUploaderService;
-        public DocumentController(IUploadDocument uploadDocument)
+        private readonly IStorageService _documentUploaderService;
+        public DocumentController(IStorageService uploadDocument)
         {
             _documentUploaderService = uploadDocument;
         }

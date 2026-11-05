@@ -1,11 +1,15 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using wleepay.Core.DTO.Response;
 using wleepay.Core.Models;
 using wleepay.Core.Repositories;
 using wleepay.Data.Context;
-using AutoMapper;
 
 namespace wleepay.Data.Repositories
 {
@@ -64,6 +68,8 @@ namespace wleepay.Data.Repositories
                 .SumAsync(t => t.Amount);
         }
 
+
+        // for  web app
         public async Task<PaginatedTransactionResult<TransactionHistory>> GetTransactionsByUserIdAsync(string userId, int? transferTypeId, int pageNumber, int pageSize)
         {
             var query = from t in _context.UserTransactions
@@ -112,7 +118,6 @@ namespace wleepay.Data.Repositories
             };
         }
 
-
         public async Task<PaginatedTransactionResult<TransactionReport>> GetTransactionsByTypeAndDateRange(int transferTypeId, DateTime startDate, DateTime endDate, int pageNumber, int pageSize)
         {
             var query = from t in _context.UserTransactions
@@ -140,5 +145,143 @@ namespace wleepay.Data.Repositories
                 Data = data
             };
         }
+
+        // for mobile app
+        public async Task<MobileTransactionPage> GetMobileTransactionsAsync(string userId, string? kind, int pageNumber, int pageSize)
+        {
+            var baseQuery = _context.UserTransactions.AsNoTracking()
+                .Where(t => t.UserId == userId
+                            && t.Status == "Success"
+                            && MobileTypeIds.Contains(t.TransferTypeId));
+
+            // Totals per kind over the whole history, independent of paging and filter
+            var sums = await baseQuery
+                .GroupBy(t => t.TransferTypeId)
+                .Select(g => new { g.Key, Sum = g.Sum(x => x.Amount) })
+                .ToListAsync();
+
+            var totals = new Dictionary<string, decimal> { ["airtime"] = 0, ["utility"] = 0, ["voucher"] = 0 };
+            foreach (var s in sums)
+                if (KindOf(s.Key) is { } k) totals[k] = s.Sum;
+
+            var listQuery = baseQuery;
+            if (!string.IsNullOrEmpty(kind))
+            {
+                var typeId = kind switch { "airtime" => 10, "utility" => 11, "voucher" => 17, _ => -1 };
+                listQuery = listQuery.Where(t => t.TransferTypeId == typeId);
+            }
+
+            var totalCount = await listQuery.CountAsync();
+            var rows = await listQuery
+                .OrderByDescending(t => t.CreatedAt)
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
+
+            var page = new MobileTransactionPage { TotalCount = totalCount, Totals = totals };
+            if (rows.Count == 0) return page;
+
+            // One query for every possible Sochitel match on this page
+            var ids = rows.Select(r => r.TransactionId).ToList();
+            var phones = rows.Select(r => r.ReceiverPhoneNumber).Where(p => !string.IsNullOrEmpty(p)).Distinct().ToList();
+            var from = rows.Min(r => r.CreatedAt).AddMinutes(-2);
+            var to = rows.Max(r => r.CreatedAt).AddMinutes(2);
+
+            var candidates = await _context.SochitelTransactions.AsNoTracking()
+                .Where(s => ids.Contains(s.UserReference) || ids.Contains(s.TransactionId)
+                            || (s.CreatedDate >= from && s.CreatedDate <= to
+                                && (phones.Contains(s.PhoneNumber) || s.PhoneNumber == null || s.PhoneNumber == "")))
+                .ToListAsync();
+
+            var used = new HashSet<int>();
+
+            foreach (var t in rows)
+            {
+                var k = KindOf(t.TransferTypeId)!;
+
+                // 1) exact link via payment intent id, 2) closest in time within 2 minutes
+                var s = candidates.FirstOrDefault(c => c.UserReference == t.TransactionId || c.TransactionId == t.TransactionId)
+                    ?? candidates
+                        .Where(c => !used.Contains(c.Id)
+                                    && c.CreatedDate.HasValue
+                                    && SochitelKind(c.TransactionType) == k
+                                    && (string.IsNullOrEmpty(t.ReceiverPhoneNumber)
+                                            ? string.IsNullOrEmpty(c.PhoneNumber)
+                                            : c.PhoneNumber == t.ReceiverPhoneNumber)
+                                    && (ParseAmount(c.TransactionAmount) ?? 0) <= t.Amount
+                                    && Math.Abs((c.CreatedDate!.Value - t.CreatedAt).TotalSeconds) <= 120)
+                        .OrderBy(c => Math.Abs((c.CreatedDate!.Value - t.CreatedAt).TotalSeconds))
+                        .FirstOrDefault();
+
+                if (s != null) used.Add(s.Id);
+
+                var baseAmount = ParseAmount(s?.TransactionAmount) ?? t.Amount;
+                var meter = !string.IsNullOrEmpty(s?.MeterNumber)
+                    ? s!.MeterNumber
+                    : s?.ExtraInfo is { } info && MeterRegex.Match(info) is { Success: true } m ? m.Groups[1].Value : null;
+
+                var provider = s?.OperatorId != null && OperatorNames.TryGetValue(s.OperatorId, out var name)
+                    ? name : KindLabels[k];
+
+                page.Data.Add(new MobileTransactionDto
+                {
+                    Id = t.TransactionId,
+                    Kind = k,
+                    Product = $"${baseAmount:0.##} {KindLabels[k]}",   // CurrencyId 2 assumed USD
+                    Provider = provider,
+                    Receiver = k switch
+                    {
+                        "airtime" => t.ReceiverPhoneNumber ?? "",
+                        "utility" => meter != null ? $"Meter {meter}" : (t.ReceiverPhoneNumber ?? ""),
+                        _ => "Self"
+                    },
+                    CreatedAt = DateTime.SpecifyKind(t.CreatedAt, DateTimeKind.Utc), // assumes UTC storage
+                    Total = t.Amount,
+                    Fee = t.Amount - baseAmount,
+                    Draft = new MobileDraftDto
+                    {
+                        Kind = k,
+                        OperatorId = s?.OperatorId,
+                        ProductId = s?.ProductId,
+                        ReceiverPhone = t.ReceiverPhoneNumber,
+                        MeterNumber = meter,
+                        Amount = baseAmount
+                    }
+                });
+            }
+
+            return page;
+        }
+
+        private static readonly int[] MobileTypeIds = { 10, 11, 17 };
+        private static string? KindOf(int transferTypeId) => transferTypeId switch
+        {
+            10 => "airtime",
+            11 => "utility",
+            17 => "voucher",
+            _ => null
+        };
+
+        private static string? SochitelKind(string? type) =>
+            type == null ? null :
+            type.StartsWith("Mobile Recharge") ? "airtime" :
+            type.StartsWith("Bill Payment") ? "utility" :
+            type.StartsWith("Gift Voucher") ? "voucher" : null;
+
+        // Fill from your operator list. Unknown ids fall back to a generic label.
+        private static readonly Dictionary<string, string> OperatorNames = new Dictionary<string, string>
+        {
+            // ["10"] = "...", ["151"] = "...", ["2470"] = "...", ["2482"] = "...",
+        };
+
+        private static readonly Dictionary<string, string> KindLabels = new Dictionary<string, string>
+        {
+            ["airtime"] = "Airtime",
+            ["utility"] = "Electricity",
+            ["voucher"] = "Gift voucher"
+        };
+
+        private static readonly Regex MeterRegex = new Regex(@"Meter Number:\s*(\d+)", RegexOptions.Compiled);
+        private static decimal? ParseAmount(string? value) => decimal.TryParse(value, NumberStyles.Any, CultureInfo.InvariantCulture, out var d) ? d : (decimal?)null;
     }
 }

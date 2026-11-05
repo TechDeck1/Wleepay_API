@@ -36,6 +36,7 @@ namespace wleepay.API.Resources
         public string Operator { get; set; }          // Sochitel operator id
         public string Command { get; set; }          // Sochitel command, same value your old RechargeData carried
         public int TransferTypeId { get; set; }
+        public bool HostedCheckout { get; set; }
     }
 
     public class BillPaymentCheckoutPayload
@@ -53,6 +54,21 @@ namespace wleepay.API.Resources
         public int ProductId { get; set; }       
         public string Command { get; set; }
         public int TransferTypeId { get; set; }
+        public bool HostedCheckout { get; set; }
+    }
+
+    public class MobilePaymentIntentPayload
+    {
+        [Required] public string Flow { get; set; }
+        public string ProductId { get; set; }
+        public string StripeProductId { get; set; }
+        public decimal Amount { get; set; }
+        public string PhoneNumber { get; set; }
+        public string Operator { get; set; }
+        public string Command { get; set; }
+        public int TransferTypeId { get; set; }
+        public string MeterNumber { get; set; }
+        public int OperatorId { get; set; }
     }
 
 }

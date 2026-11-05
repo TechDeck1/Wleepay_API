@@ -1,16 +1,17 @@
-﻿using System;
+﻿using AutoMapper;
+using Google;
+using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Google;
+using wleepay.Core;
+using wleepay.Core.DTO.Request;
+using wleepay.Core.DTO.Response;
 using wleepay.Core.Models;
 using wleepay.Core.Services;
 using wleepay.Data.Context;
-using Microsoft.EntityFrameworkCore;
-using wleepay.Core;
-using AutoMapper;
-using wleepay.Core.DTO.Request;
 
 
 namespace wleepay.Services
@@ -56,6 +57,11 @@ namespace wleepay.Services
         {
             return await _unitOfWork.PaymentTransactions.GetTransactionsByTypeAndDateRange(transferTypeId, startDate, endDate, pageNumber, pageSize);
         }
-        
+
+        public async Task<MobileTransactionPage> GetMobileTransactionsAsync(string userId, string kind, int pageNumber, int pageSize)
+        {
+            return await _unitOfWork.PaymentTransactions.GetMobileTransactionsAsync(userId, kind, pageNumber, pageSize);
+        }
+
     }
 }

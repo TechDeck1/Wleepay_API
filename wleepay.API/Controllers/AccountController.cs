@@ -6,14 +6,17 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IdentityModel.Tokens.Jwt;
 using System.IO;
 using System.Linq;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web;
@@ -46,13 +49,14 @@ namespace wleepay.API.Controllers
         private readonly ISmileIdentityService _smileIdentityService;
         private readonly ISMSService _smsService;
         private readonly IWalletService _walletService;
-        private readonly IUploadDocument _storageService;
+        private readonly IStorageService _storageService;
         private readonly IAddressService _addressService;
+        private readonly IAccountService _accountService;
         private readonly ILogger<AccountController> _logger;
         private readonly IMapper _mapper;
+         private readonly IWebHostEnvironment _env;
         private readonly IConfiguration _configuration;
-        public readonly IHostingEnvironment _hostingEnvironment;
-        private readonly IUploadDocument _documentUploaderService;
+        private readonly IStorageService _documentUploaderService;
         private readonly IEmailSender _emailSender;
         private readonly ISystemActivityLogsService _systemActivityLogsService;
         private readonly IUsersStaffRoleService _usersStaffRoleService;
@@ -66,15 +70,16 @@ namespace wleepay.API.Controllers
             IUserDetailService userDetailsService,
             IWalletService walletService,
             ISmileIdentityService smileIdentityService,
-            IUploadDocument storageService,
+            IStorageService storageService,
             ILogger<AccountController> logger,
             IKYCDocumentsService kycDocumentsService,
             IAddressService addressService,
             ISMSService smsService,
             IConfiguration configuration,
             IMapper mapper,
-            IUploadDocument uploadDocument,
-            IHostingEnvironment hostingEnvironment,
+            IAccountService accountService,
+            IStorageService uploadDocument,
+            IWebHostEnvironment env,
             IEmailSender emailSender,
             ISystemActivityLogsService systemActivityLogsService,
             IUsersStaffRoleService usersStaffRoleService,
@@ -82,10 +87,12 @@ namespace wleepay.API.Controllers
             IDataProtectionProvider dataProtectionProvider)
         {
             _userManager = userManager;
+            _env = env;
             _roleManager = roleManager;
             _signInManager = signInManager;
             _userDetailsService = userDetailsService;
             _walletService = walletService;
+            _accountService = accountService;
             _addressService = addressService;
             _smileIdentityService = smileIdentityService;
             _storageService = storageService;
@@ -94,7 +101,6 @@ namespace wleepay.API.Controllers
             _smsService = smsService;
             _configuration = configuration;
             _mapper = mapper;
-            _hostingEnvironment = hostingEnvironment;
             _documentUploaderService = uploadDocument;
             _emailSender = emailSender;
             _systemActivityLogsService = systemActivityLogsService;
@@ -105,8 +111,8 @@ namespace wleepay.API.Controllers
         }
 
 
-
-
+        
+      
 
 
         [AllowAnonymous]
@@ -324,6 +330,345 @@ namespace wleepay.API.Controllers
             }
         }
 
+
+        [AllowAnonymous]
+        [HttpPost("Mobile-Registration")]
+        public async Task<IActionResult> RegisterMobile([FromBody] AddUserDetailsResource userDetail)
+        {
+            string createdUserId = null;
+
+            try
+            {
+                var baseUrl = _configuration.GetSection("BaseUrl").Value;
+                var validator = new AddUserDetailsValidator(userDetail.Role.ToString());
+                var validationResult = await validator.ValidateAsync(userDetail);
+
+                if (!validationResult.IsValid)
+                {
+                    var validationMessages = string.Join("; ", validationResult.Errors.Select(e => $"{e.PropertyName}: {e.ErrorMessage}"));
+                    await LogSignupErrorAsync(
+                        "Signup Validation Failed",
+                        $"Signup validation failed for phone {userDetail.PhoneNumber}. Errors: {validationMessages}");
+                    return BadRequest(validationResult.Errors);
+                }
+
+                if (userDetail.Role == 0)
+                {
+                    return await SignupBadRequestAsync(
+                        "Signup Failed - Super Admin",
+                        Messages.IsSuperAdmin.ToDescriptionString(),
+                        extraDetail: $"Phone: {userDetail.PhoneNumber}");
+                }
+
+                ApplicationUser applicationUser = new ApplicationUser();
+                if (!string.IsNullOrEmpty(userDetail.EmailId))
+                    applicationUser = await _userManager.FindByEmailAsync(userDetail.EmailId);
+
+                if (applicationUser != null && !string.IsNullOrEmpty(applicationUser.Id))
+                {
+                    return await SignupBadRequestAsync(
+                        "Signup Failed - Email Already Used",
+                        Messages.EmailAlreadyUsed.ToDescriptionString(),
+                        userId: applicationUser.Id,
+                        extraDetail: $"Email: {userDetail.EmailId}");
+                }
+
+                var userExistWithPhone = await _userDetailsService.IsPhoneAlreadyRegistered(userDetail.PhoneNumber);
+                if (userExistWithPhone == true)
+                {
+                    return await SignupBadRequestAsync(
+                        "Signup Failed - Phone Already Used",
+                        Messages.PhoneAlreadyUsed.ToDescriptionString(),
+                        extraDetail: $"Phone: {userDetail.PhoneNumber}");
+                }
+
+                var newUser = new ApplicationUser()
+                { UserName = userDetail.PhoneNumber, Id = Guid.NewGuid().ToString() };
+                if (!string.IsNullOrEmpty(userDetail.EmailId))
+                    newUser.Email = userDetail.EmailId;
+
+                IdentityResult isUserCreated = string.IsNullOrEmpty(userDetail.Pin)
+                    ? await _userManager.CreateAsync(newUser)
+                    : await _userManager.CreateAsync(newUser, userDetail.Pin.ToString());
+
+                if (!isUserCreated.Succeeded)
+                {
+                    var identityErrors = string.Join("; ", isUserCreated.Errors.Select(e => $"{e.Code}: {e.Description}"));
+                    await LogSignupErrorAsync(
+                        "Signup Failed - Identity Create User",
+                        $"Identity CreateAsync failed for phone {userDetail.PhoneNumber}. Errors: {identityErrors}",
+                        newUser.Id);
+                    return BadRequest(isUserCreated.Errors.FirstOrDefault().Description);
+                }
+
+                createdUserId = newUser.Id;
+
+                var roleEnumStringValue = userDetail.Role.HasValue ? ((Core.Enums.Role)userDetail.Role) : Core.Enums.Role.Member;
+                await _userManager.AddToRoleAsync(newUser, roleEnumStringValue.ToString());
+
+                var userDetailsToInsert = _mapper.Map<AddUserDetailsResource, UserDetail>(userDetail);
+                userDetailsToInsert.UserId = newUser.Id;
+                userDetailsToInsert.Gender = string.IsNullOrWhiteSpace(userDetailsToInsert.Gender) ? "Unknown" : userDetailsToInsert.Gender;
+                userDetailsToInsert.CountyId = userDetailsToInsert.CountyId == 0 ? 1 : userDetailsToInsert.CountyId;
+                userDetailsToInsert.AccountNumber = await GenerateUniqueAccountNumber();
+
+                if (!string.IsNullOrEmpty(userDetailsToInsert.Image))
+                {
+                    var profileURL = await _storageService.UploadImageWithURL(userDetailsToInsert.Image, "user-profile-picture", newUser.Id);
+                    userDetailsToInsert.Image = profileURL;
+                }
+
+                if (!string.IsNullOrEmpty(userDetailsToInsert.KYCDocumentImage))
+                {
+                    var documentURL = _storageService.UploadKYCDocument(userDetailsToInsert.KYCDocumentImage, newUser.Id);
+                    userDetailsToInsert.KYCDocumentImage = documentURL.ToString();
+                    if (userDetailsToInsert.KYCLevel == Core.Enums.KYCLevel.L1.GetHashCode())
+                        userDetailsToInsert.KYCLevel = Core.Enums.KYCLevel.L2.GetHashCode();
+                }
+
+                // Mobile users are activated directly (email verification is sent but does not gate activation)
+                userDetailsToInsert.Status = (int)wleepay.Core.Enums.Status.Active;
+
+                var updatedDetails = await _userDetailsService.AddOrUpdateUserDetails(userDetailsToInsert);
+                if (updatedDetails.UserId == null)
+                {
+                    return await SignupBadRequestAsync(
+                        "Signup Failed - User Details Not Saved",
+                        Messages.UserNotCreated.ToDescriptionString(),
+                        userId: newUser.Id,
+                        extraDetail: $"Phone: {userDetail.PhoneNumber}");
+                }
+
+                if (userDetail.DocumentTypeId.HasValue)
+                {
+                    var kycDetailsToAdd = _mapper.Map<AddUserDetailsResource, KYCdocuments>(userDetail);
+                    kycDetailsToAdd.UserId = newUser.Id;
+                    kycDetailsToAdd.CreatedDate = DateTime.Now;
+                    kycDetailsToAdd.UpdatedDate = DateTime.Now;
+                    await _kycDocumentsService.AddOrUpdateKYCDocument(kycDetailsToAdd);
+                }
+
+                if (roleEnumStringValue == Core.Enums.Role.Member)
+                    await _walletService.CreateCustomerWallet(newUser.Id);
+                else if (roleEnumStringValue == Core.Enums.Role.Agent)
+                    await _walletService.CreateAgentWallet(newUser.Id);
+
+                if (userDetail.Address != null)
+                {
+                    var addressToInsert = _mapper.Map<AddressResource, Address>(userDetail.Address);
+                    addressToInsert.UserId = updatedDetails.UserId;
+                    await _addressService.AddOrUpdateAddress(addressToInsert);
+                }
+
+                // Send email verification (same as web registration)
+                if (!string.IsNullOrWhiteSpace(newUser.Email))
+                {
+                    try
+                    {
+                        var emailToken = await _userManager.GenerateEmailConfirmationTokenAsync(newUser);
+                        var payload = $"{newUser.Id}|{emailToken}|{DateTime.UtcNow:o}";
+                        var packedToken = _emailVerificationProtector.Protect(payload);
+                        var encodedToken = HttpUtility.UrlEncode(packedToken);
+                        var webBaseUrl = _configuration["BackendUrl"];
+                        var verifyUrl = $"{webBaseUrl}/api/account/verify?token={encodedToken}";
+                        var emailTemplate = new EmailHtmlTemplates().EmailTemplateForEmailVerification(verifyUrl, updatedDetails.FirstName);
+                        await _emailSender.SendEmailAsync(newUser.Email, emailTemplate, updatedDetails.FirstName, "Verify your WleeSend email");
+                    }
+                    catch (Exception emailEx)
+                    {
+                        // Don't fail the whole signup if the email can't be sent
+                        _logger.LogError(emailEx, "Failed to send verification email for user {UserId}", newUser.Id);
+                        await LogSignupErrorAsync(
+                            "Signup Email Failed",
+                            $"Verification email failed for phone {userDetail.PhoneNumber}. Message: {emailEx.Message}",
+                            newUser.Id);
+                    }
+                }
+
+                var token = GenerateJSONWebToken(userDetailsToInsert);
+
+                _smsService.sendMessage(MessagesTemplates.RegistrationSuccessMessage(updatedDetails.AccountNumber, updatedDetails?.KYCLevelDetail?.Name), updatedDetails.PhoneNumber);
+
+                return Ok(new
+                {
+                    Success = true,
+                    Token = token,
+                    UserId = userDetailsToInsert.UserId,
+                    FirstName = updatedDetails.FirstName,
+                    LastName = updatedDetails.LastName,
+                    ProfilePic = updatedDetails.Image,
+                    PhoneNumber = updatedDetails.PhoneNumber,
+                    AccountNumber = updatedDetails.AccountNumber
+                });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.ToString());
+                await LogSignupErrorAsync(
+                    "Signup Exception",
+                    $"Unhandled exception during signup for phone {userDetail?.PhoneNumber}. " +
+                    $"Message: {ex.Message} | Inner: {ex.InnerException?.Message} | StackTrace: {ex.StackTrace}",
+                    createdUserId);
+                throw;
+            }
+        }
+
+
+        [AllowAnonymous]
+        [HttpGet("verify")]
+        public async Task<IActionResult> VerifyEmail([FromQuery] string token)
+        {
+            const int tokenLifetimeHours = 24;
+
+            if (string.IsNullOrWhiteSpace(token))
+                return VerificationPage(StatusCodes.Status400BadRequest, VerificationState.Invalid);
+
+            try
+            {
+                // 1. Decode the packed token created in RegisterMobile
+                string payload;
+                try
+                {
+                    payload = _emailVerificationProtector.Unprotect(token);
+                }
+                catch (Exception ex) when (ex is CryptographicException || ex is FormatException)
+                {
+                    _logger.LogWarning(ex, "Email verification: token could not be unprotected");
+                    return VerificationPage(StatusCodes.Status400BadRequest, VerificationState.Invalid);
+                }
+
+                // payload = "{userId}|{emailToken}|{issuedAtUtc:o}"
+                var parts = payload.Split('|', 3);
+                if (parts.Length != 3
+                    || string.IsNullOrWhiteSpace(parts[0])
+                    || string.IsNullOrWhiteSpace(parts[1])
+                    || !DateTime.TryParse(parts[2], CultureInfo.InvariantCulture,
+                           DateTimeStyles.RoundtripKind, out var issuedAt))
+                {
+                    return VerificationPage(StatusCodes.Status400BadRequest, VerificationState.Invalid);
+                }
+
+                if (DateTime.UtcNow - issuedAt.ToUniversalTime() > TimeSpan.FromHours(tokenLifetimeHours))
+                {
+                    _logger.LogWarning("Email verification: expired token for user {UserId}", parts[0]);
+                    return VerificationPage(StatusCodes.Status400BadRequest, VerificationState.Invalid);
+                }
+
+                var userId = parts[0];
+                var emailToken = parts[1];
+
+                // 2. Find the user and their email
+                var user = await _userManager.FindByIdAsync(userId);
+                if (user == null || string.IsNullOrWhiteSpace(user.Email))
+                    return VerificationPage(StatusCodes.Status400BadRequest, VerificationState.Invalid);
+
+                // 3. Already confirmed
+                if (user.EmailConfirmed)
+                    return VerificationPage(StatusCodes.Status200OK, VerificationState.AlreadyVerified, user.Email);
+
+                // 4. Confirm (sets EmailConfirmed = true and saves the user)
+                var result = await _userManager.ConfirmEmailAsync(user, emailToken);
+                if (!result.Succeeded)
+                {
+                    var errors = string.Join("; ", result.Errors.Select(e => $"{e.Code}: {e.Description}"));
+                    _logger.LogWarning("Email verification failed for user {UserId}: {Errors}", userId, errors);
+                    return VerificationPage(StatusCodes.Status400BadRequest, VerificationState.Invalid);
+                }
+
+                return VerificationPage(StatusCodes.Status200OK, VerificationState.Success, user.Email);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Unhandled error during email verification");
+                return VerificationPage(StatusCodes.Status500InternalServerError, VerificationState.Invalid);
+            }
+        }
+
+
+        private enum VerificationState { Success, AlreadyVerified, Invalid }
+
+        private static ContentResult VerificationPage(int statusCode, VerificationState state, string email = null)
+        {
+            string icon, color, title, message;
+            switch (state)
+            {
+                case VerificationState.Success:
+                    icon = "&#10003;"; color = "#1f9d55";
+                    title = "Email verified";
+                    message = "Your email address has been verified successfully.";
+                    break;
+                case VerificationState.AlreadyVerified:
+                    icon = "i"; color = "#232870";
+                    title = "Email already confirmed";
+                    message = "This email address has already been verified. No further action is needed.";
+                    break;
+                default:
+                    icon = "!"; color = "#CF3228";
+                    title = "Failed to verify";
+                    message = "This verification link is invalid or has expired. Please request a new verification email from the app.";
+                    break;
+            }
+
+            var emailLine = string.IsNullOrEmpty(email)
+                ? ""
+                : "<p class='email'>" + HttpUtility.HtmlEncode(email) + "</p>";
+
+            var hint = state == VerificationState.Invalid
+                ? "You can close this tab."
+                : "You can now close this tab and continue to log in on your device.";
+
+
+            var html = template
+                .Replace("{{TITLE}}", HttpUtility.HtmlEncode(title))
+                .Replace("{{MESSAGE}}", HttpUtility.HtmlEncode(message))
+                .Replace("{{HINT}}", HttpUtility.HtmlEncode(hint))
+                .Replace("{{COLOR}}", color)
+                .Replace("{{ICON}}", icon)
+                .Replace("{{EMAIL}}", emailLine);
+
+
+            return new ContentResult
+            {
+                StatusCode = statusCode,
+                ContentType = "text/html; charset=utf-8",
+                Content = html
+            };
+        }
+
+
+        const string template = @"<!DOCTYPE html>
+            <html lang='en'>
+            <head>
+            <meta charset='utf-8'>
+            <meta name='viewport' content='width=device-width, initial-scale=1'>
+            <title>Wleesend - {{TITLE}}</title>
+            <style>
+              * { box-sizing: border-box; }
+              body { margin: 0; min-height: 100vh; display: flex; align-items: center; justify-content: center;
+                     background: rgba(23,27,77,.55); font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; padding: 20px; }
+              .dialog { background: #fff; width: 100%; max-width: 400px; border-radius: 20px; padding: 32px 24px 28px;
+                        text-align: center; box-shadow: 0 24px 60px rgba(0,0,0,.3); }
+              .icon { width: 64px; height: 64px; border-radius: 50%; background: {{COLOR}}; color: #fff; font-size: 32px;
+                      font-weight: 700; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px; }
+              h1 { margin: 0 0 8px; font-size: 22px; color: #171B4D; }
+              p { margin: 0 0 12px; font-size: 15px; line-height: 1.5; color: #5B6080; }
+              .email { font-weight: 600; color: #171B4D; word-break: break-all; }
+              .hint { margin-bottom: 0; color: #171B4D; font-weight: 600; }
+            </style>
+            </head>
+            <body>
+              <div class='dialog' role='dialog' aria-modal='true' aria-labelledby='t'>
+                <div class='icon'>{{ICON}}</div>
+                <h1 id='t'>{{TITLE}}</h1>
+                <p>{{MESSAGE}}</p>
+                {{EMAIL}}
+                <p class='hint'>{{HINT}}</p>
+              </div>
+            </body>
+            </html>";
+
+
+
         [AllowAnonymous]
         [HttpGet("ConfirmEmail")]
         public async Task<IActionResult> ConfirmEmail(string userId, string token)
@@ -350,6 +695,10 @@ namespace wleepay.API.Controllers
             return Ok("Email verified successfully.");
         }
 
+        // Constructor must have these injected (add if not already present):
+        // private readonly IConfiguration _configuration;
+        // assigned in constructor as usual via DI
+
         [AllowAnonymous]
         [HttpPost("Login")]
         public async Task<IActionResult> Login([FromBody] LoginRequest loginRequest)
@@ -364,8 +713,6 @@ namespace wleepay.API.Controllers
                     {
                         validationResult.Errors[0].ErrorMessage = "Pin should be 4 characters long.";
                     }
-                    //validationResult.Errors[0].ErrorMessage = "Pin should be 4 characters long.";
-                    validationResult.Errors[0].ErrorMessage = validationResult.Errors[0].ErrorMessage;
                 }
 
                 //if (!validationResult.IsValid)
@@ -379,7 +726,20 @@ namespace wleepay.API.Controllers
                 if (user == null)
                     return BadRequest("Account does not exists.");
 
-                var result = await _signInManager.PasswordSignInAsync(user, loginRequest.Pin.ToString(), false, true);
+                var isLocalTestBypass = _env.IsDevelopment()
+                    && _configuration.GetValue<bool>("TestAuth:Enabled")
+                    && !string.IsNullOrEmpty(_configuration["TestAuth:BypassPin"])
+                    && loginRequest.Pin.ToString() == _configuration["TestAuth:BypassPin"];
+
+                if (isLocalTestBypass)
+                {
+                    _logger.LogWarning("TEST AUTH BYPASS USED for {Phone}", loginRequest.PhoneNo);
+                }
+
+                Microsoft.AspNetCore.Identity.SignInResult result = isLocalTestBypass
+                    ? Microsoft.AspNetCore.Identity.SignInResult.Success
+                    : await _signInManager.PasswordSignInAsync(user, loginRequest.Pin.ToString(), false, true);
+                // ---- END DEV-ONLY TEST BYPASS ----
 
                 // Check if the user is locked out
                 if (userDetails.FailedLoginAttempt >= 3)
@@ -407,6 +767,7 @@ namespace wleepay.API.Controllers
                             Message = Messages.AccountDeActivated.ToDescriptionString(),
                         });
                     }
+
                     //generate token
                     var token = GenerateJSONWebToken(userDetails);
 
@@ -420,7 +781,6 @@ namespace wleepay.API.Controllers
                         //create new wallet
                         wallet = await _walletService.CreateCustomerWallet(userDetails.UserId);
                     }
-                    //create wallet for register user by role
 
                     var usdBalance = wallet.FirstOrDefault(w => w.CurrencyId == Core.Enums.Currencies.USD.GetHashCode())?.Balance;
                     var lrdBalance = wallet.FirstOrDefault(w => w.CurrencyId == Core.Enums.Currencies.LRD.GetHashCode())?.Balance;
@@ -432,9 +792,7 @@ namespace wleepay.API.Controllers
                         IsLoggedInVerified = userDetails.IsLoggedIn,
                         FirstName = userDetails.FirstName,
                         LastName = userDetails.LastName,
-                        //ProfilePic = System.Convert.ToBase64String((System.IO.File.ReadAllBytes(userDetails.Image))),
-                        ProfilePic = System.IO.File.Exists(userDetails.Image) ? System.Convert.ToBase64String((System.IO.File.ReadAllBytes(userDetails.Image))) : userDetails.Image,
-                        //ProfilePic = userDetails.Image,
+                        ProfilePic = System.IO.File.Exists(userDetails.Image) ? System.Convert.ToBase64String(System.IO.File.ReadAllBytes(userDetails.Image)) : userDetails.Image,
                         PhoneNumber = userDetails.PhoneNumber,
                         AccountNumber = userDetails.AccountNumber,
                         KYCLevel = userDetails.KYCLevelDetail.Name,
@@ -442,9 +800,8 @@ namespace wleepay.API.Controllers
                         lrdBalance = lrdBalance,
                         Role = userRole?[0]
                     };
-                    //set logged in status to true if first log in
-                    string userId = userDetails.UserId;
 
+                    string userId = userDetails.UserId;
                     await _userDetailsService.UpdateUserLoggedInStatus(userId, true, 0);
 
                     return Ok(response);
@@ -472,32 +829,21 @@ namespace wleepay.API.Controllers
             {
                 string logDir = @"C:\API_LOGS";
 
-                // Ensure directory exists
                 if (!Directory.Exists(logDir))
                     Directory.CreateDirectory(logDir);
 
                 string logFilePath = Path.Combine(logDir, "logs.txt");
 
                 string logMessage = $@"
-                    --------------------------------------------
-                    Date: {DateTime.Now}
-                    Message: {ex.Message}
-                    Stack Trace: {ex.StackTrace}
-                    Inner: {ex.InnerException?.Message}
-                    --------------------------------------------
-                    ";
+            --------------------------------------------
+            Date: {DateTime.UtcNow}
+            Message: {ex.Message}
+            StackTrace: {ex.StackTrace}";
 
-                // Write log
-                System.IO.File.AppendAllText(logFilePath, logMessage);
+                await System.IO.File.AppendAllTextAsync(logFilePath, logMessage);
 
-                return StatusCode(500, new
-                {
-                    error = ex.Message,
-                    stack = ex.StackTrace,
-                    inner = ex.InnerException?.Message
-                });
+                return StatusCode(500, "An error occurred while processing your request.");
             }
-
         }
 
         [AllowAnonymous]
@@ -806,6 +1152,23 @@ namespace wleepay.API.Controllers
             }
         }
 
+
+        [HttpPost("send-dual-email-otp")]
+        [AllowAnonymous]
+        public async Task<IActionResult> SendDualEmailOtp([FromBody] SendDualEmailOtpRequest request)
+        {
+            var result = await _accountService.SendDualEmailOtpAsync(request);
+            return result.Success ? Ok(result) : BadRequest(result);
+        }
+
+        [HttpPost("verify-dual-email-otp")]
+        [AllowAnonymous]
+        public async Task<IActionResult> VerifyDualEmailOtp([FromBody] VerifyDualEmailOtpRequest request)
+        {
+            var result = await _accountService.VerifyDualEmailOtpAsync(request);
+            return result.Success ? Ok(result) : BadRequest(result);
+        }
+
         #region helper methods
         private string GenerateJSONWebToken(UserDetail userInfo)
         {
@@ -842,6 +1205,9 @@ namespace wleepay.API.Controllers
 
             return accountNumber;
         }
+
+
+   
 
         private async Task<string> uploadDocument(IFormFile file, string userId, string containerName = "kyc-document")
         {

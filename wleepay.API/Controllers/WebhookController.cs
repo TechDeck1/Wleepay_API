@@ -19,6 +19,7 @@ namespace wleepay.Controllers
         private static readonly HashSet<string> HandledEvents = new HashSet<string>
         {
             "checkout.session.completed",
+            "payment_intent.amount_capturable_updated",
             "payment_intent.payment_failed"
         };
 

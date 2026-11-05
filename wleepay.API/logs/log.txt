@@ -1,53 +1,123 @@
-2026-10-26 16:06:37 PM||DEBUG|wleepay.API.Program|init main 
-2026-10-26 16:06:53 PM||INFO|wleepay.Services.WebhookProcessor|WebhookProcessor started. 
-2026-10-26 16:06:54 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: https://localhost:5001 
-2026-10-26 16:06:54 PM||INFO|Microsoft.Hosting.Lifetime|Application started. Press Ctrl+C to shut down. 
-2026-10-26 16:06:54 PM||INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development 
-2026-10-26 16:06:54 PM||INFO|Microsoft.Hosting.Lifetime|Content root path: D:\Wleepay\Wleepay_API\wleepay.API 
-2026-10-26 16:08:35 PM||DEBUG|wleepay.API.Program|init main 
-2026-10-26 16:08:38 PM||INFO|wleepay.Services.WebhookProcessor|WebhookProcessor started. 
-2026-10-26 16:08:39 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: https://localhost:5001 
-2026-10-26 16:08:39 PM||INFO|Microsoft.Hosting.Lifetime|Application started. Press Ctrl+C to shut down. 
-2026-10-26 16:08:39 PM||INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development 
-2026-10-26 16:08:39 PM||INFO|Microsoft.Hosting.Lifetime|Content root path: D:\Wleepay\Wleepay_API\wleepay.API 
-2026-10-26 16:11:13 PM|10102|WARN|Microsoft.EntityFrameworkCore.Query|The query uses a row limiting operator ('Skip'/'Take') without an 'OrderBy' operator. This may lead to unpredictable results. 
-2026-10-26 16:11:13 PM|10102|WARN|Microsoft.EntityFrameworkCore.Query|The query uses a row limiting operator ('Skip'/'Take') without an 'OrderBy' operator. This may lead to unpredictable results. 
-2026-10-26 16:14:25 PM||DEBUG|wleepay.API.Program|init main 
-2026-10-26 16:14:27 PM||INFO|wleepay.Services.WebhookProcessor|WebhookProcessor started. 
-2026-10-26 16:14:28 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: https://localhost:5001 
-2026-10-26 16:14:28 PM||INFO|Microsoft.Hosting.Lifetime|Application started. Press Ctrl+C to shut down. 
-2026-10-26 16:14:28 PM||INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development 
-2026-10-26 16:14:28 PM||INFO|Microsoft.Hosting.Lifetime|Content root path: D:\Wleepay\Wleepay_API\wleepay.API 
-2026-10-26 16:14:49 PM|10102|WARN|Microsoft.EntityFrameworkCore.Query|The query uses a row limiting operator ('Skip'/'Take') without an 'OrderBy' operator. This may lead to unpredictable results. 
-2026-10-26 16:14:49 PM|10102|WARN|Microsoft.EntityFrameworkCore.Query|The query uses a row limiting operator ('Skip'/'Take') without an 'OrderBy' operator. This may lead to unpredictable results. 
-2026-10-26 16:14:49 PM|10102|WARN|Microsoft.EntityFrameworkCore.Query|The query uses a row limiting operator ('Skip'/'Take') without an 'OrderBy' operator. This may lead to unpredictable results. 
-2026-10-26 16:14:49 PM|10102|WARN|Microsoft.EntityFrameworkCore.Query|The query uses a row limiting operator ('Skip'/'Take') without an 'OrderBy' operator. This may lead to unpredictable results. 
-2026-10-26 16:40:16 PM||DEBUG|wleepay.API.Program|init main 
-2026-10-26 16:40:29 PM||INFO|wleepay.Services.WebhookProcessor|WebhookProcessor started. 
-2026-10-26 16:40:31 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: https://localhost:5001 
-2026-10-26 16:40:31 PM||INFO|Microsoft.Hosting.Lifetime|Application started. Press Ctrl+C to shut down. 
-2026-10-26 16:40:31 PM||INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development 
-2026-10-26 16:40:31 PM||INFO|Microsoft.Hosting.Lifetime|Content root path: D:\Wleepay\Wleepay_API\wleepay.API 
-2026-10-26 16:40:55 PM|100|INFO|System.Net.Http.HttpClient.Default.LogicalHandler|Start processing HTTP request POST https://artx.sochitel.com/api.php 
-2026-10-26 16:40:55 PM|100|INFO|System.Net.Http.HttpClient.Default.ClientHandler|Sending HTTP request POST https://artx.sochitel.com/api.php 
-2026-10-26 16:40:57 PM|101|INFO|System.Net.Http.HttpClient.Default.ClientHandler|Received HTTP response headers after 2384.6851ms - 200 
-2026-10-26 16:40:57 PM|101|INFO|System.Net.Http.HttpClient.Default.LogicalHandler|End processing HTTP request after 2421.4767ms - 200 
-2026-10-26 16:40:58 PM|10102|WARN|Microsoft.EntityFrameworkCore.Query|The query uses a row limiting operator ('Skip'/'Take') without an 'OrderBy' operator. This may lead to unpredictable results. 
-2026-10-26 16:40:58 PM|10102|WARN|Microsoft.EntityFrameworkCore.Query|The query uses a row limiting operator ('Skip'/'Take') without an 'OrderBy' operator. This may lead to unpredictable results. 
-2026-10-26 16:40:58 PM|10102|WARN|Microsoft.EntityFrameworkCore.Query|The query uses a row limiting operator ('Skip'/'Take') without an 'OrderBy' operator. This may lead to unpredictable results. 
-2026-10-26 16:40:58 PM|10102|WARN|Microsoft.EntityFrameworkCore.Query|The query uses a row limiting operator ('Skip'/'Take') without an 'OrderBy' operator. This may lead to unpredictable results. 
-2026-10-26 16:49:04 PM|100|INFO|System.Net.Http.HttpClient.Default.LogicalHandler|Start processing HTTP request POST https://artx.sochitel.com/api.php 
-2026-10-26 16:49:04 PM|100|INFO|System.Net.Http.HttpClient.Default.ClientHandler|Sending HTTP request POST https://artx.sochitel.com/api.php 
-2026-10-26 16:49:05 PM|101|INFO|System.Net.Http.HttpClient.Default.ClientHandler|Received HTTP response headers after 1342.7339ms - 200 
-2026-10-26 16:49:05 PM|101|INFO|System.Net.Http.HttpClient.Default.LogicalHandler|End processing HTTP request after 1365.3112ms - 200 
-2026-10-26 16:52:29 PM|100|INFO|System.Net.Http.HttpClient.Default.LogicalHandler|Start processing HTTP request POST https://artx.sochitel.com/api.php 
-2026-10-26 16:52:29 PM|100|INFO|System.Net.Http.HttpClient.Default.ClientHandler|Sending HTTP request POST https://artx.sochitel.com/api.php 
-2026-10-26 16:52:30 PM|101|INFO|System.Net.Http.HttpClient.Default.ClientHandler|Received HTTP response headers after 1542.1348ms - 200 
-2026-10-26 16:52:30 PM|101|INFO|System.Net.Http.HttpClient.Default.LogicalHandler|End processing HTTP request after 1559.657ms - 200 
-2026-10-26 16:57:13 PM|100|INFO|System.Net.Http.HttpClient.Default.LogicalHandler|Start processing HTTP request POST https://artx.sochitel.com/api.php 
-2026-10-26 16:57:13 PM|100|INFO|System.Net.Http.HttpClient.Default.ClientHandler|Sending HTTP request POST https://artx.sochitel.com/api.php 
-2026-10-26 16:57:15 PM|101|INFO|System.Net.Http.HttpClient.Default.ClientHandler|Received HTTP response headers after 1531.6917ms - 200 
-2026-10-26 16:57:15 PM|101|INFO|System.Net.Http.HttpClient.Default.LogicalHandler|End processing HTTP request after 1543.3115ms - 200 
-2026-10-26 16:57:50 PM||INFO|wleepay.Services.StripeService|Sending Voucher. UserRef=wleea49def04d0bc Operator=2482 Msisdn= Product=18419 Amount=10.00 Simulate=False 
-2026-10-26 16:59:00 PM||INFO|wleepay.Services.StripeService|Sending Voucher. UserRef=wleea49def04d0bc Operator=2482 Msisdn= Product=18419 Amount=10.00 Simulate=True 
-2026-10-26 16:59:06 PM||INFO|wleepay.Services.StripeService|Voucher provider response received. UserRef=wleea49def04d0bc Status=Successful StatusId=0 
+2026-11-05 09:54:54 AM||DEBUG|wleepay.API.Program|init main 
+2026-11-05 09:55:03 AM||INFO|wleepay.Services.WebhookProcessor|WebhookProcessor started. 
+2026-11-05 09:55:04 AM||INFO|Microsoft.Hosting.Lifetime|Now listening on: https://localhost:5001 
+2026-11-05 09:55:04 AM||INFO|Microsoft.Hosting.Lifetime|Application started. Press Ctrl+C to shut down. 
+2026-11-05 09:55:04 AM||INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development 
+2026-11-05 09:55:04 AM||INFO|Microsoft.Hosting.Lifetime|Content root path: D:\Wleepay\Wleepay_API\wleepay.API 
+2026-11-05 09:55:18 AM||WARN|Microsoft.AspNetCore.Identity.UserManager|Invalid password for user. 
+2026-11-05 09:55:18 AM|2|WARN|Microsoft.AspNetCore.Identity.SignInManager|User failed to provide the correct password. 
+2026-11-05 09:55:28 AM|10102|WARN|Microsoft.EntityFrameworkCore.Query|The query uses a row limiting operator ('Skip'/'Take') without an 'OrderBy' operator. This may lead to unpredictable results. 
+2026-11-05 09:55:28 AM|10102|WARN|Microsoft.EntityFrameworkCore.Query|The query uses a row limiting operator ('Skip'/'Take') without an 'OrderBy' operator. This may lead to unpredictable results. 
+2026-11-05 10:41:37 AM||DEBUG|wleepay.API.Program|init main 
+2026-11-05 10:41:44 AM||INFO|wleepay.Services.WebhookProcessor|WebhookProcessor started. 
+2026-11-05 10:41:45 AM||INFO|Microsoft.Hosting.Lifetime|Now listening on: https://localhost:5001 
+2026-11-05 10:41:45 AM||INFO|Microsoft.Hosting.Lifetime|Application started. Press Ctrl+C to shut down. 
+2026-11-05 10:41:45 AM||INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development 
+2026-11-05 10:41:45 AM||INFO|Microsoft.Hosting.Lifetime|Content root path: D:\Wleepay\Wleepay_API\wleepay.API 
+2026-11-05 11:00:53 AM|10102|WARN|Microsoft.EntityFrameworkCore.Query|The query uses a row limiting operator ('Skip'/'Take') without an 'OrderBy' operator. This may lead to unpredictable results. 
+2026-11-05 11:00:53 AM|10102|WARN|Microsoft.EntityFrameworkCore.Query|The query uses a row limiting operator ('Skip'/'Take') without an 'OrderBy' operator. This may lead to unpredictable results. 
+2026-11-05 11:10:50 AM||INFO|wleepay.Storage.Services.StorageService|WebRootPath: D:\Wleepay\Wleepay_API\wleepay.API\wwwroot 
+2026-11-05 11:10:50 AM||INFO|wleepay.Storage.Services.StorageService|Path: D:\Wleepay\Wleepay_API\wleepay.API\wwwroot\Images\183ba5d5-2a10-459f-86b7-ce7fe0b2d03f Exists: False 
+2026-11-05 11:41:28 AM||DEBUG|wleepay.API.Program|init main 
+2026-11-05 11:41:32 AM||INFO|wleepay.Services.WebhookProcessor|WebhookProcessor started. 
+2026-11-05 11:41:33 AM||INFO|Microsoft.Hosting.Lifetime|Now listening on: https://localhost:5001 
+2026-11-05 11:41:33 AM||INFO|Microsoft.Hosting.Lifetime|Application started. Press Ctrl+C to shut down. 
+2026-11-05 11:41:33 AM||INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development 
+2026-11-05 11:41:33 AM||INFO|Microsoft.Hosting.Lifetime|Content root path: D:\Wleepay\Wleepay_API\wleepay.API 
+2026-11-05 11:48:06 AM|10102|WARN|Microsoft.EntityFrameworkCore.Query|The query uses a row limiting operator ('Skip'/'Take') without an 'OrderBy' operator. This may lead to unpredictable results. 
+2026-11-05 11:48:07 AM|10102|WARN|Microsoft.EntityFrameworkCore.Query|The query uses a row limiting operator ('Skip'/'Take') without an 'OrderBy' operator. This may lead to unpredictable results. 
+2026-11-05 11:51:12 AM||INFO|wleepay.Storage.Services.StorageService|WebRootPath: D:\Wleepay\Wleepay_API\wleepay.API\wwwroot 
+2026-11-05 11:51:12 AM||INFO|wleepay.Storage.Services.StorageService|Path: D:\Wleepay\Wleepay_API\wleepay.API\wwwroot\Images\183ba5d5-2a10-459f-86b7-ce7fe0b2d03f Exists: False 
+2026-11-05 11:52:13 AM||WARN|Microsoft.AspNetCore.Identity.UserManager|Invalid password for user. 
+2026-11-05 11:52:13 AM|2|WARN|Microsoft.AspNetCore.Identity.SignInManager|User failed to provide the correct password. 
+2026-11-05 11:52:38 AM||INFO|wleepay.Storage.Services.StorageService|WebRootPath: D:\Wleepay\Wleepay_API\wleepay.API\wwwroot 
+2026-11-05 11:52:38 AM||INFO|wleepay.Storage.Services.StorageService|Path: D:\Wleepay\Wleepay_API\wleepay.API\wwwroot\Images\b4a0a1fa-b200-499b-aefa-4ae7b5408798 Exists: False 
+2026-11-05 12:02:46 PM||INFO|wleepay.Storage.Services.StorageService|WebRootPath: D:\Wleepay\Wleepay_API\wleepay.API\wwwroot 
+2026-11-05 12:02:46 PM||INFO|wleepay.Storage.Services.StorageService|Path: D:\Wleepay\Wleepay_API\wleepay.API\wwwroot\Images\b4a0a1fa-b200-499b-aefa-4ae7b5408798 Exists: False 
+2026-11-05 12:10:03 PM||DEBUG|wleepay.API.Program|init main 
+2026-11-05 12:59:33 PM||DEBUG|wleepay.API.Program|init main 
+2026-11-05 12:59:37 PM||INFO|wleepay.Services.WebhookProcessor|WebhookProcessor started. 
+2026-11-05 12:59:38 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: https://localhost:5001 
+2026-11-05 12:59:38 PM||INFO|Microsoft.Hosting.Lifetime|Application started. Press Ctrl+C to shut down. 
+2026-11-05 12:59:38 PM||INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development 
+2026-11-05 12:59:38 PM||INFO|Microsoft.Hosting.Lifetime|Content root path: D:\Wleepay\Wleepay_API\wleepay.API 
+2026-11-05 13:00:11 PM|100|INFO|System.Net.Http.HttpClient.Default.LogicalHandler|Start processing HTTP request POST https://artx.sochitel.com/api.php 
+2026-11-05 13:00:11 PM|100|INFO|System.Net.Http.HttpClient.Default.ClientHandler|Sending HTTP request POST https://artx.sochitel.com/api.php 
+2026-11-05 13:00:13 PM|101|INFO|System.Net.Http.HttpClient.Default.ClientHandler|Received HTTP response headers after 1884.5269ms - 200 
+2026-11-05 13:00:13 PM|101|INFO|System.Net.Http.HttpClient.Default.LogicalHandler|End processing HTTP request after 1934.4836ms - 200 
+2026-11-05 13:06:03 PM||DEBUG|wleepay.API.Program|init main 
+2026-11-05 13:06:07 PM||INFO|wleepay.Services.WebhookProcessor|WebhookProcessor started. 
+2026-11-05 13:06:07 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: https://localhost:5001 
+2026-11-05 13:06:07 PM||INFO|Microsoft.Hosting.Lifetime|Application started. Press Ctrl+C to shut down. 
+2026-11-05 13:06:07 PM||INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development 
+2026-11-05 13:06:08 PM||INFO|Microsoft.Hosting.Lifetime|Content root path: D:\Wleepay\Wleepay_API\wleepay.API 
+2026-11-05 13:06:53 PM||DEBUG|wleepay.API.Program|init main 
+2026-11-05 13:06:55 PM||INFO|wleepay.Services.WebhookProcessor|WebhookProcessor started. 
+2026-11-05 13:06:56 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: https://localhost:5001 
+2026-11-05 13:06:56 PM||INFO|Microsoft.Hosting.Lifetime|Application started. Press Ctrl+C to shut down. 
+2026-11-05 13:06:56 PM||INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development 
+2026-11-05 13:06:56 PM||INFO|Microsoft.Hosting.Lifetime|Content root path: D:\Wleepay\Wleepay_API\wleepay.API 
+2026-11-05 13:07:21 PM|100|INFO|System.Net.Http.HttpClient.Default.LogicalHandler|Start processing HTTP request POST https://artx.sochitel.com/api.php 
+2026-11-05 13:07:21 PM|100|INFO|System.Net.Http.HttpClient.Default.ClientHandler|Sending HTTP request POST https://artx.sochitel.com/api.php 
+2026-11-05 13:07:22 PM|101|INFO|System.Net.Http.HttpClient.Default.ClientHandler|Received HTTP response headers after 1491.9211ms - 200 
+2026-11-05 13:07:22 PM|101|INFO|System.Net.Http.HttpClient.Default.LogicalHandler|End processing HTTP request after 1550.9824ms - 200 
+2026-11-05 13:08:08 PM|100|INFO|System.Net.Http.HttpClient.Default.LogicalHandler|Start processing HTTP request POST https://artx.sochitel.com/api.php 
+2026-11-05 13:08:08 PM|100|INFO|System.Net.Http.HttpClient.Default.ClientHandler|Sending HTTP request POST https://artx.sochitel.com/api.php 
+2026-11-05 13:08:09 PM|101|INFO|System.Net.Http.HttpClient.Default.ClientHandler|Received HTTP response headers after 1240.2362ms - 200 
+2026-11-05 13:08:09 PM|101|INFO|System.Net.Http.HttpClient.Default.LogicalHandler|End processing HTTP request after 1255.8108ms - 200 
+2026-11-05 13:14:33 PM|100|INFO|System.Net.Http.HttpClient.Default.LogicalHandler|Start processing HTTP request POST https://artx.sochitel.com/api.php 
+2026-11-05 13:14:33 PM|100|INFO|System.Net.Http.HttpClient.Default.ClientHandler|Sending HTTP request POST https://artx.sochitel.com/api.php 
+2026-11-05 13:14:34 PM|101|INFO|System.Net.Http.HttpClient.Default.ClientHandler|Received HTTP response headers after 1348.726ms - 200 
+2026-11-05 13:14:34 PM|101|INFO|System.Net.Http.HttpClient.Default.LogicalHandler|End processing HTTP request after 1366.2985ms - 200 
+2026-11-05 13:17:28 PM||WARN|wleepay.Services.AuthorizeNetService|Sochitel meter lookup rejected 756666666666. Status Invalid call format. Raw: {"status":{"id":11,"name":"Invalid call format","type":2,"typeName":"Failure"},"command":"account","timestamp":1793864675,"reference":4329572024,"result":[]} 
+2026-11-05 13:17:59 PM|100|INFO|System.Net.Http.HttpClient.Default.LogicalHandler|Start processing HTTP request POST https://artx.sochitel.com/api.php 
+2026-11-05 13:17:59 PM|100|INFO|System.Net.Http.HttpClient.Default.ClientHandler|Sending HTTP request POST https://artx.sochitel.com/api.php 
+2026-11-05 13:18:00 PM|101|INFO|System.Net.Http.HttpClient.Default.ClientHandler|Received HTTP response headers after 1483.9935ms - 200 
+2026-11-05 13:18:00 PM|101|INFO|System.Net.Http.HttpClient.Default.LogicalHandler|End processing HTTP request after 1498.7394ms - 200 
+2026-11-05 13:20:53 PM||DEBUG|wleepay.API.Program|init main 
+2026-11-05 13:21:01 PM||INFO|wleepay.Services.WebhookProcessor|WebhookProcessor started. 
+2026-11-05 13:21:02 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: https://localhost:5001 
+2026-11-05 13:21:02 PM||INFO|Microsoft.Hosting.Lifetime|Application started. Press Ctrl+C to shut down. 
+2026-11-05 13:21:02 PM||INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development 
+2026-11-05 13:21:02 PM||INFO|Microsoft.Hosting.Lifetime|Content root path: D:\Wleepay\Wleepay_API\wleepay.API 
+2026-11-05 13:22:15 PM|100|INFO|System.Net.Http.HttpClient.Default.LogicalHandler|Start processing HTTP request POST https://artx.sochitel.com/api.php 
+2026-11-05 13:22:15 PM|100|INFO|System.Net.Http.HttpClient.Default.ClientHandler|Sending HTTP request POST https://artx.sochitel.com/api.php 
+2026-11-05 13:22:16 PM|101|INFO|System.Net.Http.HttpClient.Default.ClientHandler|Received HTTP response headers after 828.7937ms - 200 
+2026-11-05 13:22:16 PM|101|INFO|System.Net.Http.HttpClient.Default.LogicalHandler|End processing HTTP request after 881.1508ms - 200 
+2026-11-05 13:22:36 PM||WARN|wleepay.Services.AuthorizeNetService|Sochitel meter lookup rejected 756666666666. Status Invalid call format. Raw: {"status":{"id":11,"name":"Invalid call format","type":2,"typeName":"Failure"},"command":"account","timestamp":1793865137,"reference":4878424511,"result":[]} 
+2026-11-05 13:22:47 PM|100|INFO|System.Net.Http.HttpClient.Default.LogicalHandler|Start processing HTTP request POST https://artx.sochitel.com/api.php 
+2026-11-05 13:22:47 PM|100|INFO|System.Net.Http.HttpClient.Default.ClientHandler|Sending HTTP request POST https://artx.sochitel.com/api.php 
+2026-11-05 13:22:48 PM|101|INFO|System.Net.Http.HttpClient.Default.ClientHandler|Received HTTP response headers after 593.0326ms - 200 
+2026-11-05 13:22:48 PM|101|INFO|System.Net.Http.HttpClient.Default.LogicalHandler|End processing HTTP request after 611.6506ms - 200 
+2026-11-05 13:22:48 PM||WARN|wleepay.Services.AuthorizeNetService|Sochitel meter lookup rejected 756666666666. Status Invalid call format. Raw: {"status":{"id":11,"name":"Invalid call format","type":2,"typeName":"Failure"},"command":"account","timestamp":1793865169,"reference":4641491282,"result":[]} 
+2026-11-05 13:23:20 PM|100|INFO|System.Net.Http.HttpClient.Default.LogicalHandler|Start processing HTTP request POST https://artx.sochitel.com/api.php 
+2026-11-05 13:23:20 PM|100|INFO|System.Net.Http.HttpClient.Default.ClientHandler|Sending HTTP request POST https://artx.sochitel.com/api.php 
+2026-11-05 13:23:21 PM|100|INFO|System.Net.Http.HttpClient.Default.LogicalHandler|Start processing HTTP request POST https://artx.sochitel.com/api.php 
+2026-11-05 13:23:21 PM|100|INFO|System.Net.Http.HttpClient.Default.ClientHandler|Sending HTTP request POST https://artx.sochitel.com/api.php 
+2026-11-05 13:23:22 PM|101|INFO|System.Net.Http.HttpClient.Default.ClientHandler|Received HTTP response headers after 1418.5105ms - 200 
+2026-11-05 13:23:22 PM|101|INFO|System.Net.Http.HttpClient.Default.LogicalHandler|End processing HTTP request after 1428.2325ms - 200 
+2026-11-05 13:23:22 PM|101|INFO|System.Net.Http.HttpClient.Default.ClientHandler|Received HTTP response headers after 893.5403ms - 200 
+2026-11-05 13:23:22 PM||WARN|wleepay.Services.AuthorizeNetService|Sochitel meter lookup rejected 75666666666. Status Invalid call format. Raw: {"status":{"id":11,"name":"Invalid call format","type":2,"typeName":"Failure"},"command":"account","timestamp":1793865203,"reference":4743492397,"result":[]} 
+2026-11-05 13:23:22 PM|101|INFO|System.Net.Http.HttpClient.Default.LogicalHandler|End processing HTTP request after 945.0604ms - 200 
+2026-11-05 13:23:22 PM||WARN|wleepay.Services.AuthorizeNetService|Sochitel meter lookup rejected 7566666666. Status Invalid call format. Raw: {"status":{"id":11,"name":"Invalid call format","type":2,"typeName":"Failure"},"command":"account","timestamp":1793865203,"reference":4776570169,"result":[]} 
+2026-11-05 13:23:24 PM|100|INFO|System.Net.Http.HttpClient.Default.LogicalHandler|Start processing HTTP request POST https://artx.sochitel.com/api.php 
+2026-11-05 13:23:24 PM|100|INFO|System.Net.Http.HttpClient.Default.ClientHandler|Sending HTTP request POST https://artx.sochitel.com/api.php 
+2026-11-05 13:23:25 PM|101|INFO|System.Net.Http.HttpClient.Default.ClientHandler|Received HTTP response headers after 189.5177ms - 200 
+2026-11-05 13:23:25 PM|101|INFO|System.Net.Http.HttpClient.Default.LogicalHandler|End processing HTTP request after 206.0628ms - 200 
+2026-11-05 13:23:25 PM||WARN|wleepay.Services.AuthorizeNetService|Sochitel meter lookup rejected 758888999999. Status Invalid call format. Raw: {"status":{"id":11,"name":"Invalid call format","type":2,"typeName":"Failure"},"command":"account","timestamp":1793865205,"reference":4612033558,"result":[]} 
+2026-11-05 13:23:36 PM|100|INFO|System.Net.Http.HttpClient.Default.LogicalHandler|Start processing HTTP request POST https://artx.sochitel.com/api.php 
+2026-11-05 13:23:36 PM|100|INFO|System.Net.Http.HttpClient.Default.ClientHandler|Sending HTTP request POST https://artx.sochitel.com/api.php 
+2026-11-05 13:23:37 PM|101|INFO|System.Net.Http.HttpClient.Default.ClientHandler|Received HTTP response headers after 672.8301ms - 200 
+2026-11-05 13:23:37 PM|101|INFO|System.Net.Http.HttpClient.Default.LogicalHandler|End processing HTTP request after 685.9589ms - 200 
+2026-11-05 13:23:37 PM||WARN|wleepay.Services.AuthorizeNetService|Sochitel meter lookup rejected 75888899999. Status Invalid call format. Raw: {"status":{"id":11,"name":"Invalid call format","type":2,"typeName":"Failure"},"command":"account","timestamp":1793865218,"reference":4771732003,"result":[]} 
+2026-11-05 13:23:41 PM|100|INFO|System.Net.Http.HttpClient.Default.LogicalHandler|Start processing HTTP request POST https://artx.sochitel.com/api.php 
+2026-11-05 13:23:41 PM|100|INFO|System.Net.Http.HttpClient.Default.ClientHandler|Sending HTTP request POST https://artx.sochitel.com/api.php 
+2026-11-05 13:23:42 PM|101|INFO|System.Net.Http.HttpClient.Default.ClientHandler|Received HTTP response headers after 629.4295ms - 200 
+2026-11-05 13:23:42 PM|101|INFO|System.Net.Http.HttpClient.Default.LogicalHandler|End processing HTTP request after 648.6663ms - 200 
+2026-11-05 13:23:42 PM||WARN|wleepay.Services.AuthorizeNetService|Sochitel meter lookup rejected 758888999998. Status Invalid call format. Raw: {"status":{"id":11,"name":"Invalid call format","type":2,"typeName":"Failure"},"command":"account","timestamp":1793865223,"reference":4627618491,"result":[]} 
+2026-11-05 15:43:51 PM||DEBUG|wleepay.API.Program|init main 
+2026-11-05 15:43:55 PM||INFO|wleepay.Services.WebhookProcessor|WebhookProcessor started. 
+2026-11-05 15:43:55 PM||INFO|Microsoft.Hosting.Lifetime|Now listening on: https://localhost:5001 
+2026-11-05 15:43:55 PM||INFO|Microsoft.Hosting.Lifetime|Application started. Press Ctrl+C to shut down. 
+2026-11-05 15:43:55 PM||INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development 
+2026-11-05 15:43:56 PM||INFO|Microsoft.Hosting.Lifetime|Content root path: D:\Wleepay\Wleepay_API\wleepay.API 
